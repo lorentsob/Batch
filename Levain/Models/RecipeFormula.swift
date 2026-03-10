@@ -15,7 +15,7 @@ final class RecipeFormula {
     var servings: Int
     var notes: String
     var flourMix: String
-    private var defaultStepsPayload: String
+    private var defaultStepsPayload: Data
 
     @Relationship(inverse: \Bake.formula)
     var bakes: [Bake]
@@ -62,6 +62,21 @@ final class RecipeFormula {
     var totalDoughWeight: Double {
         totalFlourWeight + totalWaterWeight + saltWeight + (totalFlourWeight * inoculationPercent / 100)
     }
+    
+    func duplicate(newName: String? = nil) -> RecipeFormula {
+        RecipeFormula(
+            name: newName ?? "\(name) (copia)",
+            type: type,
+            totalFlourWeight: totalFlourWeight,
+            totalWaterWeight: totalWaterWeight,
+            saltWeight: saltWeight,
+            inoculationPercent: inoculationPercent,
+            servings: servings,
+            notes: notes,
+            flourMix: flourMix,
+            defaultSteps: defaultSteps.map { FormulaStepTemplate(id: UUID(), type: $0.type, name: $0.name, details: $0.details, durationMinutes: $0.durationMinutes, reminderOffsetMinutes: $0.reminderOffsetMinutes, temperatureRange: $0.temperatureRange, volumeTarget: $0.volumeTarget, notes: $0.notes) }
+        )
+    }
 
     func recalculateDerivedValues() {
         hydrationPercent = RecipeFormula.computeRatio(part: totalWaterWeight, total: totalFlourWeight)
@@ -73,20 +88,17 @@ final class RecipeFormula {
         return (part / total) * 100
     }
 
-    private static func encode(defaultSteps: [FormulaStepTemplate]) -> String {
-        guard
-            let data = try? JSONEncoder().encode(defaultSteps),
-            let string = String(data: data, encoding: .utf8)
-        else {
-            return "[]"
+    private static func encode(defaultSteps: [FormulaStepTemplate]) -> Data {
+        guard let data = try? JSONEncoder().encode(defaultSteps) else {
+            return Data()
         }
-        return string
+        return data
     }
 
-    private static func decode(defaultSteps payload: String) -> [FormulaStepTemplate] {
-        guard
-            let data = payload.data(using: .utf8),
-            let steps = try? JSONDecoder().decode([FormulaStepTemplate].self, from: data)
+    private static func decode(defaultSteps payload: Data) -> [FormulaStepTemplate] {
+        guard 
+            payload.isEmpty == false,
+            let steps = try? JSONDecoder().decode([FormulaStepTemplate].self, from: payload) 
         else {
             return FormulaStepTemplate.defaultBreadSteps
         }

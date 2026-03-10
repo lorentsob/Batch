@@ -18,75 +18,81 @@ struct TodayView: View {
     }
 
     var body: some View {
-        ScrollView {
-            VStack(alignment: .leading, spacing: 20) {
-                Text("Oggi")
-                    .font(.largeTitle.bold())
-                    .foregroundStyle(Theme.ink)
+        ZStack(alignment: .topLeading) {
+            Theme.background
+                .ignoresSafeArea()
 
-                SectionCard {
-                    Text("Cosa devi fare adesso?")
-                        .font(.system(size: 30, weight: .semibold, design: .serif))
+            ScrollView {
+                VStack(alignment: .leading, spacing: 20) {
+                    Text("Oggi")
+                        .font(.largeTitle.bold())
                         .foregroundStyle(Theme.ink)
 
-                    Text(heroSubtitle)
-                        .foregroundStyle(Theme.muted)
+                    SectionCard {
+                        Text("Cosa devi fare adesso?")
+                            .font(.system(size: 30, weight: .semibold, design: .serif))
+                            .foregroundStyle(Theme.ink)
 
-                    HStack(spacing: 12) {
-                        StateBadge(text: "\(actionCount) azioni")
-                        StateBadge(text: "\(bakes.filter { $0.derivedStatus == .inProgress }.count) impasti attivi")
+                        Text(heroSubtitle)
+                            .foregroundStyle(Theme.muted)
+
+                        HStack(spacing: 12) {
+                            StateBadge(text: "\(actionCount) azioni")
+                            StateBadge(text: "\(bakes.filter { $0.derivedStatus == .inProgress }.count) impasti attivi")
+                        }
                     }
-                }
 
-                if actionCount == 0 {
-                    EmptyStateView(
-                        title: "Giornata leggera",
-                        message: "Non ci sono step urgenti o starter da rinfrescare. Puoi creare un nuovo bake dalla tab Impasti.",
-                        actionTitle: "Vai a Impasti"
-                    ) {
-                        router.selectedTab = .bakes
-                    }
-                } else {
-                    ForEach(TodayAgendaItem.Section.allCases) { section in
-                        if let items = agenda[section], items.isEmpty == false {
-                            VStack(alignment: .leading, spacing: 12) {
-                                Text(section.title)
-                                    .font(.headline)
-                                    .foregroundStyle(Theme.ink)
+                    if actionCount == 0 {
+                        EmptyStateView(
+                            title: "Giornata leggera",
+                            message: "Non ci sono step urgenti o starter da rinfrescare. Puoi creare un nuovo bake dalla tab Impasti.",
+                            actionTitle: "Vai a Impasti"
+                        ) {
+                            router.selectedTab = .bakes
+                        }
+                    } else {
+                        ForEach(TodayAgendaItem.Section.allCases) { section in
+                            if let items = agenda[section], items.isEmpty == false {
+                                VStack(alignment: .leading, spacing: 12) {
+                                    Text(section.title)
+                                        .font(.headline)
+                                        .foregroundStyle(Theme.ink)
 
-                                ForEach(items) { item in
-                                    SectionCard {
-                                        HStack(alignment: .top) {
-                                            VStack(alignment: .leading, spacing: 8) {
-                                                Text(item.title)
-                                                    .font(.headline)
-                                                    .foregroundStyle(Theme.ink)
-                                                Text(item.subtitle)
-                                                    .font(.subheadline)
-                                                    .foregroundStyle(Theme.muted)
+                                    ForEach(items) { item in
+                                        SectionCard {
+                                            HStack(alignment: .top) {
+                                                VStack(alignment: .leading, spacing: 8) {
+                                                    Text(item.title)
+                                                        .font(.headline)
+                                                        .foregroundStyle(Theme.ink)
+                                                    Text(item.subtitle)
+                                                        .font(.subheadline)
+                                                        .foregroundStyle(Theme.muted)
+                                                }
+
+                                                Spacer()
+                                                StateBadge(text: item.state)
                                             }
 
-                                            Spacer()
-                                            StateBadge(text: item.state)
+                                            Button(item.actionTitle) {
+                                                handle(item)
+                                            }
+                                            .buttonStyle(.borderedProminent)
+                                            .tint(Theme.accent)
                                         }
-
-                                        Button(item.actionTitle) {
-                                            handle(item)
-                                        }
-                                        .buttonStyle(.borderedProminent)
-                                        .tint(Theme.accent)
                                     }
                                 }
                             }
                         }
                     }
                 }
+                .padding(.horizontal, 20)
+                .padding(.vertical, 24)
             }
-            .padding(.horizontal, 20)
-            .padding(.vertical, 24)
+            .contentMargins(.bottom, 88, for: .scrollContent)
+            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
         }
-        .contentMargins(.bottom, 88, for: .scrollContent)
-        .background(Theme.background.ignoresSafeArea())
+        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
         .sheet(item: $refreshStarter) { starter in
             NavigationStack {
                 RefreshLogView(starter: starter)

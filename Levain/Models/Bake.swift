@@ -79,5 +79,26 @@ final class Bake {
         sortedSteps.first(where: { $0.status == .running }) ??
         sortedSteps.first(where: { $0.status == .pending })
     }
+
+    var nextActionableStep: BakeStep? {
+        activeStep
+    }
+
+    var completedStepCount: Int {
+        steps.filter { $0.isTerminal }.count
+    }
+
+    var totalStepCount: Int {
+        steps.count
+    }
+
+    var progress: Double {
+        guard totalStepCount > 0 else { return 0 }
+        return Double(completedStepCount) / Double(totalStepCount)
+    }
+
+    func isOverdue(now: Date = .now) -> Bool {
+        activeStep?.isOverdue(now: now) ?? false
+    }
 }
 

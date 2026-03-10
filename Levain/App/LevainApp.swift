@@ -11,7 +11,6 @@ struct LevainApp: App {
     var body: some Scene {
         WindowGroup {
             RootTabView()
-                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
                 .environmentObject(router)
                 .environmentObject(environment)
                 .modelContainer(container)

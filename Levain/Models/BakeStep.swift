@@ -84,6 +84,22 @@ final class BakeStep {
         [.done, .skipped].contains(status)
     }
 
+    var isRunning: Bool {
+        status == .running
+    }
+
+    var isPending: Bool {
+        status == .pending
+    }
+
+    func currentProgress(now: Date = .now) -> Double {
+        guard status == .running, let start = actualStart else { return 0 }
+        let duration = Double(plannedDurationMinutes * 60)
+        guard duration > 0 else { return 1.0 }
+        let elapsed = now.timeIntervalSince(start)
+        return min(max(elapsed / duration, 0), 1.0)
+    }
+
     func isOverdue(now: Date = .now) -> Bool {
         guard status == .pending || status == .running else { return false }
         return plannedEnd < now

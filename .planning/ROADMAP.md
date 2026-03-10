@@ -7,9 +7,9 @@ The roadmap moves from a native iPhone foundation into core baking logic, then a
 ## Phases
 
 - [x] **Phase 1: Foundation App Shell** - Bootstrap the repository, native project, persistence container, and navigation shell.
-- [ ] **Phase 2: Domain Scheduling** - Implement the core models, derived logic, and backward schedule generation.
-- [ ] **Phase 3: Formula Authoring** - Build reusable formula CRUD with editable default step templates.
-- [ ] **Phase 4: Bake Creation Execution** - Create and run bakes with step actions, timers, and timeline shifting.
+- [x] **Phase 2: Domain Scheduling** - Implement the core models, derived logic, and backward schedule generation.
+- [x] **Phase 3: Formula Authoring** - Build reusable formula CRUD with editable default step templates.
+- [x] **Phase 4: Bake Creation Execution** - Create and run bakes with step actions, timers, and timeline shifting.
 - [ ] **Phase 5: Today Notifications** - Build the operational Today experience and local reminder orchestration.
 - [ ] **Phase 6: Starter Management** - Add starter CRUD, refresh logging, and due-state reminders.
 - [ ] **Phase 7: Knowledge Tips** - Bundle static knowledge, browse it, and surface contextual tips.
@@ -43,9 +43,9 @@ Plans:
 **Plans**: 3 plans
 
 Plans:
-- [ ] 02-01: Model layer and persistence relationships
-- [ ] 02-02: Scheduler and derived-logic services
-- [ ] 02-03: Unit test foundation for core logic
+- [x] 02-01: Model layer and persistence relationships
+- [x] 02-02: Scheduler and derived-logic services
+- [x] 02-03: Unit test foundation for core logic
 
 ### Phase 3: Formula Authoring
 **Goal**: Let the user create and maintain reusable formulas with editable default step templates.
@@ -58,9 +58,9 @@ Plans:
 **Plans**: 3 plans
 
 Plans:
-- [ ] 03-01: Formula list and detail views
-- [ ] 03-02: Step template editor flow
-- [ ] 03-03: Validation and persistence polish
+- [x] 03-01: Formula list and detail views
+- [x] 03-02: Step template editor flow
+- [x] 03-03: Validation and persistence polish
 
 ### Phase 4: Bake Creation Execution
 **Goal**: Generate real bakes from formulas and support real-time step execution.
@@ -73,9 +73,9 @@ Plans:
 **Plans**: 3 plans
 
 Plans:
-- [ ] 04-01: Bake creation flow
-- [ ] 04-02: Bake detail and step execution
-- [ ] 04-03: Timer UI and timeline shifting
+- [x] 04-01: Bake creation flow
+- [x] 04-02: Bake detail and step execution
+- [x] 04-03: Timer UI and timeline shifting
 
 ### Phase 5: Today Notifications
 **Goal**: Make the app operational day-to-day with prioritized work and local reminders.
@@ -137,7 +137,7 @@ Plans:
 - [ ] 08-02: Empty states and internal polish
 - [ ] 08-03: Release-readiness verification
 
-## Progress
+## Progress: [██████░░░░] 50%
 
 **Execution Order:**
 Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6 → 7 → 8
@@ -145,10 +145,10 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6 → 7 → 8
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 1. Foundation App Shell | 3/3 | Complete | 2026-03-10 |
-| 2. Domain Scheduling | 0/3 | Planned | 2026-03-10 |
-| 3. Formula Authoring | 0/3 | Not started | - |
-| 4. Bake Creation Execution | 0/3 | Not started | - |
-| 5. Today Notifications | 0/3 | Not started | - |
+| 2. Domain Scheduling | 3/3 | Complete | 2026-03-10 |
+| 3. Formula Authoring | 3/3 | Complete | 2026-03-10 |
+| 4. Bake Creation Execution | 3/3 | Complete | 2026-03-10 |
+| 5. Today Notifications | 0/3 | Planned | 2026-03-10 |
 | 6. Starter Management | 0/3 | Not started | - |
 | 7. Knowledge Tips | 0/3 | Not started | - |
 | 8. Hardening UAT | 0/3 | Not started | - |

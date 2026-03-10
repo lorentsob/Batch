@@ -55,6 +55,7 @@ The app must make the next baking action obvious without adding setup, infrastru
 | Editable default step templates live on `RecipeFormula` | Keeps formulas reusable without inventing a heavier template system | — Pending |
 | Knowledge is bundled JSON, not SwiftData | Static content is easier to version and ship locally | — Pending |
 | Notifications are local and rescheduled from persisted state | Reliable behavior with the app closed | — Pending |
+| `INFOPLIST_KEY_UILaunchScreen_Generation = YES` must be kept in `.pbxproj` | Prevents iOS 26+ legacy compatibility mode (letterboxing) since we removed `ZStack` from `RootTabView` to fix native TabBar layout | — Pending |
 
 ---
 *Last updated: 2026-03-10 after Levain project unification*

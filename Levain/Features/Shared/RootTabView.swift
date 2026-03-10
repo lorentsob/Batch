@@ -11,11 +11,7 @@ struct RootTabView: View {
     @State private var didBootstrap = false
 
     var body: some View {
-        ZStack(alignment: .top) {
-            Theme.background
-                .ignoresSafeArea()
-
-            TabView(selection: $router.selectedTab) {
+        TabView(selection: $router.selectedTab) {
                 TodayView()
                     .tabItem {
                         Label("Oggi", systemImage: "sun.max.fill")
@@ -65,11 +61,8 @@ struct RootTabView: View {
                     Label("Knowledge", systemImage: "book.pages.fill")
                 }
                 .tag(RootTab.knowledge)
-            }
-            .tint(Theme.accent)
-            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
         }
-        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
+        .tint(Theme.accent)
         .task {
             await bootstrapIfNeeded()
         }
