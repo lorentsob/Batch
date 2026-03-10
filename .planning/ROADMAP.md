@@ -10,9 +10,9 @@ The roadmap moves from a native iPhone foundation into core baking logic, then a
 - [x] **Phase 2: Domain Scheduling** - Implement the core models, derived logic, and backward schedule generation.
 - [x] **Phase 3: Formula Authoring** - Build reusable formula CRUD with editable default step templates.
 - [x] **Phase 4: Bake Creation Execution** - Create and run bakes with step actions, timers, and timeline shifting.
-- [ ] **Phase 5: Today Notifications** - Build the operational Today experience and local reminder orchestration.
+- [x] **Phase 5: Today Notifications** - Build the operational Today experience and local reminder orchestration.
 - [x] **Phase 6: Starter Management** - Add starter CRUD, refresh logging, and due-state reminders.
-- [ ] **Phase 7: Knowledge Tips** - Bundle static knowledge, browse it, and surface contextual tips.
+- [x] **Phase 7: Knowledge Tips** - Bundle static knowledge, browse it, and surface contextual tips.
 - [ ] **Phase 8: Hardening UAT** - Finish tests, empty states, internal-seed polish, and release readiness.
 
 ## Phase Details
@@ -117,9 +117,9 @@ Plans:
 **Plans**: 3 plans
 
 Plans:
-- [ ] 07-01: Content schema and JSON bundle
-- [ ] 07-02: Knowledge tab and article view
-- [ ] 07-03: Contextual tip surfacing
+- [x] 07-01: Content schema and JSON bundle
+- [x] 07-02: Knowledge tab and article view
+- [x] 07-03: Contextual tip surfacing
 
 ### Phase 8: Hardening UAT
 **Goal**: Improve confidence, first-launch polish, and internal release readiness.
@@ -136,7 +136,7 @@ Plans:
 - [ ] 08-02: Empty states and internal polish
 - [ ] 08-03: Release-readiness verification
 
-## Progress: [███████░░░] 75%
+## Progress: [████████░░] 87.5%
 
 **Execution Order:**
 Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6 → 7 → 8
@@ -149,5 +149,5 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6 → 7 → 8
 | 4. Bake Creation Execution | 3/3 | Complete | 2026-03-10 |
 | 5. Today Notifications | 3/3 | Complete | 2026-03-10 |
 | 6. Starter Management | 3/3 | Complete | 2026-03-10 |
-| 7. Knowledge Tips | 0/3 | Planned | 2026-03-10 |
-| 8. Hardening UAT | 0/3 | Not started | - |
+| 7. Knowledge Tips | 3/3 | Complete | 2026-03-10 |
+| 8. Hardening UAT | 0/3 | Planned | 2026-03-10 |

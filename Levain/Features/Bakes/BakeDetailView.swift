@@ -32,6 +32,16 @@ struct BakeDetailView: View {
                     }
                 }
 
+                // Contextual tips — secondary, based on the current active step type
+                if let activeStep = bake.sortedSteps.first(where: { $0.status == .running }) {
+                    let tips = environment.knowledgeLibrary.tips(for: activeStep.type)
+                    if !tips.isEmpty {
+                        TipGroupView(items: tips) { id in
+                            router.openKnowledge(id)
+                        }
+                    }
+                }
+
                 if bake.derivedStatus != .cancelled && bake.derivedStatus != .completed {
                     Button("Annulla impasto", role: .destructive) {
                         showingCancelConfirm = true

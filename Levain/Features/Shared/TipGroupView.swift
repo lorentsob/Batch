@@ -1,5 +1,8 @@
 import SwiftUI
 
+/// Shows a compact list of related knowledge tips, positioned as secondary/supportive content.
+/// Opening a tip navigates to the shared article detail used by the Knowledge tab, ensuring
+/// one consistent article destination across browse and contextual entry points.
 struct TipGroupView: View {
     let title: String
     let items: [KnowledgeItem]
@@ -16,30 +19,43 @@ struct TipGroupView: View {
     }
 
     var body: some View {
-        if items.isEmpty == false {
+        if !items.isEmpty {
             SectionCard {
-                Text(title)
-                    .font(.headline)
-                    .foregroundStyle(Theme.ink)
+                HStack {
+                    Image(systemName: "lightbulb")
+                        .font(.footnote)
+                        .foregroundStyle(Theme.accent)
+                    Text(title)
+                        .font(.subheadline.weight(.semibold))
+                        .foregroundStyle(Theme.muted)
+                    Spacer()
+                }
 
                 ForEach(items) { item in
                     Button {
                         onOpen(item.id)
                     } label: {
-                        VStack(alignment: .leading, spacing: 6) {
-                            Text(item.title)
-                                .font(.subheadline.weight(.semibold))
-                                .foregroundStyle(Theme.ink)
-                            Text(item.summary)
-                                .font(.footnote)
+                        HStack(alignment: .top, spacing: 10) {
+                            VStack(alignment: .leading, spacing: 4) {
+                                Text(item.title)
+                                    .font(.subheadline.weight(.medium))
+                                    .foregroundStyle(Theme.ink)
+                                Text(item.summary)
+                                    .font(.footnote)
+                                    .foregroundStyle(Theme.muted)
+                                    .multilineTextAlignment(.leading)
+                                    .lineLimit(2)
+                            }
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                            Image(systemName: "chevron.right")
+                                .font(.caption.weight(.semibold))
                                 .foregroundStyle(Theme.muted)
-                                .multilineTextAlignment(.leading)
+                                .padding(.top, 3)
                         }
-                        .frame(maxWidth: .infinity, alignment: .leading)
                         .padding(12)
                         .background(
-                            RoundedRectangle(cornerRadius: 18, style: .continuous)
-                                .fill(Theme.background.opacity(0.8))
+                            RoundedRectangle(cornerRadius: 14, style: .continuous)
+                                .fill(Theme.background.opacity(0.7))
                         )
                     }
                     .buttonStyle(.plain)
