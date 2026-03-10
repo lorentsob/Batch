@@ -5,7 +5,7 @@ enum ModelContainerFactory {
         do {
             return try ModelContainer(for: schema)
         } catch {
-            fatalError("Unable to create model container: \(error)")
+            return fallbackContainer(after: error)
         }
     }
 
@@ -21,7 +21,7 @@ enum ModelContainerFactory {
             }
             return container
         } catch {
-            fatalError("Unable to create model container: \(error)")
+            return fallbackContainer(after: error, inMemory: true)
         }
     }
 
@@ -33,4 +33,14 @@ enum ModelContainerFactory {
         BakeStep.self,
         AppSettings.self
     ])
+
+    private static func fallbackContainer(after error: Error, inMemory: Bool = false) -> ModelContainer {
+        assertionFailure("Unable to create model container: \(error)")
+        let configuration = ModelConfiguration(isStoredInMemoryOnly: inMemory)
+        do {
+            return try ModelContainer(for: schema, configurations: configuration)
+        } catch {
+            fatalError("Unable to create fallback model container: \(error)")
+        }
+    }
 }
