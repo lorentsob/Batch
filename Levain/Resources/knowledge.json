@@ -1,0 +1,82 @@
+[
+  {
+    "id": "starter-basics",
+    "title": "Starter sano: cosa osservare",
+    "category": "starter",
+    "tags": ["starter", "peak", "routine"],
+    "summary": "Uno starter affidabile cresce con regolarita, mostra bolle diffuse e ha un profilo aromatico lattico o fruttato.",
+    "content": "Uno starter sano tende a raddoppiare quasi entro 4-8 ore dopo un rinfresco, in base a temperatura e idratazione. Segnali positivi: superficie leggermente bombata, bolle diffuse, odore lattico o fruttato e consistenza aerata. Se la crescita rallenta molto, l'odore diventa troppo pungente o compare liquido in superficie, conviene aumentare la frequenza dei rinfreschi e rivedere temperatura e rapporto.",
+    "relatedStepTypes": ["starterRefresh"],
+    "relatedStarterStates": ["dueToday", "overdue"]
+  },
+  {
+    "id": "starter-maintenance-fridge",
+    "title": "Routine da frigo",
+    "category": "starter",
+    "tags": ["starter", "frigo", "maintenance"],
+    "summary": "Per un uso settimanale conviene un rapporto alto, una breve partenza a temperatura ambiente e poi frigo.",
+    "content": "Quando usi lo starter meno spesso, una routine tipica e stabile e: rinfresco con rapporto 1:4:4 o simile, breve avvio a temperatura ambiente e poi frigo a 4-8 C. In questo assetto il refresh ogni 5-7 giorni e in genere sufficiente. Prima di un bake importante conviene fare uno o due rinfreschi fuori frigo per riportarlo in piena forza.",
+    "relatedStepTypes": ["starterRefresh"],
+    "relatedStarterStates": ["dueToday", "overdue"]
+  },
+  {
+    "id": "bakers-math-basics",
+    "title": "Baker's math essenziale",
+    "category": "bakerMath",
+    "tags": ["percentuali", "formula", "idratazione"],
+    "summary": "La farina totale vale sempre 100% e tutti gli altri ingredienti sono percentuali calcolate su quel peso.",
+    "content": "Nella baker's math la farina e sempre il riferimento al 100%. Acqua, sale e inoculo si leggono come percentuale della farina totale. Questo permette di confrontare formule diverse e scalarle velocemente. Esempio: 1000 g di farina con 720 g di acqua significano 72% di idratazione, mentre 22 g di sale corrispondono al 2,2%.",
+    "relatedStepTypes": ["mix"],
+    "relatedStarterStates": []
+  },
+  {
+    "id": "bulk-fermentation-basics",
+    "title": "Come leggere la bulk fermentation",
+    "category": "fermentation",
+    "tags": ["bulk", "temperatura", "volume"],
+    "summary": "Conta piu la condizione dell'impasto dell'orologio: volume, bolle e tensione danno segnali migliori del tempo previsto.",
+    "content": "Durante la bulk fermentation osserva volume, bolle e struttura. A temperature domestiche intorno a 23-25 C molti impasti con lievito madre chiudono la bulk in 2-5 ore, ma e solo un punto di partenza. Se l'impasto appare piu arioso, vivo e leggermente bombato ai bordi del contenitore, e probabile che sia vicino al target. Se usi un aliquot jar, un aumento del 35-60% puo dare un riferimento piu oggettivo.",
+    "relatedStepTypes": ["bulk", "fold"],
+    "relatedStarterStates": []
+  },
+  {
+    "id": "proofing-and-cold-retard",
+    "title": "Appretto e cold retard",
+    "category": "fermentation",
+    "tags": ["proof", "cold retard", "frigo"],
+    "summary": "L'appretto puo proseguire a temperatura ambiente o in frigo per rallentare la fermentazione e gestire meglio i tempi.",
+    "content": "Dopo la formatura puoi chiudere l'appretto a temperatura ambiente oppure usare il frigo per un cold retard di 8-24 ore o piu, in base alla ricetta. Il poke test e utile: se l'impronta torna lentamente senza scomparire del tutto, l'impasto e spesso vicino al punto giusto. Se invece collassa o resta troppo molle, probabilmente e andato oltre.",
+    "relatedStepTypes": ["shape", "proof", "coldRetard"],
+    "relatedStarterStates": []
+  },
+  {
+    "id": "timing-and-temperature",
+    "title": "Temperatura e tempi reali",
+    "category": "fermentation",
+    "tags": ["temperature", "timing", "dough"],
+    "summary": "La temperatura dell'impasto e il driver principale della fermentazione e spiega gran parte delle variazioni nei tempi.",
+    "content": "Se la cucina e fredda, la stessa formula puo richiedere anche il doppio del tempo. Per questo l'app usa tempi pianificati come base, ma conviene sempre rileggere l'impasto nella realta. Acqua piu fredda o piu tiepida, meno starter o una pausa in frigo sono strumenti semplici per riportare il flusso sotto controllo.",
+    "relatedStepTypes": ["autolysis", "mix", "bulk", "proof"],
+    "relatedStarterStates": []
+  },
+  {
+    "id": "troubleshooting-dense",
+    "title": "Pane denso o gommoso",
+    "category": "troubleshooting",
+    "tags": ["dense", "underproof", "starter"],
+    "summary": "Spesso il problema nasce da starter debole, bulk troppo corta o sviluppo glutine insufficiente.",
+    "content": "Una mollica densa o gommosa indica spesso fermentazione insufficiente. Controlla che lo starter raddoppi con regolarita, prolunga la bulk finche volume e struttura siano coerenti e aggiungi pieghe nella prima fase se l'impasto resta debole. Se le grandi bolle convivono con zone compatte, e probabile un underproofing ancora piu evidente.",
+    "relatedStepTypes": ["bulk", "fold", "proof"],
+    "relatedStarterStates": ["overdue"]
+  },
+  {
+    "id": "troubleshooting-overproofed",
+    "title": "Pane piatto o collassato",
+    "category": "troubleshooting",
+    "tags": ["overproof", "shape", "proof"],
+    "summary": "Un impasto troppo fermentato perde forza, si allarga e risponde male in forno.",
+    "content": "Se l'impasto e molto molle, l'impronta del poke test non torna indietro e in forno il pane si allarga, il problema puo essere un overproofing. In quel caso conviene accorciare l'appretto, abbassare leggermente l'idratazione o migliorare tensione e supporto in formatura. Un eccesso di acidita nel tempo puo indebolire ulteriormente il glutine.",
+    "relatedStepTypes": ["shape", "proof", "bake"],
+    "relatedStarterStates": []
+  }
+]

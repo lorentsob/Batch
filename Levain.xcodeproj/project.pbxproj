@@ -1,0 +1,735 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		03C65911A6559AA13432B175 /* StarterRefresh.swift in Sources */ = {isa = PBXBuildFile; fileRef = 429113B9EA88560877F6998C /* StarterRefresh.swift */; };
+		043C0DCBBA47ECCC7A940446 /* Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 001EFEEED8D6E87FDA2F265B /* Theme.swift */; };
+		0A238FB1DBE8C1B9BC48AD7F /* Bake.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE05B4A75F3D5DED96A3B7B9 /* Bake.swift */; };
+		0D244B36BB2D2FBD61B00E07 /* Date+Levain.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4FAA5A66043B616FE6D1EEB /* Date+Levain.swift */; };
+		19909D6C120DD64EDE45A9BA /* SectionCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EF66CC37AE507FB215CFF22 /* SectionCard.swift */; };
+		2E8E0532906BFE9F5F6245D7 /* AppRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1230562334B3FE09F3E01E83 /* AppRouter.swift */; };
+		38A739CCAF6D529859D57B4B /* Starter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EAE902CB2D317BA3DD3C564 /* Starter.swift */; };
+		3A81CC4B558FB4DBF018955F /* SeedDataLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9ECE5A0429356DA9B30ED63 /* SeedDataLoader.swift */; };
+		3F9F42BA78F745EE0A1DE5EA /* KnowledgeItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = A061F753EFB622786D154A83 /* KnowledgeItem.swift */; };
+		46883F4ACF02D8FF8668B408 /* LevainApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 031DE41E33A5A47BB92E1B84 /* LevainApp.swift */; };
+		47704AD0CE398C15C49B22E5 /* BakeSchedulerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B39BE3A6D9E872507ECAB51 /* BakeSchedulerTests.swift */; };
+		5CEDD8D761EC4B856818528F /* BakesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EE5E85F03317D648D13FDAA /* BakesView.swift */; };
+		5EB74EA9B640052A5A1D8280 /* AppEnvironment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79D4C487A002E34766EBC3F2 /* AppEnvironment.swift */; };
+		6B3C2EF47615A68D2BCBC14C /* TipGroupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF01B80A376C5C973BD17F65 /* TipGroupView.swift */; };
+		6F7C689E9224FA177FE49E9D /* DateFormattingService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3723F2A4189A29D9018AD0A5 /* DateFormattingService.swift */; };
+		6FB2EAAC65EC1C0350BDCFCB /* DomainEnums.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3CC16D0B45CCF1757437239C /* DomainEnums.swift */; };
+		81D3ED37D019F6565F3BF8B9 /* RootTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5A5E14312B26145E7F011F7 /* RootTabView.swift */; };
+		8F7B429D77A05781C4E826F9 /* LevainUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61243C17854EB5B5F0148C16 /* LevainUITests.swift */; };
+		9D9CDC426195372EFA36C5EA /* KnowledgeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC91495A586F622B67D068BE /* KnowledgeView.swift */; };
+		AC4C1CBFA44C0269CD84573D /* EmptyStateView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB0CD69CAD160F8964E04E38 /* EmptyStateView.swift */; };
+		AFE15E3C2C2B00406C25D6D8 /* ModelContainerFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = BCF69DF1AB4A6F4ADD87ECC4 /* ModelContainerFactory.swift */; };
+		B8315A2AC7FED3BC8B133FD4 /* StarterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A607B35031F3C9AC5098E415 /* StarterView.swift */; };
+		BFE0C3D56CAC5551D58E4F4D /* NotificationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31CB45B80CFC5B3AB74316A6 /* NotificationService.swift */; };
+		C04546EB78A1C4246F029AA8 /* KnowledgeLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9069286C22B79776F290E460 /* KnowledgeLoader.swift */; };
+		C4F8B17586A6584A2537F356 /* BakeScheduler.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3719CAB830F30160F021B55 /* BakeScheduler.swift */; };
+		C5F7D28B986CFB8C2F4C70E2 /* TodayAgendaBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 306A250346AF197F29E21C03 /* TodayAgendaBuilder.swift */; };
+		CFCF408602B7737A42EE82C9 /* TodayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D4D579B87EF9D7EB8FF64CD /* TodayView.swift */; };
+		D648CB0DAD33F1C6464B25B5 /* BakeStep.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B0E89FD9A23FCBB2C7F67DA /* BakeStep.swift */; };
+		DCCEBF31D5C991DFA2894BA6 /* AppSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEAB2C1827C62E47C070528C /* AppSettings.swift */; };
+		E60D19B33CA5F87D9D711D49 /* FormulaStepTemplate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 240767BF4294389BF07F152B /* FormulaStepTemplate.swift */; };
+		E97AB14C622B8A60CD53659F /* StateBadge.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E9AA4021F43AE9655D8F68C /* StateBadge.swift */; };
+		F0344AC31906020B1B9D79ED /* RecipeFormula.swift in Sources */ = {isa = PBXBuildFile; fileRef = B18A695300F304A000928E5A /* RecipeFormula.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		1737CBEFF504E939DED6766C /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D59432CA785EA45B797B449F /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 8E84F0B210E0A11CDE4A5962;
+			remoteInfo = Levain;
+		};
+		ACE63C5ED6551AB7FD601AFC /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D59432CA785EA45B797B449F /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 8E84F0B210E0A11CDE4A5962;
+			remoteInfo = Levain;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		001EFEEED8D6E87FDA2F265B /* Theme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Theme.swift; sourceTree = "<group>"; };
+		031DE41E33A5A47BB92E1B84 /* LevainApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LevainApp.swift; sourceTree = "<group>"; };
+		0EF66CC37AE507FB215CFF22 /* SectionCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SectionCard.swift; sourceTree = "<group>"; };
+		1230562334B3FE09F3E01E83 /* AppRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppRouter.swift; sourceTree = "<group>"; };
+		1EE5E85F03317D648D13FDAA /* BakesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BakesView.swift; sourceTree = "<group>"; };
+		240767BF4294389BF07F152B /* FormulaStepTemplate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FormulaStepTemplate.swift; sourceTree = "<group>"; };
+		2EFA2DE8D87323F11D4B16F3 /* LevainTests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = LevainTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		306A250346AF197F29E21C03 /* TodayAgendaBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodayAgendaBuilder.swift; sourceTree = "<group>"; };
+		31CB45B80CFC5B3AB74316A6 /* NotificationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationService.swift; sourceTree = "<group>"; };
+		3723F2A4189A29D9018AD0A5 /* DateFormattingService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateFormattingService.swift; sourceTree = "<group>"; };
+		3B0E89FD9A23FCBB2C7F67DA /* BakeStep.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BakeStep.swift; sourceTree = "<group>"; };
+		3CC16D0B45CCF1757437239C /* DomainEnums.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DomainEnums.swift; sourceTree = "<group>"; };
+		429113B9EA88560877F6998C /* StarterRefresh.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StarterRefresh.swift; sourceTree = "<group>"; };
+		4D4D579B87EF9D7EB8FF64CD /* TodayView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodayView.swift; sourceTree = "<group>"; };
+		4EAE902CB2D317BA3DD3C564 /* Starter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Starter.swift; sourceTree = "<group>"; };
+		61243C17854EB5B5F0148C16 /* LevainUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LevainUITests.swift; sourceTree = "<group>"; };
+		65564B7A1CCBBD895F8BE550 /* LevainUITests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = LevainUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		79D4C487A002E34766EBC3F2 /* AppEnvironment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppEnvironment.swift; sourceTree = "<group>"; };
+		8B39BE3A6D9E872507ECAB51 /* BakeSchedulerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BakeSchedulerTests.swift; sourceTree = "<group>"; };
+		8E9AA4021F43AE9655D8F68C /* StateBadge.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StateBadge.swift; sourceTree = "<group>"; };
+		9069286C22B79776F290E460 /* KnowledgeLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KnowledgeLoader.swift; sourceTree = "<group>"; };
+		9B4004713422E6E47C0B76CD /* Levain.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = Levain.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		A061F753EFB622786D154A83 /* KnowledgeItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KnowledgeItem.swift; sourceTree = "<group>"; };
+		A4FAA5A66043B616FE6D1EEB /* Date+Levain.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Date+Levain.swift"; sourceTree = "<group>"; };
+		A607B35031F3C9AC5098E415 /* StarterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StarterView.swift; sourceTree = "<group>"; };
+		B18A695300F304A000928E5A /* RecipeFormula.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecipeFormula.swift; sourceTree = "<group>"; };
+		BCF69DF1AB4A6F4ADD87ECC4 /* ModelContainerFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelContainerFactory.swift; sourceTree = "<group>"; };
+		C3719CAB830F30160F021B55 /* BakeScheduler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BakeScheduler.swift; sourceTree = "<group>"; };
+		CEAB2C1827C62E47C070528C /* AppSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppSettings.swift; sourceTree = "<group>"; };
+		D9ECE5A0429356DA9B30ED63 /* SeedDataLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SeedDataLoader.swift; sourceTree = "<group>"; };
+		DB0CD69CAD160F8964E04E38 /* EmptyStateView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmptyStateView.swift; sourceTree = "<group>"; };
+		DC91495A586F622B67D068BE /* KnowledgeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KnowledgeView.swift; sourceTree = "<group>"; };
+		DF01B80A376C5C973BD17F65 /* TipGroupView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TipGroupView.swift; sourceTree = "<group>"; };
+		EE05B4A75F3D5DED96A3B7B9 /* Bake.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Bake.swift; sourceTree = "<group>"; };
+		F5A5E14312B26145E7F011F7 /* RootTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootTabView.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXGroup section */
+		0592DE9A150160B3DCD0215D /* Persistence */ = {
+			isa = PBXGroup;
+			children = (
+				BCF69DF1AB4A6F4ADD87ECC4 /* ModelContainerFactory.swift */,
+				D9ECE5A0429356DA9B30ED63 /* SeedDataLoader.swift */,
+			);
+			path = Persistence;
+			sourceTree = "<group>";
+		};
+		0B9250CBB1117EA21A609C90 /* App */ = {
+			isa = PBXGroup;
+			children = (
+				79D4C487A002E34766EBC3F2 /* AppEnvironment.swift */,
+				1230562334B3FE09F3E01E83 /* AppRouter.swift */,
+				031DE41E33A5A47BB92E1B84 /* LevainApp.swift */,
+			);
+			path = App;
+			sourceTree = "<group>";
+		};
+		22C335AF921E5A350221127A /* Starter */ = {
+			isa = PBXGroup;
+			children = (
+				A607B35031F3C9AC5098E415 /* StarterView.swift */,
+			);
+			path = Starter;
+			sourceTree = "<group>";
+		};
+		2C9B600D6A369C19979105D9 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				9B4004713422E6E47C0B76CD /* Levain.app */,
+				2EFA2DE8D87323F11D4B16F3 /* LevainTests.xctest */,
+				65564B7A1CCBBD895F8BE550 /* LevainUITests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		318FBB62682335488F397DDF /* Knowledge */ = {
+			isa = PBXGroup;
+			children = (
+				DC91495A586F622B67D068BE /* KnowledgeView.swift */,
+			);
+			path = Knowledge;
+			sourceTree = "<group>";
+		};
+		35BE0B3A583C21B9E460935E /* Features */ = {
+			isa = PBXGroup;
+			children = (
+				7800CD9B09FB1F52264B975E /* Bakes */,
+				318FBB62682335488F397DDF /* Knowledge */,
+				A9580A03A39170BE0C418FE3 /* Shared */,
+				22C335AF921E5A350221127A /* Starter */,
+				AE273D162A6F1E335C21B4A0 /* Today */,
+			);
+			path = Features;
+			sourceTree = "<group>";
+		};
+		365C754AB8819569DF2EFE1C /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				C3719CAB830F30160F021B55 /* BakeScheduler.swift */,
+				3723F2A4189A29D9018AD0A5 /* DateFormattingService.swift */,
+				9069286C22B79776F290E460 /* KnowledgeLoader.swift */,
+				31CB45B80CFC5B3AB74316A6 /* NotificationService.swift */,
+				306A250346AF197F29E21C03 /* TodayAgendaBuilder.swift */,
+			);
+			path = Services;
+			sourceTree = "<group>";
+		};
+		37667EEB5A3CDB90E3A6FFE9 /* Levain */ = {
+			isa = PBXGroup;
+			children = (
+				0B9250CBB1117EA21A609C90 /* App */,
+				A99DAF22A7E8AE1E5F63D967 /* DesignSystem */,
+				35BE0B3A583C21B9E460935E /* Features */,
+				96C0161A7B4E177B9FB6A5CB /* Models */,
+				0592DE9A150160B3DCD0215D /* Persistence */,
+				94A1FE6DB1AB7DCCECF2EA08 /* Resources */,
+				365C754AB8819569DF2EFE1C /* Services */,
+			);
+			path = Levain;
+			sourceTree = "<group>";
+		};
+		632408C7CA7F874D37AE66CB /* Components */ = {
+			isa = PBXGroup;
+			children = (
+				DB0CD69CAD160F8964E04E38 /* EmptyStateView.swift */,
+				0EF66CC37AE507FB215CFF22 /* SectionCard.swift */,
+				8E9AA4021F43AE9655D8F68C /* StateBadge.swift */,
+			);
+			path = Components;
+			sourceTree = "<group>";
+		};
+		7800CD9B09FB1F52264B975E /* Bakes */ = {
+			isa = PBXGroup;
+			children = (
+				1EE5E85F03317D648D13FDAA /* BakesView.swift */,
+			);
+			path = Bakes;
+			sourceTree = "<group>";
+		};
+		94A1FE6DB1AB7DCCECF2EA08 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		96C0161A7B4E177B9FB6A5CB /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				CEAB2C1827C62E47C070528C /* AppSettings.swift */,
+				EE05B4A75F3D5DED96A3B7B9 /* Bake.swift */,
+				3B0E89FD9A23FCBB2C7F67DA /* BakeStep.swift */,
+				3CC16D0B45CCF1757437239C /* DomainEnums.swift */,
+				240767BF4294389BF07F152B /* FormulaStepTemplate.swift */,
+				A061F753EFB622786D154A83 /* KnowledgeItem.swift */,
+				B18A695300F304A000928E5A /* RecipeFormula.swift */,
+				4EAE902CB2D317BA3DD3C564 /* Starter.swift */,
+				429113B9EA88560877F6998C /* StarterRefresh.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		A3DD6D36DE95699D228E9086 /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				A4FAA5A66043B616FE6D1EEB /* Date+Levain.swift */,
+			);
+			path = Extensions;
+			sourceTree = "<group>";
+		};
+		A9580A03A39170BE0C418FE3 /* Shared */ = {
+			isa = PBXGroup;
+			children = (
+				F5A5E14312B26145E7F011F7 /* RootTabView.swift */,
+				DF01B80A376C5C973BD17F65 /* TipGroupView.swift */,
+			);
+			path = Shared;
+			sourceTree = "<group>";
+		};
+		A99DAF22A7E8AE1E5F63D967 /* DesignSystem */ = {
+			isa = PBXGroup;
+			children = (
+				001EFEEED8D6E87FDA2F265B /* Theme.swift */,
+				632408C7CA7F874D37AE66CB /* Components */,
+				A3DD6D36DE95699D228E9086 /* Extensions */,
+			);
+			path = DesignSystem;
+			sourceTree = "<group>";
+		};
+		AE273D162A6F1E335C21B4A0 /* Today */ = {
+			isa = PBXGroup;
+			children = (
+				4D4D579B87EF9D7EB8FF64CD /* TodayView.swift */,
+			);
+			path = Today;
+			sourceTree = "<group>";
+		};
+		B3BF4A0C44EBFB4B87539F1E /* LevainTests */ = {
+			isa = PBXGroup;
+			children = (
+				8B39BE3A6D9E872507ECAB51 /* BakeSchedulerTests.swift */,
+			);
+			path = LevainTests;
+			sourceTree = "<group>";
+		};
+		D9040A503A128437022B7221 = {
+			isa = PBXGroup;
+			children = (
+				37667EEB5A3CDB90E3A6FFE9 /* Levain */,
+				B3BF4A0C44EBFB4B87539F1E /* LevainTests */,
+				F67E58725427705472812B5B /* LevainUITests */,
+				2C9B600D6A369C19979105D9 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		F67E58725427705472812B5B /* LevainUITests */ = {
+			isa = PBXGroup;
+			children = (
+				61243C17854EB5B5F0148C16 /* LevainUITests.swift */,
+			);
+			path = LevainUITests;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		00849C44FA575554ED75F76A /* LevainTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 20FBC63F35D5A51F5E164A59 /* Build configuration list for PBXNativeTarget "LevainTests" */;
+			buildPhases = (
+				CD51E1E68A772BAC33FD850F /* Sources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				4C24A1508DC2DA87436A2A18 /* PBXTargetDependency */,
+			);
+			name = LevainTests;
+			packageProductDependencies = (
+			);
+			productName = LevainTests;
+			productReference = 2EFA2DE8D87323F11D4B16F3 /* LevainTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		3B49ED6DA58469A7F9B8E54F /* LevainUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = FE811F39AB7271570FA6068E /* Build configuration list for PBXNativeTarget "LevainUITests" */;
+			buildPhases = (
+				7718BD617C4F314C171F4DBA /* Sources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				E1A26A222635BA6D23E4C9DF /* PBXTargetDependency */,
+			);
+			name = LevainUITests;
+			packageProductDependencies = (
+			);
+			productName = LevainUITests;
+			productReference = 65564B7A1CCBBD895F8BE550 /* LevainUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
+		8E84F0B210E0A11CDE4A5962 /* Levain */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = DD1ACBBD224220D3A897FAB2 /* Build configuration list for PBXNativeTarget "Levain" */;
+			buildPhases = (
+				DABB43DC2407CACC4A51B9AF /* Sources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = Levain;
+			packageProductDependencies = (
+			);
+			productName = Levain;
+			productReference = 9B4004713422E6E47C0B76CD /* Levain.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		D59432CA785EA45B797B449F /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = YES;
+				LastUpgradeCheck = 1430;
+				TargetAttributes = {
+					00849C44FA575554ED75F76A = {
+						DevelopmentTeam = "";
+					};
+					3B49ED6DA58469A7F9B8E54F = {
+						DevelopmentTeam = "";
+						TestTargetID = 8E84F0B210E0A11CDE4A5962;
+					};
+					8E84F0B210E0A11CDE4A5962 = {
+						DevelopmentTeam = "";
+						ProvisioningStyle = Automatic;
+					};
+				};
+			};
+			buildConfigurationList = EF84E45622C51C9F15998F15 /* Build configuration list for PBXProject "Levain" */;
+			compatibilityVersion = "Xcode 14.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				Base,
+				en,
+			);
+			mainGroup = D9040A503A128437022B7221;
+			minimizedProjectReferenceProxies = 1;
+			preferredProjectObjectVersion = 77;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				8E84F0B210E0A11CDE4A5962 /* Levain */,
+				00849C44FA575554ED75F76A /* LevainTests */,
+				3B49ED6DA58469A7F9B8E54F /* LevainUITests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXSourcesBuildPhase section */
+		7718BD617C4F314C171F4DBA /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				8F7B429D77A05781C4E826F9 /* LevainUITests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		CD51E1E68A772BAC33FD850F /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				47704AD0CE398C15C49B22E5 /* BakeSchedulerTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		DABB43DC2407CACC4A51B9AF /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5EB74EA9B640052A5A1D8280 /* AppEnvironment.swift in Sources */,
+				2E8E0532906BFE9F5F6245D7 /* AppRouter.swift in Sources */,
+				DCCEBF31D5C991DFA2894BA6 /* AppSettings.swift in Sources */,
+				0A238FB1DBE8C1B9BC48AD7F /* Bake.swift in Sources */,
+				C4F8B17586A6584A2537F356 /* BakeScheduler.swift in Sources */,
+				D648CB0DAD33F1C6464B25B5 /* BakeStep.swift in Sources */,
+				5CEDD8D761EC4B856818528F /* BakesView.swift in Sources */,
+				0D244B36BB2D2FBD61B00E07 /* Date+Levain.swift in Sources */,
+				6F7C689E9224FA177FE49E9D /* DateFormattingService.swift in Sources */,
+				6FB2EAAC65EC1C0350BDCFCB /* DomainEnums.swift in Sources */,
+				AC4C1CBFA44C0269CD84573D /* EmptyStateView.swift in Sources */,
+				E60D19B33CA5F87D9D711D49 /* FormulaStepTemplate.swift in Sources */,
+				3F9F42BA78F745EE0A1DE5EA /* KnowledgeItem.swift in Sources */,
+				C04546EB78A1C4246F029AA8 /* KnowledgeLoader.swift in Sources */,
+				9D9CDC426195372EFA36C5EA /* KnowledgeView.swift in Sources */,
+				46883F4ACF02D8FF8668B408 /* LevainApp.swift in Sources */,
+				AFE15E3C2C2B00406C25D6D8 /* ModelContainerFactory.swift in Sources */,
+				BFE0C3D56CAC5551D58E4F4D /* NotificationService.swift in Sources */,
+				F0344AC31906020B1B9D79ED /* RecipeFormula.swift in Sources */,
+				81D3ED37D019F6565F3BF8B9 /* RootTabView.swift in Sources */,
+				19909D6C120DD64EDE45A9BA /* SectionCard.swift in Sources */,
+				3A81CC4B558FB4DBF018955F /* SeedDataLoader.swift in Sources */,
+				38A739CCAF6D529859D57B4B /* Starter.swift in Sources */,
+				03C65911A6559AA13432B175 /* StarterRefresh.swift in Sources */,
+				B8315A2AC7FED3BC8B133FD4 /* StarterView.swift in Sources */,
+				E97AB14C622B8A60CD53659F /* StateBadge.swift in Sources */,
+				043C0DCBBA47ECCC7A940446 /* Theme.swift in Sources */,
+				6B3C2EF47615A68D2BCBC14C /* TipGroupView.swift in Sources */,
+				C5F7D28B986CFB8C2F4C70E2 /* TodayAgendaBuilder.swift in Sources */,
+				CFCF408602B7737A42EE82C9 /* TodayView.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		4C24A1508DC2DA87436A2A18 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 8E84F0B210E0A11CDE4A5962 /* Levain */;
+			targetProxy = ACE63C5ED6551AB7FD601AFC /* PBXContainerItemProxy */;
+		};
+		E1A26A222635BA6D23E4C9DF /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 8E84F0B210E0A11CDE4A5962 /* Levain */;
+			targetProxy = 1737CBEFF504E939DED6766C /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		038426A9FA08E67981A3E3E8 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_STYLE = Automatic;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.lorentso.levain;
+				PRODUCT_NAME = Levain;
+				SDKROOT = iphoneos;
+				SUPPORTS_MACCATALYST = NO;
+				SWIFT_STRICT_CONCURRENCY = complete;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Release;
+		};
+		39937235DED4A116A278EC45 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.lorentso.levain.uitests;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = Levain;
+			};
+			name = Release;
+		};
+		4FDFD5A8A339160269B08DC1 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = "";
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"DEBUG=1",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MARKETING_VERSION = 0.1.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 6.0;
+			};
+			name = Debug;
+		};
+		62974A38A1B1B51FAE8126E0 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.lorentso.levain.tests;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Levain.app/Levain";
+			};
+			name = Release;
+		};
+		6F5389B6660AF16C65EECFBC /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.lorentso.levain.uitests;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = Levain;
+			};
+			name = Debug;
+		};
+		812FD5FB237ECB75004C46F9 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = "";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MARKETING_VERSION = 0.1.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 6.0;
+			};
+			name = Release;
+		};
+		DAE20842ADBD7B5D03D167BF /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.lorentso.levain.tests;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Levain.app/Levain";
+			};
+			name = Debug;
+		};
+		EBF0F5A9A2C35D7D125CF900 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_STYLE = Automatic;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.lorentso.levain;
+				PRODUCT_NAME = Levain;
+				SDKROOT = iphoneos;
+				SUPPORTS_MACCATALYST = NO;
+				SWIFT_STRICT_CONCURRENCY = complete;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Debug;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		20FBC63F35D5A51F5E164A59 /* Build configuration list for PBXNativeTarget "LevainTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				DAE20842ADBD7B5D03D167BF /* Debug */,
+				62974A38A1B1B51FAE8126E0 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		DD1ACBBD224220D3A897FAB2 /* Build configuration list for PBXNativeTarget "Levain" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				EBF0F5A9A2C35D7D125CF900 /* Debug */,
+				038426A9FA08E67981A3E3E8 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		EF84E45622C51C9F15998F15 /* Build configuration list for PBXProject "Levain" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				4FDFD5A8A339160269B08DC1 /* Debug */,
+				812FD5FB237ECB75004C46F9 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		FE811F39AB7271570FA6068E /* Build configuration list for PBXNativeTarget "LevainUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				6F5389B6660AF16C65EECFBC /* Debug */,
+				39937235DED4A116A278EC45 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = D59432CA785EA45B797B449F /* Project object */;
+}

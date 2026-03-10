@@ -1,0 +1,69 @@
+name: Levain
+options:
+  createIntermediateGroups: true
+settings:
+  base:
+    MARKETING_VERSION: 0.1.0
+    CURRENT_PROJECT_VERSION: 1
+    SWIFT_VERSION: 6.0
+    DEVELOPMENT_TEAM: ""
+targets:
+  Levain:
+    type: application
+    platform: iOS
+    deploymentTarget: "26.0"
+    sources:
+      - path: Levain
+        excludes:
+          - Resources/knowledge.json
+          - Assets.xcassets
+    resources:
+      - path: Levain/Resources
+      - path: Levain/Assets.xcassets
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.lorentso.levain
+        PRODUCT_NAME: Levain
+        GENERATE_INFOPLIST_FILE: YES
+        SWIFT_STRICT_CONCURRENCY: complete
+        SUPPORTS_MACCATALYST: NO
+        TARGETED_DEVICE_FAMILY: 1
+        ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME: AccentColor
+        CODE_SIGN_STYLE: Automatic
+  LevainTests:
+    type: bundle.unit-test
+    platform: iOS
+    deploymentTarget: "26.0"
+    sources:
+      - path: LevainTests
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.lorentso.levain.tests
+        GENERATE_INFOPLIST_FILE: YES
+    dependencies:
+      - target: Levain
+  LevainUITests:
+    type: bundle.ui-testing
+    platform: iOS
+    deploymentTarget: "26.0"
+    sources:
+      - path: LevainUITests
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.lorentso.levain.uitests
+        GENERATE_INFOPLIST_FILE: YES
+        TEST_TARGET_NAME: Levain
+    dependencies:
+      - target: Levain
+schemes:
+  Levain:
+    build:
+      targets:
+        Levain: all
+        LevainTests: [test]
+        LevainUITests: [test]
+    test:
+      targets:
+        - name: LevainTests
+        - name: LevainUITests
+          randomExecutionOrder: true

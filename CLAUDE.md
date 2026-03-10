@@ -1,0 +1,329 @@
+# CLAUDE.md — Lievito App
+
+This file is the single source of context for AI-assisted development of the Lievito App. It is derived from `lievito-app-prd-complete-v2.md`, the `.planning/` folder, and the current state of the codebase.
+
+---
+
+## What This App Is
+
+A **native iPhone-only planner** for sourdough starter management and real-world baking execution. The central question the app must answer at all times is: **"What do I need to do now?"**
+
+This is **not** a recipe manager, not a social app, not an AI assistant. It is a focused operational tool for one person.
+
+---
+
+## Platform & Stack
+
+| Concern | Choice |
+|---|---|
+| Platform | iPhone only — no iPad, no Mac Catalyst |
+| OS target | iOS 26 minimum (acceptable for personal/internal use) |
+| Language | Swift 6.0 (`SWIFT_STRICT_CONCURRENCY: complete`) |
+| UI | SwiftUI |
+| Persistence | SwiftData (`@Model`) |
+| Notifications | UserNotifications — local only |
+| Knowledge content | Bundled JSON (`Resources/knowledge.json`) |
+| Third-party libs | None — Apple-native only |
+| Backend | None |
+| Auth | None |
+| Cloud sync | None |
+
+Bundle ID: `com.lorentso.lievito`
+Product name: `Lievito`
+Version: `0.1.0`
+
+---
+
+## Project Structure
+
+```
+LievitoApp/
+├── App/
+│   ├── LievitoApp.swift          # @main entry, injects container + environment
+│   ├── AppRouter.swift           # Navigation / deep-link routing
+│   └── AppEnvironment.swift      # ObservableObject: NotificationService, KnowledgeLibrary
+├── Models/
+│   ├── Starter.swift
+│   ├── StarterRefresh.swift
+│   ├── RecipeFormula.swift
+│   ├── FormulaStepTemplate.swift
+│   ├── Bake.swift
+│   ├── BakeStep.swift
+│   ├── KnowledgeItem.swift       # Codable only, not SwiftData
+│   ├── AppSettings.swift
+│   └── DomainEnums.swift         # BakeType, StepStatus, BakeStepType, etc.
+├── Features/
+│   ├── Today/         TodayView.swift
+│   ├── Bakes/         BakesView.swift
+│   ├── Starter/       StarterView.swift
+│   ├── Knowledge/     KnowledgeView.swift
+│   └── Shared/        RootTabView.swift
+├── Services/
+│   ├── NotificationService.swift
+│   ├── BakeScheduler.swift
+│   ├── KnowledgeLoader.swift      # → KnowledgeLibrary
+│   ├── DateFormattingService.swift
+│   └── TodayAgendaBuilder.swift
+├── Persistence/
+│   ├── ModelContainerFactory.swift
+│   └── SeedDataLoader.swift
+├── Resources/
+│   └── knowledge.json
+└── DesignSystem/
+    ├── Theme.swift
+    ├── Components/
+    │   ├── EmptyStateView.swift
+    │   ├── SectionCard.swift
+    │   └── StateBadge.swift
+    └── Extensions/
+        └── Date+Lievito.swift
+```
+
+Also in repo root:
+- `project.yml` — XcodeGen spec
+- `lievito-knowledge.md` — editorial source for knowledge.json
+- `.planning/` — roadmap, requirements, state, phase plans
+
+---
+
+## Navigation
+
+Four-tab structure (defined in `RootTabView.swift`):
+
+1. **Today** — operational home, action-first
+2. **Bakes** — bake list and detail
+3. **Starter** — starter management
+4. **Knowledge** — lightweight browse tab
+
+---
+
+## Data Model
+
+### SwiftData entities (persisted)
+
+#### Starter
+Fields: `name`, `type`, `hydration`, `flourMix`, `containerWeight`, `storageMode`, `refreshIntervalDays`, `remindersEnabled`, `lastRefresh`, `notes`
+Relationships: → many `StarterRefresh`, → many `Bake`
+
+Derived UI state (computed, not persisted):
+- `ok` — refreshed within interval
+- `due today` — due date is today
+- `overdue` — past due date
+
+#### StarterRefresh
+Fields: `starterId`, `dateTime`, `flourWeight`, `waterWeight`, `starterWeightUsed`, `ratioText`, `putInFridgeAt`, `notes`
+Advanced (optional): `ambientTemp`, `photoUri`
+
+#### RecipeFormula
+Fields: `id`, `name`, `type`, `totalFlourWeight`, `totalWaterWeight`, `hydrationPercent`, `saltWeight`, `saltPercent`, `inoculationPercent`, `servings`, `notes`, `flourMix`
+Relationship: → many `FormulaStepTemplate` (cascade delete), → many `Bake`
+
+#### FormulaStepTemplate
+The editable default step list inside a formula. Used to generate `BakeStep` instances when creating a bake.
+
+#### Bake
+Fields: `id`, `name`, `typeRaw`, `dateCreated`, `targetBakeDateTime`, `inoculationPercent`, `totalFlourWeight`, `totalWaterWeight`, `totalDoughWeight`, `hydrationPercent`, `servings`, `notes`, `isCancelled`
+Relationships: `formula: RecipeFormula?`, `starter: Starter?`, `steps: [BakeStep]` (cascade delete)
+
+Derived status (computed from steps):
+```
+cancelled   → isCancelled == true
+completed   → all steps .done or .skipped (and non-empty)
+in_progress → any step is .running OR has actualStart
+planned     → default
+```
+
+#### BakeStep
+Fields: `id`, `orderIndex`, `typeRaw`, `nameOverride`, `descriptionText`, `plannedStart`, `plannedDurationMinutes`, `flexibleWindowStart?`, `flexibleWindowEnd?`, `actualStart?`, `actualEnd?`, `reminderOffsetMinutes`, `temperatureRange`, `volumeTarget`, `statusRaw`, `notes`, `photoURI`
+Relationship: `bake: Bake?`
+
+Step status values: `pending | running | done | skipped`
+
+Critical rules:
+- Steps **never auto-complete** — the user controls state
+- `overdue` / `late` is a **derived UI label** only, not a persisted status
+- `actualStart` and `actualEnd` are stored separately from planned values
+- `.start()`, `.complete()`, `.skip()` are convenience mutators on the model
+
+#### AppSettings
+Global preferences — persisted via SwiftData.
+
+### Non-persisted
+
+#### KnowledgeItem (Codable only)
+Loaded from `knowledge.json` at runtime by `KnowledgeLibrary`. Fields: `id`, `title`, `category`, `tags`, `summary`, `content`, `relatedStepTypes`, `relatedStarterStates`.
+
+---
+
+## Core Enums (DomainEnums.swift)
+
+- `BakeType` — type of bake (e.g., `.paneBase`, `.focaccia`, `.custom`)
+- `StepStatus` — `.pending`, `.running`, `.done`, `.skipped`
+- `BakeStepType` — named step types (`.autolyse`, `.bulkFermentation`, `.shaping`, `.baking`, `.custom`, etc.) each with a `.title` string
+- Storage mode for starters
+
+---
+
+## Services
+
+### BakeScheduler
+Generates `BakeStep` instances from a `RecipeFormula` working **backward** from `targetBakeDateTime`. Also handles **timeline shifting**: moves `plannedStart` forward on all future non-terminal steps by a given number of minutes.
+
+### NotificationService
+Schedules and cancels local `UNNotificationRequest` entries:
+- Step reminders (fire at `plannedStart - reminderOffsetMinutes`)
+- Starter due reminders (fire on due date, +1 day follow-up if still overdue)
+- Must reschedule on every timeline shift
+- Notification tap → deep-link into correct bake or starter via `AppRouter`
+
+### TodayAgendaBuilder
+Aggregates and prioritizes items for the Today view:
+1. Now / overdue items
+2. Upcoming steps today
+3. Starter refreshes due
+4. Later / tomorrow
+
+### KnowledgeLoader / KnowledgeLibrary
+Reads `knowledge.json` from the app bundle. Exposed as `AppEnvironment.knowledgeLibrary`.
+
+### DateFormattingService
+Shared date/time formatting utilities used across views.
+
+---
+
+## Key Product Behaviors
+
+### Step execution flow
+1. Step starts as `.pending`
+2. Tap **Start** → `.running`, `actualStart` recorded
+3. Tap **Complete** → `.done`, `actualEnd` recorded
+4. Tap **Skip** → `.skipped`
+5. If time has elapsed but step not completed → show "overdue" UI label; status stays `.pending`
+
+### Timeline shift
+From any step: user picks `+15 min`, `+30 min`, `+1h`, or `Custom`.
+Effect: shifts `plannedStart` of all **future, non-terminal** steps.
+After shift: `NotificationService` must **reschedule** affected notifications.
+
+### Bake creation from formula
+1. Pick formula
+2. Set `targetBakeDateTime`
+3. Optionally link a starter
+4. `BakeScheduler` generates steps backward from target time using formula's `defaultSteps`
+5. User can edit the resulting schedule before confirming
+
+### Starter reminder logic
+`dueDate = lastRefresh + refreshIntervalDays`
+- Schedule notification for due date
+- If no refresh logged by next day → schedule follow-up notification
+- Both notifications are cancelled and rescheduled whenever `lastRefresh` changes
+
+---
+
+## UX Principles
+
+- **Action-first, not dashboard-first** — every screen surfaces the next action
+- **One primary action per step card** — Start / Complete / View details / Shift timeline
+- **Progressive disclosure** — secondary and advanced fields live in expandable sections or detail screens; never in the core flow
+- **Minimal onboarding** — first launch shows: `New bake` CTA, `Add starter` secondary CTA, `Explore tips` tertiary CTA
+- **Italian-first** — labels, seed data, and knowledge content are in Italian for MVP
+
+---
+
+## Architecture Rules
+
+- **No heavy patterns** — no VIPER, no Combine pipelines, no elaborate DI containers
+- **Folder-by-feature** for Views; **flat Models/** for data; **Services/** for logic
+- **@MainActor** on `AppEnvironment` and services that update UI
+- **SwiftData queries** done at the view level with `@Query` or passed down via environment
+- **No runtime state machines** — derive status from data fields; never persist redundant computed state
+- **Keep AI-generated code predictable** — one clear responsibility per file; avoid clever abstractions
+
+---
+
+## Roadmap & Current Status
+
+8 phases, currently at **Phase 1 — Foundation App Shell** (in progress, 0/3 plans complete).
+
+| # | Phase | Status |
+|---|---|---|
+| 1 | Foundation App Shell | 🔄 In progress |
+| 2 | Domain Scheduling | ⬜ Not started |
+| 3 | Formula Authoring | ⬜ Not started |
+| 4 | Bake Creation & Execution | ⬜ Not started |
+| 5 | Today & Notifications | ⬜ Not started |
+| 6 | Starter Management | ⬜ Not started |
+| 7 | Knowledge & Tips | ⬜ Not started |
+| 8 | Hardening & UAT | ⬜ Not started |
+
+Phase 1 plans:
+- `01-01`: Workspace bootstrap and repository setup
+- `01-02`: Persistence and environment shell
+- `01-03`: Navigation and design system skeleton
+
+See `.planning/phases/` for detailed plan files per phase.
+
+---
+
+## What Is Already Implemented (Phase 1 scaffold)
+
+All files exist but views are stubs. The following is production-quality scaffold:
+
+- `LievitoApp.swift` — `@main`, injects `ModelContainer` + `AppEnvironment` + `AppRouter`
+- `AppEnvironment.swift` — holds `NotificationService` and `KnowledgeLibrary`
+- `ModelContainerFactory.swift` — creates the SwiftData container
+- All `@Model` classes in `Models/` — `Bake`, `BakeStep`, `Starter`, `StarterRefresh`, `RecipeFormula`, `FormulaStepTemplate`, `AppSettings`
+- `DomainEnums.swift` — all shared enums
+- `Services/` — `BakeScheduler`, `NotificationService`, `TodayAgendaBuilder`, `KnowledgeLoader`, `DateFormattingService` (scaffolded)
+- `DesignSystem/` — `Theme.swift`, `EmptyStateView`, `SectionCard`, `StateBadge`, `Date+Lievito`
+- `Features/Shared/RootTabView.swift` — four-tab structure
+- Stub views for Today, Bakes, Starter, Knowledge
+- `SeedDataLoader.swift`
+- `knowledge.json` (in Resources)
+- `project.yml` (XcodeGen)
+
+---
+
+## Working with This Codebase (AI Instructions)
+
+1. **Read this file AND `UX-SPEC.md` before starting any UI task.** They are the joint canonical context.
+2. **Generate feature by feature.** Do not attempt to generate the entire app in one pass.
+3. **Never change model names or field names without noting it here.** Model stability is critical for SwiftData migrations.
+4. **Always check the current phase.** Only implement what the current phase requires — see `.planning/STATE.md` and `.planning/phases/`.
+5. **Derive, don't persist derived state.** Never store computed fields that can be recalculated from the raw model.
+6. **Keep views lean.** Logic goes in Services or model methods, not in SwiftUI body closures.
+7. **Use `@Query` at the top view level** and pass data down — avoid issuing queries deep in the hierarchy.
+8. **After any timeline shift**, always call `NotificationService` to reschedule notifications.
+9. **Timers are UI helpers only** — reliability with app closed comes from persisted data + local notifications.
+10. **Advanced fields** (temperatureRange, volumeTarget, photoURI, ambientTemp, etc.) must live behind expandable sections or detail screens — never visible in the primary flow.
+
+---
+
+## Out of Scope (Do Not Implement)
+
+- Backend, server, or API of any kind
+- Cloud sync or iCloud
+- Authentication
+- iPad layout
+- Third-party libraries
+- AI-generated baking suggestions
+- Social or sharing features
+- Rich photo journaling as a primary flow
+- Bake `rating` field (removed from MVP)
+- Automatic step completion based on timer expiry
+
+---
+
+## Reference Files
+
+| File | Purpose |
+|---|---|
+| `lievito-app-prd-complete-v2.md` | Full product spec — source of truth for scope |
+| `UX-SPEC.md` | **Screen-by-screen UX specification** — layout, components, states, flows |
+| `lievito-knowledge.md` | Editorial source for `knowledge.json` |
+| `.planning/PROJECT.md` | Project overview and key decisions |
+| `.planning/ROADMAP.md` | Full 8-phase roadmap with phase details |
+| `.planning/REQUIREMENTS.md` | Traceable v1 requirements (FORM-xx, BAKE-xx, STEP-xx…) |
+| `.planning/STATE.md` | Current phase, progress metrics, blockers |
+| `.planning/config.json` | Workflow configuration |
+| `.planning/phases/` | Per-phase plan detail folders |

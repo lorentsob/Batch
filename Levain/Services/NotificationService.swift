@@ -1,0 +1,124 @@
+import Foundation
+import SwiftData
+import UserNotifications
+
+@MainActor
+final class NotificationService: NSObject, ObservableObject, UNUserNotificationCenterDelegate {
+    @Published var pendingURL: URL?
+
+    private let center = UNUserNotificationCenter.current()
+
+    override init() {
+        super.init()
+        center.delegate = self
+    }
+
+    func requestAuthorizationIfNeeded(settings: AppSettings?) async {
+        guard settings?.hasRequestedNotificationPermission != true else { return }
+        _ = try? await center.requestAuthorization(options: [.alert, .badge, .sound])
+        settings?.hasRequestedNotificationPermission = true
+    }
+
+    func resyncAll(using modelContext: ModelContext) async {
+        let bakes = (try? modelContext.fetch(FetchDescriptor<Bake>())) ?? []
+        let starters = (try? modelContext.fetch(FetchDescriptor<Starter>())) ?? []
+        for bake in bakes { await syncNotifications(for: bake) }
+        for starter in starters { await syncNotifications(for: starter) }
+    }
+
+    func syncNotifications(for bake: Bake) async {
+        let identifiers = bake.steps.map { stepIdentifier(bakeID: bake.id, stepID: $0.id) }
+        center.removePendingNotificationRequests(withIdentifiers: identifiers)
+
+        for step in bake.sortedSteps where step.isTerminal == false {
+            let fireDate = step.plannedStart.adding(minutes: -step.reminderOffsetMinutes)
+            guard fireDate > .now else { continue }
+
+            let content = UNMutableNotificationContent()
+            content.title = "\(step.displayName) · \(bake.name)"
+            content.body = step.status == .running
+                ? "Lo step è in corso."
+                : "È il momento di controllare questo passaggio."
+            content.sound = .default
+            content.userInfo["route"] = "levain://bake/\(bake.id.uuidString)"
+
+            try? await center.add(
+                UNNotificationRequest(
+                    identifier: stepIdentifier(bakeID: bake.id, stepID: step.id),
+                    content: content,
+                    trigger: UNCalendarNotificationTrigger(
+                        dateMatching: Calendar.current.dateComponents([.year, .month, .day, .hour, .minute], from: fireDate),
+                        repeats: false
+                    )
+                )
+            )
+        }
+    }
+
+    func syncNotifications(for starter: Starter) async {
+        let identifiers = [dueIdentifier(starter.id), followUpIdentifier(starter.id)]
+        center.removePendingNotificationRequests(withIdentifiers: identifiers)
+        guard starter.remindersEnabled else { return }
+
+        let due = starter.nextDueDate.settingTime(hour: 9, minute: 0)
+        let followUp = due.adding(minutes: 24 * 60)
+
+        let dueContent = UNMutableNotificationContent()
+        dueContent.title = starter.name
+        dueContent.body = "Rinfresco previsto oggi."
+        dueContent.sound = .default
+        dueContent.userInfo["route"] = "levain://starter/\(starter.id.uuidString)"
+
+        try? await center.add(
+            UNNotificationRequest(
+                identifier: dueIdentifier(starter.id),
+                content: dueContent,
+                trigger: UNCalendarNotificationTrigger(
+                    dateMatching: Calendar.current.dateComponents([.year, .month, .day, .hour, .minute], from: due),
+                    repeats: false
+                )
+            )
+        )
+
+        let followUpContent = UNMutableNotificationContent()
+        followUpContent.title = starter.name
+        followUpContent.body = "Ancora nessun rinfresco registrato."
+        followUpContent.sound = .default
+        followUpContent.userInfo["route"] = "levain://starter/\(starter.id.uuidString)"
+
+        try? await center.add(
+            UNNotificationRequest(
+                identifier: followUpIdentifier(starter.id),
+                content: followUpContent,
+                trigger: UNCalendarNotificationTrigger(
+                    dateMatching: Calendar.current.dateComponents([.year, .month, .day, .hour, .minute], from: followUp),
+                    repeats: false
+                )
+            )
+        )
+    }
+
+    nonisolated func userNotificationCenter(
+        _ center: UNUserNotificationCenter,
+        willPresent notification: UNNotification
+    ) async -> UNNotificationPresentationOptions {
+        [.banner, .sound]
+    }
+
+    nonisolated func userNotificationCenter(
+        _ center: UNUserNotificationCenter,
+        didReceive response: UNNotificationResponse
+    ) async {
+        guard let route = response.notification.request.content.userInfo["route"] as? String,
+              let url = URL(string: route) else { return }
+        await MainActor.run { pendingURL = url }
+    }
+
+    private func stepIdentifier(bakeID: UUID, stepID: UUID) -> String {
+        "bake-\(bakeID.uuidString)-\(stepID.uuidString)"
+    }
+
+    private func dueIdentifier(_ id: UUID) -> String { "starter-due-\(id.uuidString)" }
+    private func followUpIdentifier(_ id: UUID) -> String { "starter-followup-\(id.uuidString)" }
+}
+
