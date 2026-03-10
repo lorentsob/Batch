@@ -2,7 +2,7 @@
 
 ## Overview
 
-The roadmap moves from a native iPhone foundation into core baking logic, then adds formula authoring, bake execution, operational Today workflows, starter management, bundled knowledge, and final hardening for internal testing. Each phase delivers a coherent slice that can be validated on-device without requiring backend infrastructure.
+The roadmap moves from a native iPhone foundation into core baking logic, then adds formula authoring, bake execution, operational Today workflows, starter management, bundled knowledge, and final hardening for internal testing. A final delivery phase then audits v1 readiness and adds CI/CD so build confidence and release-candidate creation stop depending on local-only manual repetition. Each phase delivers a coherent slice that can be validated on-device without requiring backend infrastructure.
 
 ## Phases
 
@@ -14,6 +14,7 @@ The roadmap moves from a native iPhone foundation into core baking logic, then a
 - [x] **Phase 6: Starter Management** - Add starter CRUD, refresh logging, and due-state reminders.
 - [x] **Phase 7: Knowledge Tips** - Bundle static knowledge, browse it, and surface contextual tips.
 - [ ] **Phase 8: Hardening UAT** - Finish tests, empty states, internal-seed polish, and release readiness.
+- [ ] **Phase 9: v1 Audit CI/CD** - Audit v1 readiness, automate CI, and add controlled release delivery.
 
 ## Phase Details
 
@@ -132,14 +133,29 @@ Plans:
 **Plans**: 3 plans
 
 Plans:
-- [ ] 08-01: UI and unit test completion
-- [ ] 08-02: Empty states and internal polish
-- [ ] 08-03: Release-readiness verification
+- [x] 08-01: UI and unit test completion
+- [x] 08-02: Empty states and internal polish
+- [x] 08-03: Release-readiness verification
 
-## Progress: [████████░░] 87.5%
+### Phase 9: v1 Audit CI/CD
+**Goal**: Convert internal-release confidence into a repeatable v1 audit and delivery workflow.
+**Depends on**: Phase 8
+**Requirements**: [QUAL-05, QUAL-06, QUAL-07]
+**Success Criteria**:
+  1. A written v1 audit captures requirement coverage, manual test results, and explicit residual risks.
+  2. CI runs deterministic build and agreed automated test suites on repository changes with debuggable artifacts.
+  3. CD can produce a controlled release candidate or TestFlight-ready build with documented secrets and operator steps.
+**Plans**: 3 plans
+
+Plans:
+- [ ] 09-01: Final audit baseline and release checklist
+- [ ] 09-02: Continuous integration workflow
+- [ ] 09-03: Delivery automation and release runbook
+
+## Progress: [█████████░] 88.9%
 
 **Execution Order:**
-Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6 → 7 → 8
+Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6 → 7 → 8 → 9
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
@@ -150,4 +166,5 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6 → 7 → 8
 | 5. Today Notifications | 3/3 | Complete | 2026-03-10 |
 | 6. Starter Management | 3/3 | Complete | 2026-03-10 |
 | 7. Knowledge Tips | 3/3 | Complete | 2026-03-10 |
-| 8. Hardening UAT | 0/3 | Planned | 2026-03-10 |
+| 8. Hardening UAT | 3/3 | Complete | 2026-03-10 |
+| 9. v1 Audit CI/CD | 0/3 | Planned | 2026-03-10 |

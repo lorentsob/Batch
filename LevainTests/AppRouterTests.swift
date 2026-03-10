@@ -67,4 +67,48 @@ struct AppRouterTests {
         #expect(router.selectedTab == .today) // default tab
         #expect(router.bakesPath.isEmpty)
     }
+
+    @Test("AppRouter silently ignores unknown host — safe fallback for missing routes")
+    func testUnknownHostNoOp() {
+        let router = AppRouter()
+        let url = URL(string: "levain://unknown-entity/some-id")!
+
+        router.open(url: url)
+
+        // State must remain at default — no crash, no navigation
+        #expect(router.selectedTab == .today)
+        #expect(router.bakesPath.isEmpty)
+        #expect(router.starterPath.isEmpty)
+        #expect(router.knowledgePath.isEmpty)
+    }
+
+    @Test("AppRouter parses formula deep link correctly")
+    func testFormulaDeepLink() {
+        let router = AppRouter()
+        let id = UUID()
+        let url = URL(string: "levain://formula/\(id.uuidString)")!
+
+        router.open(url: url)
+
+        // Formula host resolves to bakes tab via openFormula
+        #expect(router.selectedTab == .bakes)
+        #expect(router.bakesPath.count == 1)
+        if case .formula(let parsedID) = router.bakesPath.first {
+            #expect(parsedID == id)
+        } else {
+            Issue.record("Expected formula route")
+        }
+    }
+
+    @Test("AppRouter ignores malformed UUID in bake URL — missing entity fails safely")
+    func testMalformedUUIDIgnored() {
+        let router = AppRouter()
+        let url = URL(string: "levain://bake/not-a-valid-uuid")!
+
+        router.open(url: url)
+
+        // Malformed UUID must not change navigation state
+        #expect(router.selectedTab == .today)
+        #expect(router.bakesPath.isEmpty)
+    }
 }

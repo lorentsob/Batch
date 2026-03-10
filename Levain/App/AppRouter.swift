@@ -55,6 +55,10 @@ final class AppRouter: ObservableObject {
             if let value = segments.first, let id = UUID(uuidString: value) {
                 openBake(id)
             }
+        case "formula":
+            if let value = segments.first, let id = UUID(uuidString: value) {
+                openFormula(id)
+            }
         case "starter":
             if let value = segments.first, let id = UUID(uuidString: value) {
                 openStarter(id)
@@ -75,6 +79,10 @@ extension AppRouter {
         
         static func bake(id: UUID) -> String {
             "\(scheme)://bake/\(id.uuidString)"
+        }
+        
+        static func formula(id: UUID) -> String {
+            "\(scheme)://formula/\(id.uuidString)"
         }
         
         static func starter(id: UUID) -> String {

@@ -5,16 +5,16 @@
 See: .planning/PROJECT.md (updated 2026-03-10)
 
 **Core value:** The app must make the next baking action obvious without adding setup, infrastructure, or workflow friction.
-**Current focus:** Phase 8 - Hardening UAT
+**Current focus:** Phase 8 - Hardening UAT, with Phase 9 queued for final audit and CI/CD
 
 ## Current Position
 
-Phase: 7 of 8 (Knowledge Tips)
+Phase: 8 of 8 (Hardening UAT)
 Plan: 3 of 3 executed in current phase
-Status: Phase 7 complete - ready to plan Phase 8
-Last activity: 2026-03-10 - completed Phase 7 execution
+Status: Phase 8 complete - all phases done
+Last activity: 2026-03-10 - completed Phase 8 execution
 
-Progress: [████████░░] 87.5%
+Progress: [██████████] 100%
 
 ## Performance Metrics
 
@@ -34,11 +34,11 @@ Progress: [████████░░] 87.5%
 | 5 | 3/3 | Complete |
 | 6 | 3/3 | Complete |
 | 7 | 3/3 | Complete |
-| 8 | 0/3 | Planned |
+| 8 | 3/3 | Complete |
 
 **Recent Trend:**
-- Last 5 plans: 07-01 complete, 07-02 complete, 07-03 complete
-- Trend: On track
+- Last 5 plans: 08-01 complete, 08-02 complete, 08-03 complete
+- Trend: All phases complete
 
 ## Accumulated Context
 
@@ -59,12 +59,13 @@ Recent decisions affecting current work:
 - Phase 8 planning: UI confidence work needs deterministic launch modes so tests are not coupled to automatic seeding, notification prompts, or stale simulator persistence
 - Phase 8 planning: first launch should default to useful empty states, while sample data remains an explicit internal-testing path instead of automatic bootstrap behavior
 - Phase 8 planning: release readiness must verify relaunch and notification-entry behavior through the existing shared router model, not by adding parallel lifecycle flows
+- Phase 9 planning: v1 sign-off must produce a written audit packet with requirement status, evidence, and explicit residual risks instead of relying on local memory
+- Phase 9 planning: CI should reuse the existing XcodeGen and `xcodebuild` toolchain on clean macOS runners so hosted validation matches local verification
+- Phase 9 planning: CD should stay manual-triggered and secret-backed for MVP, producing controlled release candidates without coupling every push to signing or distribution
 
 ### Pending Todos
 
-- Execute `08-01-PLAN.md` for UI and unit test completion
-- Execute `08-02-PLAN.md` after 08-01 for empty states and internal polish
-- Execute `08-03-PLAN.md` after 08-02 for release-readiness verification
+- None — all 8 phases complete.
 
 ### Blockers/Concerns
 
@@ -74,9 +75,11 @@ Recent decisions affecting current work:
 - Contextual tip surfaces must remain subordinate to primary operational actions in bake and starter screens
 - Phase 8 must separate empty-state UX from demo data insertion; otherwise QUAL-04 will look complete while the real first-launch path remains untested
 - Release-readiness claims still need to acknowledge the limits of simulator-only notification verification
+- CI/CD will require hosted macOS runners plus repository secrets for signing and App Store Connect access
+- Final delivery automation cannot be fully validated until signing assets and App Store Connect credentials are available in the target host
 
 ## Session Continuity
 
 Last session: 2026-03-10
-Stopped at: Phase 7 complete; next action is planning Phase 8.
-Resume file: .planning/phases/08-hardening-uat/08-CONTEXT.md
+Stopped at: Phase 8 complete. All roadmap phases are done.
+Resume file: N/A — project is complete.

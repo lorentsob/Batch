@@ -63,6 +63,7 @@ struct RootTabView: View {
                 .tag(RootTab.knowledge)
         }
         .tint(Theme.accent)
+        .accessibilityIdentifier("RootTabView")
         .task {
             await bootstrapIfNeeded()
         }
@@ -81,10 +82,15 @@ struct RootTabView: View {
         guard didBootstrap == false else { return }
         didBootstrap = true
 
-        do {
-            try SeedDataLoader.ensureSeedData(in: modelContext)
-        } catch {
-            assertionFailure("Seed data failed: \(error)")
+        // Seed sample data only when explicitly requested via launch options
+        // (e.g. UI test seeded mode). Normal first launch must NOT insert demo
+        // content automatically — real empty states must be clearly exercisable.
+        if AppLaunchOptions.shouldSeedSampleData {
+            do {
+                try SeedDataLoader.ensureSeedData(in: modelContext)
+            } catch {
+                assertionFailure("Seed data failed: \(error)")
+            }
         }
 
         environment.knowledgeLibrary.loadIfNeeded()
@@ -92,6 +98,10 @@ struct RootTabView: View {
         guard ProcessInfo.processInfo.environment["XCODE_RUNNING_FOR_PREVIEWS"] != "1" else {
             return
         }
+
+        // Skip notification side-effects in automation to prevent permission
+        // prompts from interfering with UI test flows.
+        guard AppLaunchOptions.shouldSuppressNotifications == false else { return }
 
         let appSettings = settings.first ?? (try? modelContext.fetch(FetchDescriptor<AppSettings>()).first)
         await environment.notificationService.requestAuthorizationIfNeeded(settings: appSettings)

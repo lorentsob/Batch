@@ -21,6 +21,8 @@ The app must make the next baking action obvious without adding setup, infrastru
 - [ ] Reliable step execution, timers, and schedule shifting for active bakes
 - [ ] Local-first starter tracking and refresh logging
 - [ ] Bundled contextual knowledge and lightweight browsing
+- [ ] Written v1 audit packet with requirement traceability, smoke results, and residual risk logging
+- [ ] CI/CD automation for build, test, and controlled release-candidate delivery
 
 ### Out of Scope
 
@@ -56,6 +58,9 @@ The app must make the next baking action obvious without adding setup, infrastru
 | Knowledge is bundled JSON, not SwiftData | Static content is easier to version and ship locally | — Pending |
 | Notifications are local and rescheduled from persisted state | Reliable behavior with the app closed | — Pending |
 | `INFOPLIST_KEY_UILaunchScreen_Generation = YES` must be kept in `.pbxproj` | Prevents iOS 26+ legacy compatibility mode (letterboxing) since we removed `ZStack` from `RootTabView` to fix native TabBar layout | — Pending |
+| v1 sign-off requires a written audit, not only successful local test runs | Feature completeness alone is not enough for release confidence | — Pending |
+| CI/CD should use GitHub Actions plus the existing XcodeGen and `xcodebuild` toolchain | Matches the current repository structure and keeps hosted automation close to local commands | — Pending |
+| Release delivery should remain manual-triggered and secret-backed for the MVP | Avoids accidental signed distribution while still automating repeatable release-candidate creation | — Pending |
 
 ---
-*Last updated: 2026-03-10 after Levain project unification*
+*Last updated: 2026-03-10 after adding Phase 9 v1 audit and CI/CD planning*

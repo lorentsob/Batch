@@ -63,6 +63,7 @@ struct KnowledgeView: View {
             .background(Theme.background.ignoresSafeArea())
             .navigationTitle("Knowledge")
             .searchable(text: $query, prompt: "Cerca articoli e consigli")
+            .accessibilityIdentifier("KnowledgeScrollView")
             .navigationDestination(for: KnowledgeRoute.self) { route in
                 switch route {
                 case .article(let id):

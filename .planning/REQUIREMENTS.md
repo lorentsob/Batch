@@ -59,6 +59,9 @@
 - [ ] **QUAL-02**: Core scheduling and derived-state logic have unit-test coverage.
 - [ ] **QUAL-03**: Core user journeys have baseline UI test coverage.
 - [ ] **QUAL-04**: First launch provides useful empty states and sample seed data for internal testing.
+- [ ] **QUAL-05**: v1 sign-off is backed by a written audit covering requirement traceability, manual smoke flows, results, and residual risks.
+- [ ] **QUAL-06**: Repository changes run CI that builds the app and executes the agreed automated test suites on a clean macOS runner.
+- [ ] **QUAL-07**: Maintainer can trigger a documented CD workflow that produces a signed release candidate or TestFlight-ready build using managed secrets.
 
 ## v2 Requirements
 
@@ -114,12 +117,15 @@
 | QUAL-02 | Phase 2 | Pending |
 | QUAL-03 | Phase 8 | Pending |
 | QUAL-04 | Phase 8 | Pending |
+| QUAL-05 | Phase 9 | Pending |
+| QUAL-06 | Phase 9 | Pending |
+| QUAL-07 | Phase 9 | Pending |
 
 **Coverage:**
-- v1 requirements: 30 total
-- Mapped to phases: 30
+- v1 requirements: 33 total
+- Mapped to phases: 33
 - Unmapped: 0
 
 ---
 *Requirements defined: 2026-03-10*
-*Last updated: 2026-03-10 after roadmap bootstrap*
+*Last updated: 2026-03-10 after adding Phase 9 quality and delivery requirements*

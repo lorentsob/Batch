@@ -43,13 +43,21 @@ struct TodayView: View {
                     }
                     
                     if actionCount == 0 {
-                        EmptyStateView(
+                        MultiActionEmptyStateView(
                             title: "Giornata leggera",
-                            message: "Non ci sono step urgenti o starter da rinfrescare. Puoi creare un nuovo bake dalla tab Impasti.",
-                            actionTitle: "Vai a Impasti"
-                        ) {
-                            router.selectedTab = .bakes
-                        }
+                            message: "Nessuna azione urgente. Da qui puoi iniziare.",
+                            actions: [
+                                .init(title: "Nuovo bake", systemImage: "plus.circle.fill") {
+                                    router.selectedTab = .bakes
+                                },
+                                .init(title: "Aggiungi starter", systemImage: "drop.fill") {
+                                    router.selectedTab = .starter
+                                },
+                                .init(title: "Esplora consigli", systemImage: "book.pages.fill") {
+                                    router.selectedTab = .knowledge
+                                }
+                            ]
+                        )
                     } else {
                         ForEach(TodayAgendaItem.Section.allCases) { section in
                             if let items = agenda[section], items.isEmpty == false {
@@ -80,6 +88,7 @@ struct TodayView: View {
             }
             .contentMargins(.bottom, 88, for: .scrollContent)
             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
+            .accessibilityIdentifier("TodayScrollView")
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
         .sheet(item: $refreshStarter) { starter in

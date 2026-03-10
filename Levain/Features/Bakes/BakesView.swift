@@ -152,6 +152,7 @@ struct BakesView: View {
         .contentMargins(.bottom, 88, for: .scrollContent)
         .background(Theme.background.ignoresSafeArea())
         .navigationTitle("Impasti")
+        .accessibilityIdentifier("BakesScrollView")
         .sheet(isPresented: $showingFormulaEditor) {
             NavigationStack {
                 FormulaEditorView(formula: editingFormula)

@@ -3,8 +3,11 @@ import SwiftData
 
 enum ModelContainerFactory {
     static func makeContainer() -> ModelContainer {
+        // Use an isolated in-memory store when running under XCTest *or* when
+        // a UI test has explicitly requested a clean store via launch options.
         let isTesting = NSClassFromString("XCTestCase") != nil
-        if isTesting {
+        let wantsReset = AppLaunchOptions.shouldResetStore
+        if isTesting || wantsReset {
             return makeInMemoryContainer()
         }
 
