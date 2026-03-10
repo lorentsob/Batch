@@ -27,27 +27,23 @@ final class NotificationService: NSObject, ObservableObject, UNUserNotificationC
     }
 
     func syncNotifications(for bake: Bake) async {
-        let identifiers = bake.steps.map { stepIdentifier(bakeID: bake.id, stepID: $0.id) }
-        center.removePendingNotificationRequests(withIdentifiers: identifiers)
+        let oldIdentifiers = bake.steps.map { "bake-\(bake.id.uuidString)-\($0.id.uuidString)" }
+        center.removePendingNotificationRequests(withIdentifiers: oldIdentifiers)
 
-        for step in bake.sortedSteps where step.isTerminal == false {
-            let fireDate = step.plannedStart.adding(minutes: -step.reminderOffsetMinutes)
-            guard fireDate > .now else { continue }
-
+        let reminders = BakeReminderPlanner.planReminders(for: bake)
+        for reminder in reminders {
             let content = UNMutableNotificationContent()
-            content.title = "\(step.displayName) · \(bake.name)"
-            content.body = step.status == .running
-                ? "Lo step è in corso."
-                : "È il momento di controllare questo passaggio."
+            content.title = reminder.title
+            content.body = reminder.body
             content.sound = .default
-            content.userInfo["route"] = "levain://bake/\(bake.id.uuidString)"
+            content.userInfo["route"] = reminder.route
 
             try? await center.add(
                 UNNotificationRequest(
-                    identifier: stepIdentifier(bakeID: bake.id, stepID: step.id),
+                    identifier: reminder.identifier,
                     content: content,
                     trigger: UNCalendarNotificationTrigger(
-                        dateMatching: Calendar.current.dateComponents([.year, .month, .day, .hour, .minute], from: fireDate),
+                        dateMatching: Calendar.current.dateComponents([.year, .month, .day, .hour, .minute], from: reminder.fireDate),
                         repeats: false
                     )
                 )
@@ -67,7 +63,7 @@ final class NotificationService: NSObject, ObservableObject, UNUserNotificationC
         dueContent.title = starter.name
         dueContent.body = "Rinfresco previsto oggi."
         dueContent.sound = .default
-        dueContent.userInfo["route"] = "levain://starter/\(starter.id.uuidString)"
+        dueContent.userInfo["route"] = AppRouter.DeepLink.starter(id: starter.id)
 
         try? await center.add(
             UNNotificationRequest(
@@ -84,7 +80,7 @@ final class NotificationService: NSObject, ObservableObject, UNUserNotificationC
         followUpContent.title = starter.name
         followUpContent.body = "Ancora nessun rinfresco registrato."
         followUpContent.sound = .default
-        followUpContent.userInfo["route"] = "levain://starter/\(starter.id.uuidString)"
+        followUpContent.userInfo["route"] = AppRouter.DeepLink.starter(id: starter.id)
 
         try? await center.add(
             UNNotificationRequest(
@@ -112,10 +108,6 @@ final class NotificationService: NSObject, ObservableObject, UNUserNotificationC
         guard let route = response.notification.request.content.userInfo["route"] as? String,
               let url = URL(string: route) else { return }
         await MainActor.run { pendingURL = url }
-    }
-
-    private func stepIdentifier(bakeID: UUID, stepID: UUID) -> String {
-        "bake-\(bakeID.uuidString)-\(stepID.uuidString)"
     }
 
     private func dueIdentifier(_ id: UUID) -> String { "starter-due-\(id.uuidString)" }

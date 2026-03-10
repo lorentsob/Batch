@@ -3,45 +3,45 @@ import SwiftUI
 
 struct TodayView: View {
     @EnvironmentObject private var router: AppRouter
-
+    
     @Query(sort: \Bake.targetBakeDateTime, order: .forward) private var bakes: [Bake]
     @Query(sort: \Starter.lastRefresh, order: .reverse) private var starters: [Starter]
-
+    
     @State private var refreshStarter: Starter?
-
+    
     private var agenda: [TodayAgendaItem.Section: [TodayAgendaItem]] {
         TodayAgendaBuilder.build(bakes: Array(bakes), starters: Array(starters))
     }
-
+    
     private var actionCount: Int {
         agenda.values.reduce(0) { $0 + $1.count }
     }
-
+    
     var body: some View {
         ZStack(alignment: .topLeading) {
             Theme.background
                 .ignoresSafeArea()
-
+            
             ScrollView {
                 VStack(alignment: .leading, spacing: 20) {
                     Text("Oggi")
                         .font(.largeTitle.bold())
                         .foregroundStyle(Theme.ink)
-
+                    
                     SectionCard {
                         Text("Cosa devi fare adesso?")
                             .font(.system(size: 30, weight: .semibold, design: .serif))
                             .foregroundStyle(Theme.ink)
-
+                        
                         Text(heroSubtitle)
                             .foregroundStyle(Theme.muted)
-
+                        
                         HStack(spacing: 12) {
                             StateBadge(text: "\(actionCount) azioni")
                             StateBadge(text: "\(bakes.filter { $0.derivedStatus == .inProgress }.count) impasti attivi")
                         }
                     }
-
+                    
                     if actionCount == 0 {
                         EmptyStateView(
                             title: "Giornata leggera",
@@ -57,28 +57,17 @@ struct TodayView: View {
                                     Text(section.title)
                                         .font(.headline)
                                         .foregroundStyle(Theme.ink)
-
+                                    
                                     ForEach(items) { item in
-                                        SectionCard {
-                                            HStack(alignment: .top) {
-                                                VStack(alignment: .leading, spacing: 8) {
-                                                    Text(item.title)
-                                                        .font(.headline)
-                                                        .foregroundStyle(Theme.ink)
-                                                    Text(item.subtitle)
-                                                        .font(.subheadline)
-                                                        .foregroundStyle(Theme.muted)
-                                                }
-
-                                                Spacer()
-                                                StateBadge(text: item.state)
-                                            }
-
-                                            Button(item.actionTitle) {
+                                        switch item.kind {
+                                        case .bakeStep:
+                                            TodayStepCardView(item: item) {
                                                 handle(item)
                                             }
-                                            .buttonStyle(.borderedProminent)
-                                            .tint(Theme.accent)
+                                        case .starter:
+                                            TodayStarterReminderRow(item: item) {
+                                                handle(item)
+                                            }
                                         }
                                     }
                                 }
@@ -99,7 +88,7 @@ struct TodayView: View {
             }
         }
     }
-
+    
     private var heroSubtitle: String {
         if let first = agenda[.now]?.first {
             return "Priorita attuale: \(first.title.lowercased())."
@@ -112,7 +101,7 @@ struct TodayView: View {
         }
         return "Tutto sotto controllo per ora."
     }
-
+    
     private func handle(_ item: TodayAgendaItem) {
         switch item.kind {
         case let .bakeStep(bakeID, _):

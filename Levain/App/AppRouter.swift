@@ -48,7 +48,7 @@ final class AppRouter: ObservableObject {
     }
 
     func open(url: URL) {
-        guard url.scheme == "levain" else { return }
+        guard url.scheme == DeepLink.scheme else { return }
         let segments = url.pathComponents.filter { $0 != "/" }
         switch url.host {
         case "bake":
@@ -65,6 +65,24 @@ final class AppRouter: ObservableObject {
             }
         default:
             break
+        }
+    }
+}
+
+extension AppRouter {
+    enum DeepLink {
+        static let scheme = "levain"
+        
+        static func bake(id: UUID) -> String {
+            "\(scheme)://bake/\(id.uuidString)"
+        }
+        
+        static func starter(id: UUID) -> String {
+            "\(scheme)://starter/\(id.uuidString)"
+        }
+        
+        static func knowledge(id: String) -> String {
+            "\(scheme)://knowledge/\(id)"
         }
     }
 }

@@ -87,10 +87,9 @@ Plans:
   3. Notification taps reopen the related bake or starter context.
 **Plans**: 3 plans
 
-Plans:
-- [ ] 05-01: Today aggregation and prioritization
-- [ ] 05-02: Bake reminder scheduling and resync
-- [ ] 05-03: Deep-link routing and action handling
+- [x] 05-01: Today aggregation and prioritization
+- [x] 05-02: Bake reminder scheduling and resync
+- [x] 05-03: Deep-link routing and action handling
 
 ### Phase 6: Starter Management
 **Goal**: Support ongoing starter maintenance as a secondary but complete workflow.
@@ -137,7 +136,7 @@ Plans:
 - [ ] 08-02: Empty states and internal polish
 - [ ] 08-03: Release-readiness verification
 
-## Progress: [██████░░░░] 50%
+## Progress: [██████████] 62%
 
 **Execution Order:**
 Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6 → 7 → 8
@@ -148,7 +147,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6 → 7 → 8
 | 2. Domain Scheduling | 3/3 | Complete | 2026-03-10 |
 | 3. Formula Authoring | 3/3 | Complete | 2026-03-10 |
 | 4. Bake Creation Execution | 3/3 | Complete | 2026-03-10 |
-| 5. Today Notifications | 0/3 | Planned | 2026-03-10 |
-| 6. Starter Management | 0/3 | Not started | - |
+| 5. Today Notifications | 3/3 | Complete | 2026-03-10 |
+| 6. Starter Management | 0/3 | Planned | 2026-03-10 |
 | 7. Knowledge Tips | 0/3 | Not started | - |
 | 8. Hardening UAT | 0/3 | Not started | - |

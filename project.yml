@@ -25,6 +25,7 @@ targets:
         PRODUCT_BUNDLE_IDENTIFIER: com.lorentso.levain
         PRODUCT_NAME: Levain
         GENERATE_INFOPLIST_FILE: YES
+        INFOPLIST_FILE: Levain/Info.plist
         SWIFT_STRICT_CONCURRENCY: complete
         SUPPORTS_MACCATALYST: NO
         TARGETED_DEVICE_FAMILY: 1

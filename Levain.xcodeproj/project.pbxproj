@@ -7,21 +7,25 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		00C08B1A12FB441F31D89271 /* AppRouterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BD7C03D5139BD3131B782AE /* AppRouterTests.swift */; };
 		03C65911A6559AA13432B175 /* StarterRefresh.swift in Sources */ = {isa = PBXBuildFile; fileRef = 429113B9EA88560877F6998C /* StarterRefresh.swift */; };
 		043C0DCBBA47ECCC7A940446 /* Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 001EFEEED8D6E87FDA2F265B /* Theme.swift */; };
 		0A238FB1DBE8C1B9BC48AD7F /* Bake.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE05B4A75F3D5DED96A3B7B9 /* Bake.swift */; };
 		0D244B36BB2D2FBD61B00E07 /* Date+Levain.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4FAA5A66043B616FE6D1EEB /* Date+Levain.swift */; };
 		19909D6C120DD64EDE45A9BA /* SectionCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EF66CC37AE507FB215CFF22 /* SectionCard.swift */; };
 		1F99F650F9715E660F28D7D1 /* DomainFixtures.swift in Sources */ = {isa = PBXBuildFile; fileRef = B103892E03A334196B1D10CE /* DomainFixtures.swift */; };
+		20066B89AB8228C6E5C18C67 /* BakeReminderPlannerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F702B38C52B89746F9D8DE1 /* BakeReminderPlannerTests.swift */; };
 		26045D68DC5B6B88BC79FA0D /* BakeStepDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E8199167A33F653C5C7BD8E /* BakeStepDetailView.swift */; };
 		2E8E0532906BFE9F5F6245D7 /* AppRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1230562334B3FE09F3E01E83 /* AppRouter.swift */; };
 		38A739CCAF6D529859D57B4B /* Starter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EAE902CB2D317BA3DD3C564 /* Starter.swift */; };
 		3A81CC4B558FB4DBF018955F /* SeedDataLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9ECE5A0429356DA9B30ED63 /* SeedDataLoader.swift */; };
 		3F9F42BA78F745EE0A1DE5EA /* KnowledgeItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = A061F753EFB622786D154A83 /* KnowledgeItem.swift */; };
+		464B3D3CE16145FEEB5671CC /* BakeReminderPlanner.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F8DFC3E0B70BF05BE48DA6B /* BakeReminderPlanner.swift */; };
 		46883F4ACF02D8FF8668B408 /* LevainApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 031DE41E33A5A47BB92E1B84 /* LevainApp.swift */; };
 		47704AD0CE398C15C49B22E5 /* BakeSchedulerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B39BE3A6D9E872507ECAB51 /* BakeSchedulerTests.swift */; };
 		4B0D6B3EC6DE9A8516EE27BF /* RecipeFormulaTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03068B3858AD919A409B16D5 /* RecipeFormulaTests.swift */; };
 		4E537EEE2ECC83C497858DA4 /* FormulaStepEditorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF8C7A1E97DF7299C6E9B7A6 /* FormulaStepEditorView.swift */; };
+		5B3C0E436D498776AC28559D /* TodayStepCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31ACC0C6A03A5AD48C0AD04A /* TodayStepCardView.swift */; };
 		5CEDD8D761EC4B856818528F /* BakesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EE5E85F03317D648D13FDAA /* BakesView.swift */; };
 		5EB74EA9B640052A5A1D8280 /* AppEnvironment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79D4C487A002E34766EBC3F2 /* AppEnvironment.swift */; };
 		6B3C2EF47615A68D2BCBC14C /* TipGroupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF01B80A376C5C973BD17F65 /* TipGroupView.swift */; };
@@ -29,6 +33,7 @@
 		6FB2EAAC65EC1C0350BDCFCB /* DomainEnums.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3CC16D0B45CCF1757437239C /* DomainEnums.swift */; };
 		746E199E505E72637497D225 /* BakeStepCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADB19A1BB4867DF590026CA3 /* BakeStepCardView.swift */; };
 		81D3ED37D019F6565F3BF8B9 /* RootTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5A5E14312B26145E7F011F7 /* RootTabView.swift */; };
+		8730BA6C0B1CDD586E6C36BB /* TodayAgendaBuilderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 471E4662846877A1B4A475C6 /* TodayAgendaBuilderTests.swift */; };
 		8F7B429D77A05781C4E826F9 /* LevainUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61243C17854EB5B5F0148C16 /* LevainUITests.swift */; };
 		9D9CDC426195372EFA36C5EA /* KnowledgeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC91495A586F622B67D068BE /* KnowledgeView.swift */; };
 		A44ED48046434A743314F4CB /* FormulaEditorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB921C835C1B081B6409CF92 /* FormulaEditorView.swift */; };
@@ -38,6 +43,7 @@
 		BB34A0D65EE95C89A7C10392 /* BakeDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC7E0BB47C494872009B35F0 /* BakeDetailView.swift */; };
 		BFE0C3D56CAC5551D58E4F4D /* NotificationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31CB45B80CFC5B3AB74316A6 /* NotificationService.swift */; };
 		C04546EB78A1C4246F029AA8 /* KnowledgeLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9069286C22B79776F290E460 /* KnowledgeLoader.swift */; };
+		C2649F9ACF555DAF1A53C1C4 /* TodayStarterReminderRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0F73F2107220BBBBD20F36DA /* TodayStarterReminderRow.swift */; };
 		C4F8B17586A6584A2537F356 /* BakeScheduler.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3719CAB830F30160F021B55 /* BakeScheduler.swift */; };
 		C5F7D28B986CFB8C2F4C70E2 /* TodayAgendaBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 306A250346AF197F29E21C03 /* TodayAgendaBuilder.swift */; };
 		CFCF408602B7737A42EE82C9 /* TodayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D4D579B87EF9D7EB8FF64CD /* TodayView.swift */; };
@@ -73,16 +79,22 @@
 		03068B3858AD919A409B16D5 /* RecipeFormulaTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecipeFormulaTests.swift; sourceTree = "<group>"; };
 		031DE41E33A5A47BB92E1B84 /* LevainApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LevainApp.swift; sourceTree = "<group>"; };
 		0EF66CC37AE507FB215CFF22 /* SectionCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SectionCard.swift; sourceTree = "<group>"; };
+		0F73F2107220BBBBD20F36DA /* TodayStarterReminderRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodayStarterReminderRow.swift; sourceTree = "<group>"; };
 		1230562334B3FE09F3E01E83 /* AppRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppRouter.swift; sourceTree = "<group>"; };
+		176CFAD7509B1D39B858F3FD /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		1EE5E85F03317D648D13FDAA /* BakesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BakesView.swift; sourceTree = "<group>"; };
 		240767BF4294389BF07F152B /* FormulaStepTemplate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FormulaStepTemplate.swift; sourceTree = "<group>"; };
 		2EFA2DE8D87323F11D4B16F3 /* LevainTests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = LevainTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		2F702B38C52B89746F9D8DE1 /* BakeReminderPlannerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BakeReminderPlannerTests.swift; sourceTree = "<group>"; };
+		2F8DFC3E0B70BF05BE48DA6B /* BakeReminderPlanner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BakeReminderPlanner.swift; sourceTree = "<group>"; };
 		306A250346AF197F29E21C03 /* TodayAgendaBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodayAgendaBuilder.swift; sourceTree = "<group>"; };
+		31ACC0C6A03A5AD48C0AD04A /* TodayStepCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodayStepCardView.swift; sourceTree = "<group>"; };
 		31CB45B80CFC5B3AB74316A6 /* NotificationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationService.swift; sourceTree = "<group>"; };
 		3723F2A4189A29D9018AD0A5 /* DateFormattingService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateFormattingService.swift; sourceTree = "<group>"; };
 		3B0E89FD9A23FCBB2C7F67DA /* BakeStep.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BakeStep.swift; sourceTree = "<group>"; };
 		3CC16D0B45CCF1757437239C /* DomainEnums.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DomainEnums.swift; sourceTree = "<group>"; };
 		429113B9EA88560877F6998C /* StarterRefresh.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StarterRefresh.swift; sourceTree = "<group>"; };
+		471E4662846877A1B4A475C6 /* TodayAgendaBuilderTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodayAgendaBuilderTests.swift; sourceTree = "<group>"; };
 		4D4D579B87EF9D7EB8FF64CD /* TodayView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodayView.swift; sourceTree = "<group>"; };
 		4EAE902CB2D317BA3DD3C564 /* Starter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Starter.swift; sourceTree = "<group>"; };
 		5D8920D2E3E25C9214B58AF7 /* FormulaDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FormulaDetailView.swift; sourceTree = "<group>"; };
@@ -90,6 +102,7 @@
 		61243C17854EB5B5F0148C16 /* LevainUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LevainUITests.swift; sourceTree = "<group>"; };
 		65564B7A1CCBBD895F8BE550 /* LevainUITests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = LevainUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		79D4C487A002E34766EBC3F2 /* AppEnvironment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppEnvironment.swift; sourceTree = "<group>"; };
+		7BD7C03D5139BD3131B782AE /* AppRouterTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppRouterTests.swift; sourceTree = "<group>"; };
 		8B39BE3A6D9E872507ECAB51 /* BakeSchedulerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BakeSchedulerTests.swift; sourceTree = "<group>"; };
 		8E9AA4021F43AE9655D8F68C /* StateBadge.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StateBadge.swift; sourceTree = "<group>"; };
 		9069286C22B79776F290E460 /* KnowledgeLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KnowledgeLoader.swift; sourceTree = "<group>"; };
@@ -177,6 +190,7 @@
 		365C754AB8819569DF2EFE1C /* Services */ = {
 			isa = PBXGroup;
 			children = (
+				2F8DFC3E0B70BF05BE48DA6B /* BakeReminderPlanner.swift */,
 				C3719CAB830F30160F021B55 /* BakeScheduler.swift */,
 				3723F2A4189A29D9018AD0A5 /* DateFormattingService.swift */,
 				9069286C22B79776F290E460 /* KnowledgeLoader.swift */,
@@ -189,6 +203,7 @@
 		37667EEB5A3CDB90E3A6FFE9 /* Levain */ = {
 			isa = PBXGroup;
 			children = (
+				176CFAD7509B1D39B858F3FD /* Info.plist */,
 				0B9250CBB1117EA21A609C90 /* App */,
 				A99DAF22A7E8AE1E5F63D967 /* DesignSystem */,
 				35BE0B3A583C21B9E460935E /* Features */,
@@ -287,6 +302,8 @@
 		AE273D162A6F1E335C21B4A0 /* Today */ = {
 			isa = PBXGroup;
 			children = (
+				0F73F2107220BBBBD20F36DA /* TodayStarterReminderRow.swift */,
+				31ACC0C6A03A5AD48C0AD04A /* TodayStepCardView.swift */,
 				4D4D579B87EF9D7EB8FF64CD /* TodayView.swift */,
 			);
 			path = Today;
@@ -295,8 +312,11 @@
 		B3BF4A0C44EBFB4B87539F1E /* LevainTests */ = {
 			isa = PBXGroup;
 			children = (
+				7BD7C03D5139BD3131B782AE /* AppRouterTests.swift */,
+				2F702B38C52B89746F9D8DE1 /* BakeReminderPlannerTests.swift */,
 				8B39BE3A6D9E872507ECAB51 /* BakeSchedulerTests.swift */,
 				03068B3858AD919A409B16D5 /* RecipeFormulaTests.swift */,
+				471E4662846877A1B4A475C6 /* TodayAgendaBuilderTests.swift */,
 				5727B15E6E72B2B734EFFEFF /* TestSupport */,
 			);
 			path = LevainTests;
@@ -432,9 +452,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				00C08B1A12FB441F31D89271 /* AppRouterTests.swift in Sources */,
+				20066B89AB8228C6E5C18C67 /* BakeReminderPlannerTests.swift in Sources */,
 				47704AD0CE398C15C49B22E5 /* BakeSchedulerTests.swift in Sources */,
 				1F99F650F9715E660F28D7D1 /* DomainFixtures.swift in Sources */,
 				4B0D6B3EC6DE9A8516EE27BF /* RecipeFormulaTests.swift in Sources */,
+				8730BA6C0B1CDD586E6C36BB /* TodayAgendaBuilderTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -448,6 +471,7 @@
 				0A238FB1DBE8C1B9BC48AD7F /* Bake.swift in Sources */,
 				E8FA6864F27D43ED3B365B93 /* BakeCreationView.swift in Sources */,
 				BB34A0D65EE95C89A7C10392 /* BakeDetailView.swift in Sources */,
+				464B3D3CE16145FEEB5671CC /* BakeReminderPlanner.swift in Sources */,
 				C4F8B17586A6584A2537F356 /* BakeScheduler.swift in Sources */,
 				D648CB0DAD33F1C6464B25B5 /* BakeStep.swift in Sources */,
 				746E199E505E72637497D225 /* BakeStepCardView.swift in Sources */,
@@ -479,6 +503,8 @@
 				043C0DCBBA47ECCC7A940446 /* Theme.swift in Sources */,
 				6B3C2EF47615A68D2BCBC14C /* TipGroupView.swift in Sources */,
 				C5F7D28B986CFB8C2F4C70E2 /* TodayAgendaBuilder.swift in Sources */,
+				C2649F9ACF555DAF1A53C1C4 /* TodayStarterReminderRow.swift in Sources */,
+				5B3C0E436D498776AC28559D /* TodayStepCardView.swift in Sources */,
 				CFCF408602B7737A42EE82C9 /* TodayView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -507,7 +533,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_FILE = Levain/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -725,7 +751,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_FILE = Levain/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
