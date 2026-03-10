@@ -10,11 +10,11 @@ See: .planning/PROJECT.md (updated 2026-03-10)
 ## Current Position
 
 Phase: 6 of 8 (Starter Management)
-Plan: 0 of 3 executed in current phase (06-01 through 06-03 planned)
-Status: Phase 6 planned - ready to execute 06-01
-Last activity: 2026-03-10 - created Phase 6 plan set after Phase 5 completion
+Plan: 3 of 3 executed in current phase
+Status: Phase 6 complete - ready to plan Phase 7
+Last activity: 2026-03-10 - completed Phase 6 execution
 
-Progress: [██████████] 62%
+Progress: [███████░░░] 75%
 
 ## Performance Metrics
 
@@ -32,10 +32,11 @@ Progress: [██████████] 62%
 | 3 | 3/3 | Complete |
 | 4 | 3/3 | Complete |
 | 5 | 3/3 | Complete |
-| 6 | 0/3 | Planned |
+| 6 | 3/3 | Complete |
+| 7 | 0/3 | Planned |
 
 **Recent Trend:**
-- Last 5 plans: 05-01 complete, 05-02 complete, 05-03 complete, Phase 6 planned
+- Last 5 plans: 05-03 complete, 06-01 complete, 06-02 complete, 06-03 complete
 - Trend: On track
 
 ## Accumulated Context
@@ -51,12 +52,16 @@ Recent decisions affecting current work:
 - Phase 6 planning: starter profile management should be extracted into dedicated list, detail, and editor surfaces instead of remaining inside one monolithic Starter file
 - Phase 6 planning: refresh logging must stay fast and data-driven, with due-state derived only from `lastRefresh` and `refreshIntervalDays`
 - Phase 6 planning: starter notifications should be preference-aware, but Today visibility for due starter work must remain driven by operational relevance, not by notification enablement
+- Phase 7 planning: bundled knowledge must stay JSON-based and offline-first instead of becoming a second persistence system
+- Phase 7 planning: the Knowledge tab should remain lightweight, with browsing and reading separated cleanly between root and article detail
+- Phase 7 planning: contextual tips in bake and starter flows should stay supportive and secondary, while opening the shared article route
 
 ### Pending Todos
 
-- Execute `06-01-PLAN.md` to extract starter profile management into dedicated screens and components
-- Execute `06-02-PLAN.md` after 06-01 to build the fast refresh logging flow and dedicated starter tests
-- Execute `06-03-PLAN.md` after 06-02 to finalize starter reminder planning, resync, and Today integration
+- Plan Phase 7 (Knowledge Tips)
+- Queue `07-01-PLAN.md` after Phase 6 to harden the bundled knowledge schema, JSON bundle, and loader tests
+- Queue `07-02-PLAN.md` after 07-01 to refine the Knowledge tab and article reading flow
+- Queue `07-03-PLAN.md` after 07-02 to strengthen contextual tips in bake and starter workflows
 
 ### Blockers/Concerns
 
@@ -64,9 +69,11 @@ Recent decisions affecting current work:
 - Notification deep-link behavior still needs on-device verification after the initial build
 - Starter management still lives in a monolithic feature file today, so Phase 6 extraction should stay disciplined about file boundaries
 - Starter reminder scheduling must build on the Phase 5 notification and routing foundation without reintroducing duplicate routing logic
+- Knowledge content is already present in the bundle, so Phase 7 should refine schema and UX without inventing editorial tooling or network sync
+- Contextual tip surfaces must remain subordinate to primary operational actions in bake and starter screens
 
 ## Session Continuity
 
 Last session: 2026-03-10
-Stopped at: Phase 6 planning complete; next action is executing 06-01.
-Resume file: .planning/phases/06-starter-management/06-01-PLAN.md
+Stopped at: Phase 6 complete; next action is planning Phase 7.
+Resume file: .planning/phases/07-knowledge-tips/07-CONTEXT.md

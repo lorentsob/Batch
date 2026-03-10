@@ -54,44 +54,26 @@ final class NotificationService: NSObject, ObservableObject, UNUserNotificationC
     func syncNotifications(for starter: Starter) async {
         let identifiers = [dueIdentifier(starter.id), followUpIdentifier(starter.id)]
         center.removePendingNotificationRequests(withIdentifiers: identifiers)
-        guard starter.remindersEnabled else { return }
 
-        let due = starter.nextDueDate.settingTime(hour: 9, minute: 0)
-        let followUp = due.adding(minutes: 24 * 60)
+        let reminders = StarterReminderPlanner.planReminders(for: starter)
+        for reminder in reminders {
+            let content = UNMutableNotificationContent()
+            content.title = reminder.title
+            content.body = reminder.body
+            content.sound = .default
+            content.userInfo["route"] = reminder.route
 
-        let dueContent = UNMutableNotificationContent()
-        dueContent.title = starter.name
-        dueContent.body = "Rinfresco previsto oggi."
-        dueContent.sound = .default
-        dueContent.userInfo["route"] = AppRouter.DeepLink.starter(id: starter.id)
-
-        try? await center.add(
-            UNNotificationRequest(
-                identifier: dueIdentifier(starter.id),
-                content: dueContent,
-                trigger: UNCalendarNotificationTrigger(
-                    dateMatching: Calendar.current.dateComponents([.year, .month, .day, .hour, .minute], from: due),
-                    repeats: false
+            try? await center.add(
+                UNNotificationRequest(
+                    identifier: reminder.identifier,
+                    content: content,
+                    trigger: UNCalendarNotificationTrigger(
+                        dateMatching: Calendar.current.dateComponents([.year, .month, .day, .hour, .minute], from: reminder.fireDate),
+                        repeats: false
+                    )
                 )
             )
-        )
-
-        let followUpContent = UNMutableNotificationContent()
-        followUpContent.title = starter.name
-        followUpContent.body = "Ancora nessun rinfresco registrato."
-        followUpContent.sound = .default
-        followUpContent.userInfo["route"] = AppRouter.DeepLink.starter(id: starter.id)
-
-        try? await center.add(
-            UNNotificationRequest(
-                identifier: followUpIdentifier(starter.id),
-                content: followUpContent,
-                trigger: UNCalendarNotificationTrigger(
-                    dateMatching: Calendar.current.dateComponents([.year, .month, .day, .hour, .minute], from: followUp),
-                    repeats: false
-                )
-            )
-        )
+        }
     }
 
     nonisolated func userNotificationCenter(

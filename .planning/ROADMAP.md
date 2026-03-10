@@ -11,7 +11,7 @@ The roadmap moves from a native iPhone foundation into core baking logic, then a
 - [x] **Phase 3: Formula Authoring** - Build reusable formula CRUD with editable default step templates.
 - [x] **Phase 4: Bake Creation Execution** - Create and run bakes with step actions, timers, and timeline shifting.
 - [ ] **Phase 5: Today Notifications** - Build the operational Today experience and local reminder orchestration.
-- [ ] **Phase 6: Starter Management** - Add starter CRUD, refresh logging, and due-state reminders.
+- [x] **Phase 6: Starter Management** - Add starter CRUD, refresh logging, and due-state reminders.
 - [ ] **Phase 7: Knowledge Tips** - Bundle static knowledge, browse it, and surface contextual tips.
 - [ ] **Phase 8: Hardening UAT** - Finish tests, empty states, internal-seed polish, and release readiness.
 
@@ -102,9 +102,9 @@ Plans:
 **Plans**: 3 plans
 
 Plans:
-- [ ] 06-01: Starter list and detail flows
-- [ ] 06-02: Refresh logging flow
-- [ ] 06-03: Starter reminder integration
+- [x] 06-01: Starter list and detail flows
+- [x] 06-02: Refresh logging flow
+- [x] 06-03: Starter reminder integration
 
 ### Phase 7: Knowledge Tips
 **Goal**: Make bundled baking knowledge available both as articles and contextual tips.
@@ -136,7 +136,7 @@ Plans:
 - [ ] 08-02: Empty states and internal polish
 - [ ] 08-03: Release-readiness verification
 
-## Progress: [██████████] 62%
+## Progress: [███████░░░] 75%
 
 **Execution Order:**
 Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6 → 7 → 8
@@ -148,6 +148,6 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6 → 7 → 8
 | 3. Formula Authoring | 3/3 | Complete | 2026-03-10 |
 | 4. Bake Creation Execution | 3/3 | Complete | 2026-03-10 |
 | 5. Today Notifications | 3/3 | Complete | 2026-03-10 |
-| 6. Starter Management | 0/3 | Planned | 2026-03-10 |
-| 7. Knowledge Tips | 0/3 | Not started | - |
+| 6. Starter Management | 3/3 | Complete | 2026-03-10 |
+| 7. Knowledge Tips | 0/3 | Planned | 2026-03-10 |
 | 8. Hardening UAT | 0/3 | Not started | - |
