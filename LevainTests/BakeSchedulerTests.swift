@@ -100,6 +100,80 @@ final class BakeSchedulerTests: XCTestCase {
         let overdueTime = now.adding(minutes: 90)
         XCTAssertEqual(step.currentProgress(now: overdueTime), 1.0, accuracy: 0.01)
     }
+
+    func testTimerHelpersForRunningStepBeforeEnd() {
+        let now = Date.fixedNow
+        let start = now.adding(minutes: -25)
+        let step = BakeStep(
+            orderIndex: 0,
+            type: .bulk,
+            nameOverride: "Bulk",
+            plannedStart: start,
+            plannedDurationMinutes: 60,
+            actualStart: start
+        )
+        step.status = .running
+
+        XCTAssertEqual(step.elapsedMinutes(now: now), 25)
+        XCTAssertEqual(step.remainingMinutes(now: now), 35)
+        XCTAssertEqual(step.overrunMinutes(now: now), 0)
+        XCTAssertEqual(step.timerPhase(now: now), .running)
+        XCTAssertEqual(step.progressValue(now: now), 25.0 / 60.0, accuracy: 0.01)
+    }
+
+    func testTimerHelpersAtExactPlannedEnd() {
+        let start = Date.fixedNow.adding(minutes: -60)
+        let now = Date.fixedNow
+        let step = BakeStep(
+            orderIndex: 0,
+            type: .bulk,
+            nameOverride: "Bulk",
+            plannedStart: start,
+            plannedDurationMinutes: 60,
+            actualStart: start
+        )
+        step.status = .running
+
+        XCTAssertEqual(step.elapsedMinutes(now: now), 60)
+        XCTAssertEqual(step.remainingMinutes(now: now), 0)
+        XCTAssertEqual(step.overrunMinutes(now: now), 0)
+        XCTAssertEqual(step.progressValue(now: now), 1.0, accuracy: 0.01)
+    }
+
+    func testTimerHelpersForOverdueRunningStep() {
+        let start = Date.fixedNow.adding(minutes: -90)
+        let now = Date.fixedNow
+        let step = BakeStep(
+            orderIndex: 0,
+            type: .bulk,
+            nameOverride: "Bulk",
+            plannedStart: start,
+            plannedDurationMinutes: 60,
+            actualStart: start
+        )
+        step.status = .running
+
+        XCTAssertEqual(step.remainingMinutes(now: now), 0)
+        XCTAssertEqual(step.overrunMinutes(now: now), 30)
+        XCTAssertEqual(step.timerPhase(now: now), .overdue)
+        XCTAssertEqual(step.progressValue(now: now), 1.0, accuracy: 0.01)
+    }
+
+    func testProgressValueRemainsClampedWhenElapsedExceedsDuration() {
+        let start = Date.fixedNow.adding(minutes: -180)
+        let now = Date.fixedNow
+        let step = BakeStep(
+            orderIndex: 0,
+            type: .bulk,
+            nameOverride: "Bulk",
+            plannedStart: start,
+            plannedDurationMinutes: 45,
+            actualStart: start
+        )
+        step.status = .running
+
+        XCTAssertEqual(step.progressValue(now: now), 1.0, accuracy: 0.01)
+    }
     
     // MARK: - Bake Status Derivation
     

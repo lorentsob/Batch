@@ -3,6 +3,13 @@ import SwiftData
 
 @Model
 final class BakeStep {
+    enum TimerPhase: Hashable {
+        case upcoming
+        case running
+        case overdue
+        case completed
+    }
+
     @Attribute(.unique) var id: UUID
     var orderIndex: Int
     var typeRaw: String
@@ -76,6 +83,10 @@ final class BakeStep {
         plannedStart.adding(minutes: plannedDurationMinutes)
     }
 
+    var referenceStart: Date {
+        actualStart ?? plannedStart
+    }
+
     var displayName: String {
         nameOverride.isEmpty ? type.title : nameOverride
     }
@@ -92,12 +103,36 @@ final class BakeStep {
         status == .pending
     }
 
+    func elapsedMinutes(now: Date = .now) -> Int {
+        max(0, Int(now.timeIntervalSince(referenceStart)) / 60)
+    }
+
+    func remainingMinutes(now: Date = .now) -> Int {
+        max(plannedDurationMinutes - elapsedMinutes(now: now), 0)
+    }
+
+    func overrunMinutes(now: Date = .now) -> Int {
+        max(elapsedMinutes(now: now) - plannedDurationMinutes, 0)
+    }
+
+    func startsInMinutes(now: Date = .now) -> Int {
+        max(Int(plannedStart.timeIntervalSince(now)) / 60, 0)
+    }
+
+    func progressValue(now: Date = .now) -> Double {
+        let duration = Double(max(plannedDurationMinutes, 1))
+        return min(max(Double(elapsedMinutes(now: now)) / duration, 0), 1)
+    }
+
+    func timerPhase(now: Date = .now) -> TimerPhase {
+        if isTerminal { return .completed }
+        if isOverdue(now: now) { return .overdue }
+        if status == .running { return .running }
+        return .upcoming
+    }
+
     func currentProgress(now: Date = .now) -> Double {
-        guard status == .running, let start = actualStart else { return 0 }
-        let duration = Double(plannedDurationMinutes * 60)
-        guard duration > 0 else { return 1.0 }
-        let elapsed = now.timeIntervalSince(start)
-        return min(max(elapsed / duration, 0), 1.0)
+        progressValue(now: now)
     }
 
     func isOverdue(now: Date = .now) -> Bool {
@@ -123,4 +158,3 @@ final class BakeStep {
         actualEnd = .now
     }
 }
-

@@ -8,33 +8,70 @@ struct BakeDetailView: View {
 
     let bake: Bake
 
+    @State private var detailStep: BakeStep?
     @State private var shiftingStep: BakeStep?
     @State private var showingCancelConfirm = false
     @State private var showingDeleteConfirm = false
 
     var body: some View {
+        let activeStep = bake.activeStep
+        let timelineSteps = bake.sortedSteps.filter { $0.id != activeStep?.id }
+
         ScrollView {
             VStack(spacing: 24) {
-                // Header card
                 BakeHeaderCard(bake: bake)
 
-                // Timeline steps
+                if let activeStep, bake.derivedStatus != .completed, bake.derivedStatus != .cancelled {
+                    ActiveStepHeroCard(
+                        contextLabel: "Step attivo",
+                        contextValue: bake.name,
+                        step: activeStep,
+                        onPrimaryAction: {
+                            handlePrimary(activeStep)
+                        },
+                        onDetail: {
+                            detailStep = activeStep
+                        },
+                        onCustomShift: activeStep.status == .running || activeStep.isOverdue() ? {
+                            shiftingStep = activeStep
+                        } : nil,
+                        onQuickShift: activeStep.status == .running || activeStep.isOverdue() ? { minutes in
+                            shift(activeStep, by: minutes)
+                        } : nil
+                    )
+                }
+
                 VStack(alignment: .leading, spacing: 12) {
-                    Text("Timeline")
+                    Text(activeStep == nil ? "Timeline" : "Timeline restante")
                         .font(.headline)
                         .foregroundStyle(Theme.ink)
 
-                    VStack(spacing: 12) {
-                        ForEach(bake.sortedSteps) { step in
-                            BakeStepCardView(step: step, onShift: {
-                                shiftingStep = step
-                            })
+                    if timelineSteps.isEmpty {
+                        SectionCard {
+                            Text("Nessun altro step operativo.")
+                                .font(.subheadline.weight(.semibold))
+                                .foregroundStyle(Theme.ink)
+                            Text("Quando chiudi lo step corrente, il prossimo entrerà qui.")
+                                .font(.footnote)
+                                .foregroundStyle(Theme.muted)
+                        }
+                    } else {
+                        VStack(spacing: 10) {
+                            ForEach(Array(timelineSteps.enumerated()), id: \.element.id) { item in
+                                let index = item.offset
+                                let step = item.element
+                                StepTimelineRow(
+                                    step: step,
+                                    showsConnector: index < timelineSteps.count - 1
+                                ) {
+                                    detailStep = step
+                                }
+                            }
                         }
                     }
                 }
 
-                // Contextual tips — secondary, based on the current active step type
-                if let activeStep = bake.sortedSteps.first(where: { $0.status == .running }) {
+                if let activeStep {
                     let tips = environment.knowledgeLibrary.tips(for: activeStep.type)
                     if !tips.isEmpty {
                         TipGroupView(items: tips) { id in
@@ -62,6 +99,11 @@ struct BakeDetailView: View {
         .background(Theme.background.ignoresSafeArea())
         .navigationTitle(bake.name)
         .navigationBarTitleDisplayMode(.inline)
+        .sheet(item: $detailStep) { step in
+            NavigationStack {
+                BakeStepDetailView(step: step)
+            }
+        }
         .sheet(item: $shiftingStep) { step in
             NavigationStack {
                 ShiftTimelineView(bake: bake, anchorStep: step)
@@ -81,6 +123,29 @@ struct BakeDetailView: View {
                 router.selectedTab = .bakes
             }
             Button("Annulla", role: .cancel) {}
+        }
+    }
+
+    private func handlePrimary(_ step: BakeStep) {
+        if step.status == .running {
+            step.complete()
+        } else if step.isTerminal == false {
+            step.start()
+        }
+
+        persistAndSync()
+    }
+
+    private func shift(_ step: BakeStep, by minutes: Int) {
+        BakeScheduler.shiftFutureSteps(in: bake, after: step, by: minutes)
+        persistAndSync()
+    }
+
+    private func persistAndSync() {
+        try? modelContext.save()
+
+        Task {
+            await environment.notificationService.syncNotifications(for: bake)
         }
     }
 }
@@ -157,33 +222,5 @@ struct MetricItem: View {
                 .foregroundStyle(Theme.ink)
         }
         .frame(maxWidth: .infinity, alignment: .leading)
-    }
-}
-
-
-struct StepTimerView: View {
-    let step: BakeStep
-
-    var body: some View {
-        TimelineView(.periodic(from: .now, by: 60)) { context in
-            let elapsed = Int(context.date.timeIntervalSince(step.actualStart ?? step.plannedStart)) / 60
-            let isLate = elapsed > step.plannedDurationMinutes
-            let remaining = abs(step.plannedDurationMinutes - elapsed)
-
-            VStack(alignment: .leading, spacing: 6) {
-                Text(isLate ? "In ritardo" : "Timer attivo")
-                    .font(.subheadline.weight(.semibold))
-                    .foregroundStyle(isLate ? Theme.danger : Theme.ink)
-                Text("Trascorso \(DateFormattingService.duration(minutes: max(0, elapsed))) · \(isLate ? "ritardo" : "residuo") \(DateFormattingService.duration(minutes: remaining))")
-                    .font(.footnote)
-                    .foregroundStyle(Theme.muted)
-            }
-            .padding(12)
-            .frame(maxWidth: .infinity, alignment: .leading)
-            .background(
-                RoundedRectangle(cornerRadius: 18, style: .continuous)
-                    .fill(Theme.background.opacity(0.8))
-            )
-        }
     }
 }

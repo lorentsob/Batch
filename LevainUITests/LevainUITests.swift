@@ -3,18 +3,21 @@ import XCTest
 // MARK: - Base Helper
 
 extension XCUIApplication {
+    private func configureHarness(resetStore: Bool, seedSampleData: Bool, suppressNotifications: Bool) {
+        launchEnvironment["LEVAIN_RESET_STORE"] = resetStore ? "1" : "0"
+        launchEnvironment["LEVAIN_SEED_SAMPLE_DATA"] = seedSampleData ? "1" : "0"
+        launchEnvironment["LEVAIN_SUPPRESS_NOTIFICATIONS"] = suppressNotifications ? "1" : "0"
+    }
+
     /// Launch the app with an isolated in-memory store (no persistent state).
     func launchEmpty() {
-        launchEnvironment["LEVAIN_RESET_STORE"] = "1"
-        launchEnvironment["LEVAIN_SUPPRESS_NOTIFICATIONS"] = "1"
+        configureHarness(resetStore: true, seedSampleData: false, suppressNotifications: true)
         launch()
     }
 
     /// Launch the app with an isolated store pre-populated with sample data.
     func launchSeeded() {
-        launchEnvironment["LEVAIN_RESET_STORE"] = "1"
-        launchEnvironment["LEVAIN_SEED_SAMPLE_DATA"] = "1"
-        launchEnvironment["LEVAIN_SUPPRESS_NOTIFICATIONS"] = "1"
+        configureHarness(resetStore: true, seedSampleData: true, suppressNotifications: true)
         launch()
     }
 
@@ -22,12 +25,13 @@ extension XCUIApplication {
     /// notification side effects. Useful for isolating persistent-store startup
     /// behavior from the authorization/resync bootstrap.
     func launchPersistentSuppressingNotifications() {
-        launchEnvironment["LEVAIN_SUPPRESS_NOTIFICATIONS"] = "1"
+        configureHarness(resetStore: false, seedSampleData: false, suppressNotifications: true)
         launch()
     }
 
     /// Launch the app with the same environment as a normal user run.
     func launchPersistent() {
+        configureHarness(resetStore: false, seedSampleData: false, suppressNotifications: false)
         launch()
     }
 }
@@ -80,9 +84,7 @@ final class LevainUITests: XCTestCase {
         app.tabBars.buttons["Home"].tap()
         XCTAssertTrue(app.scrollViews["TodayScrollView"].waitForExistence(timeout: 5))
 
-        // No bakes or starters → Today must not show any operational row cards
-        // that would only appear with persisted data.
-        XCTAssertFalse(app.staticTexts["Prossimo step:"].exists)
+        XCTAssertTrue(app.staticTexts["Giornata leggera"].waitForExistence(timeout: 5))
     }
 
     // MARK: Seeded launch has content

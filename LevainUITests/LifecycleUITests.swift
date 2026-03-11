@@ -73,6 +73,7 @@ final class LifecycleUITests: XCTestCase {
 
         // The app must not crash or show stale state from the previous seeded store
         // because each launch uses LEVAIN_RESET_STORE=1 (in-memory, discarded).
-        XCTAssertFalse(app.staticTexts["Prossimo step:"].exists)
+        XCTAssertFalse(app.buttons["Completa step"].exists)
+        XCTAssertFalse(app.buttons["Avvia step"].exists)
     }
 }

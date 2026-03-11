@@ -1,8 +1,23 @@
 import Foundation
 
 struct TodayAgendaItem: Identifiable {
+    struct BakeSummary: Hashable {
+        let bakeID: UUID
+        let stepID: UUID
+        let bakeName: String
+        let stepName: String
+        let stepDescription: String
+        let plannedStart: Date
+        let plannedEnd: Date
+        let plannedDurationMinutes: Int
+        let stepStatus: StepStatus
+        let timerPhase: BakeStep.TimerPhase
+        let isOverdue: Bool
+        let primaryActionTitle: String
+    }
+
     enum Kind: Hashable {
-        case bake(bakeID: UUID)
+        case bake(BakeSummary)
         case starter(starterID: UUID)
     }
 
@@ -32,6 +47,11 @@ struct TodayAgendaItem: Identifiable {
     let state: String
     let actionTitle: String
     let sortDate: Date
+
+    var bakeSummary: BakeSummary? {
+        guard case let .bake(summary) = kind else { return nil }
+        return summary
+    }
 }
 
 enum TodayAgendaBuilder {
@@ -52,12 +72,30 @@ enum TodayAgendaBuilder {
                 section = .later
             }
 
+            let summary = TodayAgendaItem.BakeSummary(
+                bakeID: bake.id,
+                stepID: step.id,
+                bakeName: bake.name,
+                stepName: step.displayName,
+                stepDescription: step.descriptionText,
+                plannedStart: step.plannedStart,
+                plannedEnd: step.plannedEnd,
+                plannedDurationMinutes: step.plannedDurationMinutes,
+                stepStatus: step.status,
+                timerPhase: step.timerPhase(now: now),
+                isOverdue: step.isOverdue(now: now),
+                primaryActionTitle: step.status == .running ? "Completa step" : "Avvia step"
+            )
+
             let state: String
-            if step.status == .running {
-                state = "In corso" // or mapping to new state badge
-            } else if step.isOverdue(now: now) {
+            switch summary.timerPhase {
+            case .running:
+                state = "In corso"
+            case .overdue:
                 state = "In ritardo"
-            } else {
+            case .completed:
+                state = step.status.title
+            case .upcoming:
                 state = "Pianificato"
             }
 
@@ -65,13 +103,11 @@ enum TodayAgendaBuilder {
                 TodayAgendaItem(
                     id: "bake-\(bake.id.uuidString)",
                     section: section,
-                    kind: .bake(bakeID: bake.id),
+                    kind: .bake(summary),
                     title: bake.name,
-                    subtitle: step.status == .running
-                        ? "Ora: \(step.displayName) · fine \(DateFormattingService.time(step.plannedEnd))"
-                        : "Prossimo: \(step.displayName) · \(DateFormattingService.dayTime(step.plannedStart))",
+                    subtitle: step.displayName,
                     state: state,
-                    actionTitle: "Apri impasto",
+                    actionTitle: summary.primaryActionTitle,
                     sortDate: step.plannedStart
                 )
             )

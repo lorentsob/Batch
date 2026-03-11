@@ -2,12 +2,16 @@ import SwiftData
 import SwiftUI
 
 struct TodayView: View {
+    @Environment(\.modelContext) private var modelContext
+    @EnvironmentObject private var environment: AppEnvironment
     @EnvironmentObject private var router: AppRouter
-    
+
     @Query(sort: \Bake.targetBakeDateTime, order: .forward) private var bakes: [Bake]
     @Query(sort: \Starter.lastRefresh, order: .reverse) private var starters: [Starter]
-    
+
     @State private var refreshStarter: Starter?
+    @State private var detailSelection: TodayBakeSelection?
+    @State private var shiftSelection: TodayBakeSelection?
 
     var body: some View {
         let snapshot = TodaySnapshot.make(bakes: Array(bakes), starters: Array(starters))
@@ -15,27 +19,28 @@ struct TodayView: View {
         ZStack(alignment: .topLeading) {
             Theme.background
                 .ignoresSafeArea()
-            
+
             ScrollView {
                 VStack(alignment: .leading, spacing: 20) {
-                    Text("Home")
-                        .font(.largeTitle.bold())
+                    Text("Forno operativo")
+                        .font(.system(size: 34, weight: .semibold, design: .serif))
                         .foregroundStyle(Theme.ink)
-                    
+
                     SectionCard {
-                        Text("Cosa devi fare adesso?")
-                            .font(.system(size: 30, weight: .semibold, design: .serif))
+                        Text("Cosa richiede attenzione adesso?")
+                            .font(.system(size: 24, weight: .semibold, design: .serif))
                             .foregroundStyle(Theme.ink)
-                        
+
                         Text(snapshot.heroSubtitle)
+                            .font(.subheadline)
                             .foregroundStyle(Theme.muted)
-                        
+
                         HStack(spacing: 12) {
-                            StateBadge(text: "\(snapshot.actionCount) azioni")
+                            StateBadge(text: "\(snapshot.actionCount) fronti")
                             StateBadge(text: "\(snapshot.inProgressCount) impasti attivi")
                         }
                     }
-                    
+
                     if snapshot.actionCount == 0 {
                         MultiActionEmptyStateView(
                             title: "Giornata leggera",
@@ -56,19 +61,41 @@ struct TodayView: View {
                         ForEach(TodayAgendaItem.Section.allCases) { section in
                             if let items = snapshot.agenda[section], items.isEmpty == false {
                                 VStack(alignment: .leading, spacing: 12) {
-                                    Text(section.title)
-                                        .font(.headline)
-                                        .foregroundStyle(Theme.ink)
-                                    
+                                    HStack {
+                                        Text(section.title)
+                                            .font(.headline)
+                                            .foregroundStyle(Theme.ink)
+                                        Spacer()
+                                        Text("\(items.count)")
+                                            .font(.caption.weight(.semibold))
+                                            .foregroundStyle(Theme.muted)
+                                    }
+
                                     ForEach(items) { item in
                                         switch item.kind {
-                                        case .bake:
-                                            TodayStepCardView(item: item) {
-                                                handle(item)
+                                        case let .bake(summary):
+                                            if let selection = resolve(summary) {
+                                                TodayStepCardView(
+                                                    bake: selection.bake,
+                                                    step: selection.step,
+                                                    section: item.section,
+                                                    onPrimaryAction: {
+                                                        handlePrimary(selection)
+                                                    },
+                                                    onOpenDetail: {
+                                                        detailSelection = selection
+                                                    },
+                                                    onOpenShift: {
+                                                        shiftSelection = selection
+                                                    },
+                                                    onQuickShift: { minutes in
+                                                        shift(selection, by: minutes)
+                                                    }
+                                                )
                                             }
-                                        case .starter:
+                                        case let .starter(starterID):
                                             TodayStarterReminderRow(item: item) {
-                                                handle(item)
+                                                openStarter(starterID)
                                             }
                                         }
                                     }
@@ -76,10 +103,10 @@ struct TodayView: View {
                             }
                         }
                     }
-                        
+
                     Divider()
                         .padding(.vertical, 8)
-                    
+
                     Button {
                         router.showingKnowledge = true
                     } label: {
@@ -106,16 +133,62 @@ struct TodayView: View {
                 RefreshLogView(starter: starter)
             }
         }
-    }
-
-    private func handle(_ item: TodayAgendaItem) {
-        switch item.kind {
-        case let .bake(bakeID):
-            router.openBake(bakeID)
-        case let .starter(starterID):
-            refreshStarter = starters.first(where: { $0.id == starterID })
+        .sheet(item: $detailSelection) { selection in
+            NavigationStack {
+                BakeStepDetailView(step: selection.step)
+            }
+        }
+        .sheet(item: $shiftSelection) { selection in
+            NavigationStack {
+                ShiftTimelineView(bake: selection.bake, anchorStep: selection.step)
+            }
         }
     }
+
+    private func resolve(_ summary: TodayAgendaItem.BakeSummary) -> TodayBakeSelection? {
+        guard let bake = bakes.first(where: { $0.id == summary.bakeID }),
+              let step = bake.steps.first(where: { $0.id == summary.stepID }) else {
+            return nil
+        }
+
+        return TodayBakeSelection(bake: bake, step: step)
+    }
+
+    private func handlePrimary(_ selection: TodayBakeSelection) {
+        let step = selection.step
+
+        if step.status == .running {
+            step.complete()
+        } else if step.isTerminal == false {
+            step.start()
+        }
+
+        persistAndSync(for: selection.bake)
+    }
+
+    private func shift(_ selection: TodayBakeSelection, by minutes: Int) {
+        BakeScheduler.shiftFutureSteps(in: selection.bake, after: selection.step, by: minutes)
+        persistAndSync(for: selection.bake)
+    }
+
+    private func openStarter(_ starterID: UUID) {
+        refreshStarter = starters.first(where: { $0.id == starterID })
+    }
+
+    private func persistAndSync(for bake: Bake) {
+        try? modelContext.save()
+
+        Task {
+            await environment.notificationService.syncNotifications(for: bake)
+        }
+    }
+}
+
+private struct TodayBakeSelection: Identifiable {
+    let bake: Bake
+    let step: BakeStep
+
+    var id: UUID { step.id }
 }
 
 private struct TodaySnapshot {
@@ -134,10 +207,10 @@ private struct TodaySnapshot {
         }
 
         let heroSubtitle: String
-        if let first = agenda[.now]?.first {
-            heroSubtitle = "Priorita attuale: \(first.title.lowercased())."
-        } else if let first = agenda[.upcoming]?.first {
-            heroSubtitle = "Prossimo step: \(first.title.lowercased())."
+        if let first = agenda[.now]?.first, let summary = first.bakeSummary {
+            heroSubtitle = "\(summary.stepName) in \(summary.bakeName.lowercased()): guarda il timer e decidi se completare o riallineare."
+        } else if let first = agenda[.upcoming]?.first, let summary = first.bakeSummary {
+            heroSubtitle = "Il prossimo step è \(summary.stepName.lowercased()) per \(summary.bakeName.lowercased())."
         } else if let first = agenda[.starter]?.first {
             heroSubtitle = "Hai uno starter da controllare: \(first.title.lowercased())."
         } else {

@@ -42,7 +42,16 @@ struct BakeStepDetailView: View {
             }
 
             if !step.isTerminal {
-                Section {
+                Section("Esecuzione") {
+                    Button(step.status == .running ? "Completa step" : "Avvia step") {
+                        if step.status == .running {
+                            complete()
+                        } else {
+                            start()
+                        }
+                        dismiss()
+                    }
+
                     Button("Salta questo step") {
                         skip()
                         dismiss()
@@ -62,6 +71,20 @@ struct BakeStepDetailView: View {
 
     private func skip() {
         step.skip()
+        persistAndSync()
+    }
+
+    private func start() {
+        step.start()
+        persistAndSync()
+    }
+
+    private func complete() {
+        step.complete()
+        persistAndSync()
+    }
+
+    private func persistAndSync() {
         try? modelContext.save()
         Task {
             if let bake = step.bake {

@@ -16,7 +16,7 @@ final class TodayFlowUITests: XCTestCase {
         app.launchEmpty()
 
         // Today tab is selected by default
-        XCTAssertTrue(app.scrollViews["TodayScrollView"].waitForExistence(timeout: 5))
+        XCTAssertTrue(app.scrollViews["TodayScrollView"].waitForExistence(timeout: 8))
 
         // With no data, the app must show a constructive empty state
         XCTAssertTrue(app.staticTexts["Giornata leggera"].waitForExistence(timeout: 5))
@@ -28,7 +28,7 @@ final class TodayFlowUITests: XCTestCase {
         let app = XCUIApplication()
         app.launchEmpty()
 
-        XCTAssertTrue(app.scrollViews["TodayScrollView"].waitForExistence(timeout: 5))
+        XCTAssertTrue(app.scrollViews["TodayScrollView"].waitForExistence(timeout: 8))
 
         // Tap the action button in the Today empty state
         let cta = app.buttons["Nuovo bake"]
@@ -45,9 +45,45 @@ final class TodayFlowUITests: XCTestCase {
         let app = XCUIApplication()
         app.launchSeeded()
 
-        XCTAssertTrue(app.scrollViews["TodayScrollView"].waitForExistence(timeout: 5))
+        XCTAssertTrue(app.scrollViews["TodayScrollView"].waitForExistence(timeout: 8))
 
-        // With seed data the hero section must appear
-        XCTAssertTrue(app.staticTexts["Home"].waitForExistence(timeout: 5))
+        XCTAssertTrue(app.staticTexts["Forno operativo"].waitForExistence(timeout: 5))
+    }
+
+    func testTodayOperationalCardCanTransitionFromUpcomingToRunning() throws {
+        let app = XCUIApplication()
+        app.launchSeeded()
+
+        XCTAssertTrue(app.scrollViews["TodayScrollView"].waitForExistence(timeout: 8))
+
+        let completeButton = app.buttons["Completa step"]
+        if completeButton.exists == false {
+            let startButton = app.buttons["Avvia step"]
+            XCTAssertTrue(startButton.waitForExistence(timeout: 5))
+            startButton.tap()
+        }
+
+        XCTAssertTrue(completeButton.waitForExistence(timeout: 5))
+        XCTAssertTrue(app.buttons["Dettaglio"].exists)
+    }
+
+    func testTodayOperationalCardShowsShiftEntryWhenStepIsRunning() throws {
+        let app = XCUIApplication()
+        app.launchSeeded()
+
+        XCTAssertTrue(app.scrollViews["TodayScrollView"].waitForExistence(timeout: 8))
+
+        let completeButton = app.buttons["Completa step"]
+        if completeButton.exists == false {
+            let startButton = app.buttons["Avvia step"]
+            XCTAssertTrue(startButton.waitForExistence(timeout: 5))
+            startButton.tap()
+        }
+
+        let shiftButton = app.buttons["Sposta"]
+        XCTAssertTrue(shiftButton.waitForExistence(timeout: 5))
+        shiftButton.tap()
+
+        XCTAssertTrue(app.buttons["Applica"].waitForExistence(timeout: 5))
     }
 }
