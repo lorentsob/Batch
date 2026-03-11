@@ -47,5 +47,14 @@ struct FormulaStepTemplate: Codable, Hashable, Identifiable {
         FormulaStepTemplate(type: .proof, name: "Appretto", details: "Seconda lievitazione", durationMinutes: 120, reminderOffsetMinutes: 20),
         FormulaStepTemplate(type: .bake, name: "Cottura", details: "Forno ben caldo", durationMinutes: 45, reminderOffsetMinutes: 10)
     ]
+
+    static let defaultPizzaSteps: [FormulaStepTemplate] = [
+        FormulaStepTemplate(type: .starterRefresh, name: "Starter pronto", details: "Al raddoppio", durationMinutes: 240, reminderOffsetMinutes: 15),
+        FormulaStepTemplate(type: .mix, name: "Impasto", details: "Puntamento in massa", durationMinutes: 20),
+        FormulaStepTemplate(type: .bulk, name: "Puntata", details: "Lievitazione in massa", durationMinutes: 120, temperatureRange: "24 C"),
+        FormulaStepTemplate(type: .shape, name: "Staglio", details: "Formatura dei panetti", durationMinutes: 15),
+        FormulaStepTemplate(type: .proof, name: "Appretto", details: "Maturazione in cassetta", durationMinutes: 300, temperatureRange: "20-22 C"),
+        FormulaStepTemplate(type: .bake, name: "Cottura", details: "Alte temperature", durationMinutes: 5, reminderOffsetMinutes: 2)
+    ]
 }
 

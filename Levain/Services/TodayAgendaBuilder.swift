@@ -2,7 +2,7 @@ import Foundation
 
 struct TodayAgendaItem: Identifiable {
     enum Kind: Hashable {
-        case bakeStep(bakeID: UUID, stepID: UUID)
+        case bake(bakeID: UUID)
         case starter(starterID: UUID)
     }
 
@@ -39,40 +39,41 @@ enum TodayAgendaBuilder {
         var grouped: [TodayAgendaItem.Section: [TodayAgendaItem]] = [:]
 
         for bake in bakes {
-            for step in bake.sortedSteps where step.isTerminal == false {
-                let section: TodayAgendaItem.Section
-                if step.status == .running || step.isOverdue(now: now) {
-                    section = .now
-                } else if Calendar.current.isDate(step.plannedStart, inSameDayAs: now) {
-                    section = .upcoming
-                } else {
-                    section = .later
-                }
-
-                let state: String
-                if step.status == .running {
-                    state = "running"
-                } else if step.isOverdue(now: now) {
-                    state = "late"
-                } else {
-                    state = step.status.rawValue
-                }
-
-                grouped[section, default: []].append(
-                    TodayAgendaItem(
-                        id: "bake-\(step.id.uuidString)",
-                        section: section,
-                        kind: .bakeStep(bakeID: bake.id, stepID: step.id),
-                        title: "\(step.displayName) · \(bake.name)",
-                        subtitle: step.status == .running
-                            ? "in corso · fine prevista \(DateFormattingService.time(step.plannedEnd))"
-                            : DateFormattingService.dayTime(step.plannedStart),
-                        state: state,
-                        actionTitle: "Apri step",
-                        sortDate: step.plannedStart
-                    )
-                )
+            guard bake.derivedStatus != .cancelled && bake.derivedStatus != .completed else { continue }
+            guard let step = bake.activeStep else { continue }
+            
+            let section: TodayAgendaItem.Section
+            if step.status == .running || step.isOverdue(now: now) {
+                section = .now
+            } else if Calendar.current.isDate(step.plannedStart, inSameDayAs: now) {
+                section = .upcoming
+            } else {
+                section = .later
             }
+
+            let state: String
+            if step.status == .running {
+                state = "In corso" // or mapping to new state badge
+            } else if step.isOverdue(now: now) {
+                state = "In ritardo"
+            } else {
+                state = "Pianificato"
+            }
+
+            grouped[section, default: []].append(
+                TodayAgendaItem(
+                    id: "bake-\(bake.id.uuidString)",
+                    section: section,
+                    kind: .bake(bakeID: bake.id),
+                    title: bake.name,
+                    subtitle: step.status == .running
+                        ? "Ora: \(step.displayName) · fine \(DateFormattingService.time(step.plannedEnd))"
+                        : "Prossimo: \(step.displayName) · \(DateFormattingService.dayTime(step.plannedStart))",
+                    state: state,
+                    actionTitle: "Apri impasto",
+                    sortDate: step.plannedStart
+                )
+            )
         }
 
         for starter in starters {

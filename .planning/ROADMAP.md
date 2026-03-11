@@ -15,6 +15,7 @@ The roadmap moves from a native iPhone foundation into core baking logic, then a
 - [x] **Phase 7: Knowledge Tips** - Bundle static knowledge, browse it, and surface contextual tips.
 - [x] **Phase 8: Hardening UAT** - Finish tests, empty states, internal-seed polish, and release readiness.
 - [x] **Phase 9: v1 Audit CI/CD** - Audit v1 readiness, automate CI, and add controlled release delivery.
+- [ ] **Phase 10: Operational UX Realignment** - Realign Home, Impasti, Ricette, bake lifecycle, and visual-system behavior after real UAT feedback.
 
 ## Phase Details
 
@@ -178,10 +179,28 @@ Plans:
 - [x] 09-02: Continuous integration workflow
 - [x] 09-03: Delivery automation and release runbook
 
-## Progress: [██████████] 100%
+### Phase 10: Operational UX Realignment
+
+**Goal**: Resolve the UAT gaps that make the current MVP feel misaligned with real baking use, especially around Home, Impasti, Ricette, bake lifecycle semantics, and visual trust.
+**Depends on**: Phase 9
+**Requirements**: [REALIGN-01, REALIGN-02, REALIGN-03, REALIGN-04, REALIGN-05, REALIGN-06, REALIGN-07, REALIGN-08, REALIGN-09, REALIGN-10]
+**Success Criteria**:
+
+1. Home and Impasti prioritize active or planned bakes, grouped by bake context instead of a flat stream of pending steps.
+2. Ricette and Starter authoring use structured, labeled inputs with directly reusable presets, flour multi-select, and yeast-aware planning.
+3. Cancelled or terminal bake behavior, visual-system states, and App Icon handling are reliable enough to restore product trust after UAT.
+   **Plans**: 3 plans
+
+Plans:
+
+- [ ] 10-01: Home and navigation realignment
+- [ ] 10-02: Recipe and starter authoring realignment
+- [ ] 10-03: Bake lifecycle, visual polish, and app icon closure
+
+## Progress: [█████████░] 90%
 
 **Execution Order:**
-Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6 → 7 → 8 → 9
+Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6 → 7 → 8 → 9 → 10
 
 | Phase                      | Plans Complete | Status   | Completed  |
 | -------------------------- | -------------- | -------- | ---------- |
@@ -194,3 +213,4 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6 → 7 → 8 →
 | 7. Knowledge Tips          | 3/3            | Complete | 2026-03-10 |
 | 8. Hardening UAT           | 3/3            | Complete | 2026-03-10 |
 | 9. v1 Audit CI/CD          | 3/3            | Complete | 2026-03-10 |
+| 10. Operational UX Realignment | 0/3         | Planned  | —          |

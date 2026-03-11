@@ -9,6 +9,8 @@ struct StateBadge: View {
             (Theme.warning.opacity(0.16), Theme.warning)
         case "late", "overdue", "in ritardo":
             (Theme.danger.opacity(0.14), Theme.danger)
+        case "cancelled", "annullato":
+            (Theme.danger.opacity(0.14), Theme.danger)
         case "done", "completato", "ok":
             (Theme.success.opacity(0.14), Theme.success)
         default:

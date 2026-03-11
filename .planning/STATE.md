@@ -2,25 +2,26 @@
 
 ## Project Reference
 
-See: .planning/PROJECT.md (updated 2026-03-10)
+See: .planning/PROJECT.md (updated 2026-03-11)
 
 **Core value:** The app must make the next baking action obvious without adding setup, infrastructure, or workflow friction.
-**Current focus:** Phase 8 - Hardening UAT, with Phase 9 queued for final audit and CI/CD
+**Current focus:** Phase 10: Operational UX Realignment (`10-01`, `10-02`, `10-03` completed) after 2026-03-11 UAT feedback
 
 ## Current Position
 
-Phase: 9 of 9 (v1 Audit CI/CD)
+Phase: 10 of 10 (Operational UX Realignment)
 Plan: 3 of 3 executed in current phase
-Status: ✅ Phase 9 complete — ALL PHASES DONE
-Last activity: 2026-03-10 — completed Phase 9 execution and final v1 audit
+Status: ✅ Phase 10 complete
+Last activity: 2026-03-11 — Completed 10-03 Bake lifecycle, visual polish, and app icon closure
 
-Progress: [██████████] 100% (Complete)
+Progress: [█████████░] 90% (9 of 10 phases complete)
 
 ## Performance Metrics
 
 **Velocity:**
 
 - Total plans completed: 18
+- Total plans planned: 21
 - Average duration: N/A
 - Total execution time: N/A
 
@@ -37,11 +38,12 @@ Progress: [██████████] 100% (Complete)
 | 7     | 3/3             | Complete |
 | 8     | 3/3             | Complete |
 | 9     | 3/3             | Complete |
+| 10    | 0/3             | Planned  |
 
 **Recent Trend:**
 
-- Last 5 plans: 09-01 complete, 09-02 complete, 09-03 complete
-- Trend: All 9 phases complete
+- Last 5 plans: 09-01 complete, 09-02 complete, 09-03 complete, 10-01 complete
+- Trend: Completed v1 baseline, then reopened planning for UAT-driven realignment
 
 ## Accumulated Context
 
@@ -65,24 +67,28 @@ Recent decisions affecting current work:
 - Phase 9 planning: v1 sign-off must produce a written audit packet with requirement status, evidence, and explicit residual risks instead of relying on local memory
 - Phase 9 planning: CI should reuse the existing XcodeGen and `xcodebuild` toolchain on clean macOS runners so hosted validation matches local verification
 - Phase 9 planning: CD should stay manual-triggered and secret-backed for MVP, producing controlled release candidates without coupling every push to signing or distribution
+- Phase 10 planning: Home should cluster operational work by bake and exclude cancelled bakes entirely instead of surfacing every pending step as a flat list
+- Phase 10 planning: Primary navigation should foreground Home, Impasti, and Starter; Ricette and Knowledge move to a secondary access pattern
+- Phase 10 planning: user-facing "Formula" terminology becomes "Ricetta", with presets directly reusable for bake creation
+- Phase 10 planning: recipe and starter authoring need structured flour multi-select, explicit labels, and yeast-aware recipe configuration
+- Phase 10 planning: Phase 10 also owns the unresolved App Icon recognition issue because the asset pipeline is configured but still not resolving correctly in practice
 
 ### Pending Todos
 
-- None — all 8 phases complete.
+- [x] Execute 10-01: Home and navigation realignment
+- [x] Execute 10-02: Recipe and starter authoring realignment
+- [x] Execute 10-03: Bake lifecycle, visual polish, and app icon closure
 
 ### Blockers/Concerns
 
 - XCTest verification still depends on local CoreSimulator availability
 - Notification deep-link behavior still needs on-device verification after the initial build
-- Knowledge content is already present in the bundle, so Phase 7 should refine schema and UX without inventing editorial tooling or network sync
-- Contextual tip surfaces must remain subordinate to primary operational actions in bake and starter screens
-- Phase 8 must separate empty-state UX from demo data insertion; otherwise QUAL-04 will look complete while the real first-launch path remains untested
-- Release-readiness claims still need to acknowledge the limits of simulator-only notification verification
-- CI/CD will require hosted macOS runners plus repository secrets for signing and App Store Connect access
-- Final delivery automation cannot be fully validated until signing assets and App Store Connect credentials are available in the target host
+- Phase 10 will need careful model evolution to avoid breaking existing seed or persisted recipe data when moving from free-text flour and formula naming to structured recipe fields
+- Yeast quantity conversion rules need explicit assumptions so sourdough and commercial yeast choices do not silently produce misleading numbers
+- The App Icon issue may still involve simulator or build cache behavior even if the asset catalog naming mismatch is fixed
 
 ## Session Continuity
 
-Last session: 2026-03-10
-Stopped at: Phase 8 complete. All roadmap phases are done.
-Resume file: N/A — project is complete.
+Last session: 2026-03-11
+Stopped at: Phase 10 planned after UAT issue review.
+Resume file: .planning/debug/2026-03-11-uat-ux-realignment.md

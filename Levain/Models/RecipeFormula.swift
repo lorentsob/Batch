@@ -15,6 +15,8 @@ final class RecipeFormula {
     var servings: Int
     var notes: String
     var flourMix: String
+    var yeastTypeRaw: String?
+    var floursPayload: Data?
     private var defaultStepsPayload: Data
 
     @Relationship(inverse: \Bake.formula)
@@ -23,7 +25,7 @@ final class RecipeFormula {
     init(
         id: UUID = UUID(),
         name: String,
-        type: BakeType,
+        type: RecipeCategory,
         totalFlourWeight: Double,
         totalWaterWeight: Double,
         saltWeight: Double,
@@ -31,6 +33,8 @@ final class RecipeFormula {
         servings: Int = 1,
         notes: String = "",
         flourMix: String = "",
+        yeastType: YeastType = .sourdough,
+        flours: [FlourSelection] = [],
         defaultSteps: [FormulaStepTemplate] = FormulaStepTemplate.defaultBreadSteps
     ) {
         self.id = id
@@ -45,18 +49,30 @@ final class RecipeFormula {
         self.servings = servings
         self.notes = notes
         self.flourMix = flourMix
+        self.yeastTypeRaw = yeastType.rawValue
+        self.floursPayload = RecipeFormula.encode(flours: flours)
         self.defaultStepsPayload = RecipeFormula.encode(defaultSteps: defaultSteps)
         self.bakes = []
     }
 
-    var type: BakeType {
-        get { BakeType(rawValue: typeRaw) ?? .custom }
+    var type: RecipeCategory {
+        get { RecipeCategory(rawValue: typeRaw) ?? .custom }
         set { typeRaw = newValue.rawValue }
     }
 
     var defaultSteps: [FormulaStepTemplate] {
         get { RecipeFormula.decode(defaultSteps: defaultStepsPayload) }
         set { defaultStepsPayload = RecipeFormula.encode(defaultSteps: newValue) }
+    }
+
+    var yeastType: YeastType {
+        get { YeastType(rawValue: yeastTypeRaw ?? "") ?? .sourdough }
+        set { yeastTypeRaw = newValue.rawValue }
+    }
+
+    var selectedFlours: [FlourSelection] {
+        get { RecipeFormula.decode(flours: floursPayload) }
+        set { floursPayload = RecipeFormula.encode(flours: newValue) }
     }
 
     var totalDoughWeight: Double {
@@ -74,6 +90,8 @@ final class RecipeFormula {
             servings: servings,
             notes: notes,
             flourMix: flourMix,
+            yeastType: yeastType,
+            flours: selectedFlours,
             defaultSteps: defaultSteps.map { FormulaStepTemplate(id: UUID(), type: $0.type, name: $0.name, details: $0.details, durationMinutes: $0.durationMinutes, reminderOffsetMinutes: $0.reminderOffsetMinutes, temperatureRange: $0.temperatureRange, volumeTarget: $0.volumeTarget, notes: $0.notes) }
         )
     }
@@ -103,6 +121,19 @@ final class RecipeFormula {
             return FormulaStepTemplate.defaultBreadSteps
         }
         return steps
+    }
+
+    private static func encode(flours: [FlourSelection]) -> Data {
+        guard let data = try? JSONEncoder().encode(flours) else { return Data() }
+        return data
+    }
+
+    private static func decode(flours payload: Data?) -> [FlourSelection] {
+        guard let payload = payload, !payload.isEmpty,
+              let flours = try? JSONDecoder().decode([FlourSelection].self, from: payload) else {
+            return []
+        }
+        return flours
     }
 }
 

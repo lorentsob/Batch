@@ -11,19 +11,20 @@ struct BakesView: View {
     @State private var editingFormula: RecipeFormula?
     @State private var showingBakeEditor = false
     @State private var preselectedFormula: RecipeFormula?
+    @State private var isRicetteExpanded = false
 
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 20) {
                 SectionCard {
-                    Text("Impasti e formule")
+                    Text("Impasti")
                         .font(.system(size: 30, weight: .semibold, design: .serif))
                         .foregroundStyle(Theme.ink)
-                    Text("Qui gestisci le formule riutilizzabili e i bake in corso o pianificati.")
+                    Text("L'hub operativo per i tuoi bake in corso o pianificati.")
                         .foregroundStyle(Theme.muted)
                     HStack(spacing: 12) {
                         StateBadge(text: "\(bakes.count) bake")
-                        StateBadge(text: "\(formulas.count) formule")
+                        StateBadge(text: "\(formulas.count) ricette")
                     }
                 }
 
@@ -41,14 +42,13 @@ struct BakesView: View {
                         }
                         .buttonStyle(.bordered)
                         .tint(Theme.accent)
-                        .disabled(formulas.isEmpty)
                     }
 
                     if bakes.isEmpty {
                         EmptyStateView(
-                            title: "Nessun bake pianificato",
-                            message: "Crea prima una formula, poi genera un bake con la schedulazione backward.",
-                            actionTitle: "Nuova formula"
+                            title: "Nessun impasto",
+                            message: "Crea prima una ricetta, poi genera un bake.",
+                            actionTitle: "Nuova ricetta"
                         ) {
                             editingFormula = nil
                             showingFormulaEditor = true
@@ -83,66 +83,33 @@ struct BakesView: View {
 
                 VStack(alignment: .leading, spacing: 12) {
                     HStack {
-                        Text("Formule")
+                        Text("Ricette")
                             .font(.headline)
                             .foregroundStyle(Theme.ink)
                         Spacer()
-                        Button {
-                            editingFormula = nil
-                            showingFormulaEditor = true
-                        } label: {
-                            Label("Nuova formula", systemImage: "square.and.pencil")
+                        NavigationLink(value: BakesRoute.formulaList) {
+                            Text("Vedi tutte")
+                                .font(.subheadline)
+                                .foregroundStyle(Theme.accent)
                         }
-                        .buttonStyle(.borderedProminent)
-                        .tint(Theme.accent)
                     }
 
-                    if formulas.isEmpty {
-                        EmptyStateView(
-                            title: "Nessuna formula salvata",
-                            message: "Le formule sono la base riutilizzabile da cui generare i bake.",
-                            actionTitle: "Crea formula"
-                        ) {
-                            editingFormula = nil
-                            showingFormulaEditor = true
-                        }
-                    } else {
-                        ForEach(formulas) { formula in
-                            NavigationLink(value: BakesRoute.formula(formula.id)) {
-                                SectionCard {
-                                    HStack(alignment: .top) {
-                                        VStack(alignment: .leading, spacing: 8) {
-                                            Text(formula.name)
-                                                .font(.headline)
-                                                .foregroundStyle(Theme.ink)
-                                            Text("\(formula.type.title) · \(Int(formula.hydrationPercent.rounded()))% idratazione")
-                                                .font(.subheadline)
-                                                .foregroundStyle(Theme.muted)
-                                            Text("\(formula.defaultSteps.count) step di default")
-                                                .font(.footnote)
-                                                .foregroundStyle(Theme.muted)
-                                        }
-                                        Spacer()
-                                        StateBadge(text: "\(formula.servings) pezz.")
-                                    }
-                                }
+                    SectionCard {
+                        HStack {
+                            VStack(alignment: .leading, spacing: 4) {
+                                Text("Gestione Ricette")
+                                    .font(.headline)
+                                Text("Configura i tuoi template e basi.")
+                                    .font(.subheadline)
+                                    .foregroundStyle(Theme.muted)
                             }
-                            .buttonStyle(.plain)
-                            .contextMenu {
-                                Button("Modifica") {
-                                    editingFormula = formula
-                                    showingFormulaEditor = true
-                                }
-                                Button("Duplica") {
-                                    editingFormula = formula.duplicate()
-                                    showingFormulaEditor = true
-                                }
-                                Button("Nuovo bake") {
-                                    preselectedFormula = formula
-                                    showingBakeEditor = true
-                                }
-                            }
+                            Spacer()
+                            Image(systemName: "chevron.right")
+                                .foregroundStyle(Theme.muted)
                         }
+                    }
+                    .onTapGesture {
+                        router.bakesPath.append(.formulaList)
                     }
                 }
             }
@@ -187,7 +154,10 @@ struct NumericField: View {
     @Binding var value: Double
 
     var body: some View {
-        TextField(title, value: $value, format: .number)
-            .keyboardType(.decimalPad)
+        LabeledContent(title) {
+            TextField("", value: $value, format: .number)
+                .keyboardType(.decimalPad)
+                .multilineTextAlignment(.trailing)
+        }
     }
 }

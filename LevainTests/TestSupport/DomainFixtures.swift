@@ -8,7 +8,7 @@ enum DomainFixtures {
     ) -> RecipeFormula {
         RecipeFormula(
             name: name,
-            type: .countryLoaf,
+            type: .pane,
             totalFlourWeight: 1000,
             totalWaterWeight: 750,
             saltWeight: 20,

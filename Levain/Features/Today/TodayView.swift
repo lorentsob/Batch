@@ -24,7 +24,7 @@ struct TodayView: View {
             
             ScrollView {
                 VStack(alignment: .leading, spacing: 20) {
-                    Text("Oggi")
+                    Text("Home")
                         .font(.largeTitle.bold())
                         .foregroundStyle(Theme.ink)
                     
@@ -54,7 +54,7 @@ struct TodayView: View {
                                     router.selectedTab = .starter
                                 },
                                 .init(title: "Esplora consigli", systemImage: "book.pages.fill") {
-                                    router.selectedTab = .knowledge
+                                    router.showingKnowledge = true
                                 }
                             ]
                         )
@@ -68,7 +68,7 @@ struct TodayView: View {
                                     
                                     ForEach(items) { item in
                                         switch item.kind {
-                                        case .bakeStep:
+                                        case .bake:
                                             TodayStepCardView(item: item) {
                                                 handle(item)
                                             }
@@ -82,6 +82,22 @@ struct TodayView: View {
                             }
                         }
                     }
+                        
+                    Divider()
+                        .padding(.vertical, 8)
+                    
+                    Button {
+                        router.showingKnowledge = true
+                    } label: {
+                        HStack {
+                            Image(systemName: "book.pages.fill")
+                            Text("Sfoglia la Knowledge base")
+                        }
+                        .font(.subheadline)
+                        .foregroundStyle(Theme.muted)
+                    }
+                    .buttonStyle(.plain)
+                    .padding(.bottom, 16)
                 }
                 .padding(.horizontal, 20)
                 .padding(.vertical, 24)
@@ -113,7 +129,7 @@ struct TodayView: View {
     
     private func handle(_ item: TodayAgendaItem) {
         switch item.kind {
-        case let .bakeStep(bakeID, _):
+        case let .bake(bakeID):
             router.openBake(bakeID)
         case let .starter(starterID):
             refreshStarter = starters.first(where: { $0.id == starterID })

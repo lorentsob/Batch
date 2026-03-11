@@ -42,14 +42,16 @@ enum ModelContainerFactory {
         }
     }
 
-    private static let schema = Schema([
-        Starter.self,
-        StarterRefresh.self,
-        RecipeFormula.self,
-        Bake.self,
-        BakeStep.self,
-        AppSettings.self
-    ])
+    private static var schema: Schema {
+        Schema([
+            Starter.self,
+            StarterRefresh.self,
+            RecipeFormula.self,
+            Bake.self,
+            BakeStep.self,
+            AppSettings.self
+        ])
+    }
 
     private static func makeInMemoryContainer() -> ModelContainer {
         do {

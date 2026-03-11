@@ -30,41 +30,50 @@ struct BakeCreationView: View {
     var body: some View {
         NavigationStack {
             Form {
-                Section("Formula") {
-                    Picker("Formula", selection: $selectedFormulaID) {
-                        Text("Seleziona").tag(Optional<UUID>.none)
-                        ForEach(formulas) { formula in
-                            Text(formula.name).tag(Optional(formula.id))
-                        }
+                Section("Ricetta") {
+                    Picker("Ricetta", selection: $selectedFormulaID) {
+                        formulaPickerOptions
                     }
                     .disabled(preselectedFormula != nil)
                     .onChange(of: selectedFormulaID) { _, newID in
-                        if let selected = formulas.first(where: { $0.id == newID }), name.isEmpty {
+                        if let selected = allAvailableFormulas.first(where: { $0.id == newID }), name.isEmpty {
                             name = selected.name
                         }
                     }
 
                     if let formula = selectedFormula {
-                        Text("\(formula.type.title) · \(Int(formula.hydrationPercent.rounded()))% idratazione")
-                            .font(.footnote)
-                            .foregroundStyle(Theme.muted)
+                        VStack(alignment: .leading, spacing: 4) {
+                            Text("\(formula.type.title) · \(Int(formula.hydrationPercent.rounded()))% idratazione")
+                                .font(.footnote)
+                                .foregroundStyle(Theme.muted)
+                            Text("\(formula.yeastType.title) al \(String(format: "%.1f", formula.inoculationPercent))%")
+                                .font(.footnote)
+                                .foregroundStyle(Theme.muted)
+                        }
                     }
                 }
 
                 Section("Pianificazione") {
-                    TextField("Nome bake", text: $name)
-                    DatePicker("Target cottura", selection: $targetBakeDateTime)
+                    LabeledContent("Dài un nome") {
+                        TextField("Infornata del weekend", text: $name)
+                            .multilineTextAlignment(.trailing)
+                    }
+                    DatePicker("Target utilizzo", selection: $targetBakeDateTime)
                 }
 
-                DisclosureGroup("Avanzate & Starter") {
-                    Picker("Starter", selection: $selectedStarterID) {
-                        Text("Nessuno").tag(Optional<UUID>.none)
-                        ForEach(starters) { starter in
-                            Text(starter.name).tag(Optional(starter.id))
+                if let formula = selectedFormula, formula.yeastType == .sourdough {
+                    Section("Starter") {
+                        Picker("Lievito madre usato", selection: $selectedStarterID) {
+                            Text("Nessuno").tag(Optional<UUID>.none)
+                            ForEach(starters) { starter in
+                                Text(starter.name).tag(Optional(starter.id))
+                            }
                         }
                     }
+                }
 
-                    TextField("Note", text: $notes, axis: .vertical)
+                Section("Avanzate") {
+                    TextField("Note addizionali", text: $notes, axis: .vertical)
                         .lineLimit(3...5)
                 }
             }
@@ -81,8 +90,32 @@ struct BakeCreationView: View {
         }
     }
 
+    private var formulaPickerOptions: some View {
+        Group {
+            Text("Seleziona").tag(Optional<UUID>.none)
+
+            if formulas.isEmpty == false {
+                Section("Le tue ricette") {
+                    ForEach(formulas) { formula in
+                        Text(formula.name).tag(Optional(formula.id))
+                    }
+                }
+            }
+
+            Section("Template rapidi") {
+                ForEach(RecipeTemplates.all) { template in
+                    Text(template.name).tag(Optional(template.id))
+                }
+            }
+        }
+    }
+
+    private var allAvailableFormulas: [RecipeFormula] {
+        formulas + RecipeTemplates.all
+    }
+
     private var selectedFormula: RecipeFormula? {
-        formulas.first(where: { $0.id == selectedFormulaID }) ?? preselectedFormula
+        allAvailableFormulas.first(where: { $0.id == selectedFormulaID }) ?? preselectedFormula
     }
 
     private var selectedStarter: Starter? {
@@ -91,6 +124,9 @@ struct BakeCreationView: View {
 
     private func save() {
         guard let formula = selectedFormula else { return }
+        
+        // Determine if it's a template (not in SwiftData)
+        let isTemplate = RecipeTemplates.all.contains(where: { $0.id == formula.id })
 
         let bake = BakeScheduler.generateBake(
             name: name,
@@ -99,6 +135,12 @@ struct BakeCreationView: View {
             starter: selectedStarter,
             notes: notes
         )
+        
+        if isTemplate {
+            // Decouple from formula so it's not saved to the user's recipe list
+            bake.formula = nil
+        }
+
         modelContext.insert(bake)
         bake.steps.forEach { modelContext.insert($0) }
         try? modelContext.save()

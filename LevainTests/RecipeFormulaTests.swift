@@ -6,7 +6,7 @@ final class RecipeFormulaTests: XCTestCase {
     func testDerivedValuesCalculation() {
         let formula = RecipeFormula(
             name: "Test",
-            type: .countryLoaf,
+            type: .pane,
             totalFlourWeight: 1000,
             totalWaterWeight: 750,
             saltWeight: 20,
@@ -21,7 +21,7 @@ final class RecipeFormulaTests: XCTestCase {
     func testRecalculateDerivedValues() {
         let formula = RecipeFormula(
             name: "Test",
-            type: .countryLoaf,
+            type: .pane,
             totalFlourWeight: 1000,
             totalWaterWeight: 750,
             saltWeight: 20,
@@ -41,7 +41,7 @@ final class RecipeFormulaTests: XCTestCase {
     func testDuplication() {
         let formula = RecipeFormula(
             name: "Country Loaf",
-            type: .countryLoaf,
+            type: .pane,
             totalFlourWeight: 1000,
             totalWaterWeight: 800,
             saltWeight: 22,

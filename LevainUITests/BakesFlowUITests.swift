@@ -16,8 +16,7 @@ final class BakesFlowUITests: XCTestCase {
         app.launchEmpty()
 
         app.tabBars.buttons["Impasti"].tap()
-        XCTAssertTrue(app.scrollViews["BakesScrollView"].waitForExistence(timeout: 5))
-        XCTAssertTrue(app.staticTexts["Nessuna formula salvata"].waitForExistence(timeout: 5))
+        XCTAssertTrue(app.staticTexts["Nessuna ricetta salvata"].waitForExistence(timeout: 5))
     }
 
     // MARK: Seeded state
@@ -30,7 +29,7 @@ final class BakesFlowUITests: XCTestCase {
         XCTAssertTrue(app.scrollViews["BakesScrollView"].waitForExistence(timeout: 5))
 
         // Seeded data includes known formulas; the empty-state text must disappear.
-        XCTAssertFalse(app.staticTexts["Nessuna formula salvata"].exists)
+        XCTAssertFalse(app.staticTexts["Nessuna ricetta salvata"].exists)
     }
 
     // MARK: New Bake button only enabled with formulas

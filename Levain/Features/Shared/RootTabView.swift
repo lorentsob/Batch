@@ -14,7 +14,7 @@ struct RootTabView: View {
         TabView(selection: $router.selectedTab) {
                 TodayView()
                     .tabItem {
-                        Label("Oggi", systemImage: "sun.max.fill")
+                        Label("Home", systemImage: "house.fill")
                     }
                     .tag(RootTab.today)
 
@@ -26,11 +26,13 @@ struct RootTabView: View {
                                 BakeLookupView(id: id)
                             case let .formula(id):
                                 FormulaLookupView(id: id)
+                            case .formulaList:
+                                FormulaListView()
                             }
                         }
                 }
                 .tabItem {
-                    Label("Impasti", systemImage: "birthday.cake.fill")
+                    Label("Impasti", systemImage: "fork.knife")
                 }
                 .tag(RootTab.bakes)
 
@@ -48,19 +50,6 @@ struct RootTabView: View {
                 }
                 .tag(RootTab.starter)
 
-                NavigationStack(path: $router.knowledgePath) {
-                    KnowledgeView()
-                        .navigationDestination(for: KnowledgeRoute.self) { route in
-                            switch route {
-                            case let .article(id):
-                                KnowledgeLookupView(id: id)
-                            }
-                        }
-                }
-                .tabItem {
-                    Label("Knowledge", systemImage: "book.pages.fill")
-                }
-                .tag(RootTab.knowledge)
         }
         .tint(Theme.accent)
         .accessibilityIdentifier("RootTabView")
@@ -75,6 +64,17 @@ struct RootTabView: View {
         }
         .onOpenURL { url in
             router.open(url: url)
+        }
+        .sheet(isPresented: $router.showingKnowledge) {
+            NavigationStack(path: $router.knowledgePath) {
+                KnowledgeView()
+                    .navigationDestination(for: KnowledgeRoute.self) { route in
+                        switch route {
+                        case let .article(id):
+                            KnowledgeLookupView(id: id)
+                        }
+                    }
+            }
         }
     }
 

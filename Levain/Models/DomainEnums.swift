@@ -32,23 +32,88 @@ enum StorageMode: String, CaseIterable, Codable, Identifiable {
     }
 }
 
-enum BakeType: String, CaseIterable, Codable, Identifiable {
-    case countryLoaf
-    case focaccia
-    case panBrioche
+enum RecipeCategory: String, CaseIterable, Codable, Identifiable {
+    case pane
     case pizza
+    case focaccia
+    case grandiLievitati
+    case dolci
     case custom
 
     var id: String { rawValue }
 
     var title: String {
         switch self {
-        case .countryLoaf: "Pagnotta"
-        case .focaccia: "Focaccia"
-        case .panBrioche: "Pan brioche"
+        case .pane: "Pane"
         case .pizza: "Pizza"
-        case .custom: "Personalizzato"
+        case .focaccia: "Focaccia"
+        case .grandiLievitati: "Grandi lievitati"
+        case .dolci: "Dolci"
+        case .custom: "Altro"
         }
+    }
+}
+
+enum YeastType: String, CaseIterable, Codable, Identifiable {
+    case sourdough
+    case dryYeast
+    case freshYeast
+    case none
+
+    var id: String { rawValue }
+
+    var title: String {
+        switch self {
+        case .sourdough: "Lievito madre"
+        case .dryYeast: "Lievito di birra secco"
+        case .freshYeast: "Lievito di birra fresco"
+        case .none: "Nessun lievito"
+        }
+    }
+}
+
+enum FlourCategory: String, CaseIterable, Codable, Identifiable {
+    case strong
+    case medium
+    case weak
+    case whole
+    case rye
+    case semolina
+    case special
+    case custom
+
+    var id: String { rawValue }
+
+    var title: String {
+        switch self {
+        case .strong: "Forza (Manitoba, W300+)"
+        case .medium: "Media (00, 0, W200+)"
+        case .weak: "Debole (W170-)"
+        case .whole: "Integrale"
+        case .rye: "Segale"
+        case .semolina: "Semola"
+        case .special: "Spezzata/Multicereale"
+        case .custom: "Altro"
+        }
+    }
+}
+
+struct FlourSelection: Codable, Identifiable, Hashable {
+    var id = UUID()
+    var categoryRaw: String
+    var customName: String
+    var percentage: Double // typically 0-100% of the total flour
+    
+    var category: FlourCategory {
+        get { FlourCategory(rawValue: categoryRaw) ?? .custom }
+        set { categoryRaw = newValue.rawValue }
+    }
+    
+    var displayName: String {
+        if category == .custom || !customName.isEmpty {
+            return customName.isEmpty ? category.title : customName
+        }
+        return category.title
     }
 }
 

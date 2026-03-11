@@ -10,6 +10,7 @@ enum RootTab: String, Hashable {
 enum BakesRoute: Hashable {
     case bake(UUID)
     case formula(UUID)
+    case formulaList
 }
 
 enum StarterRoute: Hashable {
@@ -26,6 +27,7 @@ final class AppRouter: ObservableObject {
     @Published var bakesPath: [BakesRoute] = []
     @Published var starterPath: [StarterRoute] = []
     @Published var knowledgePath: [KnowledgeRoute] = []
+    @Published var showingKnowledge: Bool = false
 
     func openBake(_ id: UUID) {
         selectedTab = .bakes
@@ -42,9 +44,13 @@ final class AppRouter: ObservableObject {
         starterPath = [.detail(id)]
     }
 
-    func openKnowledge(_ id: String) {
-        selectedTab = .knowledge
-        knowledgePath = [.article(id)]
+    func openKnowledge(_ id: String?) {
+        showingKnowledge = true
+        if let id = id {
+            knowledgePath = [.article(id)]
+        } else {
+            knowledgePath = []
+        }
     }
 
     func open(url: URL) {
@@ -66,6 +72,8 @@ final class AppRouter: ObservableObject {
         case "knowledge":
             if let value = segments.first {
                 openKnowledge(value)
+            } else {
+                openKnowledge(nil)
             }
         default:
             break

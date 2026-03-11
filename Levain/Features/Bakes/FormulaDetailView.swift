@@ -32,9 +32,10 @@ struct FormulaDetailView: View {
                     FormulaStatRow(label: "Acqua totale", value: "\(Int(formula.totalWaterWeight)) g")
                     FormulaStatRow(label: "Sale", value: "\(Int(formula.saltWeight)) g · \(Int(formula.saltPercent.rounded()))%")
                     FormulaStatRow(label: "Peso impasto", value: "\(Int(formula.totalDoughWeight.rounded())) g")
-                    FormulaStatRow(label: "Servings", value: "\(formula.servings)")
-                    if formula.flourMix.isEmpty == false {
-                        FormulaStatRow(label: "Mix farine", value: formula.flourMix)
+                    FormulaStatRow(label: "Porzioni", value: "\(formula.servings)")
+                    if formula.selectedFlours.isEmpty == false {
+                        let floursStr = formula.selectedFlours.map { "\($0.displayName) (\(String(format: "%.0f", $0.percentage))%)" }.joined(separator: ", ")
+                        FormulaStatRow(label: "Mix farine", value: floursStr)
                     }
                     if formula.notes.isEmpty == false {
                         FormulaStatRow(label: "Note", value: formula.notes)

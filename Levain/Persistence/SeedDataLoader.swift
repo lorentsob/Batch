@@ -85,7 +85,7 @@ enum SeedDataLoader {
         // 2. Formulas
         let formulaPane = RecipeFormula(
             name: "Pane di Campagna",
-            type: .countryLoaf,
+            type: .pane,
             totalFlourWeight: 1000,
             totalWaterWeight: 750,
             saltWeight: 20,

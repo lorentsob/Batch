@@ -25,7 +25,7 @@ final class Bake {
     init(
         id: UUID = UUID(),
         name: String,
-        type: BakeType,
+        type: RecipeCategory,
         targetBakeDateTime: Date,
         formula: RecipeFormula?,
         starter: Starter? = nil,
@@ -55,8 +55,8 @@ final class Bake {
         self.steps = []
     }
 
-    var type: BakeType {
-        get { BakeType(rawValue: typeRaw) ?? .custom }
+    var type: RecipeCategory {
+        get { RecipeCategory(rawValue: typeRaw) ?? .custom }
         set { typeRaw = newValue.rawValue }
     }
 

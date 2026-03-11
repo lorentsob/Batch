@@ -11,7 +11,7 @@ struct StarterEditorView: View {
     @State private var name: String
     @State private var type: StarterType
     @State private var hydration: Double
-    @State private var flourMix: String
+    @State private var flours: [FlourSelection]
     @State private var containerWeight: Double
     @State private var storageMode: StorageMode
     @State private var refreshIntervalDays: Int
@@ -23,7 +23,7 @@ struct StarterEditorView: View {
         _name = State(initialValue: starter?.name ?? "")
         _type = State(initialValue: starter?.type ?? .mixed)
         _hydration = State(initialValue: starter?.hydration ?? 100)
-        _flourMix = State(initialValue: starter?.flourMix ?? "")
+        _flours = State(initialValue: starter?.selectedFlours ?? [])
         _containerWeight = State(initialValue: starter?.containerWeight ?? 0)
         _storageMode = State(initialValue: starter?.storageMode ?? .fridge)
         _refreshIntervalDays = State(initialValue: starter?.refreshIntervalDays ?? 7)
@@ -33,8 +33,11 @@ struct StarterEditorView: View {
 
     var body: some View {
         Form {
-            Section("Identita") {
-                TextField("Nome starter", text: $name)
+            Section("Identità") {
+                LabeledContent("Nome dello starter") {
+                    TextField("es. Ciccio", text: $name)
+                        .multilineTextAlignment(.trailing)
+                }
                 Picker("Tipo", selection: $type) {
                     ForEach(StarterType.allCases) { option in
                         Text(option.title).tag(option)
@@ -44,7 +47,6 @@ struct StarterEditorView: View {
 
             Section("Setup") {
                 NumericField(title: "Idratazione (%)", value: $hydration)
-                TextField("Mix farine", text: $flourMix)
                 NumericField(title: "Peso contenitore (g)", value: $containerWeight)
                 Picker("Conservazione", selection: $storageMode) {
                     ForEach(StorageMode.allCases) { option in
@@ -55,9 +57,40 @@ struct StarterEditorView: View {
                 Toggle("Reminder attivi", isOn: $remindersEnabled)
             }
 
+            Section("Mix Farine") {
+                ForEach($flours) { $flour in
+                    NavigationLink(destination: FlourSelectionEditorView(flour: $flour)) {
+                        HStack {
+                            Text(flour.displayName)
+                            Spacer()
+                            Text("\(flour.percentage, specifier: "%.1f")%")
+                                .foregroundStyle(Theme.muted)
+                        }
+                    }
+                }
+                .onDelete { indices in
+                    flours.remove(atOffsets: indices)
+                }
+                Button {
+                    flours.append(FlourSelection(categoryRaw: FlourCategory.strong.rawValue, customName: "", percentage: 100))
+                } label: {
+                    Label("Aggiungi farina", systemImage: "plus")
+                }
+                
+                let sum = flours.reduce(0) { $0 + $1.percentage }
+                if sum != 100 && !flours.isEmpty {
+                    Text("Attenzione: il totale è \(sum, specifier: "%.1f")% (dovrebbe essere 100%)")
+                        .font(.caption)
+                        .foregroundStyle(.red)
+                }
+            }
+
             Section("Note") {
-                TextField("Note", text: $notes, axis: .vertical)
-                    .lineLimit(3...6)
+                LabeledContent("Note") {
+                    TextField("Consigli di rinfresco", text: $notes, axis: .vertical)
+                        .lineLimit(3...6)
+                        .multilineTextAlignment(.trailing)
+                }
             }
         }
         .navigationTitle(starter == nil ? "Nuovo starter" : "Modifica starter")
@@ -78,7 +111,7 @@ struct StarterEditorView: View {
             starter.name = name
             starter.type = type
             starter.hydration = hydration
-            starter.flourMix = flourMix
+            starter.selectedFlours = flours
             starter.containerWeight = containerWeight
             starter.storageMode = storageMode
             starter.refreshIntervalDays = refreshIntervalDays
@@ -90,7 +123,8 @@ struct StarterEditorView: View {
                 name: name,
                 type: type,
                 hydration: hydration,
-                flourMix: flourMix,
+                flourMix: "",
+                flours: flours,
                 containerWeight: containerWeight,
                 storageMode: storageMode,
                 refreshIntervalDays: refreshIntervalDays,

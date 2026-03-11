@@ -10,6 +10,7 @@ struct BakeDetailView: View {
 
     @State private var shiftingStep: BakeStep?
     @State private var showingCancelConfirm = false
+    @State private var showingDeleteConfirm = false
 
     var body: some View {
         ScrollView {
@@ -47,6 +48,11 @@ struct BakeDetailView: View {
                         showingCancelConfirm = true
                     }
                     .padding(.top, 12)
+                } else {
+                    Button("Elimina impasto", role: .destructive) {
+                        showingDeleteConfirm = true
+                    }
+                    .padding(.top, 12)
                 }
             }
             .padding(.horizontal, 20)
@@ -67,6 +73,14 @@ struct BakeDetailView: View {
                 try? modelContext.save()
             }
             Button("Indietro", role: .cancel) {}
+        }
+        .confirmationDialog("Eliminare definitivamente?", isPresented: $showingDeleteConfirm, titleVisibility: .visible) {
+            Button("Elimina", role: .destructive) {
+                modelContext.delete(bake)
+                try? modelContext.save()
+                router.selectedTab = .bakes
+            }
+            Button("Annulla", role: .cancel) {}
         }
     }
 }

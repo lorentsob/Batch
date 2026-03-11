@@ -36,9 +36,15 @@ struct FormulaStepEditorView: View {
                         Text(option.title).tag(option)
                     }
                 }
-                TextField("Nome", text: $name)
-                TextField("Descrizione", text: $details, axis: .vertical)
-                    .lineLimit(2...4)
+                LabeledContent("Nome dello step") {
+                    TextField("es. Autolisi", text: $name)
+                        .multilineTextAlignment(.trailing)
+                }
+                LabeledContent("Dettagli") {
+                    TextField("Cosa fare in questo step", text: $details, axis: .vertical)
+                        .lineLimit(2...4)
+                        .multilineTextAlignment(.trailing)
+                }
             }
 
             Section("Timing") {
@@ -47,10 +53,19 @@ struct FormulaStepEditorView: View {
             }
 
             Section("Target qualitativi") {
-                TextField("Temperatura", text: $temperatureRange)
-                TextField("Target volume", text: $volumeTarget)
-                TextField("Note", text: $notes, axis: .vertical)
-                    .lineLimit(2...4)
+                LabeledContent("Temperatura") {
+                    TextField("es. 24-26°C", text: $temperatureRange)
+                        .multilineTextAlignment(.trailing)
+                }
+                LabeledContent("Target volume") {
+                    TextField("es. Raddoppio", text: $volumeTarget)
+                        .multilineTextAlignment(.trailing)
+                }
+                LabeledContent("Note") {
+                    TextField("Osservazioni", text: $notes, axis: .vertical)
+                        .lineLimit(2...4)
+                        .multilineTextAlignment(.trailing)
+                }
             }
         }
         .navigationTitle("Step formula")

@@ -63,6 +63,27 @@
 - [x] **QUAL-06**: Repository changes run CI that builds the app and executes the agreed automated test suites on a clean macOS runner.
 - [x] **QUAL-07**: Maintainer can trigger a documented CD workflow that produces a signed release candidate or TestFlight-ready build using managed secrets.
 
+## Phase 10 Realignment Requirements
+
+### Operational Home and Navigation
+
+- [ ] **REALIGN-01**: Home groups operational work by bake context and routes into the dedicated bake detail instead of listing raw pending steps one after another.
+- [ ] **REALIGN-02**: Cancelled bakes no longer surface pending work in Home and can be safely treated as non-operational items.
+- [ ] **REALIGN-03**: Primary navigation foregrounds Home, Impasti, and Starter, while Ricette and Knowledge move to a secondary access pattern.
+- [ ] **REALIGN-04**: When no bake is planned or active, Home still offers useful CTAs to create a new impasto and reach Ricette or Knowledge.
+
+### Recipes, Starters, and Authoring
+
+- [ ] **REALIGN-05**: User-facing "Formula" terminology is replaced by "Ricetta", and template recipes are directly usable during bake creation without a mandatory save-as flow.
+- [ ] **REALIGN-06**: Recipe type is presented as a category, including renaming "Pagnotta" to "Pane" and "Pezzi" to "Porzioni".
+- [ ] **REALIGN-07**: Recipe and starter editors use persistent labels and enough descriptive context that fields remain understandable after values are entered.
+- [ ] **REALIGN-08**: Flour mix in recipes and starters uses a structured multi-select with reusable predefined categories plus custom additions.
+- [ ] **REALIGN-09**: Recipes can store the selected yeast family, including sourdough via saved starters and common commercial yeasts, with quantity expectations derived accordingly for bake creation.
+
+### Lifecycle, Visual Trust, and Assets
+
+- [ ] **REALIGN-10**: Bake creation and visual states use user-facing semantics and system polish that restore trust, including target usage time wording, destructive cancelled chips, stronger contrast, coherent iconography, deletion of terminal bakes, and working App Icon recognition.
+
 ## v2 Requirements
 
 ### Backlog
@@ -120,14 +141,24 @@
 | QUAL-05     | Phase 9 | Complete                            |
 | QUAL-06     | Phase 9 | Complete (pending first hosted run) |
 | QUAL-07     | Phase 9 | Complete (pending signing secrets)  |
+| REALIGN-01  | Phase 10 | Planned                            |
+| REALIGN-02  | Phase 10 | Planned                            |
+| REALIGN-03  | Phase 10 | Planned                            |
+| REALIGN-04  | Phase 10 | Planned                            |
+| REALIGN-05  | Phase 10 | Planned                            |
+| REALIGN-06  | Phase 10 | Planned                            |
+| REALIGN-07  | Phase 10 | Planned                            |
+| REALIGN-08  | Phase 10 | Planned                            |
+| REALIGN-09  | Phase 10 | Planned                            |
+| REALIGN-10  | Phase 10 | Planned                            |
 
 **Coverage:**
 
-- v1 requirements: 34 total
-- Mapped to phases: 34
+- v1 + phase 10 realignment requirements: 44 total
+- Mapped to phases: 44
 - Unmapped: 0
 
 ---
 
 _Requirements defined: 2026-03-10_
-_Last updated: 2026-03-10 after adding Phase 9 quality and delivery requirements_
+_Last updated: 2026-03-11 after adding Phase 10 operational UX realignment requirements_

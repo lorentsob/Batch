@@ -1,5 +1,6 @@
 import Foundation
 
+@MainActor
 enum RecipeTemplates {
     static let all: [RecipeFormula] = [
         RecipeFormula(

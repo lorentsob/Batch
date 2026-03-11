@@ -8,13 +8,14 @@ struct FormulaEditorView: View {
     let formula: RecipeFormula?
 
     @State private var name: String
-    @State private var type: BakeType
+    @State private var type: RecipeCategory
     @State private var totalFlourWeight: Double
     @State private var totalWaterWeight: Double
     @State private var saltWeight: Double
     @State private var inoculationPercent: Double
     @State private var servings: Int
-    @State private var flourMix: String
+    @State private var yeastType: YeastType
+    @State private var flours: [FlourSelection]
     @State private var notes: String
     @State private var steps: [FormulaStepTemplate]
     @State private var editingStep: FormulaStepTemplate?
@@ -22,13 +23,14 @@ struct FormulaEditorView: View {
     init(formula: RecipeFormula?) {
         self.formula = formula
         _name = State(initialValue: formula?.name ?? "")
-        _type = State(initialValue: formula?.type ?? .countryLoaf)
+        _type = State(initialValue: formula?.type ?? .pane)
         _totalFlourWeight = State(initialValue: formula?.totalFlourWeight ?? 1000)
         _totalWaterWeight = State(initialValue: formula?.totalWaterWeight ?? 720)
         _saltWeight = State(initialValue: formula?.saltWeight ?? 22)
         _inoculationPercent = State(initialValue: formula?.inoculationPercent ?? 18)
         _servings = State(initialValue: formula?.servings ?? 2)
-        _flourMix = State(initialValue: formula?.flourMix ?? "")
+        _yeastType = State(initialValue: formula?.yeastType ?? .sourdough)
+        _flours = State(initialValue: formula?.selectedFlours ?? [])
         _notes = State(initialValue: formula?.notes ?? "")
         _steps = State(initialValue: formula?.defaultSteps ?? FormulaStepTemplate.defaultBreadSteps)
     }
@@ -45,22 +47,57 @@ struct FormulaEditorView: View {
 
     var body: some View {
         Form {
-            Section("Identita") {
-                TextField("Nome formula", text: $name)
+            Section("Identità") {
+                LabeledContent("Nome della formula") {
+                    TextField("es. Pane di Segale", text: $name)
+                        .multilineTextAlignment(.trailing)
+                }
                 Picker("Tipo", selection: $type) {
-                    ForEach(BakeType.allCases) { option in
+                    ForEach(RecipeCategory.allCases) { option in
                         Text(option.title).tag(option)
                     }
                 }
-                Stepper("Pezzi: \(servings)", value: $servings, in: 1...8)
+                Stepper("Porzioni: \(servings)", value: $servings, in: 1...12)
             }
 
             Section("Ingredienti") {
                 NumericField(title: "Farina totale (g)", value: $totalFlourWeight)
                 NumericField(title: "Acqua totale (g)", value: $totalWaterWeight)
                 NumericField(title: "Sale (g)", value: $saltWeight)
-                NumericField(title: "Inoculo (%)", value: $inoculationPercent)
-                TextField("Mix farine", text: $flourMix, axis: .vertical)
+                Picker("Agente lievitante", selection: $yeastType) {
+                    ForEach(YeastType.allCases) { option in
+                        Text(option.title).tag(option)
+                    }
+                }
+                NumericField(title: "Inoculo/Lievito (%)", value: $inoculationPercent)
+            }
+
+            Section("Mix Farine") {
+                ForEach($flours) { $flour in
+                    NavigationLink(destination: FlourSelectionEditorView(flour: $flour)) {
+                        HStack {
+                            Text(flour.displayName)
+                            Spacer()
+                            Text("\(flour.percentage, specifier: "%.1f")%")
+                                .foregroundStyle(Theme.muted)
+                        }
+                    }
+                }
+                .onDelete { indices in
+                    flours.remove(atOffsets: indices)
+                }
+                Button {
+                    flours.append(FlourSelection(categoryRaw: FlourCategory.strong.rawValue, customName: "", percentage: 100))
+                } label: {
+                    Label("Aggiungi farina", systemImage: "plus")
+                }
+                
+                let sum = flours.reduce(0) { $0 + $1.percentage }
+                if sum != 100 && !flours.isEmpty {
+                    Text("Attenzione: il totale è \(sum, specifier: "%.1f")% (dovrebbe essere 100%)")
+                        .font(.caption)
+                        .foregroundStyle(.red)
+                }
             }
             
             Section("Statistiche") {
@@ -123,9 +160,14 @@ struct FormulaEditorView: View {
                 }
             }
 
-            Section("Note") {
-                TextField("Note", text: $notes, axis: .vertical)
-                    .lineLimit(4...8)
+            Section {
+                LabeledContent("Note") {
+                    TextField("Procedimento o consigli", text: $notes, axis: .vertical)
+                        .lineLimit(4...8)
+                        .multilineTextAlignment(.trailing)
+                }
+            } header: {
+                Text("Note")
             }
         }
         .navigationTitle(formula == nil ? "Nuova formula" : "Modifica formula")
@@ -175,7 +217,8 @@ struct FormulaEditorView: View {
             formula.saltWeight = saltWeight
             formula.inoculationPercent = inoculationPercent
             formula.servings = servings
-            formula.flourMix = flourMix
+            formula.yeastType = yeastType
+            formula.selectedFlours = flours
             formula.notes = notes
             formula.defaultSteps = steps
             formula.recalculateDerivedValues()
@@ -189,7 +232,9 @@ struct FormulaEditorView: View {
                 inoculationPercent: inoculationPercent,
                 servings: servings,
                 notes: notes,
-                flourMix: flourMix,
+                flourMix: "",
+                yeastType: yeastType,
+                flours: flours,
                 defaultSteps: steps
             )
             modelContext.insert(newFormula)
