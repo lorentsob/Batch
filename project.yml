@@ -7,6 +7,7 @@ settings:
     CURRENT_PROJECT_VERSION: 1
     SWIFT_VERSION: 6.0
     DEVELOPMENT_TEAM: ""
+    ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
 targets:
   Levain:
     type: application
@@ -15,10 +16,8 @@ targets:
     sources:
       - path: Levain
         excludes:
-          - Resources/knowledge.json
           - Assets.xcassets
     resources:
-      - path: Levain/Resources
       - path: Levain/Assets.xcassets
     settings:
       base:

@@ -13,4 +13,10 @@ xcuserdata/
 *.mode2v3
 *.perspectivev3
 
-.planning
+# Build artifacts
+build_output*.log
+*.ipa
+
+# Temp dev scripts
+fix_*.py
+patch_*.rb

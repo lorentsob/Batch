@@ -1,0 +1,101 @@
+name: iOS CI
+
+on:
+  push:
+    branches:
+      - main
+      - "release/**"
+  pull_request:
+    branches:
+      - main
+      - "release/**"
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build-and-test:
+    name: Build & Test
+    runs-on: macos-15
+
+    env:
+      # Override simulator name if the runner image ships a different model.
+      # Check available sims with: xcrun simctl list devices available
+      SIMULATOR_NAME: "iPhone 17 Pro"
+
+    steps:
+      # ── 1. Checkout ──────────────────────────────────────────────────────────
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # ── 2. Select Xcode version ──────────────────────────────────────────────
+      - name: Select Xcode
+        run: |
+          sudo xcode-select -s /Applications/Xcode_16.3.app/Contents/Developer || \
+          sudo xcode-select -s /Applications/Xcode.app/Contents/Developer
+          xcodebuild -version
+
+      # ── 3. Install XcodeGen ──────────────────────────────────────────────────
+      - name: Install XcodeGen
+        run: brew install xcodegen
+
+      # ── 4. Bootstrap (generate project from project.yml) ─────────────────────
+      - name: Bootstrap project
+        run: bash scripts/ci_bootstrap.sh
+
+      # ── 5. Build ─────────────────────────────────────────────────────────────
+      - name: Build (no signing)
+        run: |
+          xcodebuild \
+            -project Levain.xcodeproj \
+            -scheme Levain \
+            -configuration Debug \
+            -derivedDataPath /tmp/LevainDerivedCI \
+            -destination "platform=iOS Simulator,name=$SIMULATOR_NAME" \
+            CODE_SIGNING_ALLOWED=NO \
+            clean build \
+            | xcpretty --color || true
+          # Rerun without xcpretty to capture exit code reliably
+          xcodebuild \
+            -project Levain.xcodeproj \
+            -scheme Levain \
+            -configuration Debug \
+            -derivedDataPath /tmp/LevainDerivedCI \
+            -destination "platform=iOS Simulator,name=$SIMULATOR_NAME" \
+            CODE_SIGNING_ALLOWED=NO \
+            build 2>&1 | tee /tmp/build.log
+          grep "BUILD SUCCEEDED" /tmp/build.log
+
+      # ── 6. Test ──────────────────────────────────────────────────────────────
+      - name: Run tests
+        run: |
+          xcodebuild \
+            -project Levain.xcodeproj \
+            -scheme Levain \
+            -configuration Debug \
+            -derivedDataPath /tmp/LevainDerivedCI \
+            -destination "platform=iOS Simulator,name=$SIMULATOR_NAME" \
+            -resultBundlePath /tmp/LevainDerivedCI/Levain.xcresult \
+            CODE_SIGNING_ALLOWED=NO \
+            test 2>&1 | tee /tmp/test.log
+
+      # ── 7. Upload xcresult for debugging failures ─────────────────────────────
+      - name: Upload test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: levain-xcresult-${{ github.run_number }}
+          path: /tmp/LevainDerivedCI/Levain.xcresult
+          retention-days: 14
+          if-no-files-found: warn
+
+      # ── 8. Upload build log on failure ───────────────────────────────────────
+      - name: Upload build log on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: levain-build-log-${{ github.run_number }}
+          path: /tmp/build.log
+          retention-days: 7
+          if-no-files-found: warn

@@ -1,7 +1,7 @@
 import Foundation
 
 enum KnowledgeLoader {
-    static func loadKnowledgeItems(bundle: Bundle = .main) -> [KnowledgeItem] {
+    static func loadKnowledgeItems(bundle: Bundle = Bundle(for: KnowledgeLoaderClass.self)) -> [KnowledgeItem] {
         guard
             let url = bundle.url(forResource: "knowledge", withExtension: "json"),
             let data = try? Data(contentsOf: url),
@@ -12,6 +12,13 @@ enum KnowledgeLoader {
         return items
     }
 }
+
+/// Anchor class used by KnowledgeLoader to locate the correct bundle at runtime.
+/// This resolves the bundle whether called from the main app or from a test host that
+/// links against the Levain target (where Bundle.main would be the XCTest runner bundle).
+private final class KnowledgeLoaderClass {}
+
+
 
 @MainActor
 final class KnowledgeLibrary: ObservableObject {

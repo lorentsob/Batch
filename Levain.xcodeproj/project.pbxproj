@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 77;
+	objectVersion = 63;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -16,6 +16,7 @@
 		0BECE3BC93C7B692F5828309 /* LifecycleUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9F3A968120BB53D31A648FB /* LifecycleUITests.swift */; };
 		0D244B36BB2D2FBD61B00E07 /* Date+Levain.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4FAA5A66043B616FE6D1EEB /* Date+Levain.swift */; };
 		19909D6C120DD64EDE45A9BA /* SectionCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EF66CC37AE507FB215CFF22 /* SectionCard.swift */; };
+		1B203CD85910F7A753EA7B7E /* knowledge.json in Resources */ = {isa = PBXBuildFile; fileRef = 40446C7081740B9B23D8ADD4 /* knowledge.json */; };
 		1F99F650F9715E660F28D7D1 /* DomainFixtures.swift in Sources */ = {isa = PBXBuildFile; fileRef = B103892E03A334196B1D10CE /* DomainFixtures.swift */; };
 		20066B89AB8228C6E5C18C67 /* BakeReminderPlannerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F702B38C52B89746F9D8DE1 /* BakeReminderPlannerTests.swift */; };
 		26045D68DC5B6B88BC79FA0D /* BakeStepDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E8199167A33F653C5C7BD8E /* BakeStepDetailView.swift */; };
@@ -120,6 +121,7 @@
 		3723F2A4189A29D9018AD0A5 /* DateFormattingService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateFormattingService.swift; sourceTree = "<group>"; };
 		3B0E89FD9A23FCBB2C7F67DA /* BakeStep.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BakeStep.swift; sourceTree = "<group>"; };
 		3CC16D0B45CCF1757437239C /* DomainEnums.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DomainEnums.swift; sourceTree = "<group>"; };
+		40446C7081740B9B23D8ADD4 /* knowledge.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = knowledge.json; sourceTree = "<group>"; };
 		429113B9EA88560877F6998C /* StarterRefresh.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StarterRefresh.swift; sourceTree = "<group>"; };
 		471E4662846877A1B4A475C6 /* TodayAgendaBuilderTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodayAgendaBuilderTests.swift; sourceTree = "<group>"; };
 		4D4D579B87EF9D7EB8FF64CD /* TodayView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodayView.swift; sourceTree = "<group>"; };
@@ -142,7 +144,7 @@
 		8CBB82511329EC43AD7BC640 /* StarterDetailHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StarterDetailHeaderView.swift; sourceTree = "<group>"; };
 		8E9AA4021F43AE9655D8F68C /* StateBadge.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StateBadge.swift; sourceTree = "<group>"; };
 		9069286C22B79776F290E460 /* KnowledgeLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KnowledgeLoader.swift; sourceTree = "<group>"; };
-		9B4004713422E6E47C0B76CD /* Levain.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = Levain.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		9B4004713422E6E47C0B76CD /* Levain.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Levain.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		A061F753EFB622786D154A83 /* KnowledgeItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KnowledgeItem.swift; sourceTree = "<group>"; };
 		A327533FEB9FDE64DDA58C58 /* AppLaunchOptions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppLaunchOptions.swift; sourceTree = "<group>"; };
 		A4FAA5A66043B616FE6D1EEB /* Date+Levain.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Date+Levain.swift"; sourceTree = "<group>"; };
@@ -305,6 +307,7 @@
 		94A1FE6DB1AB7DCCECF2EA08 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				40446C7081740B9B23D8ADD4 /* knowledge.json */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -447,6 +450,7 @@
 			buildConfigurationList = DD1ACBBD224220D3A897FAB2 /* Build configuration list for PBXNativeTarget "Levain" */;
 			buildPhases = (
 				DABB43DC2407CACC4A51B9AF /* Sources */,
+				13B2E8E266F118D771F6E530 /* Resources */,
 			);
 			buildRules = (
 			);
@@ -476,7 +480,6 @@
 						TestTargetID = 8E84F0B210E0A11CDE4A5962;
 					};
 					8E84F0B210E0A11CDE4A5962 = {
-						DevelopmentTeam = "";
 						ProvisioningStyle = Automatic;
 					};
 				};
@@ -491,7 +494,6 @@
 			);
 			mainGroup = D9040A503A128437022B7221;
 			minimizedProjectReferenceProxies = 1;
-			preferredProjectObjectVersion = 77;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
@@ -501,6 +503,17 @@
 			);
 		};
 /* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		13B2E8E266F118D771F6E530 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1B203CD85910F7A753EA7B7E /* knowledge.json in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		7718BD617C4F314C171F4DBA /* Sources */ = {
@@ -616,6 +629,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = C974BPN56D;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Levain/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
@@ -623,7 +637,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.lorentso.levain;
+				PRODUCT_BUNDLE_IDENTIFIER = it.lorentso.levain;
 				PRODUCT_NAME = Levain;
 				SDKROOT = iphoneos;
 				SUPPORTS_MACCATALYST = NO;
@@ -654,6 +668,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
@@ -755,6 +770,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
@@ -834,6 +850,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = C974BPN56D;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Levain/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
@@ -841,7 +858,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.lorentso.levain;
+				PRODUCT_BUNDLE_IDENTIFIER = it.lorentso.levain;
 				PRODUCT_NAME = Levain;
 				SDKROOT = iphoneos;
 				SUPPORTS_MACCATALYST = NO;
