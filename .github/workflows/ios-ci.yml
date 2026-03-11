@@ -32,7 +32,6 @@ jobs:
       # ── 2. Select Xcode version ──────────────────────────────────────────────
       - name: Select Xcode
         run: |
-          sudo xcode-select -s /Applications/Xcode_16.3.app/Contents/Developer || \
           sudo xcode-select -s /Applications/Xcode.app/Contents/Developer
           xcodebuild -version
 

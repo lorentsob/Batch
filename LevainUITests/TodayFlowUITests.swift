@@ -31,7 +31,7 @@ final class TodayFlowUITests: XCTestCase {
         XCTAssertTrue(app.scrollViews["TodayScrollView"].waitForExistence(timeout: 5))
 
         // Tap the action button in the Today empty state
-        let cta = app.buttons["Vai a Impasti"]
+        let cta = app.buttons["Nuovo bake"]
         if cta.waitForExistence(timeout: 5) {
             cta.tap()
             XCTAssertTrue(app.scrollViews["BakesScrollView"].waitForExistence(timeout: 5))
@@ -48,6 +48,6 @@ final class TodayFlowUITests: XCTestCase {
         XCTAssertTrue(app.scrollViews["TodayScrollView"].waitForExistence(timeout: 5))
 
         // With seed data the hero section must appear
-        XCTAssertTrue(app.staticTexts["Oggi"].waitForExistence(timeout: 5))
+        XCTAssertTrue(app.staticTexts["Home"].waitForExistence(timeout: 5))
     }
 }

@@ -34,7 +34,7 @@ GitHub Actions ─────────────────────�
 ### What It Does
 
 1. **Checkout** the repository
-2. **Select Xcode** — targets `Xcode_16.3.app`; falls back to default Xcode
+2. **Select Xcode** — targets the standard `Xcode.app` (providing the current iOS SDK)
 3. **Install XcodeGen** via Homebrew
 4. **Bootstrap** — runs `scripts/ci_bootstrap.sh` to regenerate `Levain.xcodeproj` from `project.yml`
 5. **Build** — `xcodebuild … CODE_SIGNING_ALLOWED=NO clean build`

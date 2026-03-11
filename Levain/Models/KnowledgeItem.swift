@@ -1,6 +1,6 @@
 import Foundation
 
-struct KnowledgeItem: Codable, Identifiable, Hashable {
+struct KnowledgeItem: Codable, Identifiable, Hashable, Sendable {
     var id: String
     var title: String
     var category: KnowledgeCategory
@@ -10,4 +10,3 @@ struct KnowledgeItem: Codable, Identifiable, Hashable {
     var relatedStepTypes: [String]
     var relatedStarterStates: [String]
 }
-

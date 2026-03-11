@@ -1,6 +1,6 @@
 import XCTest
 
-/// UI coverage for the Knowledge tab entry and browsing flow.
+/// UI coverage for the secondary Knowledge entry and browsing flow.
 /// Uses the deterministic launch harness so tests work without network access
 /// or stale simulator state.
 final class KnowledgeFlowUITests: XCTestCase {
@@ -9,13 +9,14 @@ final class KnowledgeFlowUITests: XCTestCase {
         continueAfterFailure = false
     }
 
-    // MARK: Knowledge tab loads
+    // MARK: Knowledge sheet loads
 
-    func testKnowledgeTabLoadsContent() throws {
+    func testKnowledgeSheetLoadsContent() throws {
         let app = XCUIApplication()
         app.launchEmpty()
 
-        app.tabBars.buttons["Knowledge"].tap()
+        XCTAssertTrue(app.buttons["Esplora consigli"].waitForExistence(timeout: 5))
+        app.buttons["Esplora consigli"].tap()
         XCTAssertTrue(app.scrollViews["KnowledgeScrollView"].waitForExistence(timeout: 8))
     }
 
@@ -25,7 +26,8 @@ final class KnowledgeFlowUITests: XCTestCase {
         let app = XCUIApplication()
         app.launchEmpty()
 
-        app.tabBars.buttons["Knowledge"].tap()
+        XCTAssertTrue(app.buttons["Esplora consigli"].waitForExistence(timeout: 5))
+        app.buttons["Esplora consigli"].tap()
         XCTAssertTrue(app.scrollViews["KnowledgeScrollView"].waitForExistence(timeout: 8))
 
         // The filter pill "Tutti" is always shown as the all-categories option.
@@ -38,7 +40,8 @@ final class KnowledgeFlowUITests: XCTestCase {
         let app = XCUIApplication()
         app.launchEmpty()
 
-        app.tabBars.buttons["Knowledge"].tap()
+        XCTAssertTrue(app.buttons["Esplora consigli"].waitForExistence(timeout: 5))
+        app.buttons["Esplora consigli"].tap()
         XCTAssertTrue(app.scrollViews["KnowledgeScrollView"].waitForExistence(timeout: 8))
 
         // The searchable modifier produces a search field in the navigation area.

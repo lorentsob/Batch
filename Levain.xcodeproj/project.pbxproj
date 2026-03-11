@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 77;
+	objectVersion = 63;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -148,7 +148,7 @@
 		8CBB82511329EC43AD7BC640 /* StarterDetailHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StarterDetailHeaderView.swift; sourceTree = "<group>"; };
 		8E9AA4021F43AE9655D8F68C /* StateBadge.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StateBadge.swift; sourceTree = "<group>"; };
 		9069286C22B79776F290E460 /* KnowledgeLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KnowledgeLoader.swift; sourceTree = "<group>"; };
-		9B4004713422E6E47C0B76CD /* Levain.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = Levain.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		9B4004713422E6E47C0B76CD /* Levain.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Levain.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		A061F753EFB622786D154A83 /* KnowledgeItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KnowledgeItem.swift; sourceTree = "<group>"; };
 		A327533FEB9FDE64DDA58C58 /* AppLaunchOptions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppLaunchOptions.swift; sourceTree = "<group>"; };
 		A4FAA5A66043B616FE6D1EEB /* Date+Levain.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Date+Levain.swift"; sourceTree = "<group>"; };
@@ -489,7 +489,6 @@
 						TestTargetID = 8E84F0B210E0A11CDE4A5962;
 					};
 					8E84F0B210E0A11CDE4A5962 = {
-						DevelopmentTeam = "";
 						ProvisioningStyle = Automatic;
 					};
 				};
@@ -504,7 +503,6 @@
 			);
 			mainGroup = D9040A503A128437022B7221;
 			minimizedProjectReferenceProxies = 1;
-			preferredProjectObjectVersion = 77;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
@@ -643,8 +641,10 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = C974BPN56D;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Levain/Info.plist;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -863,8 +863,10 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = C974BPN56D;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Levain/Info.plist;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",

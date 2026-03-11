@@ -23,10 +23,24 @@ private final class KnowledgeLoaderClass {}
 @MainActor
 final class KnowledgeLibrary: ObservableObject {
     @Published private(set) var items: [KnowledgeItem] = []
+    private var preloadTask: Task<Void, Never>?
 
     func loadIfNeeded() {
-        guard items.isEmpty else { return }
+        guard items.isEmpty, preloadTask == nil else { return }
         items = KnowledgeLoader.loadKnowledgeItems()
+    }
+
+    func preloadIfNeeded() {
+        guard items.isEmpty, preloadTask == nil else { return }
+
+        preloadTask = Task {
+            let loadedItems = await Task.detached(priority: .utility) {
+                KnowledgeLoader.loadKnowledgeItems()
+            }.value
+
+            items = loadedItems
+            preloadTask = nil
+        }
     }
 
     func item(id: String) -> KnowledgeItem? {
@@ -41,4 +55,3 @@ final class KnowledgeLibrary: ObservableObject {
         items.filter { $0.relatedStarterStates.contains(starterState.rawValue) }
     }
 }
-

@@ -17,6 +17,19 @@ extension XCUIApplication {
         launchEnvironment["LEVAIN_SUPPRESS_NOTIFICATIONS"] = "1"
         launch()
     }
+
+    /// Launch the app against the real persistent store while still suppressing
+    /// notification side effects. Useful for isolating persistent-store startup
+    /// behavior from the authorization/resync bootstrap.
+    func launchPersistentSuppressingNotifications() {
+        launchEnvironment["LEVAIN_SUPPRESS_NOTIFICATIONS"] = "1"
+        launch()
+    }
+
+    /// Launch the app with the same environment as a normal user run.
+    func launchPersistent() {
+        launch()
+    }
 }
 
 // MARK: - Shell Smoke Tests
@@ -33,10 +46,10 @@ final class LevainUITests: XCTestCase {
         let app = XCUIApplication()
         app.launchEmpty()
 
-        XCTAssertTrue(app.tabBars.buttons["Oggi"].waitForExistence(timeout: 5))
+        XCTAssertTrue(app.tabBars.buttons["Home"].waitForExistence(timeout: 5))
         XCTAssertTrue(app.tabBars.buttons["Impasti"].exists)
         XCTAssertTrue(app.tabBars.buttons["Starter"].exists)
-        XCTAssertTrue(app.tabBars.buttons["Knowledge"].exists)
+        XCTAssertFalse(app.tabBars.buttons["Knowledge"].exists)
     }
 
     // MARK: Tab navigation smoke
@@ -45,7 +58,8 @@ final class LevainUITests: XCTestCase {
         let app = XCUIApplication()
         app.launchEmpty()
 
-        XCTAssertTrue(app.tabBars.buttons["Oggi"].waitForExistence(timeout: 5))
+        XCTAssertTrue(app.tabBars.buttons["Home"].waitForExistence(timeout: 5))
+        XCTAssertTrue(app.scrollViews["TodayScrollView"].waitForExistence(timeout: 5))
 
         app.tabBars.buttons["Impasti"].tap()
         XCTAssertTrue(app.scrollViews["BakesScrollView"].waitForExistence(timeout: 5))
@@ -53,10 +67,7 @@ final class LevainUITests: XCTestCase {
         app.tabBars.buttons["Starter"].tap()
         XCTAssertTrue(app.scrollViews["StarterScrollView"].waitForExistence(timeout: 5))
 
-        app.tabBars.buttons["Knowledge"].tap()
-        XCTAssertTrue(app.scrollViews["KnowledgeScrollView"].waitForExistence(timeout: 5))
-
-        app.tabBars.buttons["Oggi"].tap()
+        app.tabBars.buttons["Home"].tap()
         XCTAssertTrue(app.scrollViews["TodayScrollView"].waitForExistence(timeout: 5))
     }
 
@@ -66,7 +77,7 @@ final class LevainUITests: XCTestCase {
         let app = XCUIApplication()
         app.launchEmpty()
 
-        app.tabBars.buttons["Oggi"].tap()
+        app.tabBars.buttons["Home"].tap()
         XCTAssertTrue(app.scrollViews["TodayScrollView"].waitForExistence(timeout: 5))
 
         // No bakes or starters → Today must not show any operational row cards

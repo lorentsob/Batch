@@ -8,16 +8,10 @@ struct TodayView: View {
     @Query(sort: \Starter.lastRefresh, order: .reverse) private var starters: [Starter]
     
     @State private var refreshStarter: Starter?
-    
-    private var agenda: [TodayAgendaItem.Section: [TodayAgendaItem]] {
-        TodayAgendaBuilder.build(bakes: Array(bakes), starters: Array(starters))
-    }
-    
-    private var actionCount: Int {
-        agenda.values.reduce(0) { $0 + $1.count }
-    }
-    
+
     var body: some View {
+        let snapshot = TodaySnapshot.make(bakes: Array(bakes), starters: Array(starters))
+
         ZStack(alignment: .topLeading) {
             Theme.background
                 .ignoresSafeArea()
@@ -33,16 +27,16 @@ struct TodayView: View {
                             .font(.system(size: 30, weight: .semibold, design: .serif))
                             .foregroundStyle(Theme.ink)
                         
-                        Text(heroSubtitle)
+                        Text(snapshot.heroSubtitle)
                             .foregroundStyle(Theme.muted)
                         
                         HStack(spacing: 12) {
-                            StateBadge(text: "\(actionCount) azioni")
-                            StateBadge(text: "\(bakes.filter { $0.derivedStatus == .inProgress }.count) impasti attivi")
+                            StateBadge(text: "\(snapshot.actionCount) azioni")
+                            StateBadge(text: "\(snapshot.inProgressCount) impasti attivi")
                         }
                     }
                     
-                    if actionCount == 0 {
+                    if snapshot.actionCount == 0 {
                         MultiActionEmptyStateView(
                             title: "Giornata leggera",
                             message: "Nessuna azione urgente. Da qui puoi iniziare.",
@@ -60,7 +54,7 @@ struct TodayView: View {
                         )
                     } else {
                         ForEach(TodayAgendaItem.Section.allCases) { section in
-                            if let items = agenda[section], items.isEmpty == false {
+                            if let items = snapshot.agenda[section], items.isEmpty == false {
                                 VStack(alignment: .leading, spacing: 12) {
                                     Text(section.title)
                                         .font(.headline)
@@ -113,20 +107,7 @@ struct TodayView: View {
             }
         }
     }
-    
-    private var heroSubtitle: String {
-        if let first = agenda[.now]?.first {
-            return "Priorita attuale: \(first.title.lowercased())."
-        }
-        if let first = agenda[.upcoming]?.first {
-            return "Prossimo step: \(first.title.lowercased())."
-        }
-        if let first = agenda[.starter]?.first {
-            return "Hai uno starter da controllare: \(first.title.lowercased())."
-        }
-        return "Tutto sotto controllo per ora."
-    }
-    
+
     private func handle(_ item: TodayAgendaItem) {
         switch item.kind {
         case let .bake(bakeID):
@@ -134,5 +115,40 @@ struct TodayView: View {
         case let .starter(starterID):
             refreshStarter = starters.first(where: { $0.id == starterID })
         }
+    }
+}
+
+private struct TodaySnapshot {
+    let agenda: [TodayAgendaItem.Section: [TodayAgendaItem]]
+    let actionCount: Int
+    let inProgressCount: Int
+    let heroSubtitle: String
+
+    static func make(bakes: [Bake], starters: [Starter]) -> TodaySnapshot {
+        let agenda = TodayAgendaBuilder.build(bakes: bakes, starters: starters)
+        let actionCount = agenda.values.reduce(0) { $0 + $1.count }
+        let inProgressCount = bakes.reduce(into: 0) { count, bake in
+            if bake.derivedStatus == .inProgress {
+                count += 1
+            }
+        }
+
+        let heroSubtitle: String
+        if let first = agenda[.now]?.first {
+            heroSubtitle = "Priorita attuale: \(first.title.lowercased())."
+        } else if let first = agenda[.upcoming]?.first {
+            heroSubtitle = "Prossimo step: \(first.title.lowercased())."
+        } else if let first = agenda[.starter]?.first {
+            heroSubtitle = "Hai uno starter da controllare: \(first.title.lowercased())."
+        } else {
+            heroSubtitle = "Tutto sotto controllo per ora."
+        }
+
+        return TodaySnapshot(
+            agenda: agenda,
+            actionCount: actionCount,
+            inProgressCount: inProgressCount,
+            heroSubtitle: heroSubtitle
+        )
     }
 }

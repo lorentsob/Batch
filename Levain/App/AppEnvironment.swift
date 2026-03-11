@@ -2,15 +2,28 @@ import Foundation
 
 @MainActor
 final class AppEnvironment: ObservableObject {
-    let notificationService: NotificationService
+    @Published private(set) var preparedNotificationService: NotificationService?
     let knowledgeLibrary: KnowledgeLibrary
 
+    var notificationService: NotificationService {
+        if let preparedNotificationService {
+            return preparedNotificationService
+        }
+
+        let service = NotificationService()
+        preparedNotificationService = service
+        return service
+    }
+
     init(
-        notificationService: NotificationService = NotificationService(),
+        notificationService: NotificationService? = nil,
         knowledgeLibrary: KnowledgeLibrary = KnowledgeLibrary()
     ) {
-        self.notificationService = notificationService
+        self.preparedNotificationService = notificationService
         self.knowledgeLibrary = knowledgeLibrary
     }
-}
 
+    func prepareNotificationServiceIfNeeded() -> NotificationService {
+        notificationService
+    }
+}

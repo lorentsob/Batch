@@ -16,7 +16,7 @@ final class BakesFlowUITests: XCTestCase {
         app.launchEmpty()
 
         app.tabBars.buttons["Impasti"].tap()
-        XCTAssertTrue(app.staticTexts["Nessuna ricetta salvata"].waitForExistence(timeout: 5))
+        XCTAssertTrue(app.staticTexts["Nessun impasto"].waitForExistence(timeout: 5))
     }
 
     // MARK: Seeded state
@@ -28,23 +28,19 @@ final class BakesFlowUITests: XCTestCase {
         app.tabBars.buttons["Impasti"].tap()
         XCTAssertTrue(app.scrollViews["BakesScrollView"].waitForExistence(timeout: 5))
 
-        // Seeded data includes known formulas; the empty-state text must disappear.
-        XCTAssertFalse(app.staticTexts["Nessuna ricetta salvata"].exists)
+        // Seeded data includes an active bake, so the empty-state copy must disappear.
+        XCTAssertFalse(app.staticTexts["Nessun impasto"].exists)
     }
 
-    // MARK: New Bake button only enabled with formulas
+    // MARK: Empty state offers recipe creation
 
-    func testNewBakeButtonDisabledWhenNoFormulas() throws {
+    func testEmptyBakesStateOffersRecipeCreation() throws {
         let app = XCUIApplication()
         app.launchEmpty()
 
         app.tabBars.buttons["Impasti"].tap()
         XCTAssertTrue(app.scrollViews["BakesScrollView"].waitForExistence(timeout: 5))
 
-        // The "Nuovo bake" button should be disabled when no formulas exist.
-        let newBakeButton = app.buttons["Nuovo bake"]
-        if newBakeButton.waitForExistence(timeout: 3) {
-            XCTAssertFalse(newBakeButton.isEnabled)
-        }
+        XCTAssertTrue(app.buttons["Nuova ricetta"].waitForExistence(timeout: 5))
     }
 }

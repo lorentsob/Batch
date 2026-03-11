@@ -18,7 +18,25 @@ final class LifecycleUITests: XCTestCase {
         app.launchEmpty()
 
         // App must reach the main tab bar — no crash, no blank screen
-        XCTAssertTrue(app.tabBars.buttons["Oggi"].waitForExistence(timeout: 8))
+        XCTAssertTrue(app.tabBars.buttons["Home"].waitForExistence(timeout: 8))
+        XCTAssertTrue(app.scrollViews["TodayScrollView"].waitForExistence(timeout: 8))
+    }
+
+    func testColdLaunchWithPersistentStoreAndSuppressedNotificationsReachesOperationalState() throws {
+        let app = XCUIApplication()
+        app.launchPersistentSuppressingNotifications()
+
+        XCTAssertTrue(app.tabBars.buttons["Home"].waitForExistence(timeout: 8))
+        XCTAssertTrue(app.scrollViews["TodayScrollView"].waitForExistence(timeout: 8))
+    }
+
+    func testColdLaunchWithPersistentStoreAndNotificationBootstrapShowsFirstFrame() throws {
+        let app = XCUIApplication()
+        app.launchPersistent()
+
+        let homeVisible = app.tabBars.buttons["Home"].waitForExistence(timeout: 8)
+        let permissionAlertVisible = app.alerts.firstMatch.waitForExistence(timeout: 2)
+        XCTAssertTrue(homeVisible || permissionAlertVisible)
     }
 
     // MARK: - Relaunch stability
@@ -36,7 +54,8 @@ final class LifecycleUITests: XCTestCase {
         app.launchEmpty()
 
         // After relaunch the shell must be stable
-        XCTAssertTrue(app.tabBars.buttons["Oggi"].waitForExistence(timeout: 8))
+        XCTAssertTrue(app.tabBars.buttons["Home"].waitForExistence(timeout: 8))
+        XCTAssertTrue(app.scrollViews["TodayScrollView"].waitForExistence(timeout: 8))
     }
 
     // MARK: - Missing-entity route safety
@@ -45,12 +64,12 @@ final class LifecycleUITests: XCTestCase {
         // First launch: seeded
         let app = XCUIApplication()
         app.launchSeeded()
-        XCTAssertTrue(app.tabBars.buttons["Oggi"].waitForExistence(timeout: 8))
+        XCTAssertTrue(app.tabBars.buttons["Home"].waitForExistence(timeout: 8))
         app.terminate()
 
         // Second launch: empty (isolated store)
         app.launchEmpty()
-        XCTAssertTrue(app.tabBars.buttons["Oggi"].waitForExistence(timeout: 8))
+        XCTAssertTrue(app.tabBars.buttons["Home"].waitForExistence(timeout: 8))
 
         // The app must not crash or show stale state from the previous seeded store
         // because each launch uses LEVAIN_RESET_STORE=1 (in-memory, discarded).

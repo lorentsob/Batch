@@ -19,12 +19,13 @@ final class NotificationRouteUITests: XCTestCase {
 
     // MARK: - Route surface exists
 
-    func testKnowledgeTabReachableViaTabBar() throws {
-        // Simulates the tab-switch step that a knowledge notification route would trigger.
+    func testKnowledgeSurfaceReachableFromHome() throws {
+        // Simulates the secondary knowledge surface that a knowledge route presents.
         let app = XCUIApplication()
         app.launchEmpty()
 
-        app.tabBars.buttons["Knowledge"].tap()
+        XCTAssertTrue(app.buttons["Esplora consigli"].waitForExistence(timeout: 5))
+        app.buttons["Esplora consigli"].tap()
         XCTAssertTrue(app.scrollViews["KnowledgeScrollView"].waitForExistence(timeout: 8))
     }
 
@@ -53,7 +54,7 @@ final class NotificationRouteUITests: XCTestCase {
         let app = XCUIApplication()
         app.launchEmpty() // launchEmpty already sets LEVAIN_SUPPRESS_NOTIFICATIONS=1
 
-        XCTAssertTrue(app.tabBars.buttons["Oggi"].waitForExistence(timeout: 8))
+        XCTAssertTrue(app.tabBars.buttons["Home"].waitForExistence(timeout: 8))
 
         // Wait briefly to confirm no system permission alert appears
         let permissionAlert = app.alerts.firstMatch

@@ -39,7 +39,8 @@ enum TodayAgendaBuilder {
         var grouped: [TodayAgendaItem.Section: [TodayAgendaItem]] = [:]
 
         for bake in bakes {
-            guard bake.derivedStatus != .cancelled && bake.derivedStatus != .completed else { continue }
+            let status = bake.derivedStatus
+            guard status != .cancelled && status != .completed else { continue }
             guard let step = bake.activeStep else { continue }
             
             let section: TodayAgendaItem.Section
@@ -100,4 +101,3 @@ enum TodayAgendaBuilder {
         return grouped
     }
 }
-
