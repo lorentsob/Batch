@@ -47,11 +47,11 @@ struct BakesView: View {
                     if bakes.isEmpty {
                         EmptyStateView(
                             title: "Nessun impasto",
-                            message: "Crea prima una ricetta, poi genera un bake.",
-                            actionTitle: "Nuova ricetta"
+                            message: "Scegli una ricetta e avvia il tuo primo bake.",
+                            actionTitle: "Nuovo bake"
                         ) {
-                            editingFormula = nil
-                            showingFormulaEditor = true
+                            preselectedFormula = formulas.first
+                            showingBakeEditor = true
                         }
                     } else {
                         ForEach(bakes) { bake in
@@ -87,29 +87,33 @@ struct BakesView: View {
                             .font(.headline)
                             .foregroundStyle(Theme.ink)
                         Spacer()
-                        NavigationLink(value: BakesRoute.formulaList) {
-                            Text("Vedi tutte")
-                                .font(.subheadline)
-                                .foregroundStyle(Theme.accent)
+                        Button {
+                            editingFormula = nil
+                            showingFormulaEditor = true
+                        } label: {
+                            Label("Nuova ricetta", systemImage: "plus")
                         }
+                        .buttonStyle(.bordered)
+                        .tint(Theme.accent)
                     }
 
                     SectionCard {
-                        HStack {
-                            VStack(alignment: .leading, spacing: 4) {
-                                Text("Gestione Ricette")
-                                    .font(.headline)
-                                Text("Configura i tuoi template e basi.")
-                                    .font(.subheadline)
+                        NavigationLink(value: BakesRoute.formulaList) {
+                            HStack {
+                                VStack(alignment: .leading, spacing: 4) {
+                                    Text("Gestione Ricette")
+                                        .font(.headline)
+                                        .foregroundStyle(Theme.ink)
+                                    Text("Configura i tuoi template e basi.")
+                                        .font(.subheadline)
+                                        .foregroundStyle(Theme.muted)
+                                }
+                                Spacer()
+                                Image(systemName: "chevron.right")
                                     .foregroundStyle(Theme.muted)
                             }
-                            Spacer()
-                            Image(systemName: "chevron.right")
-                                .foregroundStyle(Theme.muted)
                         }
-                    }
-                    .onTapGesture {
-                        router.bakesPath.append(.formulaList)
+                        .buttonStyle(.plain)
                     }
                 }
             }
