@@ -6,16 +6,14 @@ import UserNotifications
 final class NotificationService: NSObject, ObservableObject, UNUserNotificationCenterDelegate {
     @Published var pendingURL: URL?
 
-    private let center = UNUserNotificationCenter.current()
-
     override init() {
         super.init()
-        center.delegate = self
+        UNUserNotificationCenter.current().delegate = self
     }
 
     func requestAuthorizationIfNeeded(settings: AppSettings?) async {
         guard settings?.hasRequestedNotificationPermission != true else { return }
-        _ = try? await center.requestAuthorization(options: [.alert, .badge, .sound])
+        _ = try? await UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .badge, .sound])
         settings?.hasRequestedNotificationPermission = true
     }
 
@@ -28,7 +26,7 @@ final class NotificationService: NSObject, ObservableObject, UNUserNotificationC
 
     func syncNotifications(for bake: Bake) async {
         let oldIdentifiers = bake.steps.map { "bake-\(bake.id.uuidString)-\($0.id.uuidString)" }
-        center.removePendingNotificationRequests(withIdentifiers: oldIdentifiers)
+        UNUserNotificationCenter.current().removePendingNotificationRequests(withIdentifiers: oldIdentifiers)
 
         let reminders = BakeReminderPlanner.planReminders(for: bake)
         for reminder in reminders {
@@ -38,7 +36,7 @@ final class NotificationService: NSObject, ObservableObject, UNUserNotificationC
             content.sound = .default
             content.userInfo["route"] = reminder.route
 
-            try? await center.add(
+            try? await UNUserNotificationCenter.current().add(
                 UNNotificationRequest(
                     identifier: reminder.identifier,
                     content: content,
@@ -53,7 +51,7 @@ final class NotificationService: NSObject, ObservableObject, UNUserNotificationC
 
     func syncNotifications(for starter: Starter) async {
         let identifiers = [dueIdentifier(starter.id), followUpIdentifier(starter.id)]
-        center.removePendingNotificationRequests(withIdentifiers: identifiers)
+        UNUserNotificationCenter.current().removePendingNotificationRequests(withIdentifiers: identifiers)
 
         let reminders = StarterReminderPlanner.planReminders(for: starter)
         for reminder in reminders {
@@ -63,7 +61,7 @@ final class NotificationService: NSObject, ObservableObject, UNUserNotificationC
             content.sound = .default
             content.userInfo["route"] = reminder.route
 
-            try? await center.add(
+            try? await UNUserNotificationCenter.current().add(
                 UNNotificationRequest(
                     identifier: reminder.identifier,
                     content: content,
