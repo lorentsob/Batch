@@ -71,8 +71,8 @@ final class NotificationService: NSObject, ObservableObject, UNUserNotificationC
         }
 
         let center = UNUserNotificationCenter.current()
-        let currentSettings = await MainActor.run { await center.notificationSettings() }
-        if currentSettings.authorizationStatus == .denied {
+        let currentStatus = await Self.fetchAuthorizationStatus(center)
+        if currentStatus == .denied {
             authorizationState = .denied
             settings?.hasRequestedNotificationPermission = true
             return .denied
@@ -82,14 +82,14 @@ final class NotificationService: NSObject, ObservableObject, UNUserNotificationC
             let granted = (try? await center.requestAuthorization(options: [.alert, .badge, .sound])) ?? false
             settings?.hasRequestedNotificationPermission = true
             if granted == false {
-                let updatedSettings = await MainActor.run { await center.notificationSettings() }
-                authorizationState = updatedSettings.authorizationStatus == .denied ? .denied : .notDetermined
+                let updatedStatus = await Self.fetchAuthorizationStatus(center)
+                authorizationState = updatedStatus == .denied ? .denied : .notDetermined
                 return authorizationState
             }
         }
 
-        let refreshedSettings = await MainActor.run { await center.notificationSettings() }
-        switch refreshedSettings.authorizationStatus {
+        let refreshedStatus = await Self.fetchAuthorizationStatus(center)
+        switch refreshedStatus {
         case .authorized, .provisional, .ephemeral:
             authorizationState = .authorized
         case .denied:
@@ -101,6 +101,12 @@ final class NotificationService: NSObject, ObservableObject, UNUserNotificationC
         }
 
         return authorizationState
+    }
+
+    /// Fetches the authorization status from a nonisolated context,
+    /// returning only the Sendable enum value to avoid crossing isolation boundaries.
+    private nonisolated static func fetchAuthorizationStatus(_ center: UNUserNotificationCenter) async -> UNAuthorizationStatus {
+        await center.notificationSettings().authorizationStatus
     }
 
     func resyncAll(using modelContext: ModelContext) async {
