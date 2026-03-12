@@ -64,6 +64,11 @@ struct TodayView: View {
                                 openFuturePreview(preview)
                             }
                         }
+                        if starters.isEmpty == false {
+                            TodayStarterStatusCard(starters: Array(starters)) { starter in
+                                refreshStarter = starter
+                            }
+                        }
                     case .actionable:
                         ForEach(TodayAgendaItem.Section.allCases) { section in
                             if let items = snapshot.agenda.sections[section], items.isEmpty == false {
@@ -116,6 +121,14 @@ struct TodayView: View {
                                         }
                                     }
                                 }
+                            }
+                        }
+                        // Starter snapshot — visibile anche quando lo starter è ok
+                        if starters.contains(where: { $0.dueState() == .ok }) {
+                            TodayStarterStatusCard(
+                                starters: starters.filter { $0.dueState() == .ok }
+                            ) { starter in
+                                refreshStarter = starter
                             }
                         }
                     }
@@ -385,6 +398,68 @@ private struct TodayTomorrowPreviewRow: View {
             )
         }
         .buttonStyle(.plain)
+    }
+}
+
+// MARK: - Starter status snapshot (actionable / futureOnly)
+
+private struct TodayStarterStatusCard: View {
+    let starters: [Starter]
+    let onRefresh: (Starter) -> Void
+
+    var body: some View {
+        SectionCard(emphasis: .subtle) {
+            VStack(alignment: .leading, spacing: 12) {
+                HStack {
+                    Image(systemName: "drop.fill")
+                        .font(.caption.weight(.semibold))
+                        .foregroundStyle(Theme.muted)
+                    Text("Lievito madre")
+                        .font(.subheadline.weight(.semibold))
+                        .foregroundStyle(Theme.muted)
+                }
+
+                ForEach(starters) { starter in
+                    if starter.id != starters.first?.id {
+                        Divider()
+                    }
+                    TodayStarterStatusRow(starter: starter) {
+                        onRefresh(starter)
+                    }
+                }
+            }
+        }
+    }
+}
+
+private struct TodayStarterStatusRow: View {
+    let starter: Starter
+    let onRefresh: () -> Void
+
+    var body: some View {
+        HStack(spacing: 12) {
+            VStack(alignment: .leading, spacing: 3) {
+                Text(starter.name)
+                    .font(.subheadline.weight(.semibold))
+                    .foregroundStyle(Theme.ink)
+                Text(nextRefreshLabel)
+                    .font(.caption)
+                    .foregroundStyle(Theme.muted)
+            }
+
+            Spacer()
+
+            StateBadge(dueState: starter.dueState())
+        }
+    }
+
+    private var nextRefreshLabel: String {
+        let days = Calendar.current.dateComponents([.day], from: Date().startOfDay, to: starter.nextDueDate.startOfDay).day ?? 0
+        switch days {
+        case 0:  return "Rinfresco oggi"
+        case 1:  return "Rinfresco domani"
+        default: return "Rinfresco tra \(days) giorni"
+        }
     }
 }
 
