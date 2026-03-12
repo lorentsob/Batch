@@ -9,15 +9,24 @@ struct RefreshLogView: View {
     let starter: Starter
 
     @State private var dateTime = Date.now
-    @State private var flourWeight = 80.0
-    @State private var waterWeight = 80.0
-    @State private var starterWeightUsed = 20.0
-    @State private var ratioText = "1:4:4"
+    @State private var flourWeight: Double
+    @State private var waterWeight: Double
+    @State private var starterWeightUsed: Double
+    @State private var ratioText: String
     @State private var notes = ""
     @State private var ambientTemp = 0.0
     @State private var putInFridgeAt = Date.now
     @State private var recordFridgeTime = false
     @State private var showingAdvanced = false
+
+    init(starter: Starter) {
+        self.starter = starter
+        let last = starter.refreshes.max(by: { $0.dateTime < $1.dateTime })
+        _flourWeight = State(initialValue: last?.flourWeight ?? 80.0)
+        _waterWeight = State(initialValue: last?.waterWeight ?? 80.0)
+        _starterWeightUsed = State(initialValue: last?.starterWeightUsed ?? 20.0)
+        _ratioText = State(initialValue: last.flatMap { $0.ratioText.isEmpty ? nil : $0.ratioText } ?? "1:4:4")
+    }
 
     var body: some View {
         Form {
@@ -75,6 +84,7 @@ struct RefreshLogView: View {
         Task {
             await environment.notificationService.syncNotifications(for: starter)
         }
+        environment.showBanner("Rinfresco salvato per \(starter.name)", duration: 3)
         dismiss()
     }
 }

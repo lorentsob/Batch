@@ -82,7 +82,7 @@ struct StarterDetailView: View {
         }
         .contentMargins(.bottom, 88, for: .scrollContent)
         .background(Theme.background.ignoresSafeArea())
-        .navigationTitle("Starter")
+        .navigationTitle(starter.name)
         .tint(Theme.Control.primaryFill)
         .toolbar {
             ToolbarItemGroup(placement: .topBarTrailing) {

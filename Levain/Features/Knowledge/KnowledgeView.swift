@@ -47,10 +47,11 @@ struct KnowledgeView: View {
                         if filteredItems.isEmpty {
                             EmptyStateView(
                                 title: "Nessun risultato",
-                                message: "Prova a cambiare ricerca o filtro.",
-                                actionTitle: "Ricarica"
+                                message: "Prova a modificare la ricerca o rimuovere il filtro per categoria.",
+                                actionTitle: "Mostra tutte le guide"
                             ) {
-                                environment.knowledgeLibrary.loadIfNeeded()
+                                query = ""
+                                selectedCategory = nil
                             }
                             .padding(.top, 40)
                         } else {

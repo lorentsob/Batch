@@ -9,6 +9,8 @@ struct BakeStepDetailView: View {
     let step: BakeStep
 
     @State private var showingOutOfOrderConfirm = false
+    @State private var stepStartedTrigger = false
+    @State private var stepCompletedTrigger = false
 
     var body: some View {
         Form {
@@ -75,13 +77,15 @@ struct BakeStepDetailView: View {
                         skip()
                         dismiss()
                     }
-                    .foregroundStyle(Theme.danger)
+                    .buttonStyle(DangerActionButtonStyle())
                 }
             }
         }
-        .navigationTitle("Fase")
+        .navigationTitle(step.displayName)
         .navigationBarTitleDisplayMode(.inline)
         .tint(Theme.Control.primaryFill)
+        .sensoryFeedback(.impact(flexibility: .soft), trigger: stepStartedTrigger)
+        .sensoryFeedback(.success, trigger: stepCompletedTrigger)
         .toolbar {
             ToolbarItem(placement: .cancellationAction) {
                 Button("Chiudi") { dismiss() }
@@ -109,11 +113,13 @@ struct BakeStepDetailView: View {
 
     private func start() {
         step.start()
+        stepStartedTrigger.toggle()
         persistAndSync()
     }
 
     private func complete() {
         step.complete()
+        stepCompletedTrigger.toggle()
         persistAndSync()
     }
 

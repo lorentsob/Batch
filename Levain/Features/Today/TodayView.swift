@@ -13,6 +13,8 @@ struct TodayView: View {
     @State private var refreshStarter: Starter?
     @State private var detailSelection: TodayBakeSelection?
     @State private var shiftSelection: TodayBakeSelection?
+    @State private var stepStartedTrigger = false
+    @State private var stepCompletedTrigger = false
 
     var body: some View {
         let snapshot = TodaySnapshot.make(
@@ -36,9 +38,13 @@ struct TodayView: View {
                             .font(.subheadline)
                             .foregroundStyle(Theme.muted)
 
-                        HStack(spacing: 12) {
-                            StateBadge(text: "\(snapshot.todayCount) in agenda", tone: .count)
-                            StateBadge(text: "\(snapshot.inProgressCount) bake attivi", tone: .info)
+                        if snapshot.agenda.emptyState == .actionable {
+                            HStack(spacing: 12) {
+                                StateBadge(text: "\(snapshot.todayCount) in agenda", tone: .count)
+                                if snapshot.inProgressCount > 0 {
+                                    StateBadge(text: "\(snapshot.inProgressCount) bake attivi", tone: .info)
+                                }
+                            }
                         }
                     }
 
@@ -49,11 +55,7 @@ struct TodayView: View {
                             onAddStarter: { router.selectedTab = .starter }
                         )
                     case .allClear:
-                        EmptyStateView(
-                            title: "Niente da fare oggi",
-                            message: "Per oggi è tutto sotto controllo: non ci sono azioni da fare.",
-                            actionTitle: "Nuovo bake"
-                        ) {
+                        TodayAllClearView {
                             router.selectedTab = .bakes
                         }
                     case .futureOnly:
@@ -143,6 +145,8 @@ struct TodayView: View {
                 ShiftTimelineView(bake: selection.bake, anchorStep: selection.step)
             }
         }
+        .sensoryFeedback(.impact(flexibility: .soft), trigger: stepStartedTrigger)
+        .sensoryFeedback(.success, trigger: stepCompletedTrigger)
     }
 
     private func resolve(_ summary: TodayAgendaItem.BakeSummary) -> TodayBakeSelection? {
@@ -159,8 +163,13 @@ struct TodayView: View {
 
         if step.status == .running {
             step.complete()
+            stepCompletedTrigger.toggle()
+            if selection.bake.derivedStatus == .completed {
+                environment.showBanner("Bake completato! Buona lievitazione 🎉", duration: 4)
+            }
         } else if step.isTerminal == false {
             step.start()
+            stepStartedTrigger.toggle()
         }
 
         persistAndSync(for: selection.bake)
@@ -223,9 +232,9 @@ private struct TodaySnapshot {
         let heroSubtitle: String
         switch agenda.emptyState {
         case .firstLaunch:
-            heroSubtitle = "Qui trovi sempre il prossimo passo utile per i tuoi impasti e il tuo starter."
+            heroSubtitle = "Crea il tuo primo bake o aggiungi uno starter per cominciare."
         case .allClear:
-            heroSubtitle = "Per oggi è tutto sotto controllo."
+            heroSubtitle = "Tutto in pari — nessuna azione urgente per oggi."
         case .futureOnly:
             if let preview = agenda.futurePreview {
                 heroSubtitle = "Oggi è libero: la prossima cosa da seguire sarà \(preview.title)."
@@ -376,6 +385,42 @@ private struct TodayTomorrowPreviewRow: View {
             )
         }
         .buttonStyle(.plain)
+    }
+}
+
+// MARK: - All-clear state
+
+private struct TodayAllClearView: View {
+    let onNewBake: () -> Void
+
+    var body: some View {
+        SectionCard(emphasis: .subtle) {
+            VStack(alignment: .leading, spacing: 16) {
+                HStack(alignment: .top, spacing: 14) {
+                    ZStack {
+                        Circle()
+                            .fill(Theme.Status.doneBackground)
+                            .frame(width: 48, height: 48)
+                        Image(systemName: "checkmark")
+                            .font(.system(size: 20, weight: .semibold))
+                            .foregroundStyle(Theme.Status.doneForeground)
+                    }
+
+                    VStack(alignment: .leading, spacing: 4) {
+                        Text("Tutto in pari")
+                            .font(.headline)
+                            .foregroundStyle(Theme.ink)
+                        Text("Non c'è nulla di urgente da fare. Il tuo starter è ok e non hai step da seguire oggi.")
+                            .font(.subheadline)
+                            .foregroundStyle(Theme.muted)
+                            .fixedSize(horizontal: false, vertical: true)
+                    }
+                }
+
+                Button("Pianifica un nuovo bake", action: onNewBake)
+                    .buttonStyle(SecondaryActionButtonStyle())
+            }
+        }
     }
 }
 

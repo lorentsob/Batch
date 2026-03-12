@@ -15,16 +15,18 @@ struct StarterView: View {
                     Text("Starter")
                         .font(.system(size: 30, weight: .bold))
                         .foregroundStyle(Theme.ink)
-                    Text("Tieni d'occhio rinfreschi, ritmo e stato del tuo starter.")
+                    Text("Rinfreschi, ritmo e stato del tuo lievito madre.")
                         .foregroundStyle(Theme.muted)
-                    StateBadge(text: "\(starters.count) starter", tone: .count)
+                    if starters.isEmpty == false {
+                        StateBadge(text: "\(starters.count) starter", tone: .count)
+                    }
                 }
 
                 if starters.isEmpty {
                     EmptyStateView(
                         title: "Nessuno starter ancora",
-                        message: "Aggiungi uno starter per segnare i rinfreschi e ricevere promemoria.",
-                        actionTitle: "Nuovo starter"
+                        message: "Aggiungi il tuo lievito madre per tracciare i rinfreschi, calcolare il prossimo e ricevere promemoria al momento giusto.",
+                        actionTitle: "Aggiungi il tuo starter"
                     ) {
                         editingStarter = nil
                         showingEditor = true

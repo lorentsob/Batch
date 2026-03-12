@@ -12,6 +12,8 @@ struct BakeDetailView: View {
     @State private var shiftingStep: BakeStep?
     @State private var showingCancelConfirm = false
     @State private var showingDeleteConfirm = false
+    @State private var stepStartedTrigger = false
+    @State private var stepCompletedTrigger = false
 
     var body: some View {
         let activeStep = bake.activeStep
@@ -119,6 +121,8 @@ struct BakeDetailView: View {
                 ShiftTimelineView(bake: bake, anchorStep: step)
             }
         }
+        .sensoryFeedback(.impact(flexibility: .soft), trigger: stepStartedTrigger)
+        .sensoryFeedback(.success, trigger: stepCompletedTrigger)
         .confirmationDialog("Sei sicuro?", isPresented: $showingCancelConfirm, titleVisibility: .visible) {
             Button("Annulla impasto", role: .destructive) {
                 bake.isCancelled = true
@@ -139,8 +143,13 @@ struct BakeDetailView: View {
     private func handlePrimary(_ step: BakeStep) {
         if step.status == .running {
             step.complete()
+            stepCompletedTrigger.toggle()
+            if bake.derivedStatus == .completed {
+                environment.showBanner("Bake completato! Buona lievitazione 🎉", duration: 4)
+            }
         } else if step.isTerminal == false {
             step.start()
+            stepStartedTrigger.toggle()
         }
 
         persistAndSync()

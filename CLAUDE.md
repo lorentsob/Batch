@@ -243,23 +243,25 @@ After shift: `NotificationService` must **reschedule** affected notifications.
 
 ## Roadmap & Current Status
 
-8 phases, currently at **Phase 1 — Foundation App Shell** (in progress, 0/3 plans complete).
+13 phases, **Phase 13 — MVP Closure completa** (39/39 piani eseguiti).
 
 | # | Phase | Status |
 |---|---|---|
-| 1 | Foundation App Shell | 🔄 In progress |
-| 2 | Domain Scheduling | ⬜ Not started |
-| 3 | Formula Authoring | ⬜ Not started |
-| 4 | Bake Creation & Execution | ⬜ Not started |
-| 5 | Today & Notifications | ⬜ Not started |
-| 6 | Starter Management | ⬜ Not started |
-| 7 | Knowledge & Tips | ⬜ Not started |
-| 8 | Hardening & UAT | ⬜ Not started |
+| 1 | Foundation App Shell | ✅ Complete |
+| 2 | Domain Scheduling | ✅ Complete |
+| 3 | Formula Authoring | ✅ Complete |
+| 4 | Bake Creation & Execution | ✅ Complete |
+| 5 | Today & Notifications | ✅ Complete |
+| 6 | Starter Management | ✅ Complete |
+| 7 | Knowledge & Tips | ✅ Complete |
+| 8 | Hardening & UAT | ✅ Complete |
+| 9 | V1 Audit & CI/CD | ✅ Complete |
+| 10 | Operational UX Realignment | ✅ Complete |
+| 11 | Naming, Today, Router Hardening | ✅ Complete |
+| 12 | Userflow UX Conformance | ✅ Complete |
+| 13 | MVP Closure | ✅ Complete |
 
-Phase 1 plans:
-- `01-01`: Workspace bootstrap and repository setup
-- `01-02`: Persistence and environment shell
-- `01-03`: Navigation and design system skeleton
+**Prossimo step:** UAT su device fisico (iPhone reale). Vedere `.planning/phases/13-mvp-closure/13-UAT.md`.
 
 See `.planning/phases/` for detailed plan files per phase.
 

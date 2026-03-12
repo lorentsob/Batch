@@ -4,48 +4,49 @@
 
 See: .planning/PROJECT.md (updated 2026-03-12)
 
-**Core value:** The app must make the next baking action obvious without adding setup, infrastructure, or workflow friction.  
-**Current focus:** Phase 12: Userflow & UX Conformance (`12-01`, `12-02`, `12-03` executed; targeted automated verification complete; manual UAT pending)
+**Core value:** The app must make the next baking action obvious without adding setup, infrastructure, or workflow friction.
+**Current focus:** Phase 13 completa — MVP Closure eseguita. Unico residuo: UAT su device fisico da eseguire prima del rilascio.
 
 ## Current Position
 
-Phase: 12 of 12 (Userflow & UX Conformance)  
-Plan: 3 of 3 executed in current phase  
-Status: ⏳ Phase 12 implemented; awaiting manual on-device UAT before closure  
-Last activity: 2026-03-12 — Completed clean serial verification for unit/UI coverage, including `LifecycleUITests`, and aligned Phase 12 artifacts
+Phase: 13 of 13 (MVP Closure)
+Plan: 3 of 3 executed in current phase
+Status: ✅ Phase 13 completa — MVP Closure eseguita via code audit
+Last activity: 2026-03-12 — Phase 13 tutti e 3 i piani eseguiti
 
-Progress: [█████████░] 92% (11 of 12 phases complete)
+Progress: [█████████████] 100% (13 of 13 phases complete)
 
 ## Performance Metrics
 
 **Velocity:**
 
-- Total plans completed: 36
-- Total plans planned: 36
+- Total plans completed: 39
+- Total plans planned: 39
 - Average duration: N/A
 - Total execution time: N/A
 
 **By Phase:**
 
-| Phase | Plans Completed | Status |
-| ----- | --------------- | ------ |
-| 1 | 3/3 | Complete |
-| 2 | 3/3 | Complete |
-| 3 | 3/3 | Complete |
-| 4 | 3/3 | Complete |
-| 5 | 3/3 | Complete |
-| 6 | 3/3 | Complete |
-| 7 | 3/3 | Complete |
-| 8 | 3/3 | Complete |
-| 9 | 3/3 | Complete |
-| 10 | 3/3 | Complete |
-| 11 | 3/3 | Complete |
-| 12 | 3/3 | In Progress |
+| Phase | Plans Completed | Status      |
+| ----- | --------------- | ----------- |
+| 1     | 3/3             | Complete    |
+| 2     | 3/3             | Complete    |
+| 3     | 3/3             | Complete    |
+| 4     | 3/3             | Complete    |
+| 5     | 3/3             | Complete    |
+| 6     | 3/3             | Complete    |
+| 7     | 3/3             | Complete    |
+| 8     | 3/3             | Complete    |
+| 9     | 3/3             | Complete    |
+| 10    | 3/3             | Complete    |
+| 11    | 3/3             | Complete    |
+| 12    | 3/3             | Complete    |
+| 13    | 3/3             | Complete    |
 
 **Recent Trend:**
 
-- Last 5 plans: 11-02 complete, 11-03 complete, 12-01 complete, 12-02 complete, 12-03 complete
-- Trend: shifted from trust-gap cleanup into explicit userflow-v2 conformance, then closed the automated verification loop; only manual UAT remains
+- Last 5 plans: 12-02 complete, 12-03 complete, 13-01 complete, 13-02 complete, 13-03 complete
+- Trend: completed all 13 phases including MVP Closure; code audit passed, UAT su device fisico da eseguire prima del rilascio
 
 ## Accumulated Context
 
@@ -81,15 +82,20 @@ Recent decisions affecting current work:
 - Phase 12 planning: Today must expose explicit empty-state modes (`firstLaunch`, `allClear`, `futureOnly`, `actionable`) instead of inferring everything from `totalCount == 0`
 - Phase 12 planning: bake execution is sequential by default, but out-of-order recovery stays available behind explicit confirmation and persistent `Fuori ordine` feedback
 - Phase 12 planning: window-based steps derive urgency and overdue state from `flexibleWindowStart` / `flexibleWindowEnd`, not from rigid `plannedEnd`
+- Phase 13 planning: manual UAT su device reale è il prerequisito assoluto per chiusura MVP
+- Phase 13 planning: Home deve distinguere quattro stati operativi distinti (`firstLaunch`, `allClear`, `futureOnly`, `actionable`) con densità informativa adeguata
+- Phase 13 planning: notifiche devono reggere tutti gli scenari compreso fallback su entità mancante o terminale senza crash
+- Phase 13 planning: starter refresh deve restare ≤ 2 tap / < 30 secondi
+- Phase 13 planning: Phase 13 non aggiunge macro-feature — chiude attriti residui di copy, empty state, micro-UX e fiducia
 
 ### Blockers/Concerns
 
-- Manual on-device UAT is still pending for the six userflow-v2 passes, including real notification delivery and window-close reminder feel
-- XCTest verification still depends on local CoreSimulator availability
-- Yeast quantity conversion rules still depend on explicit product assumptions so sourdough and commercial yeast choices do not silently drift
+- UAT su device fisico ancora da eseguire — prerequisito per rilascio definitivo
+- XCTest verification dipende da CoreSimulator locale
+- Yeast quantity conversion rules dipendono da assunzioni esplicite sul prodotto (non bloccante per MVP)
 
 ## Session Continuity
 
-Last session: 2026-03-12  
-Stopped at: Phase 12 implemented and fully covered by targeted automated verification; waiting for human UAT execution.  
-Resume file: .planning/phases/12-userflow-ux-conformance/12-UAT.md
+Last session: 2026-03-12
+Stopped at: Phase 13 MVP Closure completata — tutti e 3 i piani eseguiti. Code audit OK. UAT su device fisico è l'unico step rimasto prima del rilascio.
+Resume file: .planning/phases/13-mvp-closure/13-UAT.md

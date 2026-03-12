@@ -24,11 +24,15 @@ struct BakesView: View {
                     Text("Impasti")
                         .font(.system(size: 30, weight: .bold))
                         .foregroundStyle(Theme.ink)
-                    Text("Tieni d'occhio i bake in corso e quelli in programma.")
+                    Text("I tuoi bake in corso e in programma.")
                         .foregroundStyle(Theme.muted)
                     HStack(spacing: 12) {
-                        StateBadge(text: "\(bakes.count) bake", tone: .count)
-                        StateBadge(text: "\(formulas.count) ricette", tone: .info)
+                        if bakes.isEmpty == false {
+                            StateBadge(text: "\(bakes.count) bake", tone: .count)
+                        }
+                        if formulas.isEmpty == false {
+                            StateBadge(text: "\(formulas.count) ricette", tone: .info)
+                        }
                     }
                 }
 
@@ -39,9 +43,9 @@ struct BakesView: View {
 
                     if bakes.isEmpty {
                         EmptyStateView(
-                            title: "Nessun bake",
-                            message: "Scegli una ricetta e avvia il tuo primo bake.",
-                            actionTitle: "Nuovo bake"
+                            title: "Nessun bake ancora",
+                            message: "Scegli una ricetta, imposta l'orario di sfornatura e Levain costruisce la timeline per te.",
+                            actionTitle: "Crea il tuo primo bake"
                         ) {
                             preselectedFormula = formulas.first
                             showingBakeEditor = true
