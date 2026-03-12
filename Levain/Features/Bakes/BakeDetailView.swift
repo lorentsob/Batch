@@ -193,7 +193,7 @@ struct BakeHeaderCard: View {
                 }
 
                 LazyVGrid(columns: metricColumns, alignment: .leading, spacing: 8) {
-                    MetricChip(label: "Utilizzo", value: DateFormattingService.dayTime(bake.targetBakeDateTime), tone: .schedule)
+                    MetricChip(label: "Utilizzo", value: DateFormattingService.dayTime(bake.targetBakeDateTime), tone: .info)
                     MetricChip(label: "Farina", value: "\(Int(bake.totalFlourWeight)) g", tone: .info)
                     MetricChip(label: "Idratazione", value: "\(Int(bake.hydrationPercent))%", tone: .info)
                     MetricChip(label: "Porzioni", value: "\(bake.servings)", tone: .count)

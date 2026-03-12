@@ -113,7 +113,7 @@ struct StateBadge: View {
         self.text = bakeStatus.title
         switch bakeStatus {
         case .planned:
-            tone = .pending
+            tone = .info
         case .inProgress:
             tone = .running
         case .completed:

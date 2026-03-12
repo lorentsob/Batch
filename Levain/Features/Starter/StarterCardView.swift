@@ -24,15 +24,36 @@ struct StarterCardView: View {
                 }
 
                 LazyVGrid(columns: metricColumns, alignment: .leading, spacing: 8) {
-                    MetricChip(label: "Ritmo", value: "Ogni \(starter.refreshIntervalDays) gg", tone: .schedule)
+                    MetricChip(label: "Ritmo", value: "Ogni \(starter.refreshIntervalDays) gg", tone: .info)
                     MetricChip(label: "Prossimo", value: DateFormattingService.dayTime(starter.nextDueDate), tone: reminderTone)
                 }
 
                 if starter.selectedFlours.isEmpty == false {
-                    Text(flourSummary)
-                        .font(.footnote)
-                        .foregroundStyle(Theme.muted)
-                        .lineLimit(2)
+                    VStack(alignment: .leading, spacing: 6) {
+                        Text("Farine")
+                            .font(.caption2.weight(.semibold))
+                            .foregroundStyle(Theme.Text.tertiary)
+                            .textCase(.uppercase)
+                        ScrollView(.horizontal, showsIndicators: false) {
+                            HStack(spacing: 6) {
+                                ForEach(starter.selectedFlours) { flour in
+                                    Text(flour.displayName)
+                                        .font(.caption.weight(.semibold))
+                                        .foregroundStyle(Theme.Text.primary)
+                                        .padding(.horizontal, 10)
+                                        .padding(.vertical, 5)
+                                        .background(
+                                            Capsule()
+                                                .fill(Theme.Surface.card)
+                                                .overlay(
+                                                    Capsule()
+                                                        .stroke(Theme.Border.emphasis, lineWidth: 1.5)
+                                                )
+                                        )
+                                }
+                            }
+                        }
+                    }
                 }
             }
         }
@@ -49,12 +70,4 @@ struct StarterCardView: View {
         }
     }
 
-    private var flourSummary: String {
-        let preview = starter.selectedFlours
-            .prefix(2)
-            .map { "\($0.displayName) \(Int($0.percentage.rounded()))%" }
-            .joined(separator: " · ")
-        let extraCount = max(starter.selectedFlours.count - 2, 0)
-        return extraCount > 0 ? "\(preview) · +\(extraCount)" : preview
-    }
 }

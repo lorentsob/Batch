@@ -282,11 +282,11 @@ private struct TodayFuturePreviewCard: View {
     let action: () -> Void
 
     var body: some View {
-        SectionCard(emphasis: .subtle) {
+        SectionCard(emphasis: .tinted) {
             VStack(alignment: .leading, spacing: 12) {
-                StateBadge(text: "Più avanti", tone: .schedule)
+                StateBadge(text: "In programma", tone: .count)
 
-                Text("La prossima cosa da seguire è già in programma.")
+                Text("La prossima cosa da seguire è già programmata.")
                     .foregroundStyle(Theme.muted)
 
                 VStack(alignment: .leading, spacing: 4) {
@@ -408,7 +408,7 @@ private struct TodayStarterStatusCard: View {
     let onRefresh: (Starter) -> Void
 
     var body: some View {
-        SectionCard(emphasis: .subtle) {
+        SectionCard(emphasis: .tinted) {
             VStack(alignment: .leading, spacing: 12) {
                 HStack {
                     Image(systemName: "drop.fill")
