@@ -3,27 +3,57 @@ import SwiftUI
 struct StarterDetailHeaderView: View {
     let starter: Starter
 
+    private let metricColumns = [
+        GridItem(.adaptive(minimum: 120), spacing: 8)
+    ]
+
     var body: some View {
         SectionCard {
-            Text(starter.name)
-                .font(.system(size: 30, weight: .semibold, design: .serif))
-                .foregroundStyle(Theme.ink)
-            Text("\(starter.type.title) · \(starter.storageMode.title)")
-                .foregroundStyle(Theme.muted)
+            VStack(alignment: .leading, spacing: 16) {
+                HStack(alignment: .top) {
+                    VStack(alignment: .leading, spacing: 8) {
+                        Text(starter.name)
+                            .font(.system(size: 30, weight: .bold))
+                            .foregroundStyle(Theme.ink)
+                        Text("Gestione starter")
+                            .font(.subheadline.weight(.semibold))
+                            .foregroundStyle(Theme.muted)
+                    }
 
-            HStack(spacing: 12) {
-                StateBadge(text: starter.dueState().title)
-                StateBadge(text: "ogni \(starter.refreshIntervalDays) gg")
-            }
+                    Spacer()
 
-            if starter.selectedFlours.isEmpty == false {
-                let floursStr = starter.selectedFlours.map { "\($0.displayName) (\(String(format: "%.0f", $0.percentage))%)" }.joined(separator: ", ")
-                Text("Farina: \(floursStr)")
-                    .foregroundStyle(Theme.muted)
-            }
-            if starter.notes.isEmpty == false {
-                Text(starter.notes)
-                    .foregroundStyle(Theme.muted)
+                    StateBadge(dueState: starter.dueState())
+                }
+
+                LazyVGrid(columns: metricColumns, alignment: .leading, spacing: 8) {
+                    MetricChip(label: "Tipo", value: starter.type.title, tone: .info)
+                    MetricChip(label: "Conservazione", value: starter.storageMode.title, tone: .info)
+                    MetricChip(label: "Cadenza", value: "Ogni \(starter.refreshIntervalDays) gg", tone: .schedule)
+                    MetricChip(label: "Ultimo rinfresco", value: DateFormattingService.dayTime(starter.lastRefresh), tone: .schedule)
+                }
+
+                if starter.selectedFlours.isEmpty == false {
+                    VStack(alignment: .leading, spacing: 8) {
+                        StateBadge(text: "Mix farine", tone: .schedule)
+                        LazyVGrid(columns: metricColumns, alignment: .leading, spacing: 8) {
+                            ForEach(starter.selectedFlours) { flour in
+                                MetricChip(
+                                    label: flour.displayName,
+                                    value: "\(Int(flour.percentage.rounded()))%",
+                                    tone: .schedule
+                                )
+                            }
+                        }
+                    }
+                }
+
+                if starter.notes.isEmpty == false {
+                    VStack(alignment: .leading, spacing: 6) {
+                        StateBadge(text: "Note", tone: .info)
+                        Text(starter.notes)
+                            .foregroundStyle(Theme.muted)
+                    }
+                }
             }
         }
     }

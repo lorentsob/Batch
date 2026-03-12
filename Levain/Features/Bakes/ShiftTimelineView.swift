@@ -13,15 +13,15 @@ struct ShiftTimelineView: View {
 
     var body: some View {
         Form {
-            Section("Step ancora") {
+            Section("Fase selezionata") {
                 Text(anchorStep.displayName)
-                Text("Sposterai solo gli step futuri non completati.")
+                Text("Sposterai solo le fasi future non completate.")
                     .font(.footnote)
                     .foregroundStyle(Theme.muted)
             }
 
-            Section("Offset") {
-                Stepper("Shift: \(shiftMinutes) min", value: $shiftMinutes, in: -120...240, step: 5)
+            Section("Spostamento") {
+                Stepper("Sposta di: \(shiftMinutes) min", value: $shiftMinutes, in: -120...240, step: 5)
 
                 HStack {
                     ForEach([-30, -15, 15, 30, 60], id: \.self) { option in
@@ -33,7 +33,8 @@ struct ShiftTimelineView: View {
                 }
             }
         }
-        .navigationTitle("Shift timeline")
+        .navigationTitle("Sposta gli orari")
+        .tint(Theme.Control.primaryFill)
         .toolbar {
             ToolbarItem(placement: .cancellationAction) {
                 Button("Chiudi") { dismiss() }

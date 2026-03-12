@@ -9,7 +9,7 @@ struct TipGroupView: View {
     let onOpen: (String) -> Void
 
     init(
-        title: String = "Tips utili",
+        title: String = "Guide utili",
         items: [KnowledgeItem],
         onOpen: @escaping (String) -> Void
     ) {
@@ -20,15 +20,13 @@ struct TipGroupView: View {
 
     var body: some View {
         if !items.isEmpty {
-            SectionCard {
-                HStack {
-                    Image(systemName: "lightbulb")
-                        .font(.footnote)
-                        .foregroundStyle(Theme.accent)
-                    Text(title)
-                        .font(.subheadline.weight(.semibold))
-                        .foregroundStyle(Theme.muted)
+            SectionCard(emphasis: .subtle) {
+                HStack(alignment: .center) {
+                    StateBadge(text: title, tone: .info)
                     Spacer()
+                    Image(systemName: "lightbulb.fill")
+                        .font(.footnote)
+                        .foregroundStyle(Theme.Control.primaryFill)
                 }
 
                 ForEach(items) { item in
@@ -40,6 +38,7 @@ struct TipGroupView: View {
                                 Text(item.title)
                                     .font(.subheadline.weight(.medium))
                                     .foregroundStyle(Theme.ink)
+                                    .lineLimit(2)
                                 Text(item.summary)
                                     .font(.footnote)
                                     .foregroundStyle(Theme.muted)
@@ -54,8 +53,12 @@ struct TipGroupView: View {
                         }
                         .padding(12)
                         .background(
-                            RoundedRectangle(cornerRadius: 14, style: .continuous)
-                                .fill(Theme.background.opacity(0.7))
+                            RoundedRectangle(cornerRadius: Theme.Radius.compact, style: .continuous)
+                                .fill(Theme.Surface.card)
+                        )
+                        .overlay(
+                            RoundedRectangle(cornerRadius: Theme.Radius.compact, style: .continuous)
+                                .stroke(Theme.Border.defaultColor, lineWidth: 1)
                         )
                     }
                     .buttonStyle(.plain)

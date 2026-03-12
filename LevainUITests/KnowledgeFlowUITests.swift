@@ -15,8 +15,9 @@ final class KnowledgeFlowUITests: XCTestCase {
         let app = XCUIApplication()
         app.launchEmpty()
 
-        XCTAssertTrue(app.buttons["Esplora consigli"].waitForExistence(timeout: 5))
-        app.buttons["Esplora consigli"].tap()
+        let guidesButton = app.buttons["Sfoglia le guide"].firstMatch
+        XCTAssertTrue(guidesButton.waitForExistence(timeout: 5))
+        guidesButton.tap()
         XCTAssertTrue(app.scrollViews["KnowledgeScrollView"].waitForExistence(timeout: 8))
     }
 
@@ -26,8 +27,9 @@ final class KnowledgeFlowUITests: XCTestCase {
         let app = XCUIApplication()
         app.launchEmpty()
 
-        XCTAssertTrue(app.buttons["Esplora consigli"].waitForExistence(timeout: 5))
-        app.buttons["Esplora consigli"].tap()
+        let guidesButton = app.buttons["Sfoglia le guide"].firstMatch
+        XCTAssertTrue(guidesButton.waitForExistence(timeout: 5))
+        guidesButton.tap()
         XCTAssertTrue(app.scrollViews["KnowledgeScrollView"].waitForExistence(timeout: 8))
 
         // The filter pill "Tutti" is always shown as the all-categories option.
@@ -40,11 +42,12 @@ final class KnowledgeFlowUITests: XCTestCase {
         let app = XCUIApplication()
         app.launchEmpty()
 
-        XCTAssertTrue(app.buttons["Esplora consigli"].waitForExistence(timeout: 5))
-        app.buttons["Esplora consigli"].tap()
+        let guidesButton = app.buttons["Sfoglia le guide"].firstMatch
+        XCTAssertTrue(guidesButton.waitForExistence(timeout: 5))
+        guidesButton.tap()
         XCTAssertTrue(app.scrollViews["KnowledgeScrollView"].waitForExistence(timeout: 8))
 
         // The searchable modifier produces a search field in the navigation area.
-        XCTAssertTrue(app.searchFields["Cerca articoli e consigli"].waitForExistence(timeout: 5))
+        XCTAssertTrue(app.searchFields["Cerca guide e consigli"].waitForExistence(timeout: 5))
     }
 }

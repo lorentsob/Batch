@@ -7,16 +7,15 @@ struct EmptyStateView: View {
     let action: () -> Void
 
     var body: some View {
-        SectionCard {
+        SectionCard(emphasis: .tinted) {
             VStack(alignment: .leading, spacing: 12) {
                 Text(title)
-                    .font(.system(size: 26, weight: .semibold, design: .serif))
+                    .font(.system(size: 26, weight: .semibold))
                     .foregroundStyle(Theme.ink)
                 Text(message)
                     .foregroundStyle(Theme.muted)
                 Button(actionTitle, action: action)
-                    .buttonStyle(.borderedProminent)
-                    .tint(Theme.accent)
+                    .buttonStyle(PrimaryActionButtonStyle())
             }
         }
     }
@@ -37,10 +36,10 @@ struct MultiActionEmptyStateView: View {
     let actions: [Action]
 
     var body: some View {
-        SectionCard {
+        SectionCard(emphasis: .tinted) {
             VStack(alignment: .leading, spacing: 16) {
                 Text(title)
-                    .font(.system(size: 26, weight: .semibold, design: .serif))
+                    .font(.system(size: 26, weight: .semibold))
                     .foregroundStyle(Theme.ink)
                 Text(message)
                     .foregroundStyle(Theme.muted)
@@ -52,8 +51,7 @@ struct MultiActionEmptyStateView: View {
                             Label(action.title, systemImage: action.systemImage)
                                 .frame(maxWidth: .infinity, alignment: .leading)
                         }
-                        .buttonStyle(.bordered)
-                        .tint(Theme.accent)
+                        .buttonStyle(SecondaryActionButtonStyle())
                     }
                 }
             }

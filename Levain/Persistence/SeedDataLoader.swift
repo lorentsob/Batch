@@ -3,19 +3,18 @@ import SwiftData
 
 /// Manages the insertion of representative sample content used for internal
 /// testing and demos.
-///
-/// **Contract:**
-/// - `ensureSeedData(in:)` is idempotent: calling it multiple times on the
-///   same persistent store inserts content only once (guarded by `didSeedSampleData`).
-/// - Normal first launch must NOT call this function unconditionally. Seeding
-///   is an explicit, deliberate action restricted to internal-testing paths.
-/// - `resetAndSeed(in:)` is available for in-memory test contexts where the
-///   idempotency flag needs to be bypassed (the store is ephemeral anyway).
 enum SeedDataLoader {
+    enum Scenario: String {
+        case operational
+        case futureOnly
+        case allClear
 
-    /// Inserts sample data if it has not been inserted into this store before.
-    /// Safe to call multiple times; subsequent calls are no-ops.
-    static func ensureSeedData(in context: ModelContext) throws {
+        static func current() -> Scenario {
+            Scenario(rawValue: AppLaunchOptions.seedScenario) ?? .operational
+        }
+    }
+
+    static func ensureSeedData(in context: ModelContext, scenario: Scenario = .operational) throws {
         let settingsDescriptor = FetchDescriptor<AppSettings>()
         let settings = try context.fetch(settingsDescriptor).first ?? {
             let value = AppSettings()
@@ -24,14 +23,10 @@ enum SeedDataLoader {
         }()
 
         guard settings.didSeedSampleData == false else { return }
-
-        try insertSampleContent(in: context, settings: settings)
+        try insertSampleContent(in: context, settings: settings, scenario: scenario)
     }
 
-    /// Unconditionally inserts sample data, bypassing the idempotency guard.
-    /// Intended exclusively for in-memory test contexts where the store
-    /// is discarded after the test run.
-    static func resetAndSeed(in context: ModelContext) throws {
+    static func resetAndSeed(in context: ModelContext, scenario: Scenario = .operational) throws {
         let settingsDescriptor = FetchDescriptor<AppSettings>()
         let settings = try context.fetch(settingsDescriptor).first ?? {
             let value = AppSettings()
@@ -39,15 +34,25 @@ enum SeedDataLoader {
             return value
         }()
 
-        // Reset idempotency flag so re-seeding is allowed.
         settings.didSeedSampleData = false
-        try insertSampleContent(in: context, settings: settings)
+        try insertSampleContent(in: context, settings: settings, scenario: scenario)
     }
 
-    // MARK: - Private
+    private static func insertSampleContent(in context: ModelContext, settings: AppSettings, scenario: Scenario) throws {
+        switch scenario {
+        case .operational:
+            try insertOperationalScenario(in: context)
+        case .futureOnly:
+            try insertFutureOnlyScenario(in: context)
+        case .allClear:
+            try insertAllClearScenario(in: context)
+        }
 
-    private static func insertSampleContent(in context: ModelContext, settings: AppSettings) throws {
-        // 1. Starter & Refreshes
+        settings.didSeedSampleData = true
+        try context.save()
+    }
+
+    private static func insertOperationalScenario(in context: ModelContext) throws {
         let starter = Starter(
             name: "Lievito Madre (Semola)",
             type: .semolina,
@@ -56,7 +61,7 @@ enum SeedDataLoader {
             containerWeight: 280,
             storageMode: .fridge,
             refreshIntervalDays: 5,
-            lastRefresh: .now.adding(minutes: -2 * 24 * 60),
+            lastRefresh: .now.adding(minutes: -5 * 24 * 60),
             notes: "Vigoroso, ottimo per pane e focacce."
         )
         context.insert(starter)
@@ -71,7 +76,7 @@ enum SeedDataLoader {
             starter: starter
         )
         let refresh2 = StarterRefresh(
-            dateTime: .now.adding(minutes: -2 * 24 * 60),
+            dateTime: .now.adding(minutes: -5 * 24 * 60),
             flourWeight: 80,
             waterWeight: 80,
             starterWeightUsed: 20,
@@ -82,7 +87,6 @@ enum SeedDataLoader {
         context.insert(refresh1)
         context.insert(refresh2)
 
-        // 2. Formulas
         let formulaPane = RecipeFormula(
             name: "Pane di Campagna",
             type: .pane,
@@ -109,17 +113,15 @@ enum SeedDataLoader {
         context.insert(formulaPane)
         context.insert(formulaFocaccia)
 
-        // 3. Active Bake
         let bake = BakeScheduler.generateBake(
             name: "Infornata del weekend",
-            targetBakeDateTime: .now.adding(minutes: 120), // Due soon
+            targetBakeDateTime: .now.adding(minutes: 120),
             formula: formulaPane,
             starter: starter,
             notes: "Provare pieghe più delicate."
         )
         context.insert(bake)
 
-        // Simulate progress: first two steps completed
         if let first = bake.sortedSteps.first {
             first.complete(at: .now.adding(minutes: -360))
         }
@@ -128,8 +130,41 @@ enum SeedDataLoader {
         }
 
         bake.steps.forEach { context.insert($0) }
+    }
 
-        settings.didSeedSampleData = true
-        try context.save()
+    private static func insertFutureOnlyScenario(in context: ModelContext) throws {
+        let starter = Starter(
+            name: "Starter programma weekend",
+            type: .wheat,
+            hydration: 100,
+            refreshIntervalDays: 7,
+            lastRefresh: .now,
+            notes: "Da rinfrescare più avanti."
+        )
+        let formula = RecipeFormula(
+            name: "Pane weekend",
+            type: .pane,
+            totalFlourWeight: 900,
+            totalWaterWeight: 680,
+            saltWeight: 18,
+            inoculationPercent: 18,
+            servings: 2
+        )
+        context.insert(starter)
+        context.insert(formula)
+    }
+
+    private static func insertAllClearScenario(in context: ModelContext) throws {
+        let formula = RecipeFormula(
+            name: "Base neutra",
+            type: .pane,
+            totalFlourWeight: 1000,
+            totalWaterWeight: 720,
+            saltWeight: 20,
+            inoculationPercent: 20,
+            servings: 2,
+            notes: "Solo ricetta salvata, nessun lavoro in agenda."
+        )
+        context.insert(formula)
     }
 }

@@ -18,9 +18,20 @@ enum AppLaunchOptions {
     /// with `keyResetStore` to start truly fresh).
     static let keySeedSampleData = "LEVAIN_SEED_SAMPLE_DATA"
 
+    /// Controls which deterministic seed scenario should be inserted when
+    /// `keySeedSampleData` is enabled.
+    static let keySeedScenario = "LEVAIN_SEED_SCENARIO"
+
     /// `"1"` → skip `requestAuthorizationIfNeeded` and `resyncAll` so
     /// the notification-permission sheet never appears during automation.
     static let keySuppressNotifications = "LEVAIN_SUPPRESS_NOTIFICATIONS"
+
+    /// `"1"` → bypass OS notification APIs and behave as if authorization
+    /// status were `.denied`. Used only by automation.
+    static let keyForceNotificationsDenied = "LEVAIN_FORCE_NOTIFICATIONS_DENIED"
+
+    /// When present, simulates a cold launch opened from a notification route.
+    static let keyPendingNotificationRoute = "LEVAIN_PENDING_NOTIFICATION_ROUTE"
 
     // MARK: - Resolved Values
 
@@ -34,8 +45,20 @@ enum AppLaunchOptions {
         ProcessInfo.processInfo.environment[keySeedSampleData] == "1"
     }
 
+    static var seedScenario: String {
+        ProcessInfo.processInfo.environment[keySeedScenario] ?? "operational"
+    }
+
     /// Whether notification side-effects should be suppressed.
     static var shouldSuppressNotifications: Bool {
         ProcessInfo.processInfo.environment[keySuppressNotifications] == "1"
+    }
+
+    static var shouldForceNotificationsDenied: Bool {
+        ProcessInfo.processInfo.environment[keyForceNotificationsDenied] == "1"
+    }
+
+    static var pendingNotificationRoute: String? {
+        ProcessInfo.processInfo.environment[keyPendingNotificationRoute]
     }
 }

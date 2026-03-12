@@ -23,7 +23,7 @@ struct BakeDetailView: View {
 
                 if let activeStep, bake.derivedStatus != .completed, bake.derivedStatus != .cancelled {
                     ActiveStepHeroCard(
-                        contextLabel: "Step attivo",
+                        contextLabel: "Fase attiva",
                         contextValue: bake.name,
                         step: activeStep,
                         onPrimaryAction: {
@@ -42,16 +42,23 @@ struct BakeDetailView: View {
                 }
 
                 VStack(alignment: .leading, spacing: 12) {
-                    Text(activeStep == nil ? "Timeline" : "Timeline restante")
-                        .font(.headline)
-                        .foregroundStyle(Theme.ink)
+                    HStack {
+                        Text(activeStep == nil ? "Timeline" : "Timeline restante")
+                            .font(.headline)
+                            .foregroundStyle(Theme.ink)
+                        Spacer()
+                        StateBadge(
+                            text: "\(timelineSteps.count) fasi",
+                            tone: timelineSteps.isEmpty ? .schedule : .count
+                        )
+                    }
 
                     if timelineSteps.isEmpty {
-                        SectionCard {
-                            Text("Nessun altro step operativo.")
+                        SectionCard(emphasis: .subtle) {
+                            Text("Nessun'altra fase da seguire.")
                                 .font(.subheadline.weight(.semibold))
                                 .foregroundStyle(Theme.ink)
-                            Text("Quando chiudi lo step corrente, il prossimo entrerà qui.")
+                            Text("Quando chiudi la fase corrente, la prossima comparirà qui.")
                                 .font(.footnote)
                                 .foregroundStyle(Theme.muted)
                         }
@@ -81,14 +88,16 @@ struct BakeDetailView: View {
                 }
 
                 if bake.derivedStatus != .cancelled && bake.derivedStatus != .completed {
-                    Button("Annulla impasto", role: .destructive) {
+                    Button("Annulla impasto") {
                         showingCancelConfirm = true
                     }
+                    .buttonStyle(DangerActionButtonStyle())
                     .padding(.top, 12)
                 } else {
-                    Button("Elimina impasto", role: .destructive) {
+                    Button("Elimina impasto") {
                         showingDeleteConfirm = true
                     }
+                    .buttonStyle(DangerActionButtonStyle())
                     .padding(.top, 12)
                 }
             }
@@ -99,6 +108,7 @@ struct BakeDetailView: View {
         .background(Theme.background.ignoresSafeArea())
         .navigationTitle(bake.name)
         .navigationBarTitleDisplayMode(.inline)
+        .tint(Theme.Control.primaryFill)
         .sheet(item: $detailStep) { step in
             NavigationStack {
                 BakeStepDetailView(step: step)
@@ -154,43 +164,41 @@ struct BakeHeaderCard: View {
     let bake: Bake
     @EnvironmentObject private var router: AppRouter
 
+    private let metricColumns = [
+        GridItem(.adaptive(minimum: 110), spacing: 8)
+    ]
+
     var body: some View {
-        SectionCard {
+        SectionCard(emphasis: .tinted) {
             VStack(alignment: .leading, spacing: 12) {
                 HStack {
                     VStack(alignment: .leading, spacing: 4) {
-                        Text(bake.type.title.uppercased())
-                            .font(.caption)
-                            .fontWeight(.semibold)
-                            .foregroundStyle(Theme.muted)
+                        StateBadge(text: bake.type.title, tone: .info)
                         Text(bake.name)
                             .font(.title2)
                             .fontWeight(.semibold)
                             .foregroundStyle(Theme.ink)
                     }
                     Spacer()
-                    StateBadge(text: bake.derivedStatus.title)
+                    StateBadge(bakeStatus: bake.derivedStatus)
                 }
 
-                Divider()
-
-                HStack(spacing: 16) {
-                    MetricItem(label: "Cottura", value: DateFormattingService.dayTime(bake.targetBakeDateTime))
-                    MetricItem(label: "Farina", value: "\(Int(bake.totalFlourWeight))g")
-                    MetricItem(label: "Idratazione", value: "\(Int(bake.hydrationPercent))%")
-                    MetricItem(label: "Porzioni", value: "\(bake.servings)")
+                LazyVGrid(columns: metricColumns, alignment: .leading, spacing: 8) {
+                    MetricChip(label: "Utilizzo", value: DateFormattingService.dayTime(bake.targetBakeDateTime), tone: .schedule)
+                    MetricChip(label: "Farina", value: "\(Int(bake.totalFlourWeight)) g", tone: .info)
+                    MetricChip(label: "Idratazione", value: "\(Int(bake.hydrationPercent))%", tone: .info)
+                    MetricChip(label: "Porzioni", value: "\(bake.servings)", tone: .count)
                 }
 
                 if bake.formula != nil || bake.starter != nil {
-                    Divider()
                     HStack(spacing: 12) {
                         if let formula = bake.formula {
                             Button {
                                 router.openFormula(formula.id)
                             } label: {
-                                Text(formula.name)
+                                Label(formula.name, systemImage: "book.closed")
                             }
-                            .buttonStyle(.bordered)
+                            .buttonStyle(SecondaryActionButtonStyle(fill: Theme.Surface.card))
                         }
                         if let starter = bake.starter {
                             Button {
@@ -198,7 +206,7 @@ struct BakeHeaderCard: View {
                             } label: {
                                 Label(starter.name, systemImage: "drop.fill")
                             }
-                            .buttonStyle(.bordered)
+                            .buttonStyle(SecondaryActionButtonStyle(fill: Theme.Surface.card))
                         }
                     }
                 }
@@ -212,15 +220,6 @@ struct MetricItem: View {
     let value: String
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 2) {
-            Text(label)
-                .font(.caption2)
-                .foregroundStyle(Theme.muted)
-            Text(value)
-                .font(.subheadline)
-                .fontWeight(.semibold)
-                .foregroundStyle(Theme.ink)
-        }
-        .frame(maxWidth: .infinity, alignment: .leading)
+        MetricChip(label: label, value: value, tone: .info)
     }
 }

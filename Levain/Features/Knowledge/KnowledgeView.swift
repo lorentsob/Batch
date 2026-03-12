@@ -19,8 +19,16 @@ struct KnowledgeView: View {
         NavigationStack {
             ScrollView {
                 VStack(spacing: 24) {
-                    
-                    // Filtro categorie (horizontal scroll di pill)
+                    SectionCard(emphasis: .tinted) {
+                        Text("Guide")
+                            .font(.system(size: 30, weight: .bold))
+                            .foregroundStyle(Theme.ink)
+                        Text("Consigli rapidi, fermentazione e baker's math raccolti in blocchi leggibili.")
+                            .foregroundStyle(Theme.muted)
+                        StateBadge(text: "\(filteredItems.count) risultati", tone: .count)
+                    }
+                    .padding(.horizontal, 20)
+
                     ScrollView(.horizontal, showsIndicators: false) {
                         HStack(spacing: 12) {
                             KnowledgeCategoryPillView(title: "Tutti", isSelected: selectedCategory == nil) {
@@ -34,13 +42,12 @@ struct KnowledgeView: View {
                         }
                         .padding(.horizontal, 20)
                     }
-                    
-                    // Lista articoli
+
                     VStack(spacing: 12) {
                         if filteredItems.isEmpty {
                             EmptyStateView(
                                 title: "Nessun risultato",
-                                message: "Modifica la ricerca o il filtro per trovare contenuti.",
+                                message: "Prova a cambiare ricerca o filtro.",
                                 actionTitle: "Ricarica"
                             ) {
                                 environment.knowledgeLibrary.loadIfNeeded()
@@ -58,11 +65,12 @@ struct KnowledgeView: View {
                     .padding(.horizontal, 20)
                 }
                 .padding(.bottom, 64)
-                .padding(.top, 16)
+                .padding(.top, 8)
             }
             .background(Theme.background.ignoresSafeArea())
-            .navigationTitle("Knowledge")
-            .searchable(text: $query, prompt: "Cerca articoli e consigli")
+            .navigationTitle("Guide")
+            .tint(Theme.Control.primaryFill)
+            .searchable(text: $query, prompt: "Cerca guide e consigli")
             .accessibilityIdentifier("KnowledgeScrollView")
             .navigationDestination(for: KnowledgeRoute.self) { route in
                 switch route {
@@ -70,7 +78,7 @@ struct KnowledgeView: View {
                     if let item = environment.knowledgeLibrary.item(id: id) {
                         KnowledgeDetailView(item: item)
                     } else {
-                        Text("Articolo non trovato")
+                        Text("Guida non trovata")
                             .foregroundStyle(Theme.muted)
                     }
                 }

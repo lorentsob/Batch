@@ -3,18 +3,22 @@ import SwiftUI
 struct RefreshHistoryRow: View {
     let refresh: StarterRefresh
 
+    private let columns = [
+        GridItem(.adaptive(minimum: 94), spacing: 8)
+    ]
+
     var body: some View {
         VStack(alignment: .leading, spacing: 6) {
             Text(DateFormattingService.dayTime(refresh.dateTime))
                 .font(.subheadline.weight(.semibold))
                 .foregroundStyle(Theme.ink)
-            Text("\(Int(refresh.starterWeightUsed)) g starter · \(Int(refresh.flourWeight)) g farina · \(Int(refresh.waterWeight)) g acqua")
-                .font(.footnote)
-                .foregroundStyle(Theme.muted)
+            LazyVGrid(columns: columns, alignment: .leading, spacing: 8) {
+                MetricChip(label: "Starter", value: "\(Int(refresh.starterWeightUsed)) g", tone: .info)
+                MetricChip(label: "Farina", value: "\(Int(refresh.flourWeight)) g", tone: .schedule)
+                MetricChip(label: "Acqua", value: "\(Int(refresh.waterWeight)) g", tone: .schedule)
+            }
             if refresh.ratioText.isEmpty == false {
-                Text("Rapporto \(refresh.ratioText)")
-                    .font(.footnote)
-                    .foregroundStyle(Theme.muted)
+                StateBadge(text: "Rapporto \(refresh.ratioText)", tone: .info)
             }
         }
         .padding(.vertical, 6)

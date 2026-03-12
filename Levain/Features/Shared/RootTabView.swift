@@ -9,33 +9,52 @@ struct RootTabView: View {
     @State private var didBootstrap = false
 
     var body: some View {
-        tabs
-            .tint(Theme.accent)
-            .accessibilityIdentifier("RootTabView")
-            .task {
-                await bootstrapIfNeeded()
-            }
-            .task(id: environment.preparedNotificationService?.pendingURL) {
-                if let notificationService = environment.preparedNotificationService,
-                   let url = notificationService.pendingURL {
-                    router.open(url: url)
-                    notificationService.pendingURL = nil
+        ZStack(alignment: .top) {
+            tabs
+                .tint(Theme.accent)
+                .accessibilityIdentifier("RootTabView")
+
+            if let banner = environment.banner {
+                VStack(spacing: 0) {
+                    ToastBannerView(message: banner.message)
+                    Color.clear
+                        .frame(width: 1, height: 1)
+                        .accessibilityIdentifier("ToastBannerProbe")
+                        .accessibilityLabel(banner.message)
                 }
+                .padding(.horizontal, 16)
+                .padding(.top, 12)
+                .transition(.move(edge: .top).combined(with: .opacity))
             }
-            .onOpenURL { url in
-                router.open(url: url)
+        }
+        .animation(.spring(response: 0.28, dampingFraction: 0.88), value: environment.banner?.id)
+        .task {
+            router.bannerPresenter = { message, duration in
+                environment.showBanner(message, duration: duration)
             }
-            .sheet(isPresented: $router.showingKnowledge) {
-                NavigationStack(path: $router.knowledgePath) {
-                    KnowledgeView()
-                        .navigationDestination(for: KnowledgeRoute.self) { route in
-                            switch route {
-                            case let .article(id):
-                                KnowledgeLookupView(id: id)
-                            }
+            await bootstrapIfNeeded()
+        }
+        .task(id: environment.preparedNotificationService?.pendingURL) {
+            if let notificationService = environment.preparedNotificationService,
+               let url = notificationService.pendingURL {
+                router.open(url: url, modelContext: modelContext)
+                notificationService.pendingURL = nil
+            }
+        }
+        .onOpenURL { url in
+            router.open(url: url, modelContext: modelContext)
+        }
+        .sheet(isPresented: $router.showingKnowledge) {
+            NavigationStack(path: $router.knowledgePath) {
+                KnowledgeView()
+                    .navigationDestination(for: KnowledgeRoute.self) { route in
+                        switch route {
+                        case let .article(id):
+                            KnowledgeLookupView(id: id)
                         }
-                }
+                    }
             }
+        }
     }
 
     private var tabs: some View {
@@ -60,7 +79,9 @@ struct RootTabView: View {
                     }
             }
             .tabItem {
-                Label("Impasti", systemImage: "fork.knife")
+                Image("navbar-bake")
+                    .renderingMode(.template)
+                Text("Impasti")
             }
             .tag(RootTab.bakes)
 
@@ -74,23 +95,25 @@ struct RootTabView: View {
                     }
             }
             .tabItem {
-                Label("Starter", systemImage: "drop.fill")
+                Image("navbar-starter")
+                    .renderingMode(.template)
+                Text("Starter")
             }
             .tag(RootTab.starter)
-
         }
+        .tint(Theme.Control.tabActiveTint)
+        .toolbarBackground(Theme.Control.tabBackground, for: .tabBar)
+        .toolbarBackground(.visible, for: .tabBar)
     }
 
+    @MainActor
     private func bootstrapIfNeeded() async {
         guard didBootstrap == false else { return }
         didBootstrap = true
 
-        // Seed sample data only when explicitly requested via launch options
-        // (e.g. UI test seeded mode). Normal first launch must NOT insert demo
-        // content automatically — real empty states must be clearly exercisable.
         if AppLaunchOptions.shouldSeedSampleData {
             do {
-                try SeedDataLoader.ensureSeedData(in: modelContext)
+                try SeedDataLoader.ensureSeedData(in: modelContext, scenario: .current())
             } catch {
                 assertionFailure("Seed data failed: \(error)")
             }
@@ -102,25 +125,65 @@ struct RootTabView: View {
             return
         }
 
-        // Skip notification side-effects in automation to prevent permission
-        // prompts from interfering with UI test flows.
+        let appSettings = loadOrCreateAppSettings()
+        let notificationService = environment.prepareNotificationServiceIfNeeded()
+
+        if let route = AppLaunchOptions.pendingNotificationRoute,
+           let url = URL(string: route) {
+            notificationService.pendingURL = url
+        }
+
         guard AppLaunchOptions.shouldSuppressNotifications == false else { return }
 
-        await Task.yield()
-
-        let notificationService = environment.prepareNotificationServiceIfNeeded()
-        let appSettings = loadAppSettings()
-        await notificationService.requestAuthorizationIfNeeded(settings: appSettings)
-        await notificationService.resyncAll(using: modelContext)
-        appSettings?.lastNotificationSync = .now
-        try? modelContext.save()
+        scheduleNotificationBootstrap(
+            notificationService: notificationService,
+            appSettings: appSettings
+        )
     }
 
-    private func loadAppSettings() -> AppSettings? {
-        try? modelContext.fetch(FetchDescriptor<AppSettings>()).first
+    @MainActor
+    private func loadOrCreateAppSettings() -> AppSettings {
+        if let existing = try? modelContext.fetch(FetchDescriptor<AppSettings>()).first {
+            return existing
+        }
+
+        let settings = AppSettings()
+        modelContext.insert(settings)
+        try? modelContext.save()
+        return settings
+    }
+
+    @MainActor
+    private func scheduleNotificationBootstrap(
+        notificationService: NotificationService,
+        appSettings: AppSettings
+    ) {
+        let needsLaunchSync = appSettings.lastNotificationSync == nil
+        let needsAuthorizationPrompt = appSettings.hasRequestedNotificationPermission == false
+
+        guard needsLaunchSync || needsAuthorizationPrompt else { return }
+
+        Task(priority: .utility) {
+            let authorizationState = await notificationService.requestAuthorizationIfNeeded(settings: appSettings)
+
+            if authorizationState == .authorized {
+                await notificationService.resyncAll(using: modelContext)
+                appSettings.lastNotificationSync = .now
+                try? modelContext.save()
+            }
+
+            if authorizationState == .denied {
+                // Mark the bootstrap as handled so a denied state does not force
+                // another startup-time notification pass on every launch.
+                if appSettings.lastNotificationSync == nil {
+                    appSettings.lastNotificationSync = .now
+                    try? modelContext.save()
+                }
+                router.showNotificationsDisabledBanner()
+            }
+        }
     }
 }
-
 
 private struct BakeLookupView: View {
     @Environment(\.modelContext) private var modelContext
@@ -160,7 +223,7 @@ private struct FormulaLookupView: View {
             if let formula {
                 FormulaDetailView(formula: formula)
             } else {
-                ContentUnavailableView("Formula non trovata", systemImage: "exclamationmark.triangle")
+                ContentUnavailableView("Ricetta non trovata", systemImage: "exclamationmark.triangle")
             }
         }
         .task(id: id) {
@@ -210,7 +273,7 @@ private struct KnowledgeLookupView: View {
             if let item = environment.knowledgeLibrary.item(id: id) {
                 KnowledgeDetailView(item: item)
             } else {
-                ContentUnavailableView("Articolo non trovato", systemImage: "book.closed")
+                ContentUnavailableView("Guida non trovata", systemImage: "book.closed")
             }
         }
         .task {

@@ -34,11 +34,40 @@ struct BakeCreationView: View {
                     Picker("Ricetta", selection: $selectedFormulaID) {
                         formulaPickerOptions
                     }
+                    .accessibilityIdentifier("BakeRecipePicker")
                     .disabled(preselectedFormula != nil)
                     .onChange(of: selectedFormulaID) { _, newID in
                         if let selected = allAvailableFormulas.first(where: { $0.id == newID }), name.isEmpty {
                             name = selected.name
                         }
+                    }
+
+                    VStack(alignment: .leading, spacing: 4) {
+                        Text("Template rapidi")
+                            .font(.footnote.weight(.semibold))
+                            .foregroundStyle(Theme.ink)
+                        Text("Le ricette predefinite restano sempre disponibili anche se non hai ancora salvato formule personalizzate.")
+                            .font(.footnote)
+                            .foregroundStyle(Theme.muted)
+                    }
+
+                    if preselectedFormula == nil {
+                        ScrollView(.horizontal, showsIndicators: false) {
+                            HStack(spacing: 8) {
+                                ForEach(RecipeTemplates.all) { template in
+                                    Button(template.name) {
+                                        selectedFormulaID = template.id
+                                        if name.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+                                            name = template.name
+                                        }
+                                    }
+                                    .buttonStyle(.bordered)
+                                    .tint(selectedFormulaID == template.id ? Theme.accent : Theme.muted)
+                                }
+                            }
+                            .padding(.vertical, 2)
+                        }
+                        .accessibilityIdentifier("BakeTemplateScroller")
                     }
 
                     if let formula = selectedFormula {
@@ -54,16 +83,24 @@ struct BakeCreationView: View {
                 }
 
                 Section("Pianificazione") {
-                    LabeledContent("Dài un nome") {
-                        TextField("Infornata del weekend", text: $name)
-                            .multilineTextAlignment(.trailing)
+                    TextField("Nome del bake (opzionale)", text: $name)
+                        .accessibilityIdentifier("BakeNameField")
+
+                    VStack(alignment: .leading, spacing: 10) {
+                        Text("Quando vuoi sfornare")
+                            .font(.subheadline)
+                        DatePicker(
+                            "",
+                            selection: $targetBakeDateTime,
+                            displayedComponents: [.date, .hourAndMinute]
+                        )
+                        .labelsHidden()
                     }
-                    DatePicker("Target utilizzo", selection: $targetBakeDateTime)
                 }
 
                 if let formula = selectedFormula, formula.yeastType == .sourdough {
                     Section("Starter") {
-                        Picker("Lievito madre usato", selection: $selectedStarterID) {
+                        Picker("Starter usato", selection: $selectedStarterID) {
                             Text("Nessuno").tag(Optional<UUID>.none)
                             ForEach(starters) { starter in
                                 Text(starter.name).tag(Optional(starter.id))
@@ -73,18 +110,19 @@ struct BakeCreationView: View {
                 }
 
                 Section("Avanzate") {
-                    TextField("Note addizionali", text: $notes, axis: .vertical)
+                    TextField("Note aggiuntive", text: $notes, axis: .vertical)
                         .lineLimit(3...5)
                 }
-            }
-            .navigationTitle("Nuovo bake")
-            .toolbar {
-                ToolbarItem(placement: .cancellationAction) {
-                    Button("Chiudi") { dismiss() }
+        }
+        .navigationTitle("Nuovo bake")
+        .tint(Theme.Control.primaryFill)
+        .toolbar {
+            ToolbarItem(placement: .cancellationAction) {
+                Button("Chiudi") { dismiss() }
                 }
                 ToolbarItem(placement: .confirmationAction) {
                     Button("Crea") { save() }
-                        .disabled(selectedFormula == nil || name.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
+                        .disabled(selectedFormula == nil)
                 }
             }
         }
@@ -124,12 +162,13 @@ struct BakeCreationView: View {
 
     private func save() {
         guard let formula = selectedFormula else { return }
+        let resolvedName = name.trimmingCharacters(in: .whitespacesAndNewlines)
         
         // Determine if it's a template (not in SwiftData)
         let isTemplate = RecipeTemplates.all.contains(where: { $0.id == formula.id })
 
         let bake = BakeScheduler.generateBake(
-            name: name,
+            name: resolvedName,
             targetBakeDateTime: targetBakeDateTime,
             formula: formula,
             starter: selectedStarter,

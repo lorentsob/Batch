@@ -1,6 +1,6 @@
 # Requirements: Levain
 
-**Defined:** 2026-03-10
+**Defined:** 2026-03-10  
 **Core Value:** The app must make the next baking action obvious without adding setup, infrastructure, or workflow friction.
 
 ## v1 Requirements
@@ -67,22 +67,39 @@
 
 ### Operational Home and Navigation
 
-- [ ] **REALIGN-01**: Home groups operational work by bake context and routes into the dedicated bake detail instead of listing raw pending steps one after another.
-- [ ] **REALIGN-02**: Cancelled bakes no longer surface pending work in Home and can be safely treated as non-operational items.
-- [ ] **REALIGN-03**: Primary navigation foregrounds Home, Impasti, and Starter, while Ricette and Knowledge move to a secondary access pattern.
-- [ ] **REALIGN-04**: When no bake is planned or active, Home still offers useful CTAs to create a new impasto and reach Ricette or Knowledge.
+- [x] **REALIGN-01**: Home groups operational work by bake context and routes into the dedicated bake detail instead of listing raw pending steps one after another.
+- [x] **REALIGN-02**: Cancelled bakes no longer surface pending work in Home and can be safely treated as non-operational items.
+- [x] **REALIGN-03**: Primary navigation foregrounds Home, Impasti, and Starter, while Ricette and Knowledge move to a secondary access pattern.
+- [x] **REALIGN-04**: When no bake is planned or active, Home still offers useful CTAs to create a new impasto and reach Ricette or Knowledge.
 
 ### Recipes, Starters, and Authoring
 
-- [ ] **REALIGN-05**: User-facing "Formula" terminology is replaced by "Ricetta", and template recipes are directly usable during bake creation without a mandatory save-as flow.
-- [ ] **REALIGN-06**: Recipe type is presented as a category, including renaming "Pagnotta" to "Pane" and "Pezzi" to "Porzioni".
-- [ ] **REALIGN-07**: Recipe and starter editors use persistent labels and enough descriptive context that fields remain understandable after values are entered.
-- [ ] **REALIGN-08**: Flour mix in recipes and starters uses a structured multi-select with reusable predefined categories plus custom additions.
-- [ ] **REALIGN-09**: Recipes can store the selected yeast family, including sourdough via saved starters and common commercial yeasts, with quantity expectations derived accordingly for bake creation.
+- [x] **REALIGN-05**: User-facing "Formula" terminology is replaced by "Ricetta", and template recipes are directly usable during bake creation without a mandatory save-as flow.
+- [x] **REALIGN-06**: Recipe type is presented as a category, including renaming "Pagnotta" to "Pane" and "Pezzi" to "Porzioni".
+- [x] **REALIGN-07**: Recipe and starter editors use persistent labels and enough descriptive context that fields remain understandable after values are entered.
+- [x] **REALIGN-08**: Flour mix in recipes and starters uses a structured multi-select with reusable predefined categories plus custom additions.
+- [x] **REALIGN-09**: Recipes can store the selected yeast family, including sourdough via saved starters and common commercial yeasts, with quantity expectations derived accordingly for bake creation.
 
 ### Lifecycle, Visual Trust, and Assets
 
-- [ ] **REALIGN-10**: Bake creation and visual states use user-facing semantics and system polish that restore trust, including target usage time wording, destructive cancelled chips, stronger contrast, coherent iconography, deletion of terminal bakes, and working App Icon recognition.
+- [x] **REALIGN-10**: Bake creation and visual states use user-facing semantics and system polish that restore trust, including target usage time wording, destructive cancelled chips, stronger contrast, coherent iconography, deletion of terminal bakes, and working App Icon recognition.
+
+## Phase 11 Hardening Requirements
+
+- [x] **REALIGN-11**: Product and AI-facing markdown context use `Levain` consistently with no stale `Lievito` product naming drift.
+- [x] **REALIGN-12**: Today separates urgent work, same-day scheduled work, tomorrow preview, and hides work beyond tomorrow.
+- [x] **REALIGN-13**: Notification deep links validate live entities and degrade safely for missing bake, missing step, missing starter, cancelled bake, and completed bake routes.
+
+## Phase 12 Userflow v2 Requirements
+
+### Flow-by-Flow Conformance
+
+- [x] **USERFLOW-01**: Today exposes explicit `firstLaunch`, `allClear`, `futureOnly`, and actionable agenda states, with starter urgency and tomorrow preview matching userflow v2.
+- [x] **USERFLOW-02**: Bake creation always offers system templates, treats bake name as optional with recipe-name fallback, uses target usage semantics, and follows create-then-edit behavior.
+- [x] **USERFLOW-03**: Active bake execution is sequential by default, requires confirmation for out-of-order starts, persists `Fuori ordine` feedback, and limits quick shift to operational steps.
+- [x] **USERFLOW-04**: Window-based steps use `flexibleWindowStart` and `flexibleWindowEnd` to drive compact pre-window state, in-window action emphasis, overdue semantics, and soft closing reminders.
+- [x] **USERFLOW-05**: Starter refresh stays a fast three-field flow with advanced details collapsed by default and removes the Today starter row immediately after save.
+- [x] **USERFLOW-06**: Notification entry validates payloads on warm and cold launch, supports terminal and missing-entity fallbacks, and surfaces a non-blocking notifications-disabled banner.
 
 ## v2 Requirements
 
@@ -95,70 +112,79 @@
 
 ## Out of Scope
 
-| Feature                          | Reason                                                         |
+| Feature | Reason |
 | -------------------------------- | -------------------------------------------------------------- |
-| Backend or auth                  | Explicitly excluded by the PRD to keep setup light             |
-| AI-generated suggestions         | Static knowledge is sufficient for MVP validation              |
-| Community features               | Not aligned with the planner-first personal-use core           |
-| iPad layout support              | Increases UI scope without helping the current validation goal |
-| Third-party dependency ecosystem | Native Apple APIs are the preferred baseline                   |
+| Backend or auth | Explicitly excluded by the PRD to keep setup light |
+| AI-generated suggestions | Static knowledge is sufficient for MVP validation |
+| Community features | Not aligned with the planner-first personal-use core |
+| iPad layout support | Increases UI scope without helping the current validation goal |
+| Third-party dependency ecosystem | Native Apple APIs are the preferred baseline |
 
 ## Traceability
 
-| Requirement | Phase   | Status                              |
-| ----------- | ------- | ----------------------------------- |
-| FORM-01     | Phase 3 | Complete                            |
-| FORM-02     | Phase 3 | Complete                            |
-| FORM-03     | Phase 3 | Complete                            |
-| FORM-04     | Phase 3 | Complete                            |
-| BAKE-01     | Phase 4 | Complete                            |
-| BAKE-02     | Phase 2 | Complete                            |
-| BAKE-03     | Phase 4 | Complete                            |
-| BAKE-04     | Phase 4 | Complete                            |
-| STEP-01     | Phase 4 | Complete                            |
-| STEP-02     | Phase 2 | Complete                            |
-| STEP-03     | Phase 2 | Complete                            |
-| STEP-04     | Phase 4 | Complete                            |
-| STEP-05     | Phase 4 | Complete                            |
-| TODAY-01    | Phase 5 | Complete                            |
-| TODAY-02    | Phase 5 | Complete                            |
-| TODAY-03    | Phase 5 | Complete                            |
-| STARTER-01  | Phase 6 | Complete                            |
-| STARTER-02  | Phase 6 | Complete                            |
-| STARTER-03  | Phase 6 | Complete                            |
-| STARTER-04  | Phase 6 | Complete                            |
-| KNOW-01     | Phase 7 | Complete                            |
-| KNOW-02     | Phase 7 | Complete                            |
-| KNOW-03     | Phase 7 | Complete                            |
-| NOTIF-01    | Phase 5 | Complete                            |
-| NOTIF-02    | Phase 5 | Complete                            |
-| NOTIF-03    | Phase 6 | Complete                            |
-| NOTIF-04    | Phase 5 | Complete                            |
-| QUAL-01     | Phase 1 | Complete                            |
-| QUAL-02     | Phase 2 | Complete                            |
-| QUAL-03     | Phase 8 | Complete                            |
-| QUAL-04     | Phase 8 | Complete                            |
-| QUAL-05     | Phase 9 | Complete                            |
-| QUAL-06     | Phase 9 | Complete (pending first hosted run) |
-| QUAL-07     | Phase 9 | Complete (pending signing secrets)  |
-| REALIGN-01  | Phase 10 | Planned                            |
-| REALIGN-02  | Phase 10 | Planned                            |
-| REALIGN-03  | Phase 10 | Planned                            |
-| REALIGN-04  | Phase 10 | Planned                            |
-| REALIGN-05  | Phase 10 | Planned                            |
-| REALIGN-06  | Phase 10 | Planned                            |
-| REALIGN-07  | Phase 10 | Planned                            |
-| REALIGN-08  | Phase 10 | Planned                            |
-| REALIGN-09  | Phase 10 | Planned                            |
-| REALIGN-10  | Phase 10 | Planned                            |
+| Requirement | Phase | Status |
+| ----------- | ----- | ------ |
+| FORM-01 | Phase 3 | Complete |
+| FORM-02 | Phase 3 | Complete |
+| FORM-03 | Phase 3 | Complete |
+| FORM-04 | Phase 3 | Complete |
+| BAKE-01 | Phase 4 | Complete |
+| BAKE-02 | Phase 2 | Complete |
+| BAKE-03 | Phase 4 | Complete |
+| BAKE-04 | Phase 4 | Complete |
+| STEP-01 | Phase 4 | Complete |
+| STEP-02 | Phase 2 | Complete |
+| STEP-03 | Phase 2 | Complete |
+| STEP-04 | Phase 4 | Complete |
+| STEP-05 | Phase 4 | Complete |
+| TODAY-01 | Phase 5 | Complete |
+| TODAY-02 | Phase 5 | Complete |
+| TODAY-03 | Phase 5 | Complete |
+| STARTER-01 | Phase 6 | Complete |
+| STARTER-02 | Phase 6 | Complete |
+| STARTER-03 | Phase 6 | Complete |
+| STARTER-04 | Phase 6 | Complete |
+| KNOW-01 | Phase 7 | Complete |
+| KNOW-02 | Phase 7 | Complete |
+| KNOW-03 | Phase 7 | Complete |
+| NOTIF-01 | Phase 5 | Complete |
+| NOTIF-02 | Phase 5 | Complete |
+| NOTIF-03 | Phase 6 | Complete |
+| NOTIF-04 | Phase 5 | Complete |
+| QUAL-01 | Phase 1 | Complete |
+| QUAL-02 | Phase 2 | Complete |
+| QUAL-03 | Phase 8 | Complete |
+| QUAL-04 | Phase 8 | Complete |
+| QUAL-05 | Phase 9 | Complete |
+| QUAL-06 | Phase 9 | Complete (pending first hosted run) |
+| QUAL-07 | Phase 9 | Complete (pending signing secrets) |
+| REALIGN-01 | Phase 10 | Complete |
+| REALIGN-02 | Phase 10 | Complete |
+| REALIGN-03 | Phase 10 | Complete |
+| REALIGN-04 | Phase 10 | Complete |
+| REALIGN-05 | Phase 10 | Complete |
+| REALIGN-06 | Phase 10 | Complete |
+| REALIGN-07 | Phase 10 | Complete |
+| REALIGN-08 | Phase 10 | Complete |
+| REALIGN-09 | Phase 10 | Complete |
+| REALIGN-10 | Phase 10 | Complete |
+| REALIGN-11 | Phase 11 | Complete |
+| REALIGN-12 | Phase 11 | Complete |
+| REALIGN-13 | Phase 11 | Complete |
+| USERFLOW-01 | Phase 12 | Complete (manual UAT pending) |
+| USERFLOW-02 | Phase 12 | Complete (manual UAT pending) |
+| USERFLOW-03 | Phase 12 | Complete (manual UAT pending) |
+| USERFLOW-04 | Phase 12 | Complete (manual UAT pending) |
+| USERFLOW-05 | Phase 12 | Complete (manual UAT pending) |
+| USERFLOW-06 | Phase 12 | Complete (manual UAT pending) |
 
 **Coverage:**
 
-- v1 + phase 10 realignment requirements: 44 total
-- Mapped to phases: 44
+- v1 + realignment + userflow requirements: 53 total
+- Mapped to phases: 53
 - Unmapped: 0
 
 ---
 
-_Requirements defined: 2026-03-10_
-_Last updated: 2026-03-11 after adding Phase 10 operational UX realignment requirements_
+_Requirements defined: 2026-03-10_  
+_Last updated: 2026-03-12 after adding Phase 11 traceability and Phase 12 userflow-v2 conformance requirements_

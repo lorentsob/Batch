@@ -41,6 +41,11 @@ enum BakeScheduler {
         for index in templates.indices.reversed() {
             let template = templates[index]
             let start = cursor.adding(minutes: -max(template.durationMinutes, 1))
+            let isWindowBased = [.proof, .coldRetard].contains(template.type)
+            let flexibleWindowStart = isWindowBased ? cursor : start
+            let flexibleWindowEnd = isWindowBased
+                ? cursor.adding(minutes: max(template.reminderOffsetMinutes, 60))
+                : cursor
             let step = BakeStep(
                 orderIndex: index,
                 type: template.type,
@@ -48,8 +53,8 @@ enum BakeScheduler {
                 descriptionText: template.details,
                 plannedStart: start,
                 plannedDurationMinutes: max(template.durationMinutes, 1),
-                flexibleWindowStart: start,
-                flexibleWindowEnd: cursor,
+                flexibleWindowStart: flexibleWindowStart,
+                flexibleWindowEnd: flexibleWindowEnd,
                 reminderOffsetMinutes: max(template.reminderOffsetMinutes, 0),
                 temperatureRange: template.temperatureRange,
                 volumeTarget: template.volumeTarget,
@@ -73,4 +78,3 @@ enum BakeScheduler {
         bake.targetBakeDateTime = bake.sortedSteps.last?.plannedEnd ?? bake.targetBakeDateTime
     }
 }
-

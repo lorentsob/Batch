@@ -148,7 +148,7 @@ enum BakeStepType: String, CaseIterable, Codable, Identifiable {
         case .coldRetard: "Cold retard"
         case .bake: "Cottura"
         case .cool: "Raffreddamento"
-        case .custom: "Step personalizzato"
+        case .custom: "Fase personalizzata"
         }
     }
 }
@@ -218,8 +218,7 @@ enum KnowledgeCategory: String, CaseIterable, Codable, Identifiable {
         case .starter: "Starter"
         case .fermentation: "Fermentazione"
         case .bakerMath: "Baker's math"
-        case .troubleshooting: "Troubleshooting"
+        case .troubleshooting: "Problemi comuni"
         }
     }
 }
-

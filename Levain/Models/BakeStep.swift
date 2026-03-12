@@ -103,6 +103,60 @@ final class BakeStep {
         status == .pending
     }
 
+    var isWindowBased: Bool {
+        [.proof, .coldRetard].contains(type)
+    }
+
+    var windowStart: Date {
+        guard isWindowBased else { return plannedStart }
+        return flexibleWindowStart ?? plannedStart
+    }
+
+    var windowEnd: Date {
+        guard isWindowBased else { return plannedEnd }
+        return flexibleWindowEnd ?? plannedEnd
+    }
+
+    var requiresSequenceOverrideBeforeStart: Bool {
+        guard status == .pending, let bake else { return false }
+        return bake.sortedSteps.contains { step in
+            step.orderIndex < orderIndex && step.isTerminal == false
+        }
+    }
+
+    var startedOutOfOrder: Bool {
+        guard let actualStart, let bake else { return false }
+        return bake.sortedSteps.contains { step in
+            guard step.orderIndex < orderIndex else { return false }
+            if step.actualStart == nil, step.actualEnd == nil {
+                return true
+            }
+
+            let priorStart = step.actualStart ?? .distantPast
+            let priorEnd = step.actualEnd ?? .distantPast
+            return max(priorStart, priorEnd) > actualStart
+        }
+    }
+
+    func hasWindowOpened(now: Date = .now) -> Bool {
+        guard isWindowBased else { return true }
+        return now >= windowStart
+    }
+
+    func shouldShowCompactWindowState(now: Date = .now) -> Bool {
+        isWindowBased && status == .running && hasWindowOpened(now: now) == false
+    }
+
+    func isOperationallyUrgent(now: Date = .now) -> Bool {
+        guard status == .pending || status == .running else { return false }
+
+        if isWindowBased && status == .running {
+            return hasWindowOpened(now: now)
+        }
+
+        return status == .running || isOverdue(now: now)
+    }
+
     func elapsedMinutes(now: Date = .now) -> Int {
         max(0, Int(now.timeIntervalSince(referenceStart)) / 60)
     }
@@ -137,7 +191,7 @@ final class BakeStep {
 
     func isOverdue(now: Date = .now) -> Bool {
         guard status == .pending || status == .running else { return false }
-        return plannedEnd < now
+        return windowEnd < now
     }
 
     func start(at date: Date = .now) {

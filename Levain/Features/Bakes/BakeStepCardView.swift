@@ -9,6 +9,10 @@ struct ActiveStepHeroCard: View {
     let onCustomShift: (() -> Void)?
     let onQuickShift: ((Int) -> Void)?
 
+    private let metricColumns = [
+        GridItem(.adaptive(minimum: 104), spacing: 8)
+    ]
+
     var body: some View {
         TimelineView(.periodic(from: .now, by: 30)) { context in
             let now = context.date
@@ -17,18 +21,20 @@ struct ActiveStepHeroCard: View {
 
             VStack(alignment: .leading, spacing: 18) {
                 HStack(alignment: .top, spacing: 12) {
-                    VStack(alignment: .leading, spacing: 6) {
-                        Text(contextLabel.uppercased())
-                            .font(.caption.weight(.semibold))
-                            .kerning(0.6)
-                            .foregroundStyle(appearance.label)
+                    VStack(alignment: .leading, spacing: 8) {
+                        HStack(spacing: 8) {
+                            StateBadge(text: contextLabel, tone: .info)
+                            if step.startedOutOfOrder {
+                                StateBadge(text: "Fuori ordine", tone: .info)
+                            }
+                        }
 
                         Text(contextValue)
                             .font(.subheadline.weight(.semibold))
                             .foregroundStyle(Theme.muted)
 
                         Text(step.displayName)
-                            .font(.system(size: 28, weight: .semibold, design: .serif))
+                            .font(.system(size: 28, weight: .bold))
                             .foregroundStyle(Theme.ink)
 
                         if !step.descriptionText.isEmpty {
@@ -44,10 +50,22 @@ struct ActiveStepHeroCard: View {
                     TimerStatusPill(phase: phase, appearance: appearance)
                 }
 
-                HStack(spacing: 10) {
-                    StepMetaPill(label: "Inizio", value: DateFormattingService.time(step.referenceStart))
-                    StepMetaPill(label: "Durata", value: DateFormattingService.duration(minutes: step.plannedDurationMinutes))
-                    StepMetaPill(label: "Fine", value: DateFormattingService.time(step.plannedEnd))
+                LazyVGrid(columns: metricColumns, alignment: .leading, spacing: 8) {
+                    MetricChip(
+                        label: "Inizio",
+                        value: DateFormattingService.time(step.referenceStart),
+                        tone: .schedule
+                    )
+                    MetricChip(
+                        label: "Durata",
+                        value: DateFormattingService.duration(minutes: step.plannedDurationMinutes),
+                        tone: .info
+                    )
+                    MetricChip(
+                        label: step.isWindowBased ? "Finestra" : "Fine",
+                        value: DateFormattingService.time(step.isWindowBased ? step.windowEnd : step.plannedEnd),
+                        tone: appearance.metricTone
+                    )
                 }
 
                 LiveTimerBlock(step: step, now: now, appearance: appearance)
@@ -60,19 +78,19 @@ struct ActiveStepHeroCard: View {
                     Button(primaryActionTitle) {
                         onPrimaryAction()
                     }
-                    .buttonStyle(OperationalPrimaryButtonStyle(fill: appearance.accent))
+                    .buttonStyle(PrimaryActionButtonStyle())
 
                     HStack(spacing: 10) {
                         Button("Dettaglio") {
                             onDetail()
                         }
-                        .buttonStyle(OperationalSecondaryButtonStyle(tint: appearance.accent))
+                        .buttonStyle(SecondaryActionButtonStyle())
 
                         if let onCustomShift, phase == .running || phase == .overdue {
                             Button("Sposta") {
                                 onCustomShift()
                             }
-                            .buttonStyle(OperationalSecondaryButtonStyle(tint: appearance.accent))
+                            .buttonStyle(SecondaryActionButtonStyle())
                         }
                     }
                 }
@@ -80,12 +98,12 @@ struct ActiveStepHeroCard: View {
             .padding(20)
             .frame(maxWidth: .infinity, alignment: .leading)
             .background(
-                RoundedRectangle(cornerRadius: 28, style: .continuous)
+                RoundedRectangle(cornerRadius: Theme.Radius.card, style: .continuous)
                     .fill(appearance.background)
             )
             .overlay(
-                RoundedRectangle(cornerRadius: 28, style: .continuous)
-                    .stroke(appearance.border, lineWidth: 1.5)
+                RoundedRectangle(cornerRadius: Theme.Radius.card, style: .continuous)
+                    .stroke(appearance.border, lineWidth: appearance.lineWidth)
             )
             .shadow(color: appearance.shadow, radius: 18, y: 10)
             .accessibilityElement(children: .contain)
@@ -94,7 +112,7 @@ struct ActiveStepHeroCard: View {
     }
 
     private var primaryActionTitle: String {
-        step.status == .running ? "Completa step" : "Avvia step"
+        step.status == .running ? "Completa fase" : "Avvia fase"
     }
 
     private func accessibilitySummary(now: Date) -> String {
@@ -121,13 +139,13 @@ struct StepTimelineRow: View {
     var body: some View {
         Button(action: action) {
             HStack(alignment: .top, spacing: 14) {
-                VStack(alignment: .trailing, spacing: 3) {
+                VStack(alignment: .trailing, spacing: 4) {
                     Text(DateFormattingService.time(step.plannedStart))
                         .font(.caption.weight(.semibold))
                         .foregroundStyle(Theme.ink)
                     Text(DateFormattingService.duration(minutes: step.plannedDurationMinutes))
                         .font(.caption2)
-                        .foregroundStyle(Theme.muted)
+                        .foregroundStyle(Theme.Text.tertiary)
                 }
                 .frame(width: 70, alignment: .trailing)
 
@@ -138,26 +156,21 @@ struct StepTimelineRow: View {
 
                     if showsConnector {
                         Rectangle()
-                            .fill(Theme.muted.opacity(0.18))
+                            .fill(Theme.Border.defaultColor)
                             .frame(width: 2)
                             .frame(maxHeight: .infinity)
                     }
                 }
                 .frame(width: 14)
 
-                VStack(alignment: .leading, spacing: 6) {
+                VStack(alignment: .leading, spacing: 8) {
                     HStack(alignment: .firstTextBaseline, spacing: 8) {
                         Text(step.displayName)
                             .font(.subheadline.weight(.semibold))
                             .foregroundStyle(step.isTerminal ? Theme.muted : Theme.ink)
 
                         Spacer(minLength: 8)
-
-                        if step.isTerminal {
-                            StateBadge(text: step.status.title)
-                        } else if step.isOverdue() {
-                            StateBadge(text: "In ritardo")
-                        }
+                        statusBadge
                     }
 
                     if !step.descriptionText.isEmpty {
@@ -176,45 +189,71 @@ struct StepTimelineRow: View {
 
                 Image(systemName: "chevron.right")
                     .font(.caption.weight(.semibold))
-                    .foregroundStyle(Theme.muted.opacity(0.8))
+                    .foregroundStyle(Theme.Text.tertiary)
                     .padding(.top, 2)
             }
-            .padding(14)
+            .padding(16)
             .frame(maxWidth: .infinity, alignment: .leading)
             .background(
-                RoundedRectangle(cornerRadius: 20, style: .continuous)
-                    .fill(step.isTerminal ? Theme.panel.opacity(0.55) : Theme.panel)
+                RoundedRectangle(cornerRadius: Theme.Radius.nestedCard, style: .continuous)
+                    .fill(backgroundColor)
             )
             .overlay(
-                RoundedRectangle(cornerRadius: 20, style: .continuous)
-                    .stroke(borderColor, lineWidth: 1)
+                RoundedRectangle(cornerRadius: Theme.Radius.nestedCard, style: .continuous)
+                    .stroke(borderColor, lineWidth: lineWidth)
             )
         }
         .buttonStyle(.plain)
     }
 
+    @ViewBuilder
+    private var statusBadge: some View {
+        if step.isTerminal {
+            StateBadge(stepStatus: step.status)
+        } else if step.isOverdue() {
+            StateBadge(text: "In ritardo", tone: .danger)
+        } else if step.startedOutOfOrder {
+            StateBadge(text: "Fuori ordine", tone: .info)
+        } else {
+            StateBadge(stepStatus: step.status)
+        }
+    }
+
     private var dotColor: Color {
-        if step.status == .running { return Theme.success }
-        if step.isOverdue() { return Theme.danger }
-        if step.status == .done { return Theme.success }
-        if step.status == .skipped { return Theme.muted }
-        return Theme.accent
+        if step.status == .running { return Theme.Status.runningBackground }
+        if step.isOverdue() { return Theme.Status.dangerForeground }
+        if step.status == .done { return Theme.Status.doneForeground }
+        if step.status == .skipped { return Theme.Text.tertiary }
+        return Theme.Text.secondary
+    }
+
+    private var backgroundColor: Color {
+        if step.isOverdue() { return Theme.Surface.dangerTint }
+        if step.status == .running { return Theme.Surface.tinted }
+        return Theme.Surface.card
     }
 
     private var borderColor: Color {
-        if step.isOverdue() { return Theme.danger.opacity(0.18) }
-        if step.status == .done { return Theme.success.opacity(0.12) }
-        return Color.clear
+        if step.isOverdue() { return Theme.Status.dangerForeground.opacity(0.26) }
+        if step.status == .running { return Theme.Border.active }
+        return Theme.Border.defaultColor
+    }
+
+    private var lineWidth: CGFloat {
+        step.status == .running ? 2 : 1
     }
 
     private var statusLine: String {
         switch step.status {
         case .pending:
             if step.isOverdue() {
-                return "Scaduto alle \(DateFormattingService.time(step.plannedEnd))"
+                return "Scaduto alle \(DateFormattingService.time(step.isWindowBased ? step.windowEnd : step.plannedEnd))"
             }
-            return "Previsto \(DateFormattingService.dayTime(step.plannedStart))"
+            return "Previsto \(DateFormattingService.dayTime(step.isWindowBased ? step.windowStart : step.plannedStart))"
         case .running:
+            if step.shouldShowCompactWindowState() {
+                return "Finestra dalle \(DateFormattingService.dayTime(step.windowStart))"
+            }
             return "Iniziato alle \(DateFormattingService.time(step.referenceStart))"
         case .done:
             if let actualEnd = step.actualEnd {
@@ -243,14 +282,14 @@ struct StepProgressBar: View {
 
             ZStack(alignment: .leading) {
                 Capsule(style: .continuous)
-                    .fill(accent.opacity(0.14))
+                    .fill(Theme.Status.doneBackground)
 
                 Capsule(style: .continuous)
                     .fill(accent)
                     .frame(width: fillWidth)
 
                 Circle()
-                    .fill(Color.white)
+                    .fill(Theme.Surface.card)
                     .frame(width: 12, height: 12)
                     .overlay(
                         Circle()
@@ -301,7 +340,7 @@ struct TimerStatusPill: View {
         .padding(.vertical, 8)
         .background(
             Capsule(style: .continuous)
-                .fill(appearance.accent.opacity(0.12))
+                .fill(appearance.pillBackground)
         )
         .task(id: phase) {
             animatePulse = phase == .running || phase == .overdue
@@ -327,6 +366,10 @@ struct LiveTimerBlock: View {
     let now: Date
     let appearance: OperationalStepAppearance
 
+    private let timerColumns = [
+        GridItem(.adaptive(minimum: 92), spacing: 8)
+    ]
+
     var body: some View {
         VStack(alignment: .leading, spacing: 14) {
             HStack(alignment: .lastTextBaseline, spacing: 12) {
@@ -344,23 +387,18 @@ struct LiveTimerBlock: View {
 
                 Spacer(minLength: 12)
 
-                Text(DateFormattingService.duration(minutes: step.plannedDurationMinutes))
-                    .font(.headline.weight(.semibold))
-                    .foregroundStyle(appearance.accent)
-                    .padding(.horizontal, 12)
-                    .padding(.vertical, 8)
-                    .background(
-                        Capsule(style: .continuous)
-                            .fill(appearance.accent.opacity(0.1))
-                    )
+                StateBadge(
+                    text: DateFormattingService.duration(minutes: step.plannedDurationMinutes),
+                    tone: appearance.metricTone
+                )
             }
 
             StepProgressBar(progress: progressValue, accent: appearance.accent, isOverdue: phase == .overdue)
 
-            HStack(alignment: .top, spacing: 8) {
-                TimerMetric(label: "Inizio", value: DateFormattingService.time(step.referenceStart))
-                TimerMetric(label: "Fine prevista", value: DateFormattingService.time(step.plannedEnd))
-                TimerMetric(label: trailingMetricLabel, value: trailingMetricValue)
+            LazyVGrid(columns: timerColumns, alignment: .leading, spacing: 8) {
+                MetricChip(label: "Inizio", value: DateFormattingService.time(step.referenceStart), tone: .schedule)
+                MetricChip(label: "Fine", value: DateFormattingService.time(step.plannedEnd), tone: phase == .overdue ? .danger : .schedule)
+                MetricChip(label: trailingMetricLabel, value: trailingMetricValue, tone: appearance.metricTone)
             }
 
             Text(detailLine)
@@ -370,12 +408,12 @@ struct LiveTimerBlock: View {
         .padding(16)
         .frame(maxWidth: .infinity, alignment: .leading)
         .background(
-            RoundedRectangle(cornerRadius: 22, style: .continuous)
-                .fill(Color.white.opacity(0.65))
+            RoundedRectangle(cornerRadius: Theme.Radius.nestedCard, style: .continuous)
+                .fill(Theme.Surface.card)
         )
         .overlay(
-            RoundedRectangle(cornerRadius: 22, style: .continuous)
-                .stroke(appearance.accent.opacity(0.12), lineWidth: 1)
+            RoundedRectangle(cornerRadius: Theme.Radius.nestedCard, style: .continuous)
+                .stroke(appearance.innerBorder, lineWidth: 1)
         )
     }
 
@@ -392,7 +430,7 @@ struct LiveTimerBlock: View {
         case .overdue:
             return "Ritardo accumulato"
         case .completed:
-            return "Step completato"
+            return "Fase completata"
         }
     }
 
@@ -416,9 +454,7 @@ struct LiveTimerBlock: View {
             return 0
         case .running:
             return step.progressValue(now: now)
-        case .overdue:
-            return 1
-        case .completed:
+        case .overdue, .completed:
             return 1
         }
     }
@@ -453,16 +489,22 @@ struct LiveTimerBlock: View {
     private var detailLine: String {
         switch phase {
         case .upcoming:
+            if step.isWindowBased {
+                return "Finestra prevista dalle \(DateFormattingService.time(step.windowStart)) alle \(DateFormattingService.time(step.windowEnd))."
+            }
             return "Inizio alle \(DateFormattingService.time(step.plannedStart)) con chiusura prevista alle \(DateFormattingService.time(step.plannedEnd))."
         case .running:
-            return "Avviato alle \(DateFormattingService.time(step.referenceStart)); il ritmo previsto si chiude alle \(DateFormattingService.time(step.plannedEnd))."
+            if step.isWindowBased, step.hasWindowOpened(now: now) == false {
+                return "Fase in corso. La finestra operativa si apre alle \(DateFormattingService.time(step.windowStart)) e si chiude alle \(DateFormattingService.time(step.windowEnd))."
+            }
+            return "Avviato alle \(DateFormattingService.time(step.referenceStart)); il ritmo previsto si chiude alle \(DateFormattingService.time(step.isWindowBased ? step.windowEnd : step.plannedEnd))."
         case .overdue:
-            return "La durata prevista era fino alle \(DateFormattingService.time(step.plannedEnd)); puoi completare lo step o spostare il resto della timeline."
+            return "La chiusura prevista era alle \(DateFormattingService.time(step.isWindowBased ? step.windowEnd : step.plannedEnd)); puoi completare la fase o spostare il resto degli orari."
         case .completed:
             if let actualEnd = step.actualEnd {
-                return "Step chiuso alle \(DateFormattingService.time(actualEnd))."
+                return "Fase chiusa alle \(DateFormattingService.time(actualEnd))."
             }
-            return "Step chiuso."
+            return "Fase chiusa."
         }
     }
 }
@@ -475,22 +517,20 @@ struct StepQuickShiftStrip: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 10) {
-            Text("Riallinea rapidamente la timeline")
-                .font(.caption.weight(.semibold))
-                .foregroundStyle(Theme.muted)
+            StateBadge(text: "Sposta rapidamente gli orari", tone: .schedule)
 
             LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: 8) {
                 ForEach(presets, id: \.self) { minutes in
                     Button(shiftLabel(for: minutes)) {
                         onShift(minutes)
                     }
-                    .buttonStyle(OperationalSecondaryButtonStyle(tint: Theme.accent))
+                    .buttonStyle(SecondaryActionButtonStyle(fill: Theme.Surface.card))
                 }
 
-                Button("Custom") {
+                Button("Personalizzato") {
                     onCustom()
                 }
-                .buttonStyle(OperationalSecondaryButtonStyle(tint: Theme.accent))
+                .buttonStyle(SecondaryActionButtonStyle(fill: Theme.Surface.card))
             }
         }
     }
@@ -508,115 +548,56 @@ struct StepQuickShiftStrip: View {
 struct OperationalStepAppearance {
     let background: Color
     let border: Color
+    let innerBorder: Color
     let shadow: Color
     let accent: Color
     let label: Color
+    let pillBackground: Color
+    let metricTone: StateBadge.Tone
+    let lineWidth: CGFloat
 
     init(phase: BakeStep.TimerPhase) {
         switch phase {
         case .upcoming:
-            background = Theme.panel
-            border = Theme.accent.opacity(0.16)
-            shadow = Theme.accent.opacity(0.12)
-            accent = Theme.accent
-            label = Theme.accent
+            background = Theme.Surface.card
+            border = Theme.Border.defaultColor
+            innerBorder = Theme.Border.defaultColor
+            shadow = Theme.Shadow.card
+            accent = Theme.Control.primaryFill
+            label = Theme.Palette.green600
+            pillBackground = Theme.Surface.tinted
+            metricTone = .schedule
+            lineWidth = 1
         case .running:
-            background = Theme.success.opacity(0.12)
-            border = Theme.success.opacity(0.2)
-            shadow = Theme.success.opacity(0.12)
-            accent = Theme.success
-            label = Theme.success
+            background = Theme.Surface.tinted
+            border = Theme.Border.active
+            innerBorder = Theme.Border.emphasis
+            shadow = Theme.Palette.green100.opacity(0.38)
+            accent = Theme.Status.runningBackground
+            label = Theme.Palette.green600
+            pillBackground = Theme.Palette.green50
+            metricTone = .running
+            lineWidth = 2
         case .overdue:
-            background = Theme.danger.opacity(0.12)
-            border = Theme.danger.opacity(0.24)
-            shadow = Theme.danger.opacity(0.1)
-            accent = Theme.danger
-            label = Theme.danger
+            background = Theme.Surface.dangerTint
+            border = Theme.Status.dangerForeground
+            innerBorder = Theme.Status.dangerForeground.opacity(0.18)
+            shadow = Theme.Status.dangerForeground.opacity(0.1)
+            accent = Theme.Status.dangerForeground
+            label = Theme.Status.dangerForeground
+            pillBackground = Theme.Status.dangerBackground
+            metricTone = .danger
+            lineWidth = 1.5
         case .completed:
-            background = Theme.panel.opacity(0.8)
-            border = Theme.muted.opacity(0.12)
-            shadow = Theme.ink.opacity(0.04)
-            accent = Theme.muted
-            label = Theme.muted
+            background = Theme.Surface.card
+            border = Theme.Border.defaultColor
+            innerBorder = Theme.Border.defaultColor
+            shadow = Theme.Shadow.card.opacity(0.8)
+            accent = Theme.Status.doneForeground
+            label = Theme.Status.doneForeground
+            pillBackground = Theme.Status.doneBackground
+            metricTone = .done
+            lineWidth = 1
         }
-    }
-}
-
-private struct TimerMetric: View {
-    let label: String
-    let value: String
-
-    var body: some View {
-        VStack(alignment: .leading, spacing: 4) {
-            Text(label)
-                .font(.caption2.weight(.semibold))
-                .foregroundStyle(Theme.muted)
-            Text(value)
-                .font(.footnote.weight(.semibold))
-                .foregroundStyle(Theme.ink)
-        }
-        .frame(maxWidth: .infinity, alignment: .leading)
-    }
-}
-
-private struct StepMetaPill: View {
-    let label: String
-    let value: String
-
-    var body: some View {
-        VStack(alignment: .leading, spacing: 2) {
-            Text(label)
-                .font(.caption2.weight(.semibold))
-                .foregroundStyle(Theme.muted)
-            Text(value)
-                .font(.footnote.weight(.semibold))
-                .foregroundStyle(Theme.ink)
-        }
-        .padding(.horizontal, 12)
-        .padding(.vertical, 10)
-        .background(
-            RoundedRectangle(cornerRadius: 16, style: .continuous)
-                .fill(Color.white.opacity(0.5))
-        )
-    }
-}
-
-private struct OperationalPrimaryButtonStyle: ButtonStyle {
-    let fill: Color
-
-    func makeBody(configuration: Configuration) -> some View {
-        configuration.label
-            .font(.headline.weight(.semibold))
-            .foregroundStyle(Color.white)
-            .frame(maxWidth: .infinity)
-            .padding(.vertical, 15)
-            .background(
-                RoundedRectangle(cornerRadius: 18, style: .continuous)
-                    .fill(fill)
-            )
-            .scaleEffect(configuration.isPressed ? 0.98 : 1)
-            .animation(.easeOut(duration: 0.15), value: configuration.isPressed)
-    }
-}
-
-private struct OperationalSecondaryButtonStyle: ButtonStyle {
-    let tint: Color
-
-    func makeBody(configuration: Configuration) -> some View {
-        configuration.label
-            .font(.subheadline.weight(.semibold))
-            .foregroundStyle(tint)
-            .frame(maxWidth: .infinity)
-            .padding(.vertical, 13)
-            .background(
-                RoundedRectangle(cornerRadius: 16, style: .continuous)
-                    .fill(Color.white.opacity(0.45))
-            )
-            .overlay(
-                RoundedRectangle(cornerRadius: 16, style: .continuous)
-                    .stroke(tint.opacity(0.18), lineWidth: 1)
-            )
-            .scaleEffect(configuration.isPressed ? 0.985 : 1)
-            .animation(.easeOut(duration: 0.15), value: configuration.isPressed)
     }
 }

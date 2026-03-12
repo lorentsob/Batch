@@ -2,76 +2,121 @@ import Foundation
 import SwiftData
 import UserNotifications
 
+private struct NotificationRequestPayload: Sendable {
+    let identifier: String
+    let title: String
+    let body: String
+    let route: String
+    let fireDate: Date
+}
+
+private struct NotificationSyncPlan: Sendable {
+    let identifiersToRemove: [String]
+    let requests: [NotificationRequestPayload]
+}
+
+private enum NotificationScheduler {
+    static func apply(_ plans: [NotificationSyncPlan]) async {
+        let center = UNUserNotificationCenter.current()
+
+        for plan in plans {
+            if plan.identifiersToRemove.isEmpty == false {
+                center.removePendingNotificationRequests(withIdentifiers: plan.identifiersToRemove)
+            }
+
+            for request in plan.requests {
+                let content = UNMutableNotificationContent()
+                content.title = request.title
+                content.body = request.body
+                content.sound = .default
+                content.userInfo["route"] = request.route
+
+                try? await center.add(
+                    UNNotificationRequest(
+                        identifier: request.identifier,
+                        content: content,
+                        trigger: UNCalendarNotificationTrigger(
+                            dateMatching: Calendar.current.dateComponents([.year, .month, .day, .hour, .minute], from: request.fireDate),
+                            repeats: false
+                        )
+                    )
+                )
+            }
+        }
+    }
+}
+
 @MainActor
 final class NotificationService: NSObject, ObservableObject, UNUserNotificationCenterDelegate {
+    enum AuthorizationState: Equatable {
+        case authorized
+        case denied
+        case notDetermined
+    }
+
     @Published var pendingURL: URL?
+    @Published private(set) var authorizationState: AuthorizationState = .notDetermined
 
     override init() {
         super.init()
         UNUserNotificationCenter.current().delegate = self
     }
 
-    func requestAuthorizationIfNeeded(settings: AppSettings?) async {
-        guard settings?.hasRequestedNotificationPermission != true else { return }
-        _ = try? await UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .badge, .sound])
-        settings?.hasRequestedNotificationPermission = true
+    @discardableResult
+    func requestAuthorizationIfNeeded(settings: AppSettings?) async -> AuthorizationState {
+        if AppLaunchOptions.shouldForceNotificationsDenied {
+            authorizationState = .denied
+            settings?.hasRequestedNotificationPermission = true
+            return .denied
+        }
+
+        let center = UNUserNotificationCenter.current()
+        let currentSettings = await center.notificationSettings()
+        if currentSettings.authorizationStatus == .denied {
+            authorizationState = .denied
+            settings?.hasRequestedNotificationPermission = true
+            return .denied
+        }
+
+        if settings?.hasRequestedNotificationPermission != true {
+            let granted = (try? await center.requestAuthorization(options: [.alert, .badge, .sound])) ?? false
+            settings?.hasRequestedNotificationPermission = true
+            if granted == false {
+                let updatedSettings = await center.notificationSettings()
+                authorizationState = updatedSettings.authorizationStatus == .denied ? .denied : .notDetermined
+                return authorizationState
+            }
+        }
+
+        let refreshedSettings = await center.notificationSettings()
+        switch refreshedSettings.authorizationStatus {
+        case .authorized, .provisional, .ephemeral:
+            authorizationState = .authorized
+        case .denied:
+            authorizationState = .denied
+        case .notDetermined:
+            authorizationState = .notDetermined
+        @unknown default:
+            authorizationState = .notDetermined
+        }
+
+        return authorizationState
     }
 
     func resyncAll(using modelContext: ModelContext) async {
         let bakes = (try? modelContext.fetch(FetchDescriptor<Bake>())) ?? []
         let starters = (try? modelContext.fetch(FetchDescriptor<Starter>())) ?? []
-        for bake in bakes { await syncNotifications(for: bake) }
-        for starter in starters { await syncNotifications(for: starter) }
+
+        let plans = bakes.map(makeSyncPlan(for:)) + starters.map(makeSyncPlan(for:))
+        await NotificationScheduler.apply(plans)
     }
 
     func syncNotifications(for bake: Bake) async {
-        let oldIdentifiers = bake.steps.map { "bake-\(bake.id.uuidString)-\($0.id.uuidString)" }
-        UNUserNotificationCenter.current().removePendingNotificationRequests(withIdentifiers: oldIdentifiers)
-
-        let reminders = BakeReminderPlanner.planReminders(for: bake)
-        for reminder in reminders {
-            let content = UNMutableNotificationContent()
-            content.title = reminder.title
-            content.body = reminder.body
-            content.sound = .default
-            content.userInfo["route"] = reminder.route
-
-            try? await UNUserNotificationCenter.current().add(
-                UNNotificationRequest(
-                    identifier: reminder.identifier,
-                    content: content,
-                    trigger: UNCalendarNotificationTrigger(
-                        dateMatching: Calendar.current.dateComponents([.year, .month, .day, .hour, .minute], from: reminder.fireDate),
-                        repeats: false
-                    )
-                )
-            )
-        }
+        await NotificationScheduler.apply([makeSyncPlan(for: bake)])
     }
 
     func syncNotifications(for starter: Starter) async {
-        let identifiers = [dueIdentifier(starter.id), followUpIdentifier(starter.id)]
-        UNUserNotificationCenter.current().removePendingNotificationRequests(withIdentifiers: identifiers)
-
-        let reminders = StarterReminderPlanner.planReminders(for: starter)
-        for reminder in reminders {
-            let content = UNMutableNotificationContent()
-            content.title = reminder.title
-            content.body = reminder.body
-            content.sound = .default
-            content.userInfo["route"] = reminder.route
-
-            try? await UNUserNotificationCenter.current().add(
-                UNNotificationRequest(
-                    identifier: reminder.identifier,
-                    content: content,
-                    trigger: UNCalendarNotificationTrigger(
-                        dateMatching: Calendar.current.dateComponents([.year, .month, .day, .hour, .minute], from: reminder.fireDate),
-                        repeats: false
-                    )
-                )
-            )
-        }
+        await NotificationScheduler.apply([makeSyncPlan(for: starter)])
     }
 
     nonisolated func userNotificationCenter(
@@ -92,5 +137,34 @@ final class NotificationService: NSObject, ObservableObject, UNUserNotificationC
 
     private func dueIdentifier(_ id: UUID) -> String { "starter-due-\(id.uuidString)" }
     private func followUpIdentifier(_ id: UUID) -> String { "starter-followup-\(id.uuidString)" }
-}
 
+    private func makeSyncPlan(for bake: Bake) -> NotificationSyncPlan {
+        NotificationSyncPlan(
+            identifiersToRemove: BakeReminderPlanner.identifiers(for: bake),
+            requests: BakeReminderPlanner.planReminders(for: bake).map { reminder in
+                NotificationRequestPayload(
+                    identifier: reminder.identifier,
+                    title: reminder.title,
+                    body: reminder.body,
+                    route: reminder.route,
+                    fireDate: reminder.fireDate
+                )
+            }
+        )
+    }
+
+    private func makeSyncPlan(for starter: Starter) -> NotificationSyncPlan {
+        NotificationSyncPlan(
+            identifiersToRemove: [dueIdentifier(starter.id), followUpIdentifier(starter.id)],
+            requests: StarterReminderPlanner.planReminders(for: starter).map { reminder in
+                NotificationRequestPayload(
+                    identifier: reminder.identifier,
+                    title: reminder.title,
+                    body: reminder.body,
+                    route: reminder.route,
+                    fireDate: reminder.fireDate
+                )
+            }
+        )
+    }
+}

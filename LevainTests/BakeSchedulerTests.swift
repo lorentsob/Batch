@@ -30,6 +30,39 @@ final class BakeSchedulerTests: XCTestCase {
         XCTAssertEqual(steps[0].plannedEnd, steps[1].plannedStart)
         XCTAssertEqual(steps[0].plannedStart, steps[1].plannedStart.adding(minutes: -60))
     }
+
+    func testEmptyBakeNameFallsBackToFormulaName() {
+        let formula = DomainFixtures.makeFormula(name: "Pane Base")
+
+        let bake = BakeScheduler.generateBake(
+            name: "",
+            targetBakeDateTime: .fixedNow.adding(minutes: 60),
+            formula: formula
+        )
+
+        XCTAssertEqual(bake.name, "Pane Base")
+    }
+
+    func testWindowBasedStepUsesOpeningAndClosingWindow() {
+        let formula = DomainFixtures.makeFormula(steps: [
+            FormulaStepTemplate(type: .mix, name: "Impasto", durationMinutes: 30),
+            FormulaStepTemplate(type: .proof, name: "Appretto", durationMinutes: 120, reminderOffsetMinutes: 20)
+        ])
+
+        let bake = BakeScheduler.generateBake(
+            name: "Window bake",
+            targetBakeDateTime: .fixedNow.adding(minutes: 240),
+            formula: formula
+        )
+
+        guard let proof = bake.sortedSteps.last else {
+            return XCTFail("Expected proof step")
+        }
+
+        XCTAssertTrue(proof.isWindowBased)
+        XCTAssertEqual(proof.windowStart, proof.plannedEnd)
+        XCTAssertEqual(proof.windowEnd, proof.plannedEnd.adding(minutes: 60))
+    }
     
     // MARK: - Timeline Shifting
     
@@ -173,6 +206,34 @@ final class BakeSchedulerTests: XCTestCase {
         step.status = .running
 
         XCTAssertEqual(step.progressValue(now: now), 1.0, accuracy: 0.01)
+    }
+
+    func testWindowBasedOverdueUsesWindowEnd() {
+        let now = Date.fixedNow
+        let step = BakeStep(
+            orderIndex: 0,
+            type: .coldRetard,
+            nameOverride: "Cold retard",
+            plannedStart: now.adding(minutes: -180),
+            plannedDurationMinutes: 60,
+            flexibleWindowStart: now.adding(minutes: -30),
+            flexibleWindowEnd: now.adding(minutes: 30),
+            actualStart: now.adding(minutes: -180)
+        )
+        step.status = .running
+
+        XCTAssertFalse(step.isOverdue(now: now))
+        XCTAssertTrue(step.isOperationallyUrgent(now: now))
+    }
+
+    func testStepStartedOutOfOrderIsDetectedAfterExplicitOverride() {
+        let bake = DomainFixtures.makeBake()
+        let second = bake.sortedSteps[1]
+
+        XCTAssertTrue(second.requiresSequenceOverrideBeforeStart)
+        second.start(at: .fixedNow)
+
+        XCTAssertTrue(second.startedOutOfOrder)
     }
     
     // MARK: - Bake Status Derivation

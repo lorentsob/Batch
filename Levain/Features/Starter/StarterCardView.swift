@@ -3,23 +3,58 @@ import SwiftUI
 struct StarterCardView: View {
     let starter: Starter
 
+    private let metricColumns = [
+        GridItem(.adaptive(minimum: 118), spacing: 8)
+    ]
+
     var body: some View {
         SectionCard {
-            HStack(alignment: .top) {
-                VStack(alignment: .leading, spacing: 8) {
-                    Text(starter.name)
-                        .font(.headline)
-                        .foregroundStyle(Theme.ink)
-                    Text("\(starter.type.title) · \(Int(starter.hydration.rounded()))% idratazione")
-                        .font(.subheadline)
-                        .foregroundStyle(Theme.muted)
-                    Text("Prossimo rinfresco: \(DateFormattingService.dayTime(starter.nextDueDate))")
+            VStack(alignment: .leading, spacing: 12) {
+                HStack(alignment: .top) {
+                    VStack(alignment: .leading, spacing: 8) {
+                        Text(starter.name)
+                            .font(.headline)
+                            .foregroundStyle(Theme.ink)
+                        Text("\(starter.type.title) · \(Int(starter.hydration.rounded()))% idratazione")
+                            .font(.subheadline)
+                            .foregroundStyle(Theme.muted)
+                    }
+                    Spacer()
+                    StateBadge(dueState: starter.dueState())
+                }
+
+                LazyVGrid(columns: metricColumns, alignment: .leading, spacing: 8) {
+                    MetricChip(label: "Ritmo", value: "Ogni \(starter.refreshIntervalDays) gg", tone: .schedule)
+                    MetricChip(label: "Prossimo", value: DateFormattingService.dayTime(starter.nextDueDate), tone: reminderTone)
+                }
+
+                if starter.selectedFlours.isEmpty == false {
+                    Text(flourSummary)
                         .font(.footnote)
                         .foregroundStyle(Theme.muted)
+                        .lineLimit(2)
                 }
-                Spacer()
-                StateBadge(text: starter.dueState().title)
             }
         }
+    }
+
+    private var reminderTone: StateBadge.Tone {
+        switch starter.dueState() {
+        case .ok:
+            .done
+        case .dueToday:
+            .schedule
+        case .overdue:
+            .danger
+        }
+    }
+
+    private var flourSummary: String {
+        let preview = starter.selectedFlours
+            .prefix(2)
+            .map { "\($0.displayName) \(Int($0.percentage.rounded()))%" }
+            .joined(separator: " · ")
+        let extraCount = max(starter.selectedFlours.count - 2, 0)
+        return extraCount > 0 ? "\(preview) · +\(extraCount)" : preview
     }
 }

@@ -2,6 +2,7 @@ import SwiftUI
 import SwiftData
 
 struct StarterView: View {
+    @EnvironmentObject private var router: AppRouter
     @Query(sort: \Starter.name) private var starters: [Starter]
 
     @State private var showingEditor = false
@@ -10,19 +11,19 @@ struct StarterView: View {
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 20) {
-                SectionCard {
+                SectionCard(emphasis: .tinted) {
                     Text("Starter")
-                        .font(.system(size: 30, weight: .semibold, design: .serif))
+                        .font(.system(size: 30, weight: .bold))
                         .foregroundStyle(Theme.ink)
-                    Text("Gestisci routine, stato di salute e cronologia rinfreschi.")
+                    Text("Tieni d'occhio rinfreschi, ritmo e stato del tuo starter.")
                         .foregroundStyle(Theme.muted)
-                    StateBadge(text: "\(starters.count) starter")
+                    StateBadge(text: "\(starters.count) starter", tone: .count)
                 }
 
                 if starters.isEmpty {
                     EmptyStateView(
-                        title: "Nessuno starter configurato",
-                        message: "Crea il primo starter per far emergere promemoria e log di rinfresco.",
+                        title: "Nessuno starter ancora",
+                        message: "Aggiungi uno starter per segnare i rinfreschi e ricevere promemoria.",
                         actionTitle: "Nuovo starter"
                     ) {
                         editingStarter = nil
@@ -48,7 +49,7 @@ struct StarterView: View {
         }
         .contentMargins(.bottom, 88, for: .scrollContent)
         .background(Theme.background.ignoresSafeArea())
-        .navigationTitle("Starter")
+        .tint(Theme.Control.primaryFill)
         .accessibilityIdentifier("StarterScrollView")
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {
@@ -56,7 +57,8 @@ struct StarterView: View {
                     editingStarter = nil
                     showingEditor = true
                 } label: {
-                    Label("Nuovo starter", systemImage: "plus")
+                    Text("Nuovo starter")
+                        .fontWeight(.semibold)
                 }
             }
         }

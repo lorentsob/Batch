@@ -86,14 +86,12 @@ struct StarterEditorView: View {
             }
 
             Section("Note") {
-                LabeledContent("Note") {
-                    TextField("Consigli di rinfresco", text: $notes, axis: .vertical)
-                        .lineLimit(3...6)
-                        .multilineTextAlignment(.trailing)
-                }
+                TextField("Consigli di rinfresco", text: $notes, axis: .vertical)
+                    .lineLimit(3...6)
             }
         }
         .navigationTitle(starter == nil ? "Nuovo starter" : "Modifica starter")
+        .tint(Theme.Control.primaryFill)
         .toolbar {
             ToolbarItem(placement: .cancellationAction) {
                 Button("Chiudi") { dismiss() }

@@ -16,11 +16,13 @@ The app must make the next baking action obvious without adding setup, infrastru
 
 ### Active
 
-- [ ] Operational Home grouped by bake instead of a flat list of pending steps
-- [ ] Bake-first information architecture with Home / Impasti / Starter primary navigation and secondary access to Ricette and Knowledge
-- [ ] Recipe and starter authoring with explicit labels, structured flour selection, and yeast-aware planning inputs
-- [ ] Bake lifecycle cleanup for cancellation, deletion, target-usage semantics, and trustworthy visual-state feedback
-- [ ] Visual and asset compliance pass, including corrected state colors, iconography, and working App Icon recognition
+- [x] Operational Home grouped by bake instead of a flat list of pending steps
+- [x] Bake-first information architecture with Home / Impasti / Starter primary navigation and secondary access to Ricette and Knowledge
+- [x] Recipe and starter authoring with explicit labels, structured flour selection, and yeast-aware planning inputs
+- [x] Bake lifecycle cleanup for cancellation, deletion, target-usage semantics, and trustworthy visual-state feedback
+- [x] Visual and asset compliance pass, including corrected state colors, iconography, and working App Icon recognition
+- [x] Naming, Today urgency semantics, and notification-router fallback behavior aligned after post-UAT gap review
+- [ ] Userflow v2 conformance across Today, bake creation/execution, window-based steps, starter refresh, and notification entry, with final closure gated by manual on-device UAT
 
 ### Out of Scope
 
@@ -33,6 +35,7 @@ The app must make the next baking action obvious without adding setup, infrastru
 ## Context
 
 - Source of truth for scope: `docs/levain-prd-complete-v2.md`
+- Source of truth for operational flow behavior: `docs/levain-user-flows.md`
 - Source of truth for bundled editorial content: `docs/levain-knowledge.md`
 - MVP language is Italian-first to match the current knowledge content and personal-use scope
 - Implementation baseline is native Apple tooling with Xcode 26.3 and Swift 6.2.4
@@ -64,6 +67,12 @@ The app must make the next baking action obvious without adding setup, infrastru
 | User-facing "Formula" language is replaced by "Ricetta", with built-in templates directly reusable | Current terminology and flow force unnecessary duplication before starting a bake | 2026-03-11 |
 | Structured flour and yeast selection are required domain features, not optional UI polish | Real recipe and starter use needs reusable ingredient taxonomy and clear fermentation basis | 2026-03-11 |
 | Phase 10 must explicitly close the unresolved App Icon issue | The asset catalog is partly configured, but the icon still is not recognized in practice | 2026-03-11 |
+| Product and AI context naming must use `Levain` consistently | Conflicting `Levain`/`Lievito` references degrade AI-assisted development quality and document trust | 2026-03-12 |
+| Today must separate urgent work from same-day scheduled work and suppress work beyond tomorrow | Operational trust depends on distinguishing "do now" from "planned later today" instead of flattening both into one signal | 2026-03-12 |
+| Notification deep links must resolve against live entities with safe fallback and transient toast feedback | Stale IDs are normal over time; the app must degrade safely instead of landing in silent empty states | 2026-03-12 |
+| The repo-maintained operational source of truth is `docs/levain-user-flows.md`, mirrored from the external HTML v2 | The attached HTML drives UX expectations, but the repository needs a durable markdown document for planning, code review, and traceability | 2026-03-12 |
+| Window-based bake steps use `flexibleWindowStart`/`flexibleWindowEnd` for urgency instead of `plannedEnd` | Proof and cold-retard windows are inherently flexible; overdue semantics should match real baking behavior | 2026-03-12 |
+| Bake execution remains sequential by default, with explicit confirmation and persistent `Fuori ordine` feedback for overrides | The app should prescribe the next correct action while still allowing expert recovery from real-world deviations | 2026-03-12 |
 
 ---
-*Last updated: 2026-03-11 after adding Phase 10 operational UX realignment planning*
+*Last updated: 2026-03-12 after Phase 12 implementation and automated verification, with manual UAT still pending*

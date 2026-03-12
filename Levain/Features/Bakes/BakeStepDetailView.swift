@@ -8,19 +8,29 @@ struct BakeStepDetailView: View {
 
     let step: BakeStep
 
+    @State private var showingOutOfOrderConfirm = false
+
     var body: some View {
         Form {
-            Section("Dettagli step") {
+            Section("Dettagli fase") {
                 Text(step.displayName)
                 if !step.descriptionText.isEmpty {
                     Text(step.descriptionText)
                         .foregroundStyle(Theme.muted)
+                }
+                if step.startedOutOfOrder {
+                    StateBadge(text: "Fuori ordine", tone: .info)
                 }
             }
 
             Section("Timing") {
                 MetricRow(label: "Pianificato", value: DateFormattingService.dayTime(step.plannedStart))
                 MetricRow(label: "Durata pianificata", value: DateFormattingService.duration(minutes: step.plannedDurationMinutes))
+
+                if step.isWindowBased {
+                    MetricRow(label: "Apertura finestra", value: DateFormattingService.dayTime(step.windowStart))
+                    MetricRow(label: "Chiusura finestra", value: DateFormattingService.dayTime(step.windowEnd))
+                }
 
                 if let actualStart = step.actualStart {
                     MetricRow(label: "Inizio reale", value: DateFormattingService.dayTime(actualStart))
@@ -43,16 +53,25 @@ struct BakeStepDetailView: View {
 
             if !step.isTerminal {
                 Section("Esecuzione") {
-                    Button(step.status == .running ? "Completa step" : "Avvia step") {
+                    Button(step.status == .running ? "Completa fase" : "Avvia fase") {
                         if step.status == .running {
                             complete()
+                            dismiss()
+                        } else if step.requiresSequenceOverrideBeforeStart {
+                            showingOutOfOrderConfirm = true
                         } else {
                             start()
+                            dismiss()
                         }
-                        dismiss()
                     }
 
-                    Button("Salta questo step") {
+                    if step.requiresSequenceOverrideBeforeStart {
+                        Text("Questa fase non è la prossima in sequenza. Puoi comunque avviarla con una conferma esplicita.")
+                            .font(.footnote)
+                            .foregroundStyle(Theme.muted)
+                    }
+
+                    Button("Salta questa fase") {
                         skip()
                         dismiss()
                     }
@@ -60,12 +79,26 @@ struct BakeStepDetailView: View {
                 }
             }
         }
-        .navigationTitle("Step")
+        .navigationTitle("Fase")
         .navigationBarTitleDisplayMode(.inline)
+        .tint(Theme.Control.primaryFill)
         .toolbar {
             ToolbarItem(placement: .cancellationAction) {
                 Button("Chiudi") { dismiss() }
             }
+        }
+        .confirmationDialog(
+            "Vuoi davvero avviare questa fase fuori sequenza?",
+            isPresented: $showingOutOfOrderConfirm,
+            titleVisibility: .visible
+        ) {
+            Button("Avvia comunque") {
+                start()
+                dismiss()
+            }
+            Button("Annulla", role: .cancel) {}
+        } message: {
+            Text("Le fasi intermedie resteranno da fare e questa verrà segnata come fuori ordine.")
         }
     }
 
@@ -104,6 +137,7 @@ private struct MetricRow: View {
             Spacer()
             Text(value)
                 .foregroundStyle(Theme.muted)
+                .multilineTextAlignment(.trailing)
         }
     }
 }

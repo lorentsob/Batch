@@ -48,7 +48,7 @@ struct FormulaEditorView: View {
     var body: some View {
         Form {
             Section("Identità") {
-                LabeledContent("Nome della formula") {
+                LabeledContent("Nome della ricetta") {
                     TextField("es. Pane di Segale", text: $name)
                         .multilineTextAlignment(.trailing)
                 }
@@ -121,9 +121,9 @@ struct FormulaEditorView: View {
                 }
             }
 
-            Section("Step di default") {
+            Section("Fasi di default") {
                 if steps.isEmpty {
-                    Text("Aggiungi almeno uno step.")
+                    Text("Aggiungi almeno una fase.")
                         .foregroundStyle(Theme.muted)
                 }
 
@@ -152,11 +152,11 @@ struct FormulaEditorView: View {
                 Button {
                     editingStep = FormulaStepTemplate(
                         type: .custom,
-                        name: "Nuovo step",
+                        name: "Nuova fase",
                         durationMinutes: 20
                     )
                 } label: {
-                    Label("Aggiungi step", systemImage: "plus")
+                    Label("Aggiungi fase", systemImage: "plus")
                 }
             }
 
@@ -170,7 +170,8 @@ struct FormulaEditorView: View {
                 Text("Note")
             }
         }
-        .navigationTitle(formula == nil ? "Nuova formula" : "Modifica formula")
+        .navigationTitle(formula == nil ? "Nuova ricetta" : "Modifica ricetta")
+        .tint(Theme.Control.primaryFill)
         .toolbar {
             ToolbarItem(placement: .cancellationAction) {
                 Button("Chiudi") { dismiss() }

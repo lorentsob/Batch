@@ -9,14 +9,14 @@ struct KnowledgeCategoryPillView: View {
         Button(action: action) {
             Text(title)
                 .font(.subheadline.weight(.semibold))
-                .foregroundStyle(isSelected ? Theme.background : Theme.muted)
+                .foregroundStyle(isSelected ? Theme.Control.primaryForeground : Theme.Control.secondaryForeground)
                 .padding(.horizontal, 16)
                 .padding(.vertical, 8)
-                .background(isSelected ? Theme.ink : Theme.panel)
+                .background(isSelected ? Theme.Control.primaryFill : Theme.Surface.card)
                 .clipShape(Capsule())
                 .overlay(
                     Capsule()
-                        .stroke(isSelected ? Color.clear : Theme.muted.opacity(0.3), lineWidth: 1)
+                        .stroke(isSelected ? Color.clear : Theme.Border.defaultColor, lineWidth: 1)
                 )
         }
         .buttonStyle(.plain)

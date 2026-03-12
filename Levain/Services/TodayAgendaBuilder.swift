@@ -1,7 +1,38 @@
 import Foundation
 
+struct TodayFuturePreview: Hashable {
+    enum Kind: Hashable {
+        case bake(TodayAgendaItem.BakeSummary)
+        case starter(starterID: UUID)
+    }
+
+    let kind: Kind
+    let title: String
+    let subtitle: String
+    let referenceDate: Date
+}
+
+struct TodayAgendaSnapshot {
+    enum EmptyStateMode: String {
+        case firstLaunch
+        case allClear
+        case futureOnly
+        case actionable
+    }
+
+    let sections: [TodayAgendaItem.Section: [TodayAgendaItem]]
+    let emptyState: EmptyStateMode
+    let futurePreview: TodayFuturePreview?
+}
+
 struct TodayAgendaItem: Identifiable {
     struct BakeSummary: Hashable {
+        enum PresentationStyle: Hashable {
+            case primaryCard
+            case compactWindow
+            case tomorrowPreview
+        }
+
         let bakeID: UUID
         let stepID: UUID
         let bakeName: String
@@ -14,6 +45,9 @@ struct TodayAgendaItem: Identifiable {
         let timerPhase: BakeStep.TimerPhase
         let isOverdue: Bool
         let primaryActionTitle: String
+        let presentationStyle: PresentationStyle
+        let windowStart: Date?
+        let windowEnd: Date?
     }
 
     enum Kind: Hashable {
@@ -22,19 +56,17 @@ struct TodayAgendaItem: Identifiable {
     }
 
     enum Section: String, CaseIterable, Identifiable {
-        case now
-        case upcoming
-        case starter
-        case later
+        case urgent
+        case scheduled
+        case tomorrow
 
         var id: String { rawValue }
 
         var title: String {
             switch self {
-            case .now: "Ora / in ritardo"
-            case .upcoming: "In arrivo"
-            case .starter: "Starter"
-            case .later: "Più tardi"
+            case .urgent: "Da fare"
+            case .scheduled: "In programma oggi"
+            case .tomorrow: "Domani"
             }
         }
     }
@@ -46,6 +78,7 @@ struct TodayAgendaItem: Identifiable {
     let subtitle: String
     let state: String
     let actionTitle: String
+    let sortPriority: Int
     let sortDate: Date
 
     var bakeSummary: BakeSummary? {
@@ -55,21 +88,61 @@ struct TodayAgendaItem: Identifiable {
 }
 
 enum TodayAgendaBuilder {
-    static func build(bakes: [Bake], starters: [Starter], now: Date = .now) -> [TodayAgendaItem.Section: [TodayAgendaItem]] {
+    static func buildSnapshot(
+        bakes: [Bake],
+        starters: [Starter],
+        hasPersistedData: Bool,
+        now: Date = .now
+    ) -> TodayAgendaSnapshot {
         var grouped: [TodayAgendaItem.Section: [TodayAgendaItem]] = [:]
+        let calendar = Calendar.current
+        let tomorrow = calendar.date(byAdding: .day, value: 1, to: now.startOfDay) ?? now.addingTimeInterval(24 * 60 * 60)
 
         for bake in bakes {
-            let status = bake.derivedStatus
-            guard status != .cancelled && status != .completed else { continue }
-            guard let step = bake.activeStep else { continue }
-            
+            guard bake.derivedStatus != .cancelled,
+                  bake.derivedStatus != .completed,
+                  let step = bake.activeStep else {
+                continue
+            }
+
+            let presentationStyle: TodayAgendaItem.BakeSummary.PresentationStyle
             let section: TodayAgendaItem.Section
-            if step.status == .running || step.isOverdue(now: now) {
-                section = .now
-            } else if Calendar.current.isDate(step.plannedStart, inSameDayAs: now) {
-                section = .upcoming
+            let sortDate: Date
+            let state: String
+            let subtitle: String
+            let actionTitle: String
+
+            if step.shouldShowCompactWindowState(now: now) {
+                presentationStyle = .compactWindow
+                section = .scheduled
+                sortDate = step.windowStart
+                state = "In maturazione"
+                subtitle = "\(step.displayName) in corso · finestra dalle \(DateFormattingService.time(step.windowStart))"
+                actionTitle = "Apri fase"
+            } else if step.isOperationallyUrgent(now: now) {
+                presentationStyle = .primaryCard
+                section = .urgent
+                sortDate = step.isWindowBased ? step.windowEnd : step.plannedStart
+                state = step.isOverdue(now: now) ? "In ritardo" : "In corso"
+                subtitle = step.displayName
+                actionTitle = step.status == .running ? "Completa fase" : "Avvia fase"
             } else {
-                section = .later
+                let referenceDate = step.isWindowBased ? step.windowStart : step.plannedStart
+
+                if calendar.isDate(referenceDate, inSameDayAs: now) {
+                    presentationStyle = .primaryCard
+                    section = .scheduled
+                } else if calendar.isDate(referenceDate, inSameDayAs: tomorrow) {
+                    presentationStyle = .tomorrowPreview
+                    section = .tomorrow
+                } else {
+                    continue
+                }
+
+                sortDate = referenceDate
+                state = "Pianificato"
+                subtitle = step.displayName
+                actionTitle = "Avvia fase"
             }
 
             let summary = TodayAgendaItem.BakeSummary(
@@ -84,20 +157,11 @@ enum TodayAgendaBuilder {
                 stepStatus: step.status,
                 timerPhase: step.timerPhase(now: now),
                 isOverdue: step.isOverdue(now: now),
-                primaryActionTitle: step.status == .running ? "Completa step" : "Avvia step"
+                primaryActionTitle: actionTitle,
+                presentationStyle: presentationStyle,
+                windowStart: step.isWindowBased ? step.windowStart : nil,
+                windowEnd: step.isWindowBased ? step.windowEnd : nil
             )
-
-            let state: String
-            switch summary.timerPhase {
-            case .running:
-                state = "In corso"
-            case .overdue:
-                state = "In ritardo"
-            case .completed:
-                state = step.status.title
-            case .upcoming:
-                state = "Pianificato"
-            }
 
             grouped[section, default: []].append(
                 TodayAgendaItem(
@@ -105,10 +169,11 @@ enum TodayAgendaBuilder {
                     section: section,
                     kind: .bake(summary),
                     title: bake.name,
-                    subtitle: step.displayName,
+                    subtitle: subtitle,
                     state: state,
-                    actionTitle: summary.primaryActionTitle,
-                    sortDate: step.plannedStart
+                    actionTitle: actionTitle,
+                    sortPriority: presentationStyle == .compactWindow ? 0 : 1,
+                    sortDate: sortDate
                 )
             )
         }
@@ -116,24 +181,121 @@ enum TodayAgendaBuilder {
         for starter in starters {
             let dueState = starter.dueState(now: now)
             guard dueState != .ok else { continue }
-            grouped[.starter, default: []].append(
+
+            let section: TodayAgendaItem.Section = dueState == .overdue ? .urgent : .scheduled
+            grouped[section, default: []].append(
                 TodayAgendaItem(
                     id: "starter-\(starter.id.uuidString)",
-                    section: .starter,
+                    section: section,
                     kind: .starter(starterID: starter.id),
                     title: starter.name,
-                    subtitle: dueState == .overdue ? "rinfresco in ritardo" : "rinfresco previsto oggi",
-                    state: dueState.rawValue,
+                    subtitle: dueState == .overdue ? "Rinfresco in ritardo" : "Rinfresco previsto oggi",
+                    state: dueState.title,
                     actionTitle: "Rinfresca",
-                    sortDate: starter.nextDueDate
+                    sortPriority: dueState == .overdue ? 2 : 3,
+                    sortDate: starter.nextDueDate.settingTime(hour: dueState == .overdue ? 8 : 21, minute: 0)
                 )
             )
         }
 
         for key in grouped.keys {
-            grouped[key]?.sort { $0.sortDate < $1.sortDate }
+            grouped[key]?.sort {
+                if $0.sortPriority == $1.sortPriority {
+                    return $0.sortDate < $1.sortDate
+                }
+                return $0.sortPriority < $1.sortPriority
+            }
         }
 
-        return grouped
+        if let tomorrowItems = grouped[.tomorrow] {
+            grouped[.tomorrow] = Array(tomorrowItems.prefix(2))
+        }
+
+        let hasActionableWork = grouped[.urgent]?.isEmpty == false || grouped[.scheduled]?.isEmpty == false
+        let futurePreview = makeFuturePreview(bakes: bakes, starters: starters, now: now)
+
+        let emptyState: TodayAgendaSnapshot.EmptyStateMode
+        if hasActionableWork {
+            emptyState = .actionable
+        } else if hasPersistedData == false {
+            emptyState = .firstLaunch
+        } else if futurePreview != nil {
+            emptyState = .futureOnly
+        } else {
+            emptyState = .allClear
+        }
+
+        return TodayAgendaSnapshot(
+            sections: grouped,
+            emptyState: emptyState,
+            futurePreview: futurePreview
+        )
+    }
+
+    private static func makeFuturePreview(
+        bakes: [Bake],
+        starters: [Starter],
+        now: Date
+    ) -> TodayFuturePreview? {
+        var candidates: [TodayFuturePreview] = []
+        let endOfToday = now.startOfDay.addingTimeInterval((24 * 60 * 60) - 1)
+
+        for bake in bakes {
+            guard bake.derivedStatus != .cancelled,
+                  bake.derivedStatus != .completed,
+                  let step = bake.activeStep else {
+                continue
+            }
+
+            if step.shouldShowCompactWindowState(now: now) {
+                continue
+            }
+
+            let referenceDate = step.isWindowBased ? step.windowStart : step.plannedStart
+            guard referenceDate > endOfToday else { continue }
+
+            let summary = TodayAgendaItem.BakeSummary(
+                bakeID: bake.id,
+                stepID: step.id,
+                bakeName: bake.name,
+                stepName: step.displayName,
+                stepDescription: step.descriptionText,
+                plannedStart: step.plannedStart,
+                plannedEnd: step.plannedEnd,
+                plannedDurationMinutes: step.plannedDurationMinutes,
+                stepStatus: step.status,
+                timerPhase: step.timerPhase(now: now),
+                isOverdue: step.isOverdue(now: now),
+                primaryActionTitle: "Apri bake",
+                presentationStyle: .tomorrowPreview,
+                windowStart: step.isWindowBased ? step.windowStart : nil,
+                windowEnd: step.isWindowBased ? step.windowEnd : nil
+            )
+
+            candidates.append(
+                TodayFuturePreview(
+                    kind: .bake(summary),
+                    title: bake.name,
+                    subtitle: "\(step.displayName) · \(DateFormattingService.dayTime(referenceDate))",
+                    referenceDate: referenceDate
+                )
+            )
+        }
+
+        for starter in starters {
+            let dueState = starter.dueState(now: now)
+            guard dueState == .ok else { continue }
+            let referenceDate = starter.nextDueDate.settingTime(hour: 9, minute: 0)
+            candidates.append(
+                TodayFuturePreview(
+                    kind: .starter(starterID: starter.id),
+                    title: starter.name,
+                    subtitle: "Prossimo rinfresco · \(DateFormattingService.dayTime(referenceDate))",
+                    referenceDate: referenceDate
+                )
+            )
+        }
+
+        return candidates.sorted { $0.referenceDate < $1.referenceDate }.first
     }
 }

@@ -2,29 +2,55 @@ import SwiftUI
 
 struct TodayStarterReminderRow: View {
     let item: TodayAgendaItem
+    let isUrgent: Bool
     let action: () -> Void
     
     var body: some View {
-        SectionCard {
-            HStack(alignment: .top) {
-                VStack(alignment: .leading, spacing: 8) {
-                    Text(item.title)
-                        .font(.headline)
-                        .foregroundStyle(Theme.ink)
-                    Text(item.subtitle)
-                        .font(.subheadline)
-                        .foregroundStyle(Theme.muted)
+        Group {
+            if isUrgent {
+                SectionCard {
+                    content(titleFont: .headline, subtitleFont: .subheadline, badgeTone: .danger)
+                    Button(item.actionTitle) {
+                        action()
+                    }
+                    .buttonStyle(PrimaryActionButtonStyle())
                 }
-                
-                Spacer()
-                StateBadge(text: item.state)
+            } else {
+                HStack(alignment: .center, spacing: 14) {
+                    content(titleFont: .subheadline.weight(.semibold), subtitleFont: .footnote, badgeTone: .schedule)
+                    Button(item.actionTitle) {
+                        action()
+                    }
+                    .buttonStyle(SecondaryActionButtonStyle())
+                }
+                .padding(16)
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .background(
+                    RoundedRectangle(cornerRadius: Theme.Radius.nestedCard, style: .continuous)
+                        .fill(Theme.Surface.card)
+                )
+                .overlay(
+                    RoundedRectangle(cornerRadius: Theme.Radius.nestedCard, style: .continuous)
+                        .stroke(Theme.Border.defaultColor, lineWidth: 1)
+                )
             }
-            
-            Button(item.actionTitle) {
-                action()
+        }
+    }
+
+    @ViewBuilder
+    private func content(titleFont: Font, subtitleFont: Font, badgeTone: StateBadge.Tone) -> some View {
+        HStack(alignment: .top, spacing: 12) {
+            VStack(alignment: .leading, spacing: 6) {
+                Text(item.title)
+                    .font(titleFont)
+                    .foregroundStyle(Theme.ink)
+                Text(item.subtitle)
+                    .font(subtitleFont)
+                    .foregroundStyle(Theme.muted)
             }
-            .buttonStyle(.borderedProminent)
-            .tint(Theme.accent)
+
+            Spacer()
+            StateBadge(text: item.state, tone: badgeTone)
         }
     }
 }

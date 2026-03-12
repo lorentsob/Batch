@@ -7,22 +7,26 @@ struct FormulaListView: View {
     @State private var showingFormulaEditor = false
     @State private var editingFormula: RecipeFormula?
 
+    private let metricColumns = [
+        GridItem(.adaptive(minimum: 118), spacing: 8)
+    ]
+
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 20) {
-                SectionCard {
+                SectionCard(emphasis: .tinted) {
                     Text("Ricette")
-                        .font(.system(size: 30, weight: .semibold, design: .serif))
+                        .font(.system(size: 30, weight: .bold))
                         .foregroundStyle(Theme.ink)
-                    Text("Template e formule disponibili per creare nuovi bake.")
+                    Text("Ricette e template disponibili per creare nuovi bake.")
                         .foregroundStyle(Theme.muted)
-                    StateBadge(text: "\(formulas.count) ricette")
+                    StateBadge(text: "\(formulas.count) ricette", tone: .count)
                 }
 
                 if formulas.isEmpty {
                     EmptyStateView(
                         title: "Nessuna ricetta",
-                        message: "Crea una formula per iniziare i tuoi impasti.",
+                        message: "Crea una ricetta per iniziare i tuoi impasti.",
                         actionTitle: "Nuova ricetta"
                     ) {
                         editingFormula = nil
@@ -32,21 +36,25 @@ struct FormulaListView: View {
                     ForEach(formulas) { formula in
                         NavigationLink(value: BakesRoute.formula(formula.id)) {
                             SectionCard {
-                                HStack(alignment: .top) {
-                                    VStack(alignment: .leading, spacing: 6) {
-                                        Text(formula.name)
-                                            .font(.headline)
-                                            .foregroundStyle(Theme.ink)
-                                        Text(formula.type.title)
-                                            .font(.subheadline)
-                                            .foregroundStyle(Theme.muted)
-                                        Text("\(Int(formula.hydrationPercent.rounded()))% idratazione · \(formula.servings) porzioni")
-                                            .font(.footnote)
+                                VStack(alignment: .leading, spacing: 12) {
+                                    HStack(alignment: .top) {
+                                        VStack(alignment: .leading, spacing: 6) {
+                                            Text(formula.name)
+                                                .font(.headline)
+                                                .foregroundStyle(Theme.ink)
+                                            Text(formula.type.title)
+                                                .font(.subheadline)
+                                                .foregroundStyle(Theme.muted)
+                                        }
+                                        Spacer()
+                                        Image(systemName: "chevron.right")
                                             .foregroundStyle(Theme.muted)
                                     }
-                                    Spacer()
-                                    Image(systemName: "chevron.right")
-                                        .foregroundStyle(Theme.muted)
+
+                                    LazyVGrid(columns: metricColumns, alignment: .leading, spacing: 8) {
+                                        MetricChip(label: "Idratazione", value: "\(Int(formula.hydrationPercent.rounded()))%", tone: .info)
+                                        MetricChip(label: "Porzioni", value: "\(formula.servings)", tone: .count)
+                                    }
                                 }
                             }
                         }
@@ -60,6 +68,7 @@ struct FormulaListView: View {
         .contentMargins(.bottom, 88, for: .scrollContent)
         .background(Theme.background.ignoresSafeArea())
         .navigationTitle("Ricette")
+        .tint(Theme.Control.primaryFill)
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {
                 Button("Nuova") {

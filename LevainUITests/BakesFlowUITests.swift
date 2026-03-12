@@ -1,38 +1,26 @@
 import XCTest
 
-/// UI coverage for the Bakes tab entry flow.
-/// Tests use the deterministic launch harness so they are independent of
-/// simulator state and do not trigger notification permission prompts.
 final class BakesFlowUITests: XCTestCase {
-
     override func setUpWithError() throws {
         continueAfterFailure = false
     }
-
-    // MARK: Empty state
 
     func testBakesTabShownEmptyWithNoData() throws {
         let app = XCUIApplication()
         app.launchEmpty()
 
         app.tabBars.buttons["Impasti"].tap()
-        XCTAssertTrue(app.staticTexts["Nessun impasto"].waitForExistence(timeout: 5))
+        XCTAssertTrue(app.staticTexts["Nessun bake"].waitForExistence(timeout: 5))
     }
 
-    // MARK: Seeded state
-
-    func testBakesTabShowsFormulaWithSeedData() throws {
+    func testBakesTabShowsOperationalDataWithSeedData() throws {
         let app = XCUIApplication()
         app.launchSeeded()
 
         app.tabBars.buttons["Impasti"].tap()
         XCTAssertTrue(app.scrollViews["BakesScrollView"].waitForExistence(timeout: 5))
-
-        // Seeded data includes an active bake, so the empty-state copy must disappear.
-        XCTAssertFalse(app.staticTexts["Nessun impasto"].exists)
+        XCTAssertFalse(app.staticTexts["Nessun bake"].exists)
     }
-
-    // MARK: Empty state offers recipe creation
 
     func testEmptyBakesStateOffersRecipeCreation() throws {
         let app = XCUIApplication()
@@ -40,7 +28,25 @@ final class BakesFlowUITests: XCTestCase {
 
         app.tabBars.buttons["Impasti"].tap()
         XCTAssertTrue(app.scrollViews["BakesScrollView"].waitForExistence(timeout: 5))
+        XCTAssertTrue(app.buttons["BakesNewRecipeButton"].waitForExistence(timeout: 5))
+    }
 
-        XCTAssertTrue(app.buttons["Nuova ricetta"].waitForExistence(timeout: 5))
+    func testNewBakeUsesTemplatesAndCreateThenEditFlow() throws {
+        let app = XCUIApplication()
+        app.launchEmpty()
+
+        app.tabBars.buttons["Impasti"].tap()
+        XCTAssertTrue(app.buttons["BakesPrimaryNewBakeButton"].waitForExistence(timeout: 5))
+        app.buttons["BakesPrimaryNewBakeButton"].tap()
+
+        XCTAssertTrue(app.navigationBars["Nuovo bake"].waitForExistence(timeout: 5))
+        XCTAssertTrue(app.staticTexts["Template rapidi"].waitForExistence(timeout: 5))
+        XCTAssertTrue(app.scrollViews["BakeTemplateScroller"].waitForExistence(timeout: 5))
+        XCTAssertTrue(app.buttons["Pane di campagna"].waitForExistence(timeout: 5))
+        app.buttons["Pane di campagna"].tap()
+
+        app.navigationBars["Nuovo bake"].buttons["Crea"].tap()
+
+        XCTAssertTrue(app.navigationBars["Pane di campagna"].waitForExistence(timeout: 8))
     }
 }

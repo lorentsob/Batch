@@ -1,6 +1,6 @@
-# CLAUDE.md — Lievito App
+# CLAUDE.md — Levain
 
-This file is the single source of context for AI-assisted development of the Lievito App. It is derived from `lievito-app-prd-complete-v2.md`, the `.planning/` folder, and the current state of the codebase.
+This file is the single source of context for AI-assisted development of Levain. It is derived from `docs/levain-prd-complete-v2.md`, the `.planning/` folder, and the current state of the codebase.
 
 ---
 
@@ -28,8 +28,8 @@ This is **not** a recipe manager, not a social app, not an AI assistant. It is a
 | Auth | None |
 | Cloud sync | None |
 
-Bundle ID: `com.lorentso.lievito`
-Product name: `Lievito`
+Bundle ID: `com.lorentso.levain`
+Product name: `Levain`
 Version: `0.1.0`
 
 ---
@@ -37,9 +37,9 @@ Version: `0.1.0`
 ## Project Structure
 
 ```
-LievitoApp/
+Levain/
 ├── App/
-│   ├── LievitoApp.swift          # @main entry, injects container + environment
+│   ├── LevainApp.swift           # @main entry, injects container + environment
 │   ├── AppRouter.swift           # Navigation / deep-link routing
 │   └── AppEnvironment.swift      # ObservableObject: NotificationService, KnowledgeLibrary
 ├── Models/
@@ -76,12 +76,12 @@ LievitoApp/
     │   ├── SectionCard.swift
     │   └── StateBadge.swift
     └── Extensions/
-        └── Date+Lievito.swift
+        └── Date+Levain.swift
 ```
 
 Also in repo root:
 - `project.yml` — XcodeGen spec
-- `lievito-knowledge.md` — editorial source for knowledge.json
+- `docs/levain-knowledge.md` — editorial source for knowledge.json
 - `.planning/` — roadmap, requirements, state, phase plans
 
 ---
@@ -269,13 +269,13 @@ See `.planning/phases/` for detailed plan files per phase.
 
 All files exist but views are stubs. The following is production-quality scaffold:
 
-- `LievitoApp.swift` — `@main`, injects `ModelContainer` + `AppEnvironment` + `AppRouter`
+- `LevainApp.swift` — `@main`, injects `ModelContainer` + `AppEnvironment` + `AppRouter`
 - `AppEnvironment.swift` — holds `NotificationService` and `KnowledgeLibrary`
 - `ModelContainerFactory.swift` — creates the SwiftData container
 - All `@Model` classes in `Models/` — `Bake`, `BakeStep`, `Starter`, `StarterRefresh`, `RecipeFormula`, `FormulaStepTemplate`, `AppSettings`
 - `DomainEnums.swift` — all shared enums
 - `Services/` — `BakeScheduler`, `NotificationService`, `TodayAgendaBuilder`, `KnowledgeLoader`, `DateFormattingService` (scaffolded)
-- `DesignSystem/` — `Theme.swift`, `EmptyStateView`, `SectionCard`, `StateBadge`, `Date+Lievito`
+- `DesignSystem/` — `Theme.swift`, `EmptyStateView`, `SectionCard`, `StateBadge`, `Date+Levain`
 - `Features/Shared/RootTabView.swift` — four-tab structure
 - Stub views for Today, Bakes, Starter, Knowledge
 - `SeedDataLoader.swift`
@@ -318,9 +318,9 @@ All files exist but views are stubs. The following is production-quality scaffol
 
 | File | Purpose |
 |---|---|
-| `lievito-app-prd-complete-v2.md` | Full product spec — source of truth for scope |
-| `UX-SPEC.md` | **Screen-by-screen UX specification** — layout, components, states, flows |
-| `lievito-knowledge.md` | Editorial source for `knowledge.json` |
+| `docs/levain-prd-complete-v2.md` | Full product spec — source of truth for scope |
+| `docs/UX-SPEC.md` | **Screen-by-screen UX specification** — layout, components, states, flows |
+| `docs/levain-knowledge.md` | Editorial source for `knowledge.json` |
 | `.planning/PROJECT.md` | Project overview and key decisions |
 | `.planning/ROADMAP.md` | Full 8-phase roadmap with phase details |
 | `.planning/REQUIREMENTS.md` | Traceable v1 requirements (FORM-xx, BAKE-xx, STEP-xx…) |

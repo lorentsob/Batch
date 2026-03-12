@@ -2,54 +2,56 @@
 
 ## Project Reference
 
-See: .planning/PROJECT.md (updated 2026-03-11)
+See: .planning/PROJECT.md (updated 2026-03-12)
 
-**Core value:** The app must make the next baking action obvious without adding setup, infrastructure, or workflow friction.
-**Current focus:** Phase 10: Operational UX Realignment (`10-01`, `10-02`, `10-03` completed) after 2026-03-11 UAT feedback
+**Core value:** The app must make the next baking action obvious without adding setup, infrastructure, or workflow friction.  
+**Current focus:** Phase 12: Userflow & UX Conformance (`12-01`, `12-02`, `12-03` executed; targeted automated verification complete; manual UAT pending)
 
 ## Current Position
 
-Phase: 10 of 10 (Operational UX Realignment)
-Plan: 3 of 3 executed in current phase
-Status: ✅ Phase 10 complete
-Last activity: 2026-03-11 — Completed 10-03 Bake lifecycle, visual polish, and app icon closure
+Phase: 12 of 12 (Userflow & UX Conformance)  
+Plan: 3 of 3 executed in current phase  
+Status: ⏳ Phase 12 implemented; awaiting manual on-device UAT before closure  
+Last activity: 2026-03-12 — Completed clean serial verification for unit/UI coverage, including `LifecycleUITests`, and aligned Phase 12 artifacts
 
-Progress: [█████████░] 90% (9 of 10 phases complete)
+Progress: [█████████░] 92% (11 of 12 phases complete)
 
 ## Performance Metrics
 
 **Velocity:**
 
-- Total plans completed: 18
-- Total plans planned: 21
+- Total plans completed: 36
+- Total plans planned: 36
 - Average duration: N/A
 - Total execution time: N/A
 
 **By Phase:**
 
-| Phase | Plans Completed | Status   |
-| ----- | --------------- | -------- |
-| 1     | 3/3             | Complete |
-| 2     | 3/3             | Complete |
-| 3     | 3/3             | Complete |
-| 4     | 3/3             | Complete |
-| 5     | 3/3             | Complete |
-| 6     | 3/3             | Complete |
-| 7     | 3/3             | Complete |
-| 8     | 3/3             | Complete |
-| 9     | 3/3             | Complete |
-| 10    | 0/3             | Planned  |
+| Phase | Plans Completed | Status |
+| ----- | --------------- | ------ |
+| 1 | 3/3 | Complete |
+| 2 | 3/3 | Complete |
+| 3 | 3/3 | Complete |
+| 4 | 3/3 | Complete |
+| 5 | 3/3 | Complete |
+| 6 | 3/3 | Complete |
+| 7 | 3/3 | Complete |
+| 8 | 3/3 | Complete |
+| 9 | 3/3 | Complete |
+| 10 | 3/3 | Complete |
+| 11 | 3/3 | Complete |
+| 12 | 3/3 | In Progress |
 
 **Recent Trend:**
 
-- Last 5 plans: 09-01 complete, 09-02 complete, 09-03 complete, 10-01 complete
-- Trend: Completed v1 baseline, then reopened planning for UAT-driven realignment
+- Last 5 plans: 11-02 complete, 11-03 complete, 12-01 complete, 12-02 complete, 12-03 complete
+- Trend: shifted from trust-gap cleanup into explicit userflow-v2 conformance, then closed the automated verification loop; only manual UAT remains
 
 ## Accumulated Context
 
 ### Decisions
 
-Decisions are logged in PROJECT.md Key Decisions table.
+Decisions are logged in PROJECT.md Key Decisions table.  
 Recent decisions affecting current work:
 
 - Phase 5 planning: Today should be the operational home screen with explicit priority buckets
@@ -72,23 +74,22 @@ Recent decisions affecting current work:
 - Phase 10 planning: user-facing "Formula" terminology becomes "Ricetta", with presets directly reusable for bake creation
 - Phase 10 planning: recipe and starter authoring need structured flour multi-select, explicit labels, and yeast-aware recipe configuration
 - Phase 10 planning: Phase 10 also owns the unresolved App Icon recognition issue because the asset pipeline is configured but still not resolving correctly in practice
-
-### Pending Todos
-
-- [x] Execute 10-01: Home and navigation realignment
-- [x] Execute 10-02: Recipe and starter authoring realignment
-- [x] Execute 10-03: Bake lifecycle, visual polish, and app icon closure
+- Phase 11 planning: `Levain` is the only valid product name in markdown and AI context; stale `Lievito` product references must be removed
+- Phase 11 planning: Today must split urgent work from scheduled-today work and cap tomorrow preview while hiding anything later
+- Phase 11 planning: notification navigation must resolve live entities and degrade to safe tab/detail fallbacks with transient toast feedback
+- Phase 12 planning: `docs/levain-user-flows.md` is the repository source of truth for the six operational flows defined in the external HTML v2
+- Phase 12 planning: Today must expose explicit empty-state modes (`firstLaunch`, `allClear`, `futureOnly`, `actionable`) instead of inferring everything from `totalCount == 0`
+- Phase 12 planning: bake execution is sequential by default, but out-of-order recovery stays available behind explicit confirmation and persistent `Fuori ordine` feedback
+- Phase 12 planning: window-based steps derive urgency and overdue state from `flexibleWindowStart` / `flexibleWindowEnd`, not from rigid `plannedEnd`
 
 ### Blockers/Concerns
 
+- Manual on-device UAT is still pending for the six userflow-v2 passes, including real notification delivery and window-close reminder feel
 - XCTest verification still depends on local CoreSimulator availability
-- Notification deep-link behavior still needs on-device verification after the initial build
-- Phase 10 will need careful model evolution to avoid breaking existing seed or persisted recipe data when moving from free-text flour and formula naming to structured recipe fields
-- Yeast quantity conversion rules need explicit assumptions so sourdough and commercial yeast choices do not silently produce misleading numbers
-- The App Icon issue may still involve simulator or build cache behavior even if the asset catalog naming mismatch is fixed
+- Yeast quantity conversion rules still depend on explicit product assumptions so sourdough and commercial yeast choices do not silently drift
 
 ## Session Continuity
 
-Last session: 2026-03-11
-Stopped at: Phase 10 planned after UAT issue review.
-Resume file: .planning/debug/2026-03-11-uat-ux-realignment.md
+Last session: 2026-03-12  
+Stopped at: Phase 12 implemented and fully covered by targeted automated verification; waiting for human UAT execution.  
+Resume file: .planning/phases/12-userflow-ux-conformance/12-UAT.md

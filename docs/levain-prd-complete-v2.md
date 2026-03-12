@@ -167,10 +167,19 @@ The home screen should be the operational center of the app.
 It must be **action-first**, not dashboard-first.
 
 ### Priority order in Today
-1. **Now / overdue**
-2. **Upcoming steps today**
-3. **Starter refreshes due**
-4. **Later / tomorrow**
+1. **Da fare**
+   - running bake steps
+   - overdue bake steps
+   - overdue starter refreshes only
+2. **In programma oggi**
+   - pending bake steps scheduled today
+   - starter refreshes due today but not overdue
+3. **Domani**
+   - collapsed preview only
+   - max 2 items
+   - only the next actionable bake step per bake
+
+Items beyond tomorrow should not appear in Today. Starter reminders due tomorrow or later should not appear in Today.
 
 ### Each item in Today must show
 - clear title

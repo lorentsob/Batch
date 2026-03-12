@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 63;
+	objectVersion = 70;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -21,6 +21,7 @@
 		20066B89AB8228C6E5C18C67 /* BakeReminderPlannerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F702B38C52B89746F9D8DE1 /* BakeReminderPlannerTests.swift */; };
 		26045D68DC5B6B88BC79FA0D /* BakeStepDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E8199167A33F653C5C7BD8E /* BakeStepDetailView.swift */; };
 		2E8E0532906BFE9F5F6245D7 /* AppRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1230562334B3FE09F3E01E83 /* AppRouter.swift */; };
+		328CEA6DCF4F2E21651079F3 /* ToastBannerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C25872A58F8373FE1A2CF530 /* ToastBannerView.swift */; };
 		38A739CCAF6D529859D57B4B /* Starter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EAE902CB2D317BA3DD3C564 /* Starter.swift */; };
 		3A81CC4B558FB4DBF018955F /* SeedDataLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9ECE5A0429356DA9B30ED63 /* SeedDataLoader.swift */; };
 		3F9F42BA78F745EE0A1DE5EA /* KnowledgeItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = A061F753EFB622786D154A83 /* KnowledgeItem.swift */; };
@@ -41,7 +42,9 @@
 		6F7C689E9224FA177FE49E9D /* DateFormattingService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3723F2A4189A29D9018AD0A5 /* DateFormattingService.swift */; };
 		6FB2EAAC65EC1C0350BDCFCB /* DomainEnums.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3CC16D0B45CCF1757437239C /* DomainEnums.swift */; };
 		746E199E505E72637497D225 /* BakeStepCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADB19A1BB4867DF590026CA3 /* BakeStepCardView.swift */; };
+		7D3DA6A05B6CB6132F859BC1 /* DesignPrimitives.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D09C0219515B0C58E80A791 /* DesignPrimitives.swift */; };
 		7DBF2B3CE6183DA9DFAC65AC /* RefreshLogView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 147E7D4B5D15D0D071744403 /* RefreshLogView.swift */; };
+		8040B7FDC41AEF93B266D79C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E9C70A97FB07D332B0B66E73 /* Assets.xcassets */; };
 		81D3ED37D019F6565F3BF8B9 /* RootTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5A5E14312B26145E7F011F7 /* RootTabView.swift */; };
 		8730BA6C0B1CDD586E6C36BB /* TodayAgendaBuilderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 471E4662846877A1B4A475C6 /* TodayAgendaBuilderTests.swift */; };
 		8D52486D5B3CF8C5B1346BEA /* AppLaunchOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = A327533FEB9FDE64DDA58C58 /* AppLaunchOptions.swift */; };
@@ -57,6 +60,7 @@
 		B5E9CD6022D24A67C2CD7C74 /* StarterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DDDA7E52937AA625C6BE4336 /* StarterTests.swift */; };
 		B8315A2AC7FED3BC8B133FD4 /* StarterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A607B35031F3C9AC5098E415 /* StarterView.swift */; };
 		B855098278619B8C04F933DC /* NotificationRouteUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFF203DD5A6EA2502E937535 /* NotificationRouteUITests.swift */; };
+		BA77CD1E23F1F5BFECFCE9F3 /* StateBadgeToneTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7762E15F65697D717FBB038F /* StateBadgeToneTests.swift */; };
 		BB34A0D65EE95C89A7C10392 /* BakeDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC7E0BB47C494872009B35F0 /* BakeDetailView.swift */; };
 		BFE0C3D56CAC5551D58E4F4D /* NotificationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31CB45B80CFC5B3AB74316A6 /* NotificationService.swift */; };
 		C04546EB78A1C4246F029AA8 /* KnowledgeLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9069286C22B79776F290E460 /* KnowledgeLoader.swift */; };
@@ -128,6 +132,7 @@
 		40446C7081740B9B23D8ADD4 /* knowledge.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = knowledge.json; sourceTree = "<group>"; };
 		429113B9EA88560877F6998C /* StarterRefresh.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StarterRefresh.swift; sourceTree = "<group>"; };
 		471E4662846877A1B4A475C6 /* TodayAgendaBuilderTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodayAgendaBuilderTests.swift; sourceTree = "<group>"; };
+		4D09C0219515B0C58E80A791 /* DesignPrimitives.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DesignPrimitives.swift; sourceTree = "<group>"; };
 		4D4D579B87EF9D7EB8FF64CD /* TodayView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodayView.swift; sourceTree = "<group>"; };
 		4EAE902CB2D317BA3DD3C564 /* Starter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Starter.swift; sourceTree = "<group>"; };
 		5261819BB2151A4B0A46054A /* StarterEditorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StarterEditorView.swift; sourceTree = "<group>"; };
@@ -142,13 +147,14 @@
 		6DAE057C970FA6A827C1AC37 /* TodayFlowUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodayFlowUITests.swift; sourceTree = "<group>"; };
 		74E8B96E2C8D2CE83E5D72CD /* BakesFlowUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BakesFlowUITests.swift; sourceTree = "<group>"; };
 		75D5700D7ACF9659E555318D /* StarterCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StarterCardView.swift; sourceTree = "<group>"; };
+		7762E15F65697D717FBB038F /* StateBadgeToneTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StateBadgeToneTests.swift; sourceTree = "<group>"; };
 		79D4C487A002E34766EBC3F2 /* AppEnvironment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppEnvironment.swift; sourceTree = "<group>"; };
 		7BD7C03D5139BD3131B782AE /* AppRouterTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppRouterTests.swift; sourceTree = "<group>"; };
 		8B39BE3A6D9E872507ECAB51 /* BakeSchedulerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BakeSchedulerTests.swift; sourceTree = "<group>"; };
 		8CBB82511329EC43AD7BC640 /* StarterDetailHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StarterDetailHeaderView.swift; sourceTree = "<group>"; };
 		8E9AA4021F43AE9655D8F68C /* StateBadge.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StateBadge.swift; sourceTree = "<group>"; };
 		9069286C22B79776F290E460 /* KnowledgeLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KnowledgeLoader.swift; sourceTree = "<group>"; };
-		9B4004713422E6E47C0B76CD /* Levain.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Levain.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		9B4004713422E6E47C0B76CD /* Levain.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = Levain.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		A061F753EFB622786D154A83 /* KnowledgeItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KnowledgeItem.swift; sourceTree = "<group>"; };
 		A327533FEB9FDE64DDA58C58 /* AppLaunchOptions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppLaunchOptions.swift; sourceTree = "<group>"; };
 		A4FAA5A66043B616FE6D1EEB /* Date+Levain.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Date+Levain.swift"; sourceTree = "<group>"; };
@@ -160,6 +166,7 @@
 		B18A695300F304A000928E5A /* RecipeFormula.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecipeFormula.swift; sourceTree = "<group>"; };
 		B1F880ED6926551889AA8A10 /* RecipeTemplates.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecipeTemplates.swift; sourceTree = "<group>"; };
 		BCF69DF1AB4A6F4ADD87ECC4 /* ModelContainerFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelContainerFactory.swift; sourceTree = "<group>"; };
+		C25872A58F8373FE1A2CF530 /* ToastBannerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToastBannerView.swift; sourceTree = "<group>"; };
 		C3719CAB830F30160F021B55 /* BakeScheduler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BakeScheduler.swift; sourceTree = "<group>"; };
 		CDA0457086F14FDAC1DC627A /* ShiftTimelineView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShiftTimelineView.swift; sourceTree = "<group>"; };
 		CEAB2C1827C62E47C070528C /* AppSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppSettings.swift; sourceTree = "<group>"; };
@@ -171,6 +178,7 @@
 		DC91495A586F622B67D068BE /* KnowledgeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KnowledgeView.swift; sourceTree = "<group>"; };
 		DDDA7E52937AA625C6BE4336 /* StarterTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StarterTests.swift; sourceTree = "<group>"; };
 		DF01B80A376C5C973BD17F65 /* TipGroupView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TipGroupView.swift; sourceTree = "<group>"; };
+		E9C70A97FB07D332B0B66E73 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		E9F3A968120BB53D31A648FB /* LifecycleUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LifecycleUITests.swift; sourceTree = "<group>"; };
 		EE05B4A75F3D5DED96A3B7B9 /* Bake.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Bake.swift; sourceTree = "<group>"; };
 		EFFD3965E1ACFBC8C1DDABAA /* BakeCreationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BakeCreationView.swift; sourceTree = "<group>"; };
@@ -178,6 +186,10 @@
 		F5A5E14312B26145E7F011F7 /* RootTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootTabView.swift; sourceTree = "<group>"; };
 		FC7E0BB47C494872009B35F0 /* BakeDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BakeDetailView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
+
+/* Begin PBXFileSystemSynchronizedRootGroup section */
+		8EBA90AA2F62F67800E941BE /* icons */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = icons; sourceTree = "<group>"; };
+/* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXGroup section */
 		0592DE9A150160B3DCD0215D /* Persistence */ = {
@@ -264,6 +276,8 @@
 		37667EEB5A3CDB90E3A6FFE9 /* Levain */ = {
 			isa = PBXGroup;
 			children = (
+				8EBA90AA2F62F67800E941BE /* icons */,
+				E9C70A97FB07D332B0B66E73 /* Assets.xcassets */,
 				176CFAD7509B1D39B858F3FD /* Info.plist */,
 				0B9250CBB1117EA21A609C90 /* App */,
 				A99DAF22A7E8AE1E5F63D967 /* DesignSystem */,
@@ -287,6 +301,7 @@
 		632408C7CA7F874D37AE66CB /* Components */ = {
 			isa = PBXGroup;
 			children = (
+				4D09C0219515B0C58E80A791 /* DesignPrimitives.swift */,
 				DB0CD69CAD160F8964E04E38 /* EmptyStateView.swift */,
 				0EF66CC37AE507FB215CFF22 /* SectionCard.swift */,
 				8E9AA4021F43AE9655D8F68C /* StateBadge.swift */,
@@ -350,6 +365,7 @@
 				05BB2A8E3BCF16B390C67996 /* FlourSelectionEditorView.swift */,
 				F5A5E14312B26145E7F011F7 /* RootTabView.swift */,
 				DF01B80A376C5C973BD17F65 /* TipGroupView.swift */,
+				C25872A58F8373FE1A2CF530 /* ToastBannerView.swift */,
 			);
 			path = Shared;
 			sourceTree = "<group>";
@@ -386,6 +402,7 @@
 				6983B1F948DFA6BE209403E8 /* SeedDataLoaderTests.swift */,
 				529741780FA026FA8C458250 /* StarterReminderPlannerTests.swift */,
 				DDDA7E52937AA625C6BE4336 /* StarterTests.swift */,
+				7762E15F65697D717FBB038F /* StateBadgeToneTests.swift */,
 				471E4662846877A1B4A475C6 /* TodayAgendaBuilderTests.swift */,
 				5727B15E6E72B2B734EFFEFF /* TestSupport */,
 			);
@@ -465,6 +482,9 @@
 			);
 			dependencies = (
 			);
+			fileSystemSynchronizedGroups = (
+				8EBA90AA2F62F67800E941BE /* icons */,
+			);
 			name = Levain;
 			packageProductDependencies = (
 			);
@@ -489,6 +509,7 @@
 						TestTargetID = 8E84F0B210E0A11CDE4A5962;
 					};
 					8E84F0B210E0A11CDE4A5962 = {
+						DevelopmentTeam = "";
 						ProvisioningStyle = Automatic;
 					};
 				};
@@ -518,6 +539,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8040B7FDC41AEF93B266D79C /* Assets.xcassets in Resources */,
 				1B203CD85910F7A753EA7B7E /* knowledge.json in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -552,6 +574,7 @@
 				A6B6C10E319F7201014A093A /* SeedDataLoaderTests.swift in Sources */,
 				E51AA3D045B8F6386DBEE0FE /* StarterReminderPlannerTests.swift in Sources */,
 				B5E9CD6022D24A67C2CD7C74 /* StarterTests.swift in Sources */,
+				BA77CD1E23F1F5BFECFCE9F3 /* StateBadgeToneTests.swift in Sources */,
 				8730BA6C0B1CDD586E6C36BB /* TodayAgendaBuilderTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -575,6 +598,7 @@
 				5CEDD8D761EC4B856818528F /* BakesView.swift in Sources */,
 				0D244B36BB2D2FBD61B00E07 /* Date+Levain.swift in Sources */,
 				6F7C689E9224FA177FE49E9D /* DateFormattingService.swift in Sources */,
+				7D3DA6A05B6CB6132F859BC1 /* DesignPrimitives.swift in Sources */,
 				6FB2EAAC65EC1C0350BDCFCB /* DomainEnums.swift in Sources */,
 				AC4C1CBFA44C0269CD84573D /* EmptyStateView.swift in Sources */,
 				4FCFC5305EEE296E84DCF165 /* FlourSelectionEditorView.swift in Sources */,
@@ -611,6 +635,7 @@
 				E97AB14C622B8A60CD53659F /* StateBadge.swift in Sources */,
 				043C0DCBBA47ECCC7A940446 /* Theme.swift in Sources */,
 				6B3C2EF47615A68D2BCBC14C /* TipGroupView.swift in Sources */,
+				328CEA6DCF4F2E21651079F3 /* ToastBannerView.swift in Sources */,
 				C5F7D28B986CFB8C2F4C70E2 /* TodayAgendaBuilder.swift in Sources */,
 				C2649F9ACF555DAF1A53C1C4 /* TodayStarterReminderRow.swift in Sources */,
 				5B3C0E436D498776AC28559D /* TodayStepCardView.swift in Sources */,
@@ -641,9 +666,9 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = C974BPN56D;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Levain/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = Levain;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -863,9 +888,9 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = C974BPN56D;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Levain/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = Levain;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
 				LD_RUNPATH_SEARCH_PATHS = (

@@ -26,7 +26,7 @@ Gestione completa del ciclo di vita di ogni panificazione:
 - **Adaptive Timeline**: possibilità di slittare l'intera programmazione futura in caso di ritardi nella lievitazione reale.
 - Distinzione tra tempi pianificati ed esecuzione effettiva.
 
-### 🧪 Starter (Lievito Madre)
+### 🧪 Starter (lievito madre)
 Un registro semplificato per la salute del tuo lievito:
 - Log rapido dei rinfreschi con calcolo automatico della prossima scadenza.
 - Gestione di parametri specifici (idratazione, mix di farine, peso del contenitore).

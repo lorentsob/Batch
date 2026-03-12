@@ -470,35 +470,29 @@ HStack {
 ScrollView {
     VStack(spacing: Theme.Spacing.xxl) {
 
-        // Sezione 1 — "Adesso" (solo se presenti step overdue o running)
-        if !nowItems.isEmpty {
-            SectionHeader("Adesso", count: nowItems.count)
+        // Sezione 1 — "Da fare" (step running/overdue + starter overdue)
+        if !urgentItems.isEmpty {
+            SectionHeader("Da fare", count: urgentItems.count)
             VStack(spacing: Theme.Spacing.sm) {
-                ForEach(nowItems) { StepCard($0, context: .today) }
+                ForEach(urgentBakeItems) { StepCard($0, context: .today) }
+                ForEach(urgentStarterItems) { StarterReminderRow($0, prominence: .urgent) }
             }
         }
 
-        // Sezione 2 — "Più tardi oggi"
-        if !laterItems.isEmpty {
-            SectionHeader("Più tardi oggi", count: laterItems.count)
+        // Sezione 2 — "In programma oggi"
+        if !scheduledItems.isEmpty {
+            SectionHeader("In programma oggi", count: scheduledItems.count)
             VStack(spacing: Theme.Spacing.sm) {
-                ForEach(laterItems) { StepCard($0, context: .today) }
+                ForEach(scheduledBakeItems) { StepCard($0, context: .today) }
+                ForEach(scheduledStarterItems) { StarterReminderRow($0, prominence: .scheduled) }
             }
         }
 
-        // Sezione 3 — "Starter" (starter refreshes due)
-        if !starterItems.isEmpty {
-            SectionHeader("Starter")
-            VStack(spacing: Theme.Spacing.sm) {
-                ForEach(starterItems) { StarterReminderRow($0) }
-            }
-        }
-
-        // Sezione 4 — "Domani" (preview, collassata)
+        // Sezione 3 — "Domani" (preview collassata, max 2)
         if !tomorrowItems.isEmpty {
             SectionHeader("Domani")
             VStack(spacing: Theme.Spacing.sm) {
-                ForEach(tomorrowItems.prefix(2)) { StepCard($0, context: .tomorrow) }
+                ForEach(tomorrowItems.prefix(2)) { TomorrowPreviewRow($0) }
                 if tomorrowItems.count > 2 {
                     Text("+ \(tomorrowItems.count - 2) altri step")
                         .font(Theme.Typography.footnote)
@@ -527,7 +521,10 @@ CTA:         PrimaryButton("Nuovo impasto") { presentNewBakeSheet }
 ```
 
 ### 4.2 StarterReminderRow
-Riga compatta per i reminder del lievito nella Today view (non usa la StarterCard completa).
+Riga per i reminder starter nella Today view con due varianti di prominenza.
+
+- `urgent`: usa la card piena e lo stesso peso visivo degli step da fare.
+- `scheduled`: usa una riga compatta, con CTA presente ma meno dominante.
 
 ```
 HStack(spacing: Theme.Spacing.md) {
@@ -555,6 +552,16 @@ HStack(spacing: Theme.Spacing.md) {
 .background(Theme.Color.surface)
 .squircle(radius: Theme.Radius.lg)
 .themeShadow(Theme.Shadow.sm)
+```
+
+Per i reminder `scheduled`, usare:
+
+```
+- padding ridotto
+- font titolo `subheadline`
+- font secondario `footnote`
+- bottone `Rinfresca` outlined, non filled
+- background meno prominente della variant urgent
 ```
 
 ---

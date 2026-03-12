@@ -13,66 +13,75 @@ struct BakesView: View {
     @State private var preselectedFormula: RecipeFormula?
     @State private var isRicetteExpanded = false
 
+    private let metricColumns = [
+        GridItem(.adaptive(minimum: 118), spacing: 8)
+    ]
+
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 20) {
-                SectionCard {
+                SectionCard(emphasis: .tinted) {
                     Text("Impasti")
-                        .font(.system(size: 30, weight: .semibold, design: .serif))
+                        .font(.system(size: 30, weight: .bold))
                         .foregroundStyle(Theme.ink)
-                    Text("L'hub operativo per i tuoi bake in corso o pianificati.")
+                    Text("Tieni d'occhio i bake in corso e quelli in programma.")
                         .foregroundStyle(Theme.muted)
                     HStack(spacing: 12) {
-                        StateBadge(text: "\(bakes.count) bake")
-                        StateBadge(text: "\(formulas.count) ricette")
+                        StateBadge(text: "\(bakes.count) bake", tone: .count)
+                        StateBadge(text: "\(formulas.count) ricette", tone: .info)
                     }
                 }
 
                 VStack(alignment: .leading, spacing: 12) {
-                    HStack {
-                        Text("Bake")
-                            .font(.headline)
-                            .foregroundStyle(Theme.ink)
-                        Spacer()
-                        Button {
-                            preselectedFormula = formulas.first
-                            showingBakeEditor = true
-                        } label: {
-                            Label("Nuovo bake", systemImage: "plus")
-                        }
-                        .buttonStyle(.bordered)
-                        .tint(Theme.accent)
-                    }
+                    Text("Bake")
+                        .font(.headline)
+                        .foregroundStyle(Theme.ink)
 
                     if bakes.isEmpty {
                         EmptyStateView(
-                            title: "Nessun impasto",
+                            title: "Nessun bake",
                             message: "Scegli una ricetta e avvia il tuo primo bake.",
                             actionTitle: "Nuovo bake"
                         ) {
                             preselectedFormula = formulas.first
                             showingBakeEditor = true
                         }
+                        .accessibilityIdentifier("BakesEmptyState")
                     } else {
                         ForEach(bakes) { bake in
                             NavigationLink(value: BakesRoute.bake(bake.id)) {
                                 SectionCard {
-                                    HStack(alignment: .top) {
-                                        VStack(alignment: .leading, spacing: 8) {
-                                            Text(bake.name)
-                                                .font(.headline)
-                                                .foregroundStyle(Theme.ink)
-                                            Text("\(bake.type.title) · target \(DateFormattingService.dayTime(bake.targetBakeDateTime))")
-                                                .font(.subheadline)
-                                                .foregroundStyle(Theme.muted)
-                                            if let step = bake.activeStep {
-                                                Text("Prossimo step: \(step.displayName)")
-                                                    .font(.footnote)
+                                    VStack(alignment: .leading, spacing: 12) {
+                                        HStack(alignment: .top) {
+                                            VStack(alignment: .leading, spacing: 8) {
+                                                Text(bake.name)
+                                                    .font(.headline)
+                                                    .foregroundStyle(Theme.ink)
+                                                Text(bake.type.title)
+                                                    .font(.subheadline)
                                                     .foregroundStyle(Theme.muted)
                                             }
+                                            Spacer()
+                                            StateBadge(bakeStatus: bake.derivedStatus)
                                         }
-                                        Spacer()
-                                        StateBadge(text: bake.derivedStatus.title)
+
+                                        LazyVGrid(columns: metricColumns, alignment: .leading, spacing: 8) {
+                                            MetricChip(
+                                                label: "Utilizzo",
+                                                value: DateFormattingService.dayTime(bake.targetBakeDateTime),
+                                                tone: .schedule
+                                            )
+                                            if let step = bake.activeStep {
+                                                MetricChip(label: "Prossima fase", value: step.displayName, tone: .info)
+                                            }
+                                        }
+
+                                        if let step = bake.activeStep {
+                                            Text(step.descriptionText.isEmpty ? "La fase attiva è pronta da seguire." : step.descriptionText)
+                                                .font(.footnote)
+                                                .foregroundStyle(Theme.muted)
+                                                .lineLimit(2)
+                                        }
                                     }
                                 }
                             }
@@ -82,31 +91,21 @@ struct BakesView: View {
                 }
 
                 VStack(alignment: .leading, spacing: 12) {
-                    HStack {
-                        Text("Ricette")
-                            .font(.headline)
-                            .foregroundStyle(Theme.ink)
-                        Spacer()
-                        Button {
-                            editingFormula = nil
-                            showingFormulaEditor = true
-                        } label: {
-                            Label("Nuova ricetta", systemImage: "plus")
-                        }
-                        .buttonStyle(.bordered)
-                        .tint(Theme.accent)
-                    }
+                    Text("Ricette")
+                        .font(.headline)
+                        .foregroundStyle(Theme.ink)
 
                     SectionCard {
                         NavigationLink(value: BakesRoute.formulaList) {
                             HStack {
-                                VStack(alignment: .leading, spacing: 4) {
-                                    Text("Gestione Ricette")
+                                VStack(alignment: .leading, spacing: 8) {
+                                    Text("Le tue ricette")
                                         .font(.headline)
                                         .foregroundStyle(Theme.ink)
-                                    Text("Configura i tuoi template e basi.")
+                                    Text("Raccogli ricette, template e tempi di lavoro.")
                                         .font(.subheadline)
                                         .foregroundStyle(Theme.muted)
+                                    StateBadge(text: "\(formulas.count) salvate", tone: .count)
                                 }
                                 Spacer()
                                 Image(systemName: "chevron.right")
@@ -122,8 +121,20 @@ struct BakesView: View {
         }
         .contentMargins(.bottom, 88, for: .scrollContent)
         .background(Theme.background.ignoresSafeArea())
-        .navigationTitle("Impasti")
+        .tint(Theme.Control.primaryFill)
         .accessibilityIdentifier("BakesScrollView")
+        .toolbar {
+            ToolbarItem(placement: .topBarTrailing) {
+                Button {
+                    preselectedFormula = formulas.first
+                    showingBakeEditor = true
+                } label: {
+                    Text("Nuovo bake")
+                        .fontWeight(.semibold)
+                }
+                .accessibilityIdentifier("BakesPrimaryNewBakeButton")
+            }
+        }
         .sheet(isPresented: $showingFormulaEditor) {
             NavigationStack {
                 FormulaEditorView(formula: editingFormula)
@@ -134,7 +145,6 @@ struct BakesView: View {
         }
     }
 }
-
 
 
 struct FormulaStatRow: View {

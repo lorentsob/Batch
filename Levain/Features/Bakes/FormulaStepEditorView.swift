@@ -30,18 +30,18 @@ struct FormulaStepEditorView: View {
 
     var body: some View {
         Form {
-            Section("Step") {
+            Section("Fase") {
                 Picker("Tipo", selection: $type) {
                     ForEach(BakeStepType.allCases) { option in
                         Text(option.title).tag(option)
                     }
                 }
-                LabeledContent("Nome dello step") {
+                LabeledContent("Nome della fase") {
                     TextField("es. Autolisi", text: $name)
                         .multilineTextAlignment(.trailing)
                 }
                 LabeledContent("Dettagli") {
-                    TextField("Cosa fare in questo step", text: $details, axis: .vertical)
+                    TextField("Cosa fare in questa fase", text: $details, axis: .vertical)
                         .lineLimit(2...4)
                         .multilineTextAlignment(.trailing)
                 }
@@ -49,7 +49,7 @@ struct FormulaStepEditorView: View {
 
             Section("Timing") {
                 Stepper("Durata: \(DateFormattingService.duration(minutes: durationMinutes))", value: $durationMinutes, in: 5...24 * 60, step: 5)
-                Stepper("Reminder: \(reminderOffsetMinutes) min prima", value: $reminderOffsetMinutes, in: 0...180, step: 5)
+                Stepper("Promemoria: \(reminderOffsetMinutes) min prima", value: $reminderOffsetMinutes, in: 0...180, step: 5)
             }
 
             Section("Target qualitativi") {
@@ -68,7 +68,7 @@ struct FormulaStepEditorView: View {
                 }
             }
         }
-        .navigationTitle("Step formula")
+        .navigationTitle("Fase della ricetta")
         .toolbar {
             ToolbarItem(placement: .cancellationAction) {
                 Button("Chiudi") { dismiss() }

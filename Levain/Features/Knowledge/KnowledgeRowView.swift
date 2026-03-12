@@ -7,9 +7,7 @@ struct KnowledgeRowView: View {
         SectionCard {
             VStack(alignment: .leading, spacing: 8) {
                 HStack {
-                    Text(item.category.title.uppercased())
-                        .font(.caption2.weight(.bold))
-                        .foregroundStyle(Theme.muted)
+                    StateBadge(text: item.category.title, tone: .schedule)
                     Spacer()
                     Image(systemName: "chevron.right")
                         .font(.system(size: 11, weight: .semibold))

@@ -28,14 +28,12 @@ struct TodayStepCardView: View {
 
     private var sectionLabel: String {
         switch section {
-        case .now:
-            return "Adesso"
-        case .upcoming:
-            return "In arrivo"
-        case .starter:
-            return "Impasto"
-        case .later:
-            return "Più tardi"
+        case .urgent:
+            return "Da fare"
+        case .scheduled:
+            return "Oggi"
+        case .tomorrow:
+            return "Domani"
         }
     }
 }

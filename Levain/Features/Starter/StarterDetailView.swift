@@ -20,9 +20,13 @@ struct StarterDetailView: View {
                 StarterDetailHeaderView(starter: starter)
 
                 SectionCard {
-                    Text("Ultimi rinfreschi")
-                        .font(.headline)
-                        .foregroundStyle(Theme.ink)
+                    HStack {
+                        Text("Ultimi rinfreschi")
+                            .font(.headline)
+                            .foregroundStyle(Theme.ink)
+                        Spacer()
+                        StateBadge(text: "\(sortedRefreshes.count)", tone: .count)
+                    }
 
                     if sortedRefreshes.isEmpty {
                         Text("Ancora nessun log.")
@@ -36,9 +40,13 @@ struct StarterDetailView: View {
 
                 if starter.bakes.isEmpty == false {
                     SectionCard {
-                        Text("Bake collegati")
-                            .font(.headline)
-                            .foregroundStyle(Theme.ink)
+                        HStack {
+                            Text("Bake collegati")
+                                .font(.headline)
+                                .foregroundStyle(Theme.ink)
+                            Spacer()
+                            StateBadge(text: "\(starter.bakes.count)", tone: .count)
+                        }
 
                         ForEach(starter.bakes.sorted { $0.targetBakeDateTime > $1.targetBakeDateTime }.prefix(4)) { bake in
                             Button {
@@ -48,9 +56,12 @@ struct StarterDetailView: View {
                                     VStack(alignment: .leading, spacing: 4) {
                                         Text(bake.name)
                                             .foregroundStyle(Theme.ink)
-                                        Text(DateFormattingService.dayTime(bake.targetBakeDateTime))
-                                            .font(.footnote)
-                                            .foregroundStyle(Theme.muted)
+                                        HStack(spacing: 8) {
+                                            StateBadge(bakeStatus: bake.derivedStatus)
+                                            Text(DateFormattingService.dayTime(bake.targetBakeDateTime))
+                                                .font(.footnote)
+                                                .foregroundStyle(Theme.muted)
+                                        }
                                     }
                                     Spacer()
                                     Image(systemName: "chevron.right")
@@ -72,6 +83,7 @@ struct StarterDetailView: View {
         .contentMargins(.bottom, 88, for: .scrollContent)
         .background(Theme.background.ignoresSafeArea())
         .navigationTitle("Starter")
+        .tint(Theme.Control.primaryFill)
         .toolbar {
             ToolbarItemGroup(placement: .topBarTrailing) {
                 Button("Modifica") {

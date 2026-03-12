@@ -1,53 +1,45 @@
 import XCTest
 
-/// UI coverage for the Today operational flow.
-/// Uses the deterministic launch harness from AppLaunchOptions so tests do not
-/// depend on simulator state or notification permission prompts.
 final class TodayFlowUITests: XCTestCase {
-
     override func setUpWithError() throws {
         continueAfterFailure = false
     }
 
-    // MARK: Empty state
-
-    func testTodayEmptyStateShownOnFirstLaunch() throws {
-        let app = XCUIApplication()
-        app.launchEmpty()
-
-        // Today tab is selected by default
-        XCTAssertTrue(app.scrollViews["TodayScrollView"].waitForExistence(timeout: 8))
-
-        // With no data, the app must show a constructive empty state
-        XCTAssertTrue(app.staticTexts["Giornata leggera"].waitForExistence(timeout: 5))
-    }
-
-    // MARK: Navigation to Bakes from Today empty state
-
-    func testTodayEmptyStateActionNavigatesToBakes() throws {
+    func testTodayFirstLaunchStateShownWhenNoDataExists() throws {
         let app = XCUIApplication()
         app.launchEmpty()
 
         XCTAssertTrue(app.scrollViews["TodayScrollView"].waitForExistence(timeout: 8))
-
-        // Tap the action button in the Today empty state
-        let cta = app.buttons["Nuovo bake"]
-        if cta.waitForExistence(timeout: 5) {
-            cta.tap()
-            XCTAssertTrue(app.scrollViews["BakesScrollView"].waitForExistence(timeout: 5))
-        }
-        // If CTA not in empty state, that's acceptable — Today header is present
+        XCTAssertTrue(app.staticTexts["Per iniziare"].waitForExistence(timeout: 5))
+        XCTAssertTrue(app.buttons["Nuovo bake"].exists)
+        XCTAssertTrue(app.buttons["Aggiungi starter"].exists)
     }
 
-    // MARK: Seeded state shows agenda content
+    func testTodayAllClearStateShownWhenDataExistsButNothingIsPlanned() throws {
+        let app = XCUIApplication()
+        app.launchSeeded(scenario: "allClear")
+
+        XCTAssertTrue(app.scrollViews["TodayScrollView"].waitForExistence(timeout: 8))
+        XCTAssertTrue(app.staticTexts["Niente da fare oggi"].waitForExistence(timeout: 5))
+        XCTAssertTrue(app.buttons["Nuovo bake"].exists)
+    }
+
+    func testTodayFutureOnlyStateShowsPreviewCard() throws {
+        let app = XCUIApplication()
+        app.launchSeeded(scenario: "futureOnly")
+
+        XCTAssertTrue(app.scrollViews["TodayScrollView"].waitForExistence(timeout: 8))
+        XCTAssertTrue(app.staticTexts["Più avanti"].waitForExistence(timeout: 5))
+        XCTAssertTrue(app.buttons["Vai a Starter"].waitForExistence(timeout: 5))
+    }
 
     func testTodaySeededLaunchShowsOperationalContent() throws {
         let app = XCUIApplication()
         app.launchSeeded()
 
         XCTAssertTrue(app.scrollViews["TodayScrollView"].waitForExistence(timeout: 8))
-
-        XCTAssertTrue(app.staticTexts["Forno operativo"].waitForExistence(timeout: 5))
+        XCTAssertTrue(app.staticTexts["Il forno oggi"].waitForExistence(timeout: 5))
+        XCTAssertTrue(app.staticTexts["Da fare"].waitForExistence(timeout: 5))
     }
 
     func testTodayOperationalCardCanTransitionFromUpcomingToRunning() throws {
@@ -56,9 +48,9 @@ final class TodayFlowUITests: XCTestCase {
 
         XCTAssertTrue(app.scrollViews["TodayScrollView"].waitForExistence(timeout: 8))
 
-        let completeButton = app.buttons["Completa step"]
+        let completeButton = app.buttons["Completa fase"]
         if completeButton.exists == false {
-            let startButton = app.buttons["Avvia step"]
+            let startButton = app.buttons["Avvia fase"]
             XCTAssertTrue(startButton.waitForExistence(timeout: 5))
             startButton.tap()
         }
@@ -67,23 +59,20 @@ final class TodayFlowUITests: XCTestCase {
         XCTAssertTrue(app.buttons["Dettaglio"].exists)
     }
 
-    func testTodayOperationalCardShowsShiftEntryWhenStepIsRunning() throws {
+    func testStarterReminderDisappearsAfterRefreshSave() throws {
         let app = XCUIApplication()
         app.launchSeeded()
 
         XCTAssertTrue(app.scrollViews["TodayScrollView"].waitForExistence(timeout: 8))
 
-        let completeButton = app.buttons["Completa step"]
-        if completeButton.exists == false {
-            let startButton = app.buttons["Avvia step"]
-            XCTAssertTrue(startButton.waitForExistence(timeout: 5))
-            startButton.tap()
-        }
+        let refreshButton = app.buttons["Rinfresca"].firstMatch
+        XCTAssertTrue(refreshButton.waitForExistence(timeout: 5))
+        refreshButton.tap()
 
-        let shiftButton = app.buttons["Sposta"]
-        XCTAssertTrue(shiftButton.waitForExistence(timeout: 5))
-        shiftButton.tap()
+        XCTAssertTrue(app.navigationBars["Log rinfresco"].waitForExistence(timeout: 5))
+        app.navigationBars["Log rinfresco"].buttons["Salva"].tap()
 
-        XCTAssertTrue(app.buttons["Applica"].waitForExistence(timeout: 5))
+        XCTAssertTrue(app.scrollViews["TodayScrollView"].waitForExistence(timeout: 5))
+        XCTAssertFalse(app.buttons["Rinfresca"].firstMatch.exists)
     }
 }
