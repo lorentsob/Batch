@@ -10,79 +10,41 @@ struct StateBadge: View {
         case schedule
         case danger
 
-        var backgroundToken: String {
-            switch self {
-            case .running:
-                "green-500"
-            case .done:
-                "green-50"
-            case .pending:
-                "neutral-100"
-            case .info:
-                "green-25"
-            case .count:
-                "green-50"
-            case .schedule:
-                "neutral-100"
-            case .danger:
-                "error-light"
-            }
-        }
-
-        var foregroundToken: String {
-            switch self {
-            case .running:
-                "neutral-0"
-            case .done:
-                "green-600"
-            case .pending:
-                "neutral-400"
-            case .info:
-                "green-600"
-            case .count:
-                "green-800"
-            case .schedule:
-                "neutral-500"
-            case .danger:
-                "error"
-            }
-        }
-
         var background: Color {
             switch self {
             case .running:
-                Theme.Status.runningBackground
+                Theme.Status.runningBackground         // green500 — solid, attivo ora
             case .done:
-                Theme.Status.doneBackground
+                Theme.Status.doneBackground            // green50 — completato
             case .pending:
-                Theme.Status.pendingBackground
+                Theme.Palette.green100                 // green100 — da fare (era grigio)
             case .info:
-                Theme.Status.infoBackground
+                Theme.Status.countBackground           // green50 — informativo
             case .count:
-                Theme.Status.countBackground
+                Theme.Status.countBackground           // green50
             case .schedule:
-                Theme.Status.scheduleBackground
+                Theme.Status.doneBackground            // green50 — pianificato (era grigio)
             case .danger:
-                Theme.Status.dangerBackground
+                Theme.Status.dangerBackground          // rosso chiaro
             }
         }
 
         var foreground: Color {
             switch self {
             case .running:
-                Theme.Status.runningForeground
+                Theme.Status.runningForeground         // bianco su verde pieno
             case .done:
-                Theme.Status.doneForeground
+                Theme.Status.doneForeground            // green600
             case .pending:
-                Theme.Status.pendingForeground
+                Theme.Text.primary                     // green800 su green100
             case .info:
-                Theme.Status.infoForeground
+                Theme.Status.countForeground           // green800
             case .count:
-                Theme.Status.countForeground
+                Theme.Status.countForeground           // green800
             case .schedule:
-                Theme.Status.scheduleForeground
+                Theme.Status.doneForeground            // green600 su green50
             case .danger:
-                Theme.Status.dangerForeground
+                Theme.Status.dangerForeground          // rosso
             }
         }
     }

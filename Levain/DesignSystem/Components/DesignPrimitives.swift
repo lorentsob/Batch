@@ -10,9 +10,10 @@ struct MetricChip: View {
             Text(label)
                 .font(.caption2.weight(.semibold))
                 .foregroundStyle(Theme.Text.tertiary)
+                .textCase(.uppercase)
             Text(value)
                 .font(.footnote.weight(.semibold))
-                .foregroundStyle(foreground)
+                .foregroundStyle(valueColor)
                 .fixedSize(horizontal: false, vertical: true)
         }
         .padding(.horizontal, 12)
@@ -20,61 +21,19 @@ struct MetricChip: View {
         .frame(maxWidth: .infinity, alignment: .leading)
         .background(
             RoundedRectangle(cornerRadius: Theme.Radius.compact, style: .continuous)
-                .fill(background)
+                .fill(tone == .danger ? Theme.Status.dangerBackground : Theme.Surface.card)
         )
         .overlay(
             RoundedRectangle(cornerRadius: Theme.Radius.compact, style: .continuous)
-                .stroke(border, lineWidth: 1)
+                .stroke(
+                    tone == .danger ? Theme.Status.dangerForeground.opacity(0.25) : Theme.Border.emphasis,
+                    lineWidth: 1.5
+                )
         )
     }
 
-    private var background: Color {
-        switch tone {
-        case .running:
-            Theme.Palette.green25
-        case .done:
-            Theme.Status.doneBackground
-        case .pending:
-            Theme.Status.pendingBackground
-        case .danger:
-            Theme.Status.dangerBackground
-        case .count:
-            Theme.Status.countBackground
-        case .schedule:
-            Theme.Status.scheduleBackground
-        case .info:
-            Theme.Status.infoBackground
-        }
-    }
-
-    private var foreground: Color {
-        switch tone {
-        case .running:
-            Theme.Palette.green600
-        case .done:
-            Theme.Status.doneForeground
-        case .pending:
-            Theme.Text.secondary
-        case .danger:
-            Theme.Status.dangerForeground
-        case .count:
-            Theme.Status.countForeground
-        case .schedule:
-            Theme.Text.secondary
-        case .info:
-            Theme.Text.primary
-        }
-    }
-
-    private var border: Color {
-        switch tone {
-        case .running:
-            Theme.Border.emphasis
-        case .danger:
-            Theme.Status.dangerForeground.opacity(0.14)
-        default:
-            Theme.Border.defaultColor
-        }
+    private var valueColor: Color {
+        tone == .danger ? Theme.Status.dangerForeground : Theme.Text.primary
     }
 }
 
