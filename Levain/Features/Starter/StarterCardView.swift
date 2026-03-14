@@ -37,7 +37,7 @@ struct StarterCardView: View {
                         ScrollView(.horizontal, showsIndicators: false) {
                             HStack(spacing: 6) {
                                 ForEach(starter.selectedFlours) { flour in
-                                    Text(flour.displayName)
+                                    Text(flour.shortDisplayName)
                                         .font(.caption.weight(.semibold))
                                         .foregroundStyle(Theme.Text.primary)
                                         .padding(.horizontal, 10)
@@ -64,7 +64,7 @@ struct StarterCardView: View {
         case .ok:
             .done
         case .dueToday:
-            .schedule
+            .pending                // verde tenue — scade oggi, nel piano attivo
         case .overdue:
             .danger
         }

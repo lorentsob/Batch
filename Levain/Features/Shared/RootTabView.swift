@@ -54,6 +54,9 @@ struct RootTabView: View {
                         }
                     }
             }
+            .toolbarColorScheme(.light, for: .navigationBar)
+            .toolbarBackground(Theme.Surface.app, for: .navigationBar)
+            .toolbarBackground(.visible, for: .navigationBar)
         }
     }
 
@@ -78,6 +81,9 @@ struct RootTabView: View {
                         }
                     }
             }
+            .toolbarColorScheme(.light, for: .navigationBar)
+            .toolbarBackground(Theme.Surface.app, for: .navigationBar)
+            .toolbarBackground(.visible, for: .navigationBar)
             .tabItem {
                 Image("navbar-bake")
                     .renderingMode(.template)
@@ -94,6 +100,9 @@ struct RootTabView: View {
                         }
                     }
             }
+            .toolbarColorScheme(.light, for: .navigationBar)
+            .toolbarBackground(Theme.Surface.app, for: .navigationBar)
+            .toolbarBackground(.visible, for: .navigationBar)
             .tabItem {
                 Image("navbar-starter")
                     .renderingMode(.template)
@@ -102,6 +111,7 @@ struct RootTabView: View {
             .tag(RootTab.starter)
         }
         .tint(Theme.Control.tabActiveTint)
+        .toolbarColorScheme(.light, for: .tabBar)
         .toolbarBackground(Theme.Control.tabBackground, for: .tabBar)
         .toolbarBackground(.visible, for: .tabBar)
     }

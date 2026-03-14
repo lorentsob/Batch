@@ -2,26 +2,26 @@
 
 ## Project Reference
 
-See: .planning/PROJECT.md (updated 2026-03-12)
+See: .planning/PROJECT.md (updated 2026-03-14)
 
 **Core value:** The app must make the next baking action obvious without adding setup, infrastructure, or workflow friction.
-**Current focus:** Phase 13 completa — MVP Closure eseguita. Unico residuo: UAT su device fisico da eseguire prima del rilascio.
+**Current focus:** MVP chiuso con successo. Regressioni design-system v2.0 risolte e verificate via UAT.
 
 ## Current Position
 
-Phase: 13 of 13 (MVP Closure)
-Plan: 3 of 3 executed in current phase
-Status: ✅ Phase 13 completa — MVP Closure eseguita via code audit
-Last activity: 2026-03-12 — Phase 13 tutti e 3 i piani eseguiti
+Phase: 14 of 14 (Design System Regression Closure)
+Plan: 1 of 1 executed in current phase
+Status: ✅ Project Complete — MVP closure and Design System regressions verified
+Last activity: 2026-03-14 — Phase 14-01 verificate via UAT (light mode, cancellation flow, timeline)
 
-Progress: [█████████████] 100% (13 of 13 phases complete)
+Progress: [██████████████] 100% (14 of 14 phases complete)
 
 ## Performance Metrics
 
 **Velocity:**
 
-- Total plans completed: 39
-- Total plans planned: 39
+- Total plans planned: 40
+- Total plans completed: 40
 - Average duration: N/A
 - Total execution time: N/A
 
@@ -42,11 +42,12 @@ Progress: [█████████████] 100% (13 of 13 phases comple
 | 11    | 3/3             | Complete    |
 | 12    | 3/3             | Complete    |
 | 13    | 3/3             | Complete    |
+| 14    | 1/1             | Complete    |
 
 **Recent Trend:**
 
-- Last 5 plans: 12-02 complete, 12-03 complete, 13-01 complete, 13-02 complete, 13-03 complete
-- Trend: completed all 13 phases including MVP Closure; code audit passed, UAT su device fisico da eseguire prima del rilascio
+- Last 5 plans: 12-03 complete, 13-01 complete, 13-02 complete, 13-03 complete, 14-01 complete
+- Trend: Phase 14 verificate via UAT; MVP completato al 100% con allineamento design system.
 
 ## Accumulated Context
 
@@ -87,15 +88,16 @@ Recent decisions affecting current work:
 - Phase 13 planning: notifiche devono reggere tutti gli scenari compreso fallback su entità mancante o terminale senza crash
 - Phase 13 planning: starter refresh deve restare ≤ 2 tap / < 30 secondi
 - Phase 13 planning: Phase 13 non aggiunge macro-feature — chiude attriti residui di copy, empty state, micro-UX e fiducia
+- Phase 14 planning: il design system v2.0 è light-only a livello app, non solo a livello token
+- Phase 14 planning: cancel/delete bake deve usare una conferma bottom-aligned coerente con il design system
+- Phase 14 planning: un bake annullato deve apparire terminale e archiviato, mentre il rosso resta per i problemi attivi
 
 ### Blockers/Concerns
 
-- UAT su device fisico ancora da eseguire — prerequisito per rilascio definitivo
-- XCTest verification dipende da CoreSimulator locale
-- Yeast quantity conversion rules dipendono da assunzioni esplicite sul prodotto (non bloccante per MVP)
+- Nessun bloccante residuo per il lancio MVP
 
 ## Session Continuity
 
-Last session: 2026-03-12
-Stopped at: Phase 13 MVP Closure completata — tutti e 3 i piani eseguiti. Code audit OK. UAT su device fisico è l'unico step rimasto prima del rilascio.
-Resume file: .planning/phases/13-mvp-closure/13-UAT.md
+Last session: 2026-03-14
+Stopped at: MVP closure complete. Phase 14-01 verified. Design System aligned.
+Resume file: .planning/ROADMAP.md

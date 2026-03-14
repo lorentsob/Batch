@@ -101,6 +101,15 @@
 - [x] **USERFLOW-05**: Starter refresh stays a fast three-field flow with advanced details collapsed by default and removes the Today starter row immediately after save.
 - [x] **USERFLOW-06**: Notification entry validates payloads on warm and cold launch, supports terminal and missing-entity fallbacks, and surfaces a non-blocking notifications-disabled banner.
 
+## Phase 13 and Phase 14 Trust Requirements
+
+- [x] **QUAL-08**: MVP closure is tracked through explicit UAT, copy, micro-UX, and operational sign-off artifacts instead of assuming feature completeness is enough.
+- [x] **REALIGN-14**: Home, bake execution, notifications, starter flow, naming, and empty states reach MVP trust quality after post-UAT refinement.
+- [x] **REALIGN-15**: The app enforces light-only appearance across tab chrome, navigation chrome, toolbar controls, and modal backgrounds regardless of iOS system dark mode.
+- [x] **REALIGN-16**: Bake cancel/delete confirmation appears bottom-aligned and design-system aligned instead of as a misplaced system popover.
+- [x] **REALIGN-17**: Cancelling a bake makes the detail experience visibly terminal: archived future steps, no active contextual guidance, and notification cleanup.
+- [x] **REALIGN-18**: Timeline rails and danger chips stay visually legible after the design-system refresh, including centered dots and bordered red states.
+
 ## v2 Requirements
 
 ### Backlog
@@ -177,14 +186,20 @@
 | USERFLOW-04 | Phase 12 | Complete (manual UAT pending) |
 | USERFLOW-05 | Phase 12 | Complete (manual UAT pending) |
 | USERFLOW-06 | Phase 12 | Complete (manual UAT pending) |
+| QUAL-08 | Phase 13 | Complete |
+| REALIGN-14 | Phase 13 | Complete |
+| REALIGN-15 | Phase 14 | Complete (manual visual UAT pending) |
+| REALIGN-16 | Phase 14 | Complete (manual visual UAT pending) |
+| REALIGN-17 | Phase 14 | Complete (manual visual UAT pending) |
+| REALIGN-18 | Phase 14 | Complete (manual visual UAT pending) |
 
 **Coverage:**
 
-- v1 + realignment + userflow requirements: 53 total
-- Mapped to phases: 53
+- v1 + realignment + userflow requirements: 59 total
+- Mapped to phases: 59
 - Unmapped: 0
 
 ---
 
 _Requirements defined: 2026-03-10_  
-_Last updated: 2026-03-12 after adding Phase 11 traceability and Phase 12 userflow-v2 conformance requirements_
+_Last updated: 2026-03-14 after adding Phase 13/14 trust and design-system regression requirements_

@@ -48,7 +48,7 @@ struct SectionCard<Content: View>: View {
         case .tinted:
             Theme.Surface.tinted
         case .danger:
-            Theme.Surface.dangerTint
+            Theme.Surface.danger
         }
     }
 
@@ -59,7 +59,7 @@ struct SectionCard<Content: View>: View {
         case .tinted:
             Theme.Border.emphasis
         case .danger:
-            Theme.Status.dangerForeground.opacity(0.18)
+            Theme.Border.danger
         }
     }
 }

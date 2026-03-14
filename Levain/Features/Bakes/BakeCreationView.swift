@@ -113,17 +113,23 @@ struct BakeCreationView: View {
                     TextField("Note aggiuntive", text: $notes, axis: .vertical)
                         .lineLimit(3...5)
                 }
+            }
+            .scrollContentBackground(.hidden)
+            .background(Theme.Surface.app)
         }
         .navigationTitle("Nuovo bake")
         .tint(Theme.Control.primaryFill)
+        .toolbarColorScheme(.light, for: .navigationBar)
+        .toolbarBackground(Theme.Surface.app, for: .navigationBar)
+        .toolbarBackground(.visible, for: .navigationBar)
+        .presentationBackground(Theme.Surface.app)
         .toolbar {
             ToolbarItem(placement: .cancellationAction) {
                 Button("Chiudi") { dismiss() }
-                }
-                ToolbarItem(placement: .confirmationAction) {
-                    Button("Crea") { save() }
-                        .disabled(selectedFormula == nil)
-                }
+            }
+            ToolbarItem(placement: .confirmationAction) {
+                Button("Crea") { save() }
+                    .disabled(selectedFormula == nil)
             }
         }
     }

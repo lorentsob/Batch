@@ -34,6 +34,7 @@ struct LevainApp: App {
                     showSplash = false
                 }
             }
+            .preferredColorScheme(.light)
         }
     }
 }

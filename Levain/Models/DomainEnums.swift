@@ -96,6 +96,20 @@ enum FlourCategory: String, CaseIterable, Codable, Identifiable {
         case .custom: "Altro"
         }
     }
+
+    /// Nome compatto senza specifica W — usato nei chip di dettaglio e nelle card
+    var shortTitle: String {
+        switch self {
+        case .strong:   "Forza (Manitoba)"
+        case .medium:   "Media (00/0)"
+        case .weak:     "Debole"
+        case .whole:    "Integrale"
+        case .rye:      "Segale"
+        case .semolina: "Semola"
+        case .special:  "Multicereale"
+        case .custom:   "Altro"
+        }
+    }
 }
 
 struct FlourSelection: Codable, Identifiable, Hashable {
@@ -109,11 +123,20 @@ struct FlourSelection: Codable, Identifiable, Hashable {
         set { categoryRaw = newValue.rawValue }
     }
     
+    /// Nome completo (con spec W) — usato nell'editor e dove serve precisione
     var displayName: String {
         if category == .custom || !customName.isEmpty {
             return customName.isEmpty ? category.title : customName
         }
         return category.title
+    }
+
+    /// Nome compatto senza spec W — usato nei chip di dettaglio e nelle card compact
+    var shortDisplayName: String {
+        if category == .custom || !customName.isEmpty {
+            return customName.isEmpty ? category.shortTitle : customName
+        }
+        return category.shortTitle
     }
 }
 

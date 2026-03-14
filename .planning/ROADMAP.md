@@ -2,7 +2,7 @@
 
 ## Overview
 
-The roadmap moves from a native iPhone foundation into core baking logic, then adds formula authoring, bake execution, operational Today workflows, starter management, bundled knowledge, and final hardening for internal testing. After the v1 audit and the UAT-driven UX realignment, Phase 12 closes the remaining trust gap: the app must now conform explicitly to the six operational flows defined in the updated userflow v2, not just to the older PRD interpretation.
+The roadmap moves from a native iPhone foundation into core baking logic, then adds formula authoring, bake execution, operational Today workflows, starter management, bundled knowledge, and final hardening for internal testing. After the v1 audit, the UAT-driven UX realignment, and MVP closure, the design-system v2 rollout exposed a final trust gap: system chrome and bake-detail terminal states must still obey the light-only semantic contract even when iOS itself is dark.
 
 ## Phases
 
@@ -17,7 +17,9 @@ The roadmap moves from a native iPhone foundation into core baking logic, then a
 - [x] **Phase 9: v1 Audit CI/CD** - Audit v1 readiness, automate CI, and add controlled release delivery.
 - [x] **Phase 10: Operational UX Realignment** - Realign Home, Impasti, Ricette, bake lifecycle, and visual-system behavior after real UAT feedback.
 - [x] **Phase 11: Naming, Today Semantics & Router Hardening** - Remove product naming drift, clarify Today urgency semantics, and harden notification routing against stale IDs.
-- [ ] **Phase 12: Userflow & UX Conformance** - Align app behavior, docs, and verification to the six operational flows defined in userflow v2.
+- [x] **Phase 12: Userflow & UX Conformance** - Align app behavior, docs, and verification to the six operational flows defined in userflow v2.
+- [x] **Phase 13: MVP Closure** - Chiudere l'MVP con manual UAT su device reale, Home/Today operativa nei quattro stati, bake execution leggibile, notifiche robuste, starter flow veloce, naming/copy/empty states definitivi e sign-off finale.
+- [x] **Phase 14: Design System Regression Closure** - Forzare light mode nell'app, riallineare chrome e modali al design system, correggere il flow distruttivo di cancel/delete bake, e rendere cancellazione / ritardo / timeline visivamente affidabili dopo il refresh v2.0.
 
 ## Phase Details
 
@@ -237,22 +239,61 @@ Plans:
 - [x] 12-02: Bake execution and starter refresh conformance
 - [x] 12-03: Window-based flows, notification conformance, and sign-off prep
 
-## Progress: [█████████░] 92%
+### Phase 13: MVP Closure
+
+**Goal**: Chiudere l'MVP senza aprire nuovo scope. Manual UAT su device reale, Home/Today come dashboard operativa nei quattro stati, esecuzione bake leggibile, notifiche robuste in tutti gli scenari, starter flow veloce, naming/copy/empty states definitivi, e sign-off finale.  
+**Depends on**: Phase 12  
+**Requirements**: [QUAL-08, REALIGN-14]  
+**Success Criteria**:
+
+1. Manual UAT su iPhone reale completato per i flow principali senza bug critici.
+2. Home risponde a "cosa devo fare adesso?" nei quattro stati (`firstLaunch`, `allClear`, `futureOnly`, `actionable`).
+3. Notifiche robuste in tutti gli scenari (warm/cold launch, entità mancante, entità terminale).
+4. Starter refresh in ≤ 2 tap principali con risultato visibile immediatamente.
+5. Naming, copy ed empty state definitivi in tutta l'app.  
+   **Plans**: 3 plans
+
+Plans:
+
+- [x] 13-01: Manual UAT su device reale e Home/Today refinement
+- [x] 13-02: Bake execution polish, notifiche robuste, starter flow veloce
+- [x] 13-03: Naming/copy, empty states, micro-UX e audit finale di layout
+
+### Phase 14: Design System Regression Closure
+
+**Goal**: Chiudere le regressioni emerse dopo il design-system v2.0 senza aprire nuovo scope prodotto: light-only chrome, modali coerenti, destructive flow posizionato correttamente, detail dei bake cancellati/late leggibile e affidabile.  
+**Depends on**: Phase 13  
+**Requirements**: [REALIGN-15, REALIGN-16, REALIGN-17, REALIGN-18]  
+**Success Criteria**:
+
+1. Dark mode iOS non altera tab bar, navigation bar, toolbar CTA, o sheet background.
+2. Cancel/delete bake usa una conferma bottom-aligned coerente con il design system e pulisce reminder + navigazione.
+3. Un bake annullato comunica subito stato terminale: header rosso, future steps archiviate, no tips attivi, CTA finale di delete.
+4. Timeline rail e chip danger restano leggibili e stabili visivamente.  
+   **Plans**: 1 plan
+
+Plans:
+
+- [x] 14-01: Light-mode enforcement, destructive flow anchoring, and cancelled timeline trust pass
+
+## Progress: [██████████████] 100% (14 of 14 phases complete)
 
 **Execution Order:**  
-Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6 → 7 → 8 → 9 → 10 → 11 → 12
+Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6 → 7 → 8 → 9 → 10 → 11 → 12 → 13 → 14
 
-| Phase | Plans Complete | Status | Completed |
-| ----- | -------------- | ------ | --------- |
-| 1. Foundation App Shell | 3/3 | Complete | 2026-03-10 |
-| 2. Domain Scheduling | 3/3 | Complete | 2026-03-10 |
-| 3. Formula Authoring | 3/3 | Complete | 2026-03-10 |
-| 4. Bake Creation Execution | 3/3 | Complete | 2026-03-10 |
-| 5. Today Notifications | 3/3 | Complete | 2026-03-10 |
-| 6. Starter Management | 3/3 | Complete | 2026-03-10 |
-| 7. Knowledge Tips | 3/3 | Complete | 2026-03-10 |
-| 8. Hardening UAT | 3/3 | Complete | 2026-03-10 |
-| 9. v1 Audit CI/CD | 3/3 | Complete | 2026-03-10 |
-| 10. Operational UX Realignment | 3/3 | Complete | 2026-03-11 |
-| 11. Naming, Today Semantics & Router Hardening | 3/3 | Complete | 2026-03-12 |
-| 12. Userflow & UX Conformance | 3/3 | In Progress | — |
+| Phase                                          | Plans Complete | Status      | Completed  |
+| ---------------------------------------------- | -------------- | ----------- | ---------- |
+| 1. Foundation App Shell                        | 3/3            | Complete    | 2026-03-10 |
+| 2. Domain Scheduling                           | 3/3            | Complete    | 2026-03-10 |
+| 3. Formula Authoring                           | 3/3            | Complete    | 2026-03-10 |
+| 4. Bake Creation Execution                     | 3/3            | Complete    | 2026-03-10 |
+| 5. Today Notifications                         | 3/3            | Complete    | 2026-03-10 |
+| 6. Starter Management                          | 3/3            | Complete    | 2026-03-10 |
+| 7. Knowledge Tips                              | 3/3            | Complete    | 2026-03-10 |
+| 8. Hardening UAT                               | 3/3            | Complete    | 2026-03-10 |
+| 9. v1 Audit CI/CD                              | 3/3            | Complete    | 2026-03-10 |
+| 10. Operational UX Realignment                 | 3/3            | Complete    | 2026-03-11 |
+| 11. Naming, Today Semantics & Router Hardening | 3/3            | Complete    | 2026-03-12 |
+| 12. Userflow & UX Conformance                  | 3/3            | Complete    | 2026-03-12 |
+| 13. MVP Closure                                | 3/3            | Complete    | 2026-03-12 |
+| 14. Design System Regression Closure           | 1/1            | Complete    | 2026-03-14 |

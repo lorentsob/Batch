@@ -23,6 +23,7 @@ The app must make the next baking action obvious without adding setup, infrastru
 - [x] Visual and asset compliance pass, including corrected state colors, iconography, and working App Icon recognition
 - [x] Naming, Today urgency semantics, and notification-router fallback behavior aligned after post-UAT gap review
 - [ ] Userflow v2 conformance across Today, bake creation/execution, window-based steps, starter refresh, and notification entry, with final closure gated by manual on-device UAT
+- [ ] Design-system regression closure after v2.0 rollout: light-only chrome, bottom destructive confirmations, cancelled bake terminal styling, and stable timeline danger/read-only states
 
 ### Out of Scope
 
@@ -73,6 +74,8 @@ The app must make the next baking action obvious without adding setup, infrastru
 | The repo-maintained operational source of truth is `docs/levain-user-flows.md`, mirrored from the external HTML v2 | The attached HTML drives UX expectations, but the repository needs a durable markdown document for planning, code review, and traceability | 2026-03-12 |
 | Window-based bake steps use `flexibleWindowStart`/`flexibleWindowEnd` for urgency instead of `plannedEnd` | Proof and cold-retard windows are inherently flexible; overdue semantics should match real baking behavior | 2026-03-12 |
 | Bake execution remains sequential by default, with explicit confirmation and persistent `Fuori ordine` feedback for overrides | The app should prescribe the next correct action while still allowing expert recovery from real-world deviations | 2026-03-12 |
+| Design-system v2.0 remains light-only at the app level, not only at the token level | Relying on system appearance caused dark sheets/chrome regressions that broke the design contract | 2026-03-14 |
+| Cancelled bakes must read as archived terminal contexts, while overdue steps remain explicit red problems | Terminal state and problem state solve different trust problems and need distinct UI treatments | 2026-03-14 |
 
 ---
-*Last updated: 2026-03-12 after Phase 12 implementation and automated verification, with manual UAT still pending*
+*Last updated: 2026-03-14 after opening Phase 14 for design-system regression closure*

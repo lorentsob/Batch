@@ -10,6 +10,10 @@ struct BakeReminder: Equatable {
 
 enum BakeReminderPlanner {
     static func planReminders(for bake: Bake, now: Date = .now) -> [BakeReminder] {
+        guard bake.derivedStatus != .cancelled, bake.derivedStatus != .completed else {
+            return []
+        }
+
         var reminders: [BakeReminder] = []
 
         for step in bake.sortedSteps where step.isTerminal == false {

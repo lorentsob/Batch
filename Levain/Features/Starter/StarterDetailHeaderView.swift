@@ -38,7 +38,7 @@ struct StarterDetailHeaderView: View {
                         LazyVGrid(columns: metricColumns, alignment: .leading, spacing: 8) {
                             ForEach(starter.selectedFlours) { flour in
                                 MetricChip(
-                                    label: flour.displayName,
+                                    label: flour.shortDisplayName,
                                     value: "\(Int(flour.percentage.rounded()))%",
                                     tone: .schedule
                                 )

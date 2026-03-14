@@ -47,7 +47,7 @@ struct FormulaDetailView: View {
                             LazyVGrid(columns: metricColumns, alignment: .leading, spacing: 8) {
                                 ForEach(formula.selectedFlours) { flour in
                                     MetricChip(
-                                        label: flour.displayName,
+                                        label: flour.shortDisplayName,
                                         value: "\(Int(flour.percentage.rounded()))%",
                                         tone: .schedule
                                     )

@@ -9,7 +9,7 @@ struct MetricChip: View {
         VStack(alignment: .leading, spacing: 4) {
             Text(label)
                 .font(.caption2.weight(.semibold))
-                .foregroundStyle(Theme.Text.tertiary)
+                .foregroundStyle(labelColor)
                 .textCase(.uppercase)
             Text(value)
                 .font(.footnote.weight(.semibold))
@@ -21,21 +21,59 @@ struct MetricChip: View {
         .frame(maxWidth: .infinity, alignment: .leading)
         .background(
             RoundedRectangle(cornerRadius: Theme.Radius.compact, style: .continuous)
-                .fill(tone == .danger ? Theme.Status.dangerBackground : Theme.Surface.card)
+                .fill(backgroundColor)
         )
         .overlay(
             RoundedRectangle(cornerRadius: Theme.Radius.compact, style: .continuous)
-                .stroke(
-                    tone == .danger ? Theme.Status.dangerForeground.opacity(0.25) : Theme.Border.emphasis,
-                    lineWidth: 1.5
-                )
+                .stroke(borderColor, lineWidth: 1.5)
         )
     }
 
+    private var backgroundColor: Color {
+        switch tone {
+        case .danger, .overdue:
+            Theme.Surface.danger
+        case .done, .skipped:
+            Theme.Surface.subtle
+        default:
+            Theme.Surface.card
+        }
+    }
+
+    private var borderColor: Color {
+        switch tone {
+        case .danger, .overdue:
+            Theme.Border.danger
+        case .done, .skipped:
+            Theme.Border.done
+        default:
+            Theme.Border.emphasis
+        }
+    }
+
+    private var labelColor: Color {
+        switch tone {
+        case .done, .skipped:
+            Theme.Text.secondary
+        default:
+            Theme.Text.tertiary
+        }
+    }
+
     private var valueColor: Color {
-        tone == .danger ? Theme.Status.dangerForeground : Theme.Text.primary
+        switch tone {
+        case .danger, .overdue:
+            Theme.Text.onDanger
+        case .done, .skipped:
+            Theme.Text.secondary
+        default:
+            Theme.Text.primary
+        }
     }
 }
+
+// MARK: - Primary Action Button
+// Solid green fill — all main CTAs: Avvia, Completa, Rinfresca, Salva, Crea
 
 struct PrimaryActionButtonStyle: ButtonStyle {
     var fill: Color = Theme.Control.primaryFill
@@ -55,10 +93,14 @@ struct PrimaryActionButtonStyle: ButtonStyle {
     }
 }
 
+// MARK: - Secondary Action Button
+// Outline style — transparent bg, green500 border, green800 text
+// v2.0: was neutral100 bg — updated to outline for semantic clarity (secondary CTAs are green actions)
+
 struct SecondaryActionButtonStyle: ButtonStyle {
-    var fill: Color = Theme.Control.secondaryFill
-    var tint: Color = Theme.Control.secondaryForeground
-    var border: Color = Theme.Control.outlineBorder
+    var fill: Color = Theme.Control.secondaryFill          // Color.clear — outline style
+    var tint: Color = Theme.Control.secondaryForeground    // green800
+    var border: Color = Theme.Control.secondaryBorder      // green500
 
     func makeBody(configuration: Configuration) -> some View {
         configuration.label
@@ -72,27 +114,27 @@ struct SecondaryActionButtonStyle: ButtonStyle {
             )
             .overlay(
                 RoundedRectangle(cornerRadius: Theme.Radius.compact, style: .continuous)
-                    .stroke(border, lineWidth: 1)
+                    .stroke(border, lineWidth: 1.5)
             )
             .scaleEffect(configuration.isPressed ? 0.99 : 1)
             .animation(.easeOut(duration: 0.15), value: configuration.isPressed)
     }
 }
 
+// MARK: - Danger Action Button
+// Solid red fill, white text — destructive actions and overdue primary CTAs
+// v2.0: was errorLight bg + error text (outlined danger) — updated to solid fill for visual weight
+
 struct DangerActionButtonStyle: ButtonStyle {
     func makeBody(configuration: Configuration) -> some View {
         configuration.label
             .font(.subheadline.weight(.semibold))
-            .foregroundStyle(Theme.Control.dangerForeground)
+            .foregroundStyle(Theme.Control.dangerForeground)  // neutral0 — white on red
             .frame(maxWidth: .infinity)
             .padding(.vertical, 13)
             .background(
                 RoundedRectangle(cornerRadius: Theme.Radius.compact, style: .continuous)
-                    .fill(Theme.Control.dangerFill)
-            )
-            .overlay(
-                RoundedRectangle(cornerRadius: Theme.Radius.compact, style: .continuous)
-                    .stroke(Theme.Status.dangerForeground.opacity(0.12), lineWidth: 1)
+                    .fill(Theme.Control.dangerFill)            // Palette.error — solid red
             )
             .scaleEffect(configuration.isPressed ? 0.99 : 1)
             .animation(.easeOut(duration: 0.15), value: configuration.isPressed)

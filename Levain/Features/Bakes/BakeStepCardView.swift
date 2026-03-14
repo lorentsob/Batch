@@ -9,10 +9,6 @@ struct ActiveStepHeroCard: View {
     let onCustomShift: (() -> Void)?
     let onQuickShift: ((Int) -> Void)?
 
-    private let metricColumns = [
-        GridItem(.adaptive(minimum: 104), spacing: 8)
-    ]
-
     var body: some View {
         TimelineView(.periodic(from: .now, by: 30)) { context in
             let now = context.date
@@ -50,7 +46,8 @@ struct ActiveStepHeroCard: View {
                     TimerStatusPill(phase: phase, appearance: appearance)
                 }
 
-                LazyVGrid(columns: metricColumns, alignment: .leading, spacing: 8) {
+                // 3 chip fissi in linea — HStack uguale in larghezza
+                HStack(spacing: 8) {
                     MetricChip(
                         label: "Inizio",
                         value: DateFormattingService.time(step.referenceStart),
@@ -133,41 +130,40 @@ struct ActiveStepHeroCard: View {
 
 struct StepTimelineRow: View {
     let step: BakeStep
-    let showsConnector: Bool
+    let isBakeCancelled: Bool
     let action: () -> Void
 
     var body: some View {
         Button(action: action) {
             HStack(alignment: .top, spacing: 14) {
-                VStack(alignment: .trailing, spacing: 4) {
+                VStack(alignment: .leading, spacing: 4) {
                     Text(DateFormattingService.time(step.plannedStart))
                         .font(.caption.weight(.semibold))
-                        .foregroundStyle(Theme.ink)
+                        .foregroundStyle(timeColor)
                     Text(DateFormattingService.duration(minutes: step.plannedDurationMinutes))
                         .font(.caption2)
-                        .foregroundStyle(Theme.Text.tertiary)
+                        .foregroundStyle(metaColor)
                 }
-                .frame(width: 70, alignment: .trailing)
+                .frame(width: 72, alignment: .leading)
 
                 VStack(spacing: 0) {
-                    Circle()
-                        .fill(dotColor)
-                        .frame(width: 12, height: 12)
-
-                    if showsConnector {
-                        Rectangle()
-                            .fill(Theme.Border.defaultColor)
-                            .frame(width: 2)
-                            .frame(maxHeight: .infinity)
-                    }
+                    Spacer(minLength: 0)
+                    timelineDot
+                    Spacer(minLength: 0)
                 }
-                .frame(width: 14)
+                .frame(width: 18)
+                .frame(maxHeight: .infinity)
+                .background {
+                    Rectangle()
+                        .fill(connectorColor)
+                        .frame(width: 2)
+                }
 
                 VStack(alignment: .leading, spacing: 8) {
                     HStack(alignment: .firstTextBaseline, spacing: 8) {
                         Text(step.displayName)
                             .font(.subheadline.weight(.semibold))
-                            .foregroundStyle(step.isTerminal ? Theme.muted : Theme.ink)
+                            .foregroundStyle(titleColor)
 
                         Spacer(minLength: 8)
                         statusBadge
@@ -176,13 +172,13 @@ struct StepTimelineRow: View {
                     if !step.descriptionText.isEmpty {
                         Text(step.descriptionText)
                             .font(.footnote)
-                            .foregroundStyle(Theme.muted)
+                            .foregroundStyle(metaColor)
                             .lineLimit(1)
                     }
 
                     Text(statusLine)
                         .font(.footnote)
-                        .foregroundStyle(Theme.muted)
+                        .foregroundStyle(metaColor)
                 }
 
                 Spacer(minLength: 8)
@@ -208,7 +204,9 @@ struct StepTimelineRow: View {
 
     @ViewBuilder
     private var statusBadge: some View {
-        if step.isTerminal {
+        if isArchived {
+            StateBadge(text: "Archiviata", tone: .done)
+        } else if step.isTerminal {
             StateBadge(stepStatus: step.status)
         } else if step.isOverdue() {
             StateBadge(text: "In ritardo", tone: .danger)
@@ -219,31 +217,84 @@ struct StepTimelineRow: View {
         }
     }
 
-    private var dotColor: Color {
-        if step.status == .running { return Theme.Status.runningBackground }
-        if step.isOverdue() { return Theme.Status.dangerForeground }
-        if step.status == .done { return Theme.Status.doneForeground }
-        if step.status == .skipped { return Theme.Text.tertiary }
-        return Theme.Text.secondary
+    // Timeline dot — ZStack con frame fisso 14pt per tutti gli stati
+    private var timelineDot: some View {
+        ZStack {
+            // Ring per running — halo verde, non altera layout
+            if step.status == .running && isArchived == false {
+                Circle()
+                    .fill(Theme.TimelineDot.runningRing)
+                    .frame(width: 14, height: 14)
+            }
+            // Dot principale — 8pt in tutti gli stati
+            Circle()
+                .fill(dotFillColor)
+                .frame(width: 8, height: 8)
+            // Bordo pending — stroke che non altera dimensione
+            if step.status == .pending && !step.isOverdue() && isArchived == false {
+                Circle()
+                    .strokeBorder(Theme.TimelineDot.pendingBorder, lineWidth: 1.5)
+                    .frame(width: 8, height: 8)
+            }
+        }
+        .frame(width: 14, height: 14) // ingombro costante per tutti gli stati
+    }
+
+    private var dotFillColor: Color {
+        if isArchived { return Theme.TimelineDot.skipped }
+        if step.status == .running  { return Theme.TimelineDot.running  }
+        if step.status == .done     { return Theme.TimelineDot.done     }
+        if step.status == .skipped  { return Theme.TimelineDot.skipped  }
+        if step.isOverdue()         { return Theme.TimelineDot.overdue  }
+        return Theme.TimelineDot.pending
     }
 
     private var backgroundColor: Color {
-        if step.isOverdue() { return Theme.Surface.dangerTint }
+        if isArchived { return Theme.Surface.subtle }
+        if step.isOverdue() { return Theme.Surface.danger }
         if step.status == .running { return Theme.Surface.tinted }
         return Theme.Surface.card
     }
 
     private var borderColor: Color {
-        if step.isOverdue() { return Theme.Status.dangerForeground.opacity(0.26) }
+        if isArchived { return Theme.Border.done }
+        if step.isOverdue() { return Theme.Border.danger }
         if step.status == .running { return Theme.Border.active }
         return Theme.Border.defaultColor
     }
 
     private var lineWidth: CGFloat {
-        step.status == .running ? 2 : 1
+        (step.status == .running && isArchived == false) ? 2 : 1
+    }
+
+    private var connectorColor: Color {
+        if isArchived { return Theme.Border.done }
+        if step.isOverdue() { return Theme.Border.danger }
+        return Theme.Border.defaultColor
+    }
+
+    private var isArchived: Bool {
+        isBakeCancelled && step.isTerminal == false
+    }
+
+    private var titleColor: Color {
+        if isArchived { return Theme.Text.secondary }
+        return step.isTerminal ? Theme.muted : Theme.ink
+    }
+
+    private var timeColor: Color {
+        isArchived ? Theme.Text.secondary : Theme.ink
+    }
+
+    private var metaColor: Color {
+        isArchived ? Theme.Text.secondary : Theme.muted
     }
 
     private var statusLine: String {
+        if isArchived {
+            return "Bake annullato — fase non piu attiva"
+        }
+
         switch step.status {
         case .pending:
             if step.isOverdue() {
@@ -366,10 +417,6 @@ struct LiveTimerBlock: View {
     let now: Date
     let appearance: OperationalStepAppearance
 
-    private let timerColumns = [
-        GridItem(.adaptive(minimum: 92), spacing: 8)
-    ]
-
     var body: some View {
         VStack(alignment: .leading, spacing: 14) {
             HStack(alignment: .lastTextBaseline, spacing: 12) {
@@ -395,7 +442,8 @@ struct LiveTimerBlock: View {
 
             StepProgressBar(progress: progressValue, accent: appearance.accent, isOverdue: phase == .overdue)
 
-            LazyVGrid(columns: timerColumns, alignment: .leading, spacing: 8) {
+            // 3 chip fissi in linea — HStack uguale in larghezza
+            HStack(spacing: 8) {
                 MetricChip(label: "Inizio", value: DateFormattingService.time(step.referenceStart), tone: .schedule)
                 MetricChip(label: "Fine", value: DateFormattingService.time(step.plannedEnd), tone: phase == .overdue ? .danger : .schedule)
                 MetricChip(label: trailingMetricLabel, value: trailingMetricValue, tone: appearance.metricTone)
@@ -579,13 +627,13 @@ struct OperationalStepAppearance {
             metricTone = .running
             lineWidth = 2
         case .overdue:
-            background = Theme.Surface.dangerTint
-            border = Theme.Status.dangerForeground
-            innerBorder = Theme.Status.dangerForeground.opacity(0.18)
-            shadow = Theme.Status.dangerForeground.opacity(0.1)
-            accent = Theme.Status.dangerForeground
-            label = Theme.Status.dangerForeground
-            pillBackground = Theme.Status.dangerBackground
+            background = Theme.Surface.danger
+            border = Theme.Palette.error
+            innerBorder = Theme.Border.danger
+            shadow = Theme.Shadow.danger
+            accent = Theme.Palette.error
+            label = Theme.Text.onDanger
+            pillBackground = Theme.Surface.danger
             metricTone = .danger
             lineWidth = 1.5
         case .completed:
