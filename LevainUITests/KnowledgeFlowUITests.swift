@@ -3,6 +3,7 @@ import XCTest
 /// UI coverage for the secondary Knowledge entry and browsing flow.
 /// Uses the deterministic launch harness so tests work without network access
 /// or stale simulator state.
+@MainActor
 final class KnowledgeFlowUITests: XCTestCase {
 
     override func setUpWithError() throws {
@@ -15,7 +16,7 @@ final class KnowledgeFlowUITests: XCTestCase {
         let app = XCUIApplication()
         app.launchEmpty()
 
-        let guidesButton = app.buttons["Sfoglia le guide"].firstMatch
+        let guidesButton = app.buttons["TodayBrowseGuidesButton"]
         XCTAssertTrue(guidesButton.waitForExistence(timeout: 5))
         guidesButton.tap()
         XCTAssertTrue(app.scrollViews["KnowledgeScrollView"].waitForExistence(timeout: 8))
@@ -27,7 +28,7 @@ final class KnowledgeFlowUITests: XCTestCase {
         let app = XCUIApplication()
         app.launchEmpty()
 
-        let guidesButton = app.buttons["Sfoglia le guide"].firstMatch
+        let guidesButton = app.buttons["TodayBrowseGuidesButton"]
         XCTAssertTrue(guidesButton.waitForExistence(timeout: 5))
         guidesButton.tap()
         XCTAssertTrue(app.scrollViews["KnowledgeScrollView"].waitForExistence(timeout: 8))
@@ -42,7 +43,7 @@ final class KnowledgeFlowUITests: XCTestCase {
         let app = XCUIApplication()
         app.launchEmpty()
 
-        let guidesButton = app.buttons["Sfoglia le guide"].firstMatch
+        let guidesButton = app.buttons["TodayBrowseGuidesButton"]
         XCTAssertTrue(guidesButton.waitForExistence(timeout: 5))
         guidesButton.tap()
         XCTAssertTrue(app.scrollViews["KnowledgeScrollView"].waitForExistence(timeout: 8))

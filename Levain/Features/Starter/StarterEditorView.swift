@@ -9,7 +9,6 @@ struct StarterEditorView: View {
     let starter: Starter?
 
     @State private var name: String
-    @State private var type: StarterType
     @State private var hydration: Double
     @State private var flours: [FlourSelection]
     @State private var containerWeight: Double
@@ -17,11 +16,12 @@ struct StarterEditorView: View {
     @State private var refreshIntervalDays: Int
     @State private var remindersEnabled: Bool
     @State private var notes: String
+    @State private var showingHydrationPicker = false
+    @State private var editingFlourID: UUID?
 
     init(starter: Starter?) {
         self.starter = starter
         _name = State(initialValue: starter?.name ?? "")
-        _type = State(initialValue: starter?.type ?? .mixed)
         _hydration = State(initialValue: starter?.hydration ?? 100)
         _flours = State(initialValue: starter?.selectedFlours ?? [])
         _containerWeight = State(initialValue: starter?.containerWeight ?? 0)
@@ -38,15 +38,18 @@ struct StarterEditorView: View {
                     TextField("es. Ciccio", text: $name)
                         .multilineTextAlignment(.trailing)
                 }
-                Picker("Tipo", selection: $type) {
-                    ForEach(StarterType.allCases) { option in
-                        Text(option.title).tag(option)
-                    }
-                }
             }
 
             Section("Setup") {
-                NumericField(title: "Idratazione (%)", value: $hydration)
+                Button {
+                    showingHydrationPicker = true
+                } label: {
+                    SelectionFormRow(
+                        title: "Idratazione (%)",
+                        value: "\(Int(hydration.rounded()))%"
+                    )
+                }
+                .buttonStyle(.plain)
                 NumericField(title: "Peso contenitore (g)", value: $containerWeight)
                 Picker("Conservazione", selection: $storageMode) {
                     ForEach(StorageMode.allCases) { option in
@@ -58,21 +61,34 @@ struct StarterEditorView: View {
             }
 
             Section("Mix Farine") {
-                ForEach($flours) { $flour in
-                    NavigationLink(destination: FlourSelectionEditorView(flour: $flour)) {
+                ForEach(flours) { flour in
+                    Button {
+                        editingFlourID = flour.id
+                    } label: {
                         HStack {
                             Text(flour.displayName)
+                                .foregroundStyle(Theme.ink)
                             Spacer()
-                            Text("\(flour.percentage, specifier: "%.1f")%")
+                            Text("\(Int(flour.percentage.rounded()))%")
+                                .foregroundStyle(Theme.muted)
+                            Image(systemName: "chevron.right")
+                                .font(.footnote.weight(.semibold))
                                 .foregroundStyle(Theme.muted)
                         }
                     }
+                    .buttonStyle(.plain)
                 }
                 .onDelete { indices in
                     flours.remove(atOffsets: indices)
                 }
                 Button {
-                    flours.append(FlourSelection(categoryRaw: FlourCategory.strong.rawValue, customName: "", percentage: 100))
+                    let newFlour = FlourSelection(
+                        categoryRaw: FlourCategory.strong.rawValue,
+                        customName: "",
+                        percentage: 100
+                    )
+                    flours.append(newFlour)
+                    editingFlourID = newFlour.id
                 } label: {
                     Label("Aggiungi farina", systemImage: "plus")
                 }
@@ -101,13 +117,28 @@ struct StarterEditorView: View {
                     .disabled(name.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
             }
         }
+        .sheet(isPresented: $showingHydrationPicker) {
+            StepValuePickerSheet(
+                title: "Idratazione",
+                values: Array(stride(from: 50, through: 200, by: 5)),
+                selection: hydrationSelection,
+                unit: "%"
+            )
+        }
+        .sheet(isPresented: editingFlourSheetBinding) {
+            NavigationStack {
+                if let editingFlourIndex {
+                    FlourSelectionEditorView(flour: $flours[editingFlourIndex])
+                }
+            }
+        }
     }
 
     private func save() {
         let savedStarter: Starter
         if let starter {
             starter.name = name
-            starter.type = type
+            starter.type = inferredStarterType
             starter.hydration = hydration
             starter.selectedFlours = flours
             starter.containerWeight = containerWeight
@@ -119,7 +150,7 @@ struct StarterEditorView: View {
         } else {
             savedStarter = Starter(
                 name: name,
-                type: type,
+                type: inferredStarterType,
                 hydration: hydration,
                 flourMix: "",
                 flours: flours,
@@ -139,5 +170,42 @@ struct StarterEditorView: View {
         }
 
         dismiss()
+    }
+
+    private var hydrationSelection: Binding<Int> {
+        Binding(
+            get: { Int(hydration.rounded()) },
+            set: { hydration = Double($0) }
+        )
+    }
+
+    private var editingFlourSheetBinding: Binding<Bool> {
+        Binding(
+            get: { editingFlourIndex != nil },
+            set: { isPresented in
+                if isPresented == false {
+                    editingFlourID = nil
+                }
+            }
+        )
+    }
+
+    private var editingFlourIndex: Int? {
+        guard let editingFlourID else { return nil }
+        return flours.firstIndex(where: { $0.id == editingFlourID })
+    }
+
+    private var inferredStarterType: StarterType {
+        guard let primaryFlour = flours.first else { return starter?.type ?? .mixed }
+        guard flours.count == 1 else { return .mixed }
+
+        switch primaryFlour.category {
+        case .rye:
+            return .rye
+        case .semolina:
+            return .semolina
+        default:
+            return .wheat
+        }
     }
 }

@@ -14,27 +14,11 @@ struct SeedDataLoaderTests {
 
     // MARK: - Helpers
 
-    private func makeInMemoryContext() throws -> ModelContext {
-        let schema = Schema([
-            Starter.self,
-            StarterRefresh.self,
-            RecipeFormula.self,
-            Bake.self,
-            BakeStep.self,
-            AppSettings.self
-        ])
-        let container = try ModelContainer(
-            for: schema,
-            configurations: ModelConfiguration(isStoredInMemoryOnly: true)
-        )
-        return ModelContext(container)
-    }
-
     // MARK: - Idempotency
 
     @Test("ensureSeedData inserts content on first call")
     func testEnsureSeedDataInsertsOnFirstCall() throws {
-        let context = try makeInMemoryContext()
+        let context = try ModelTestSupport.makeInMemoryContext()
 
         try SeedDataLoader.ensureSeedData(in: context)
 
@@ -50,7 +34,7 @@ struct SeedDataLoaderTests {
 
     @Test("ensureSeedData is idempotent — second call does not duplicate content")
     func testEnsureSeedDataIdempotent() throws {
-        let context = try makeInMemoryContext()
+        let context = try ModelTestSupport.makeInMemoryContext()
 
         try SeedDataLoader.ensureSeedData(in: context)
         let countAfterFirst = try context.fetch(FetchDescriptor<Starter>()).count
@@ -64,7 +48,7 @@ struct SeedDataLoaderTests {
 
     @Test("ensureSeedData sets didSeedSampleData flag to true")
     func testEnsureSeedDataSetsFlag() throws {
-        let context = try makeInMemoryContext()
+        let context = try ModelTestSupport.makeInMemoryContext()
 
         try SeedDataLoader.ensureSeedData(in: context)
 
@@ -76,7 +60,7 @@ struct SeedDataLoaderTests {
 
     @Test("Fresh in-memory store has no starters before seeding")
     func testFreshStorHasNoContent() throws {
-        let context = try makeInMemoryContext()
+        let context = try ModelTestSupport.makeInMemoryContext()
 
         let starters = try context.fetch(FetchDescriptor<Starter>())
         #expect(starters.isEmpty, "Fresh store must not contain any starters")
@@ -89,7 +73,7 @@ struct SeedDataLoaderTests {
 
     @Test("resetAndSeed re-seeds even when idempotency flag is set")
     func testResetAndSeedOverridesFlag() throws {
-        let context = try makeInMemoryContext()
+        let context = try ModelTestSupport.makeInMemoryContext()
 
         // First seed
         try SeedDataLoader.ensureSeedData(in: context)

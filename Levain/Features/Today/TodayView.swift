@@ -529,6 +529,7 @@ private struct TodayOnboardingView: View {
                     systemImage: "drop.fill",
                     title: "Aggiungi uno starter",
                     subtitle: "Traccia rinfreschi e ricevi promemoria.",
+                    accessibilityIdentifier: "TodayAddStarterButton",
                     action: onAddStarter
                 )
 
@@ -536,6 +537,7 @@ private struct TodayOnboardingView: View {
                     systemImage: "book.pages.fill",
                     title: "Sfoglia le guide",
                     subtitle: "Scopri i segreti della lievitazione naturale.",
+                    accessibilityIdentifier: "TodayBrowseGuidesButton",
                     action: { router.showingKnowledge = true }
                 )
             }
@@ -547,6 +549,7 @@ private struct FeaturePillCard: View {
     let systemImage: String
     let title: String
     let subtitle: String
+    let accessibilityIdentifier: String
     let action: () -> Void
 
     var body: some View {
@@ -582,5 +585,6 @@ private struct FeaturePillCard: View {
             )
         }
         .buttonStyle(.plain)
+        .accessibilityIdentifier(accessibilityIdentifier)
     }
 }

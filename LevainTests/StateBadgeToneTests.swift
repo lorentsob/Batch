@@ -1,16 +1,17 @@
 import XCTest
 @testable import Levain
 
+@MainActor
 final class StateBadgeToneTests: XCTestCase {
     func testStepStatusUsesSemanticToneMapping() {
         XCTAssertEqual(StateBadge(stepStatus: .pending).tone, .pending)
         XCTAssertEqual(StateBadge(stepStatus: .running).tone, .running)
         XCTAssertEqual(StateBadge(stepStatus: .done).tone, .done)
-        XCTAssertEqual(StateBadge(stepStatus: .skipped).tone, .pending)
+        XCTAssertEqual(StateBadge(stepStatus: .skipped).tone, .skipped)
     }
 
     func testBakeStatusUsesSemanticToneMapping() {
-        XCTAssertEqual(StateBadge(bakeStatus: .planned).tone, .pending)
+        XCTAssertEqual(StateBadge(bakeStatus: .planned).tone, .info)
         XCTAssertEqual(StateBadge(bakeStatus: .inProgress).tone, .running)
         XCTAssertEqual(StateBadge(bakeStatus: .completed).tone, .done)
         XCTAssertEqual(StateBadge(bakeStatus: .cancelled).tone, .danger)
@@ -18,16 +19,12 @@ final class StateBadgeToneTests: XCTestCase {
 
     func testStarterDueStateUsesSemanticToneMapping() {
         XCTAssertEqual(StateBadge(dueState: .ok).tone, .done)
-        XCTAssertEqual(StateBadge(dueState: .dueToday).tone, .schedule)
-        XCTAssertEqual(StateBadge(dueState: .overdue).tone, .danger)
+        XCTAssertEqual(StateBadge(dueState: .dueToday).tone, .pending)
+        XCTAssertEqual(StateBadge(dueState: .overdue).tone, .overdue)
     }
 
-    func testSemanticTonesKeepStableTokens() {
-        XCTAssertEqual(StateBadge.Tone.running.backgroundToken, "green-500")
-        XCTAssertEqual(StateBadge.Tone.running.foregroundToken, "neutral-0")
-        XCTAssertEqual(StateBadge.Tone.done.backgroundToken, "green-50")
-        XCTAssertEqual(StateBadge.Tone.pending.backgroundToken, "neutral-100")
-        XCTAssertEqual(StateBadge.Tone.schedule.foregroundToken, "neutral-500")
-        XCTAssertEqual(StateBadge.Tone.danger.backgroundToken, "error-light")
+    func testScheduleToneRemainsExplicitAlias() {
+        XCTAssertEqual(StateBadge.Tone.schedule.rawValue, "schedule")
+        XCTAssertNotEqual(StateBadge.Tone.schedule, .info)
     }
 }

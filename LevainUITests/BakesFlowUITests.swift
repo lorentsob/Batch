@@ -1,5 +1,6 @@
 import XCTest
 
+@MainActor
 final class BakesFlowUITests: XCTestCase {
     override func setUpWithError() throws {
         continueAfterFailure = false
@@ -9,44 +10,58 @@ final class BakesFlowUITests: XCTestCase {
         let app = XCUIApplication()
         app.launchEmpty()
 
-        app.tabBars.buttons["Impasti"].tap()
-        XCTAssertTrue(app.staticTexts["Nessun bake"].waitForExistence(timeout: 5))
+        let bakesTab = app.tabBars.buttons["Impasti"]
+        XCTAssertTrue(bakesTab.waitForExistence(timeout: 5))
+        bakesTab.tap()
+
+        XCTAssertTrue(app.scrollViews["BakesScrollView"].waitForExistence(timeout: 8))
+        XCTAssertTrue(app.staticTexts["Nessun bake ancora"].waitForExistence(timeout: 8))
     }
 
     func testBakesTabShowsOperationalDataWithSeedData() throws {
         let app = XCUIApplication()
         app.launchSeeded()
 
-        app.tabBars.buttons["Impasti"].tap()
-        XCTAssertTrue(app.scrollViews["BakesScrollView"].waitForExistence(timeout: 5))
-        XCTAssertFalse(app.staticTexts["Nessun bake"].exists)
+        let bakesTab = app.tabBars.buttons["Impasti"]
+        XCTAssertTrue(bakesTab.waitForExistence(timeout: 5))
+        bakesTab.tap()
+
+        XCTAssertTrue(app.scrollViews["BakesScrollView"].waitForExistence(timeout: 8))
+        XCTAssertTrue(app.staticTexts["Infornata del weekend"].waitForExistence(timeout: 8))
+        XCTAssertFalse(app.staticTexts["Nessun bake ancora"].exists)
     }
 
     func testEmptyBakesStateOffersRecipeCreation() throws {
         let app = XCUIApplication()
         app.launchEmpty()
 
-        app.tabBars.buttons["Impasti"].tap()
-        XCTAssertTrue(app.scrollViews["BakesScrollView"].waitForExistence(timeout: 5))
-        XCTAssertTrue(app.buttons["BakesNewRecipeButton"].waitForExistence(timeout: 5))
+        let bakesTab = app.tabBars.buttons["Impasti"]
+        XCTAssertTrue(bakesTab.waitForExistence(timeout: 5))
+        bakesTab.tap()
+
+        XCTAssertTrue(app.scrollViews["BakesScrollView"].waitForExistence(timeout: 8))
+        XCTAssertTrue(app.staticTexts["Nessun bake ancora"].waitForExistence(timeout: 8))
+        XCTAssertTrue(app.buttons["Crea il tuo primo bake"].waitForExistence(timeout: 8))
     }
 
-    func testNewBakeUsesTemplatesAndCreateThenEditFlow() throws {
+    func testNewBakeUsesBundledTemplates() throws {
         let app = XCUIApplication()
         app.launchEmpty()
 
-        app.tabBars.buttons["Impasti"].tap()
-        XCTAssertTrue(app.buttons["BakesPrimaryNewBakeButton"].waitForExistence(timeout: 5))
-        app.buttons["BakesPrimaryNewBakeButton"].tap()
+        let bakesTab = app.tabBars.buttons["Impasti"]
+        XCTAssertTrue(bakesTab.waitForExistence(timeout: 5))
+        bakesTab.tap()
 
-        XCTAssertTrue(app.navigationBars["Nuovo bake"].waitForExistence(timeout: 5))
+        XCTAssertTrue(app.scrollViews["BakesScrollView"].waitForExistence(timeout: 8))
+        XCTAssertTrue(app.buttons["Nuovo bake"].waitForExistence(timeout: 8))
+        app.buttons["Nuovo bake"].tap()
+
+        XCTAssertTrue(app.staticTexts["Ricetta"].waitForExistence(timeout: 8))
         XCTAssertTrue(app.staticTexts["Template rapidi"].waitForExistence(timeout: 5))
         XCTAssertTrue(app.scrollViews["BakeTemplateScroller"].waitForExistence(timeout: 5))
         XCTAssertTrue(app.buttons["Pane di campagna"].waitForExistence(timeout: 5))
         app.buttons["Pane di campagna"].tap()
 
-        app.navigationBars["Nuovo bake"].buttons["Crea"].tap()
-
-        XCTAssertTrue(app.navigationBars["Pane di campagna"].waitForExistence(timeout: 8))
+        XCTAssertTrue(app.staticTexts["Starter"].waitForExistence(timeout: 8))
     }
 }

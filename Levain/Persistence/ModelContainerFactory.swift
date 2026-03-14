@@ -15,13 +15,6 @@ enum ModelContainerFactory {
         do {
             return try makePersistentContainer(at: storeURL)
         } catch {
-            #if DEBUG
-            if erasePersistentStore(at: storeURL) {
-                if let container = try? makePersistentContainer(at: storeURL) {
-                    return container
-                }
-            }
-            #endif
             return fallbackContainer(after: error, inMemory: true)
         }
     }
@@ -30,7 +23,8 @@ enum ModelContainerFactory {
     static func makePreviewContainer(seed: Bool = true) -> ModelContainer {
         do {
             let container = try ModelContainer(
-                for: schema,
+                for: LevainSchema.current,
+                migrationPlan: LevainMigrationPlan.self,
                 configurations: ModelConfiguration(isStoredInMemoryOnly: true)
             )
             if seed {
@@ -42,21 +36,11 @@ enum ModelContainerFactory {
         }
     }
 
-    private static var schema: Schema {
-        Schema([
-            Starter.self,
-            StarterRefresh.self,
-            RecipeFormula.self,
-            Bake.self,
-            BakeStep.self,
-            AppSettings.self
-        ])
-    }
-
     private static func makeInMemoryContainer() -> ModelContainer {
         do {
             return try ModelContainer(
-                for: schema,
+                for: LevainSchema.current,
+                migrationPlan: LevainMigrationPlan.self,
                 configurations: ModelConfiguration(isStoredInMemoryOnly: true)
             )
         } catch {
@@ -66,7 +50,11 @@ enum ModelContainerFactory {
 
     private static func makePersistentContainer(at url: URL) throws -> ModelContainer {
         let configuration = ModelConfiguration(url: url)
-        return try ModelContainer(for: schema, configurations: configuration)
+        return try ModelContainer(
+            for: LevainSchema.current,
+            migrationPlan: LevainMigrationPlan.self,
+            configurations: configuration
+        )
     }
 
     private static func persistentStoreURL() -> URL {
@@ -77,30 +65,15 @@ enum ModelContainerFactory {
         return folderURL.appendingPathComponent("Levain.store")
     }
 
-    private static func erasePersistentStore(at url: URL) -> Bool {
-        let fileManager = FileManager.default
-        let shmURL = URL(fileURLWithPath: url.path + "-shm")
-        let walURL = URL(fileURLWithPath: url.path + "-wal")
-        let candidates = [url, shmURL, walURL]
-        var removedAny = false
-
-        for candidate in candidates where fileManager.fileExists(atPath: candidate.path) {
-            do {
-                try fileManager.removeItem(at: candidate)
-                removedAny = true
-            } catch {
-                assertionFailure("Unable to remove persistent store at \(candidate): \(error)")
-            }
-        }
-
-        return removedAny
-    }
-
     private static func fallbackContainer(after error: Error, inMemory: Bool = true) -> ModelContainer {
-        assertionFailure("Unable to create model container: \(error)")
+        assertionFailure("Unable to create persistent model container without mutating the existing store: \(error)")
         let configuration = ModelConfiguration(isStoredInMemoryOnly: inMemory)
         do {
-            return try ModelContainer(for: schema, configurations: configuration)
+            return try ModelContainer(
+                for: LevainSchema.current,
+                migrationPlan: LevainMigrationPlan.self,
+                configurations: configuration
+            )
         } catch {
             fatalError("Unable to create in-memory fallback model container: \(error)")
         }

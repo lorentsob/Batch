@@ -1,5 +1,6 @@
 import XCTest
 
+@MainActor
 final class TodayFlowUITests: XCTestCase {
     override func setUpWithError() throws {
         continueAfterFailure = false
@@ -10,7 +11,7 @@ final class TodayFlowUITests: XCTestCase {
         app.launchEmpty()
 
         XCTAssertTrue(app.scrollViews["TodayScrollView"].waitForExistence(timeout: 8))
-        XCTAssertTrue(app.staticTexts["Per iniziare"].waitForExistence(timeout: 5))
+        XCTAssertTrue(app.staticTexts["Inizia il tuo primo bake"].waitForExistence(timeout: 5))
         XCTAssertTrue(app.buttons["Nuovo bake"].exists)
         XCTAssertTrue(app.buttons["Aggiungi starter"].exists)
     }
@@ -20,8 +21,8 @@ final class TodayFlowUITests: XCTestCase {
         app.launchSeeded(scenario: "allClear")
 
         XCTAssertTrue(app.scrollViews["TodayScrollView"].waitForExistence(timeout: 8))
-        XCTAssertTrue(app.staticTexts["Niente da fare oggi"].waitForExistence(timeout: 5))
-        XCTAssertTrue(app.buttons["Nuovo bake"].exists)
+        XCTAssertTrue(app.staticTexts["Tutto in pari"].waitForExistence(timeout: 5))
+        XCTAssertTrue(app.buttons["Pianifica un nuovo bake"].exists)
     }
 
     func testTodayFutureOnlyStateShowsPreviewCard() throws {
@@ -29,7 +30,7 @@ final class TodayFlowUITests: XCTestCase {
         app.launchSeeded(scenario: "futureOnly")
 
         XCTAssertTrue(app.scrollViews["TodayScrollView"].waitForExistence(timeout: 8))
-        XCTAssertTrue(app.staticTexts["Più avanti"].waitForExistence(timeout: 5))
+        XCTAssertTrue(app.staticTexts["La prossima cosa da seguire è già programmata."].waitForExistence(timeout: 5))
         XCTAssertTrue(app.buttons["Vai a Starter"].waitForExistence(timeout: 5))
     }
 
@@ -38,7 +39,7 @@ final class TodayFlowUITests: XCTestCase {
         app.launchSeeded()
 
         XCTAssertTrue(app.scrollViews["TodayScrollView"].waitForExistence(timeout: 8))
-        XCTAssertTrue(app.staticTexts["Il forno oggi"].waitForExistence(timeout: 5))
+        XCTAssertTrue(app.staticTexts["Infornata del weekend"].waitForExistence(timeout: 5))
         XCTAssertTrue(app.staticTexts["Da fare"].waitForExistence(timeout: 5))
     }
 

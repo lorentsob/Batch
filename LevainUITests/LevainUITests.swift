@@ -72,6 +72,7 @@ extension XCUIApplication {
     }
 }
 
+@MainActor
 final class LevainUITests: XCTestCase {
     override func setUpWithError() throws {
         continueAfterFailure = false
@@ -110,15 +111,19 @@ final class LevainUITests: XCTestCase {
 
         app.tabBars.buttons["Home"].tap()
         XCTAssertTrue(app.scrollViews["TodayScrollView"].waitForExistence(timeout: 5))
-        XCTAssertTrue(app.staticTexts["Per iniziare"].waitForExistence(timeout: 5))
+        XCTAssertTrue(app.staticTexts["Inizia il tuo primo bake"].waitForExistence(timeout: 5))
     }
 
     func testSeededLaunchHasAtLeastOneResult() throws {
         let app = XCUIApplication()
         app.launchSeeded()
 
-        app.tabBars.buttons["Impasti"].tap()
-        XCTAssertTrue(app.scrollViews["BakesScrollView"].waitForExistence(timeout: 5))
-        XCTAssertFalse(app.staticTexts["Nessuna ricetta"].exists)
+        let bakesTab = app.tabBars.buttons["Impasti"]
+        XCTAssertTrue(bakesTab.waitForExistence(timeout: 5))
+        bakesTab.tap()
+
+        XCTAssertTrue(app.scrollViews["BakesScrollView"].waitForExistence(timeout: 8))
+        XCTAssertTrue(app.staticTexts["Infornata del weekend"].waitForExistence(timeout: 8))
+        XCTAssertFalse(app.staticTexts["Nessun bake ancora"].exists)
     }
 }

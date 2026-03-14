@@ -1,5 +1,6 @@
 import XCTest
 
+@MainActor
 final class NotificationRouteUITests: XCTestCase {
     override func setUpWithError() throws {
         continueAfterFailure = false
@@ -9,7 +10,7 @@ final class NotificationRouteUITests: XCTestCase {
         let app = XCUIApplication()
         app.launchEmpty()
 
-        let guidesButton = app.buttons["Sfoglia le guide"].firstMatch
+        let guidesButton = app.buttons["TodayBrowseGuidesButton"]
         XCTAssertTrue(guidesButton.waitForExistence(timeout: 5))
         guidesButton.tap()
         XCTAssertTrue(app.scrollViews["KnowledgeScrollView"].waitForExistence(timeout: 8))

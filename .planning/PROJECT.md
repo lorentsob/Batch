@@ -22,12 +22,13 @@ The app must make the next baking action obvious without adding setup, infrastru
 - [x] Bake lifecycle cleanup for cancellation, deletion, target-usage semantics, and trustworthy visual-state feedback
 - [x] Visual and asset compliance pass, including corrected state colors, iconography, and working App Icon recognition
 - [x] Naming, Today urgency semantics, and notification-router fallback behavior aligned after post-UAT gap review
-- [ ] Userflow v2 conformance across Today, bake creation/execution, window-based steps, starter refresh, and notification entry, with final closure gated by manual on-device UAT
-- [ ] Design-system regression closure after v2.0 rollout: light-only chrome, bottom destructive confirmations, cancelled bake terminal styling, and stable timeline danger/read-only states
+- [x] Userflow v2 conformance across Today, bake creation/execution, window-based steps, starter refresh, and notification entry, with final closure gated by manual on-device UAT
+- [x] Design-system regression closure after v2.0 rollout: light-only chrome, bottom destructive confirmations, cancelled bake terminal styling, and stable timeline danger/read-only states
+- [ ] Memory durability and system content separation: explicit SwiftData schema versioning, non-destructive persistent bootstrap, manual JSON backup/restore, bundled system formulas, and demo seed isolated from official content
 
 ### Out of Scope
 
-- Backend, auth, cloud sync, or external database — personal internal MVP only
+- Backend, auth, automatic cloud sync, or external database — personal internal MVP only
 - iPad and multi-device support — iPhone-only validation target
 - AI-generated baking advice — knowledge stays static and bundled
 - Social, community, or public sharing features — not part of the operational core
@@ -76,6 +77,10 @@ The app must make the next baking action obvious without adding setup, infrastru
 | Bake execution remains sequential by default, with explicit confirmation and persistent `Fuori ordine` feedback for overrides | The app should prescribe the next correct action while still allowing expert recovery from real-world deviations | 2026-03-12 |
 | Design-system v2.0 remains light-only at the app level, not only at the token level | Relying on system appearance caused dark sheets/chrome regressions that broke the design contract | 2026-03-14 |
 | Cancelled bakes must read as archived terminal contexts, while overdue steps remain explicit red problems | Terminal state and problem state solve different trust problems and need distinct UI treatments | 2026-03-14 |
+| User data remains local-first in SwiftData, but every persisted-model change now requires explicit schema versioning and migration ownership | Surviving app updates on real devices matters more than keeping the pre-versioning bootstrap simple | 2026-03-14 |
+| Persistent bootstrap must never auto-delete the on-disk store as an error recovery path | Silent local data loss is worse than falling back to an empty in-memory session during development failures | 2026-03-14 |
+| System knowledge and system formulas stay bundled JSON, while demo seed stays launch-option-only and non-official | Bundled content must remain deterministic and separate from both user data and internal test fixtures | 2026-03-14 |
+| No backend, auth, or sync work is added for memory durability; CloudKit stays explicitly deferred | The problem to solve now is on-device durability, not multi-device infrastructure | 2026-03-14 |
 
 ---
-*Last updated: 2026-03-14 after opening Phase 14 for design-system regression closure*
+*Last updated: 2026-03-14 after opening Phase 15 for memory durability and system content separation*

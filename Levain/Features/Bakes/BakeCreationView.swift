@@ -11,15 +11,19 @@ struct BakeCreationView: View {
     @Query(sort: \Starter.name) private var starters: [Starter]
 
     let preselectedFormula: RecipeFormula?
+    private let systemFormulas: [SystemFormula]
 
     @State private var selectedFormulaID: UUID?
     @State private var selectedStarterID: UUID?
     @State private var name: String
     @State private var targetBakeDateTime: Date
     @State private var notes: String
+    @State private var showingBakeDatePicker = false
+    @State private var showingBakeTimePicker = false
 
     init(preselectedFormula: RecipeFormula?) {
         self.preselectedFormula = preselectedFormula
+        self.systemFormulas = SystemFormulaLoader.loadSystemFormulas()
         _selectedFormulaID = State(initialValue: preselectedFormula?.id)
         _selectedStarterID = State(initialValue: nil)
         _name = State(initialValue: preselectedFormula?.name ?? "")
@@ -28,109 +32,128 @@ struct BakeCreationView: View {
     }
 
     var body: some View {
-        NavigationStack {
-            Form {
-                Section("Ricetta") {
-                    Picker("Ricetta", selection: $selectedFormulaID) {
-                        formulaPickerOptions
+        Form {
+            Section("Ricetta") {
+                Picker("Ricetta", selection: $selectedFormulaID) {
+                    formulaPickerOptions
+                }
+                .accessibilityIdentifier("BakeRecipePicker")
+                .disabled(preselectedFormula != nil)
+                .onChange(of: selectedFormulaID) { _, newID in
+                    if let selected = allAvailableFormulas.first(where: { $0.id == newID }), name.isEmpty {
+                        name = selected.name
                     }
-                    .accessibilityIdentifier("BakeRecipePicker")
-                    .disabled(preselectedFormula != nil)
-                    .onChange(of: selectedFormulaID) { _, newID in
-                        if let selected = allAvailableFormulas.first(where: { $0.id == newID }), name.isEmpty {
-                            name = selected.name
-                        }
-                    }
+                }
 
+                VStack(alignment: .leading, spacing: 4) {
+                    Text("Template rapidi")
+                        .font(.footnote.weight(.semibold))
+                        .foregroundStyle(Theme.ink)
+                    Text("I template bundled restano sempre disponibili anche se non hai ancora salvato ricette personalizzate.")
+                        .font(.footnote)
+                        .foregroundStyle(Theme.muted)
+                }
+
+                if preselectedFormula == nil {
+                    ScrollView(.horizontal, showsIndicators: false) {
+                        HStack(spacing: 8) {
+                            ForEach(systemFormulas) { formula in
+                                Button {
+                                    selectedFormulaID = formula.id
+                                    if name.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+                                        name = formula.name
+                                    }
+                                } label: {
+                                    BakeSelectionChip(
+                                        title: formula.name,
+                                        systemImage: selectedFormulaID == formula.id ? "checkmark" : nil
+                                    )
+                                }
+                                .buttonStyle(.plain)
+                            }
+                        }
+                        .padding(.vertical, 2)
+                    }
+                    .accessibilityIdentifier("BakeTemplateScroller")
+                }
+
+                if let formula = selectedFormulaChoice {
                     VStack(alignment: .leading, spacing: 4) {
-                        Text("Template rapidi")
-                            .font(.footnote.weight(.semibold))
-                            .foregroundStyle(Theme.ink)
-                        Text("Le ricette predefinite restano sempre disponibili anche se non hai ancora salvato formule personalizzate.")
+                        Text("\(formula.type.title) · \(Int(formula.hydrationPercent.rounded()))% idratazione")
+                            .font(.footnote)
+                            .foregroundStyle(Theme.muted)
+                        Text("\(formula.yeastType.title) al \(String(format: "%.1f", formula.inoculationPercent))%")
                             .font(.footnote)
                             .foregroundStyle(Theme.muted)
                     }
-
-                    if preselectedFormula == nil {
-                        ScrollView(.horizontal, showsIndicators: false) {
-                            HStack(spacing: 8) {
-                                ForEach(RecipeTemplates.all) { template in
-                                    Button(template.name) {
-                                        selectedFormulaID = template.id
-                                        if name.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
-                                            name = template.name
-                                        }
-                                    }
-                                    .buttonStyle(.bordered)
-                                    .tint(selectedFormulaID == template.id ? Theme.accent : Theme.muted)
-                                }
-                            }
-                            .padding(.vertical, 2)
-                        }
-                        .accessibilityIdentifier("BakeTemplateScroller")
-                    }
-
-                    if let formula = selectedFormula {
-                        VStack(alignment: .leading, spacing: 4) {
-                            Text("\(formula.type.title) · \(Int(formula.hydrationPercent.rounded()))% idratazione")
-                                .font(.footnote)
-                                .foregroundStyle(Theme.muted)
-                            Text("\(formula.yeastType.title) al \(String(format: "%.1f", formula.inoculationPercent))%")
-                                .font(.footnote)
-                                .foregroundStyle(Theme.muted)
-                        }
-                    }
-                }
-
-                Section("Pianificazione") {
-                    TextField("Nome del bake (opzionale)", text: $name)
-                        .accessibilityIdentifier("BakeNameField")
-
-                    VStack(alignment: .leading, spacing: 10) {
-                        Text("Quando vuoi sfornare")
-                            .font(.subheadline)
-                        DatePicker(
-                            "",
-                            selection: $targetBakeDateTime,
-                            displayedComponents: [.date, .hourAndMinute]
-                        )
-                        .labelsHidden()
-                    }
-                }
-
-                if let formula = selectedFormula, formula.yeastType == .sourdough {
-                    Section("Starter") {
-                        Picker("Starter usato", selection: $selectedStarterID) {
-                            Text("Nessuno").tag(Optional<UUID>.none)
-                            ForEach(starters) { starter in
-                                Text(starter.name).tag(Optional(starter.id))
-                            }
-                        }
-                    }
-                }
-
-                Section("Avanzate") {
-                    TextField("Note aggiuntive", text: $notes, axis: .vertical)
-                        .lineLimit(3...5)
                 }
             }
-            .scrollContentBackground(.hidden)
-            .background(Theme.Surface.app)
+
+            Section("Pianificazione") {
+                TextField("Nome del bake (opzionale)", text: $name)
+                    .accessibilityIdentifier("BakeNameField")
+
+                VStack(alignment: .leading, spacing: 12) {
+                    Text("Quando vuoi sfornare")
+                        .font(.subheadline)
+
+                    HStack(spacing: 10) {
+                        Button {
+                            showingBakeDatePicker = true
+                        } label: {
+                            BakeSelectionChip(title: targetBakeDateLabel, systemImage: "calendar")
+                        }
+                        .buttonStyle(.plain)
+
+                        Button {
+                            showingBakeTimePicker = true
+                        } label: {
+                            BakeSelectionChip(title: targetBakeTimeLabel, systemImage: "clock")
+                        }
+                        .buttonStyle(.plain)
+                    }
+                }
+                .padding(.vertical, 4)
+            }
+
+            if let formula = selectedFormulaChoice, formula.yeastType == .sourdough {
+                Section("Starter") {
+                    Picker("Starter usato", selection: $selectedStarterID) {
+                        Text("Nessuno").tag(Optional<UUID>.none)
+                        ForEach(starters) { starter in
+                            Text(starter.name).tag(Optional(starter.id))
+                        }
+                    }
+                }
+            }
+
+            Section("Avanzate") {
+                TextField("Note aggiuntive", text: $notes, axis: .vertical)
+                    .lineLimit(3...5)
+            }
         }
         .navigationTitle("Nuovo bake")
         .tint(Theme.Control.primaryFill)
         .toolbarColorScheme(.light, for: .navigationBar)
         .toolbarBackground(Theme.Surface.app, for: .navigationBar)
         .toolbarBackground(.visible, for: .navigationBar)
-        .presentationBackground(Theme.Surface.app)
         .toolbar {
             ToolbarItem(placement: .cancellationAction) {
                 Button("Chiudi") { dismiss() }
             }
             ToolbarItem(placement: .confirmationAction) {
                 Button("Crea") { save() }
-                    .disabled(selectedFormula == nil)
+                    .disabled(selectedFormulaChoice == nil)
             }
+        }
+        .scrollContentBackground(.hidden)
+        .background(Theme.Surface.app)
+        .presentationBackground(Theme.Surface.app)
+        .sheet(isPresented: $showingBakeDatePicker) {
+            BakeDatePickerSheet(selection: targetBakeDateBinding)
+        }
+        .sheet(isPresented: $showingBakeTimePicker) {
+            BakeTimePickerSheet(selection: targetBakeTimeBinding)
         }
     }
 
@@ -146,32 +169,83 @@ struct BakeCreationView: View {
                 }
             }
 
-            Section("Template rapidi") {
-                ForEach(RecipeTemplates.all) { template in
-                    Text(template.name).tag(Optional(template.id))
+            if systemFormulas.isEmpty == false {
+                Section("Template di sistema") {
+                    ForEach(systemFormulas) { formula in
+                        Text(formula.name).tag(Optional(formula.id))
+                    }
                 }
             }
         }
     }
 
-    private var allAvailableFormulas: [RecipeFormula] {
-        formulas + RecipeTemplates.all
+    private var allAvailableFormulas: [FormulaChoice] {
+        formulas.map(FormulaChoice.user) + systemFormulas.map(FormulaChoice.system)
     }
 
-    private var selectedFormula: RecipeFormula? {
-        allAvailableFormulas.first(where: { $0.id == selectedFormulaID }) ?? preselectedFormula
+    private var selectedFormulaChoice: FormulaChoice? {
+        if let selectedFormulaID {
+            if let selected = allAvailableFormulas.first(where: { $0.id == selectedFormulaID }) {
+                return selected
+            }
+            if let preselectedFormula, preselectedFormula.id == selectedFormulaID {
+                return .user(preselectedFormula)
+            }
+            return nil
+        }
+
+        return preselectedFormula.map(FormulaChoice.user)
     }
 
     private var selectedStarter: Starter? {
         starters.first(where: { $0.id == selectedStarterID })
     }
 
+    private var targetBakeDateLabel: String {
+        Self.targetDateFormatter.string(from: targetBakeDateTime)
+    }
+
+    private var targetBakeTimeLabel: String {
+        DateFormattingService.time(targetBakeDateTime)
+    }
+
+    private var targetBakeDateBinding: Binding<Date> {
+        Binding(
+            get: { targetBakeDateTime },
+            set: { newValue in
+                let calendar = Calendar.current
+                let timeComponents = calendar.dateComponents([.hour, .minute], from: targetBakeDateTime)
+                targetBakeDateTime = calendar.date(
+                    bySettingHour: timeComponents.hour ?? 9,
+                    minute: timeComponents.minute ?? 0,
+                    second: 0,
+                    of: newValue
+                ) ?? newValue
+            }
+        )
+    }
+
+    private var targetBakeTimeBinding: Binding<Date> {
+        Binding(
+            get: { targetBakeDateTime },
+            set: { newValue in
+                let calendar = Calendar.current
+                let timeComponents = calendar.dateComponents([.hour, .minute], from: newValue)
+                targetBakeDateTime = calendar.date(
+                    bySettingHour: timeComponents.hour ?? 9,
+                    minute: timeComponents.minute ?? 0,
+                    second: 0,
+                    of: targetBakeDateTime
+                ) ?? newValue
+            }
+        )
+    }
+
     private func save() {
-        guard let formula = selectedFormula else { return }
+        guard let selectedFormulaChoice else { return }
         let resolvedName = name.trimmingCharacters(in: .whitespacesAndNewlines)
-        
-        // Determine if it's a template (not in SwiftData)
-        let isTemplate = RecipeTemplates.all.contains(where: { $0.id == formula.id })
+
+        let formula = selectedFormulaChoice.makeTransientFormula()
 
         let bake = BakeScheduler.generateBake(
             name: resolvedName,
@@ -180,9 +254,8 @@ struct BakeCreationView: View {
             starter: selectedStarter,
             notes: notes
         )
-        
-        if isTemplate {
-            // Decouple from formula so it's not saved to the user's recipe list
+
+        if selectedFormulaChoice.isSystem {
             bake.formula = nil
         }
 
@@ -196,5 +269,173 @@ struct BakeCreationView: View {
         
         dismiss()
         router.openBake(bake.id)
+    }
+}
+
+private extension BakeCreationView {
+    enum FormulaChoice {
+        case user(RecipeFormula)
+        case system(SystemFormula)
+
+        var id: UUID {
+            switch self {
+            case let .user(formula):
+                formula.id
+            case let .system(formula):
+                formula.id
+            }
+        }
+
+        var name: String {
+            switch self {
+            case let .user(formula):
+                formula.name
+            case let .system(formula):
+                formula.name
+            }
+        }
+
+        var type: RecipeCategory {
+            switch self {
+            case let .user(formula):
+                formula.type
+            case let .system(formula):
+                formula.type
+            }
+        }
+
+        var hydrationPercent: Double {
+            switch self {
+            case let .user(formula):
+                formula.hydrationPercent
+            case let .system(formula):
+                formula.hydrationPercent
+            }
+        }
+
+        var yeastType: YeastType {
+            switch self {
+            case let .user(formula):
+                formula.yeastType
+            case let .system(formula):
+                formula.yeastType
+            }
+        }
+
+        var inoculationPercent: Double {
+            switch self {
+            case let .user(formula):
+                formula.inoculationPercent
+            case let .system(formula):
+                formula.inoculationPercent
+            }
+        }
+
+        var isSystem: Bool {
+            if case .system = self {
+                return true
+            }
+            return false
+        }
+
+        func makeTransientFormula() -> RecipeFormula {
+            switch self {
+            case let .user(formula):
+                formula
+            case let .system(formula):
+                formula.makeTransientFormula()
+            }
+        }
+    }
+}
+
+private extension BakeCreationView {
+    static let targetDateFormatter: DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.locale = Locale(identifier: "it_IT")
+        formatter.dateFormat = "EEE d MMM yyyy"
+        return formatter
+    }()
+}
+
+private struct BakeSelectionChip: View {
+    let title: String
+    let systemImage: String?
+
+    var body: some View {
+        HStack(spacing: 8) {
+            if let systemImage {
+                Image(systemName: systemImage)
+                    .font(.caption.weight(.semibold))
+            }
+            Text(title)
+                .lineLimit(1)
+        }
+        .font(.subheadline.weight(.semibold))
+        .foregroundStyle(Theme.Control.secondaryForeground)
+        .padding(.horizontal, 16)
+        .padding(.vertical, 10)
+        .background(Theme.Surface.card)
+        .clipShape(Capsule())
+        .overlay(
+            Capsule()
+                .stroke(Theme.Control.secondaryBorder, lineWidth: 1.5)
+        )
+    }
+}
+
+private struct BakeDatePickerSheet: View {
+    @Environment(\.dismiss) private var dismiss
+    @Binding var selection: Date
+
+    var body: some View {
+        NavigationStack {
+            VStack(spacing: 0) {
+                DatePicker("Data", selection: $selection, displayedComponents: .date)
+                    .datePickerStyle(.graphical)
+                    .labelsHidden()
+                    .padding()
+            }
+            .navigationTitle("Data sfornata")
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .cancellationAction) {
+                    Button("Chiudi") { dismiss() }
+                }
+                ToolbarItem(placement: .confirmationAction) {
+                    Button("Conferma") { dismiss() }
+                }
+            }
+        }
+        .presentationDetents([.medium, .large])
+        .presentationBackground(Theme.Surface.app)
+    }
+}
+
+private struct BakeTimePickerSheet: View {
+    @Environment(\.dismiss) private var dismiss
+    @Binding var selection: Date
+
+    var body: some View {
+        NavigationStack {
+            VStack(spacing: 0) {
+                DatePicker("Ora", selection: $selection, displayedComponents: .hourAndMinute)
+                    .datePickerStyle(.wheel)
+                    .labelsHidden()
+                    .frame(maxWidth: .infinity)
+            }
+            .navigationTitle("Ora sfornata")
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .cancellationAction) {
+                    Button("Chiudi") { dismiss() }
+                }
+                ToolbarItem(placement: .confirmationAction) {
+                    Button("Conferma") { dismiss() }
+                }
+            }
+        }
+        .presentationDetents([.fraction(0.38)])
+        .presentationBackground(Theme.Surface.app)
     }
 }

@@ -2,7 +2,7 @@
 
 ## Overview
 
-The roadmap moves from a native iPhone foundation into core baking logic, then adds formula authoring, bake execution, operational Today workflows, starter management, bundled knowledge, and final hardening for internal testing. After the v1 audit, the UAT-driven UX realignment, and MVP closure, the design-system v2 rollout exposed a final trust gap: system chrome and bake-detail terminal states must still obey the light-only semantic contract even when iOS itself is dark.
+The roadmap moves from a native iPhone foundation into core baking logic, then adds formula authoring, bake execution, operational Today workflows, starter management, bundled knowledge, and final hardening for internal testing. After the v1 audit, the UAT-driven UX realignment, MVP closure, and design-system regression cleanup, Phase 15 hardens memory durability: persisted user data must survive app updates, backup or restore must be explicit and versioned, and bundled system content must stay separate from user data and demo seed paths.
 
 ## Phases
 
@@ -20,6 +20,7 @@ The roadmap moves from a native iPhone foundation into core baking logic, then a
 - [x] **Phase 12: Userflow & UX Conformance** - Align app behavior, docs, and verification to the six operational flows defined in userflow v2.
 - [x] **Phase 13: MVP Closure** - Chiudere l'MVP con manual UAT su device reale, Home/Today operativa nei quattro stati, bake execution leggibile, notifiche robuste, starter flow veloce, naming/copy/empty states definitivi e sign-off finale.
 - [x] **Phase 14: Design System Regression Closure** - Forzare light mode nell'app, riallineare chrome e modali al design system, correggere il flow distruttivo di cancel/delete bake, e rendere cancellazione / ritardo / timeline visivamente affidabili dopo il refresh v2.0.
+- [ ] **Phase 15: Memory Durability & System Content Separation** - Proteggere i dati utente dagli update on-device, introdurre backup/restore JSON esplicito, e separare contenuti bundled di sistema da seed demo e user data.
 
 ## Phase Details
 
@@ -276,10 +277,29 @@ Plans:
 
 - [x] 14-01: Light-mode enforcement, destructive flow anchoring, and cancelled timeline trust pass
 
-## Progress: [██████████████] 100% (14 of 14 phases complete)
+### Phase 15: Memory Durability & System Content Separation
+
+**Goal**: Rendere i dati utente durabili tra build installate sopra dati reali, introdurre un backup/restore manuale e versionato, e separare in modo definitivo SwiftData utente, contenuti bundled di sistema e demo seed interno.
+**Depends on**: Phase 14
+**Requirements**: [MEM-01, MEM-02, MEM-03, MEM-04, MEM-05]
+**Success Criteria**:
+
+1. Un aggiornamento dell'app sopra una build esistente non resetta piu silenziosamente il database locale.
+2. L'utente puo esportare e ripristinare i propri dati tramite backup JSON validato e versionato.
+3. I template di sistema restano disponibili nel flow `Nuovo bake` anche con zero ricette salvate.
+4. Seed/demo data resta un percorso interno esplicito via launch options e non rappresenta piu il contenuto ufficiale dell'app.
+   **Plans**: 3 plans
+
+Plans:
+
+- [x] 15-01: Schema durability and safe container bootstrap
+- [x] 15-02: Backup and restore
+- [x] 15-03: Bundled system content separation
+
+## Progress: [██████████████░] 93% (14 of 15 phases complete)
 
 **Execution Order:**  
-Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6 → 7 → 8 → 9 → 10 → 11 → 12 → 13 → 14
+Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6 → 7 → 8 → 9 → 10 → 11 → 12 → 13 → 14 → 15
 
 | Phase                                          | Plans Complete | Status      | Completed  |
 | ---------------------------------------------- | -------------- | ----------- | ---------- |
@@ -297,3 +317,4 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6 → 7 → 8 →
 | 12. Userflow & UX Conformance                  | 3/3            | Complete    | 2026-03-12 |
 | 13. MVP Closure                                | 3/3            | Complete    | 2026-03-12 |
 | 14. Design System Regression Closure           | 1/1            | Complete    | 2026-03-14 |
+| 15. Memory Durability & System Content Separation | 3/3         | In Progress | —          |

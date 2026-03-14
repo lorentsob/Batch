@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 70;
+	objectVersion = 77;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -13,13 +13,16 @@
 		0436934CA2D28D6C64D10195 /* StarterDetailHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8CBB82511329EC43AD7BC640 /* StarterDetailHeaderView.swift */; };
 		043C0DCBBA47ECCC7A940446 /* Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 001EFEEED8D6E87FDA2F265B /* Theme.swift */; };
 		0A238FB1DBE8C1B9BC48AD7F /* Bake.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE05B4A75F3D5DED96A3B7B9 /* Bake.swift */; };
+		0AD978B4F088E30BC5FA053D /* bake.svg in Resources */ = {isa = PBXBuildFile; fileRef = 7A93F72E454DE1667B080E9C /* bake.svg */; };
 		0BECE3BC93C7B692F5828309 /* LifecycleUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9F3A968120BB53D31A648FB /* LifecycleUITests.swift */; };
 		0D244B36BB2D2FBD61B00E07 /* Date+Levain.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4FAA5A66043B616FE6D1EEB /* Date+Levain.swift */; };
+		117C421943BF09675D867489 /* SystemFormulaLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88067D9DEA0402EE4E48496A /* SystemFormulaLoader.swift */; };
 		19909D6C120DD64EDE45A9BA /* SectionCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EF66CC37AE507FB215CFF22 /* SectionCard.swift */; };
 		1B203CD85910F7A753EA7B7E /* knowledge.json in Resources */ = {isa = PBXBuildFile; fileRef = 40446C7081740B9B23D8ADD4 /* knowledge.json */; };
 		1F99F650F9715E660F28D7D1 /* DomainFixtures.swift in Sources */ = {isa = PBXBuildFile; fileRef = B103892E03A334196B1D10CE /* DomainFixtures.swift */; };
 		20066B89AB8228C6E5C18C67 /* BakeReminderPlannerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F702B38C52B89746F9D8DE1 /* BakeReminderPlannerTests.swift */; };
 		26045D68DC5B6B88BC79FA0D /* BakeStepDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E8199167A33F653C5C7BD8E /* BakeStepDetailView.swift */; };
+		2E2C9DBFC17FF0A91ED55588 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9527884010C3C4CC2BA7DF2D /* SettingsView.swift */; };
 		2E8E0532906BFE9F5F6245D7 /* AppRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1230562334B3FE09F3E01E83 /* AppRouter.swift */; };
 		328CEA6DCF4F2E21651079F3 /* ToastBannerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C25872A58F8373FE1A2CF530 /* ToastBannerView.swift */; };
 		38A739CCAF6D529859D57B4B /* Starter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EAE902CB2D317BA3DD3C564 /* Starter.swift */; };
@@ -44,6 +47,7 @@
 		746E199E505E72637497D225 /* BakeStepCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADB19A1BB4867DF590026CA3 /* BakeStepCardView.swift */; };
 		7D3DA6A05B6CB6132F859BC1 /* DesignPrimitives.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D09C0219515B0C58E80A791 /* DesignPrimitives.swift */; };
 		7DBF2B3CE6183DA9DFAC65AC /* RefreshLogView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 147E7D4B5D15D0D071744403 /* RefreshLogView.swift */; };
+		7EA1604B83C128AC2B7AB1C5 /* LevainSchema.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4A8FBB9610077DD981D867C /* LevainSchema.swift */; };
 		8040B7FDC41AEF93B266D79C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E9C70A97FB07D332B0B66E73 /* Assets.xcassets */; };
 		81D3ED37D019F6565F3BF8B9 /* RootTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5A5E14312B26145E7F011F7 /* RootTabView.swift */; };
 		8730BA6C0B1CDD586E6C36BB /* TodayAgendaBuilderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 471E4662846877A1B4A475C6 /* TodayAgendaBuilderTests.swift */; };
@@ -55,34 +59,41 @@
 		A44ED48046434A743314F4CB /* FormulaEditorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB921C835C1B081B6409CF92 /* FormulaEditorView.swift */; };
 		A6B6C10E319F7201014A093A /* SeedDataLoaderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6983B1F948DFA6BE209403E8 /* SeedDataLoaderTests.swift */; };
 		A72AB65E92A8FBAD29E07734 /* TodayFlowUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DAE057C970FA6A827C1AC37 /* TodayFlowUITests.swift */; };
+		A9950169D4FF9217C2B29CD8 /* SystemFormula.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82808E94CC2A7217CDAAFE45 /* SystemFormula.swift */; };
 		AC4C1CBFA44C0269CD84573D /* EmptyStateView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB0CD69CAD160F8964E04E38 /* EmptyStateView.swift */; };
 		AFE15E3C2C2B00406C25D6D8 /* ModelContainerFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = BCF69DF1AB4A6F4ADD87ECC4 /* ModelContainerFactory.swift */; };
 		B5E9CD6022D24A67C2CD7C74 /* StarterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DDDA7E52937AA625C6BE4336 /* StarterTests.swift */; };
 		B8315A2AC7FED3BC8B133FD4 /* StarterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A607B35031F3C9AC5098E415 /* StarterView.swift */; };
 		B855098278619B8C04F933DC /* NotificationRouteUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFF203DD5A6EA2502E937535 /* NotificationRouteUITests.swift */; };
 		BA77CD1E23F1F5BFECFCE9F3 /* StateBadgeToneTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7762E15F65697D717FBB038F /* StateBadgeToneTests.swift */; };
+		BAED026D7F966950C128061C /* BackupServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 513ECE7BBD0FCB5758573E34 /* BackupServiceTests.swift */; };
 		BB34A0D65EE95C89A7C10392 /* BakeDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC7E0BB47C494872009B35F0 /* BakeDetailView.swift */; };
+		BCF0E6F3ED93790D58CFE4FD /* ActivityView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12ACF366375F43B564C1D0C8 /* ActivityView.swift */; };
 		BFE0C3D56CAC5551D58E4F4D /* NotificationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31CB45B80CFC5B3AB74316A6 /* NotificationService.swift */; };
 		C04546EB78A1C4246F029AA8 /* KnowledgeLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9069286C22B79776F290E460 /* KnowledgeLoader.swift */; };
 		C2649F9ACF555DAF1A53C1C4 /* TodayStarterReminderRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0F73F2107220BBBBD20F36DA /* TodayStarterReminderRow.swift */; };
 		C4F8B17586A6584A2537F356 /* BakeScheduler.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3719CAB830F30160F021B55 /* BakeScheduler.swift */; };
 		C5F7D28B986CFB8C2F4C70E2 /* TodayAgendaBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 306A250346AF197F29E21C03 /* TodayAgendaBuilder.swift */; };
+		C8B637AD08CBBF23DF0ABD9B /* system_formulas.json in Resources */ = {isa = PBXBuildFile; fileRef = D88945036E9817121C4963FC /* system_formulas.json */; };
 		CFCF408602B7737A42EE82C9 /* TodayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D4D579B87EF9D7EB8FF64CD /* TodayView.swift */; };
 		D2504F28AB2BB7BFAB285C13 /* StarterDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33ED4DE51ECCE105E6EDF74F /* StarterDetailView.swift */; };
 		D648CB0DAD33F1C6464B25B5 /* BakeStep.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B0E89FD9A23FCBB2C7F67DA /* BakeStep.swift */; };
 		D7BBC6CAA904668226675EA3 /* FormulaDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D8920D2E3E25C9214B58AF7 /* FormulaDetailView.swift */; };
 		D9467BF48A4DC17C258CC2CF /* StarterEditorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5261819BB2151A4B0A46054A /* StarterEditorView.swift */; };
 		DCCEBF31D5C991DFA2894BA6 /* AppSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEAB2C1827C62E47C070528C /* AppSettings.swift */; };
+		E1B4B8B57517B854F49572E0 /* BackupService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E01C62CC5536C52C2331B21 /* BackupService.swift */; };
 		E51AA3D045B8F6386DBEE0FE /* StarterReminderPlannerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 529741780FA026FA8C458250 /* StarterReminderPlannerTests.swift */; };
 		E60D19B33CA5F87D9D711D49 /* FormulaStepTemplate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 240767BF4294389BF07F152B /* FormulaStepTemplate.swift */; };
+		E7D48580DF3D624D72BC1E87 /* ModelTestSupport.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA9879766E0514881FB1C3B5 /* ModelTestSupport.swift */; };
 		E8FA6864F27D43ED3B365B93 /* BakeCreationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EFFD3965E1ACFBC8C1DDABAA /* BakeCreationView.swift */; };
-		E97330E879BEE9169BA9E5CD /* RecipeTemplates.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1F880ED6926551889AA8A10 /* RecipeTemplates.swift */; };
 		E97AB14C622B8A60CD53659F /* StateBadge.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E9AA4021F43AE9655D8F68C /* StateBadge.swift */; };
 		E9B83EA939A647F16F9F6B31 /* KnowledgeLibraryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8DF65CB9BD3C97DD93D1E5B /* KnowledgeLibraryTests.swift */; };
 		EFEB9DD53AB12E97E532518B /* StarterReminderPlanner.swift in Sources */ = {isa = PBXBuildFile; fileRef = 224FD5268CD696ECAA07AD82 /* StarterReminderPlanner.swift */; };
 		F0344AC31906020B1B9D79ED /* RecipeFormula.swift in Sources */ = {isa = PBXBuildFile; fileRef = B18A695300F304A000928E5A /* RecipeFormula.swift */; };
 		F1BC557DDA862B108D1A9109 /* ShiftTimelineView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDA0457086F14FDAC1DC627A /* ShiftTimelineView.swift */; };
 		F4F46A97B9F0EE28E5B4E275 /* KnowledgeFlowUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F2C6374ED12D33A5878CF5F3 /* KnowledgeFlowUITests.swift */; };
+		F61E1B0737AD9DD1C7957726 /* starter.svg in Resources */ = {isa = PBXBuildFile; fileRef = 0829A06D388058C26EB78A33 /* starter.svg */; };
+		FF3F83DEF6AF4836D8A29A5D /* SystemFormulaLoaderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2974CC1E6E482DB4EAF2E6FE /* SystemFormulaLoaderTests.swift */; };
 		FFA273A8F2496E91BA328B92 /* FormulaListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A999EF4FA9FC0323D7F206C2 /* FormulaListView.swift */; };
 /* End PBXBuildFile section */
 
@@ -110,14 +121,17 @@
 		031DE41E33A5A47BB92E1B84 /* LevainApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LevainApp.swift; sourceTree = "<group>"; };
 		0488D5D97917ED1EDCE7A49E /* KnowledgeRowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KnowledgeRowView.swift; sourceTree = "<group>"; };
 		05BB2A8E3BCF16B390C67996 /* FlourSelectionEditorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlourSelectionEditorView.swift; sourceTree = "<group>"; };
+		0829A06D388058C26EB78A33 /* starter.svg */ = {isa = PBXFileReference; path = starter.svg; sourceTree = "<group>"; };
 		0EF66CC37AE507FB215CFF22 /* SectionCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SectionCard.swift; sourceTree = "<group>"; };
 		0F73F2107220BBBBD20F36DA /* TodayStarterReminderRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodayStarterReminderRow.swift; sourceTree = "<group>"; };
 		1230562334B3FE09F3E01E83 /* AppRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppRouter.swift; sourceTree = "<group>"; };
+		12ACF366375F43B564C1D0C8 /* ActivityView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityView.swift; sourceTree = "<group>"; };
 		147E7D4B5D15D0D071744403 /* RefreshLogView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RefreshLogView.swift; sourceTree = "<group>"; };
 		176CFAD7509B1D39B858F3FD /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		1EE5E85F03317D648D13FDAA /* BakesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BakesView.swift; sourceTree = "<group>"; };
 		224FD5268CD696ECAA07AD82 /* StarterReminderPlanner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StarterReminderPlanner.swift; sourceTree = "<group>"; };
 		240767BF4294389BF07F152B /* FormulaStepTemplate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FormulaStepTemplate.swift; sourceTree = "<group>"; };
+		2974CC1E6E482DB4EAF2E6FE /* SystemFormulaLoaderTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SystemFormulaLoaderTests.swift; sourceTree = "<group>"; };
 		2AC91F1BE2D66E6CA2B2D162 /* RefreshHistoryRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RefreshHistoryRow.swift; sourceTree = "<group>"; };
 		2EFA2DE8D87323F11D4B16F3 /* LevainTests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = LevainTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		2F702B38C52B89746F9D8DE1 /* BakeReminderPlannerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BakeReminderPlannerTests.swift; sourceTree = "<group>"; };
@@ -135,6 +149,7 @@
 		4D09C0219515B0C58E80A791 /* DesignPrimitives.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DesignPrimitives.swift; sourceTree = "<group>"; };
 		4D4D579B87EF9D7EB8FF64CD /* TodayView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodayView.swift; sourceTree = "<group>"; };
 		4EAE902CB2D317BA3DD3C564 /* Starter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Starter.swift; sourceTree = "<group>"; };
+		513ECE7BBD0FCB5758573E34 /* BackupServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackupServiceTests.swift; sourceTree = "<group>"; };
 		5261819BB2151A4B0A46054A /* StarterEditorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StarterEditorView.swift; sourceTree = "<group>"; };
 		529741780FA026FA8C458250 /* StarterReminderPlannerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StarterReminderPlannerTests.swift; sourceTree = "<group>"; };
 		5D8920D2E3E25C9214B58AF7 /* FormulaDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FormulaDetailView.swift; sourceTree = "<group>"; };
@@ -145,16 +160,21 @@
 		67516C2C986793F18606EC30 /* KnowledgeCategoryPillView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KnowledgeCategoryPillView.swift; sourceTree = "<group>"; };
 		6983B1F948DFA6BE209403E8 /* SeedDataLoaderTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SeedDataLoaderTests.swift; sourceTree = "<group>"; };
 		6DAE057C970FA6A827C1AC37 /* TodayFlowUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodayFlowUITests.swift; sourceTree = "<group>"; };
+		6E01C62CC5536C52C2331B21 /* BackupService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackupService.swift; sourceTree = "<group>"; };
 		74E8B96E2C8D2CE83E5D72CD /* BakesFlowUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BakesFlowUITests.swift; sourceTree = "<group>"; };
 		75D5700D7ACF9659E555318D /* StarterCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StarterCardView.swift; sourceTree = "<group>"; };
 		7762E15F65697D717FBB038F /* StateBadgeToneTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StateBadgeToneTests.swift; sourceTree = "<group>"; };
 		79D4C487A002E34766EBC3F2 /* AppEnvironment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppEnvironment.swift; sourceTree = "<group>"; };
+		7A93F72E454DE1667B080E9C /* bake.svg */ = {isa = PBXFileReference; path = bake.svg; sourceTree = "<group>"; };
 		7BD7C03D5139BD3131B782AE /* AppRouterTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppRouterTests.swift; sourceTree = "<group>"; };
+		82808E94CC2A7217CDAAFE45 /* SystemFormula.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SystemFormula.swift; sourceTree = "<group>"; };
+		88067D9DEA0402EE4E48496A /* SystemFormulaLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SystemFormulaLoader.swift; sourceTree = "<group>"; };
 		8B39BE3A6D9E872507ECAB51 /* BakeSchedulerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BakeSchedulerTests.swift; sourceTree = "<group>"; };
 		8CBB82511329EC43AD7BC640 /* StarterDetailHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StarterDetailHeaderView.swift; sourceTree = "<group>"; };
 		8E9AA4021F43AE9655D8F68C /* StateBadge.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StateBadge.swift; sourceTree = "<group>"; };
 		9069286C22B79776F290E460 /* KnowledgeLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KnowledgeLoader.swift; sourceTree = "<group>"; };
-		9B4004713422E6E47C0B76CD /* Levain.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Levain.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		9527884010C3C4CC2BA7DF2D /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		9B4004713422E6E47C0B76CD /* Levain.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = Levain.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		A061F753EFB622786D154A83 /* KnowledgeItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KnowledgeItem.swift; sourceTree = "<group>"; };
 		A327533FEB9FDE64DDA58C58 /* AppLaunchOptions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppLaunchOptions.swift; sourceTree = "<group>"; };
 		A4FAA5A66043B616FE6D1EEB /* Date+Levain.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Date+Levain.swift"; sourceTree = "<group>"; };
@@ -164,7 +184,7 @@
 		ADB19A1BB4867DF590026CA3 /* BakeStepCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BakeStepCardView.swift; sourceTree = "<group>"; };
 		B103892E03A334196B1D10CE /* DomainFixtures.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DomainFixtures.swift; sourceTree = "<group>"; };
 		B18A695300F304A000928E5A /* RecipeFormula.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecipeFormula.swift; sourceTree = "<group>"; };
-		B1F880ED6926551889AA8A10 /* RecipeTemplates.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecipeTemplates.swift; sourceTree = "<group>"; };
+		B4A8FBB9610077DD981D867C /* LevainSchema.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LevainSchema.swift; sourceTree = "<group>"; };
 		BCF69DF1AB4A6F4ADD87ECC4 /* ModelContainerFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelContainerFactory.swift; sourceTree = "<group>"; };
 		C25872A58F8373FE1A2CF530 /* ToastBannerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToastBannerView.swift; sourceTree = "<group>"; };
 		C3719CAB830F30160F021B55 /* BakeScheduler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BakeScheduler.swift; sourceTree = "<group>"; };
@@ -172,6 +192,7 @@
 		CEAB2C1827C62E47C070528C /* AppSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppSettings.swift; sourceTree = "<group>"; };
 		CF8C7A1E97DF7299C6E9B7A6 /* FormulaStepEditorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FormulaStepEditorView.swift; sourceTree = "<group>"; };
 		CFF203DD5A6EA2502E937535 /* NotificationRouteUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationRouteUITests.swift; sourceTree = "<group>"; };
+		D88945036E9817121C4963FC /* system_formulas.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = system_formulas.json; sourceTree = "<group>"; };
 		D9ECE5A0429356DA9B30ED63 /* SeedDataLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SeedDataLoader.swift; sourceTree = "<group>"; };
 		DB0CD69CAD160F8964E04E38 /* EmptyStateView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmptyStateView.swift; sourceTree = "<group>"; };
 		DB921C835C1B081B6409CF92 /* FormulaEditorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FormulaEditorView.swift; sourceTree = "<group>"; };
@@ -180,6 +201,7 @@
 		DF01B80A376C5C973BD17F65 /* TipGroupView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TipGroupView.swift; sourceTree = "<group>"; };
 		E9C70A97FB07D332B0B66E73 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		E9F3A968120BB53D31A648FB /* LifecycleUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LifecycleUITests.swift; sourceTree = "<group>"; };
+		EA9879766E0514881FB1C3B5 /* ModelTestSupport.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelTestSupport.swift; sourceTree = "<group>"; };
 		EE05B4A75F3D5DED96A3B7B9 /* Bake.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Bake.swift; sourceTree = "<group>"; };
 		EFFD3965E1ACFBC8C1DDABAA /* BakeCreationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BakeCreationView.swift; sourceTree = "<group>"; };
 		F2C6374ED12D33A5878CF5F3 /* KnowledgeFlowUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KnowledgeFlowUITests.swift; sourceTree = "<group>"; };
@@ -187,14 +209,20 @@
 		FC7E0BB47C494872009B35F0 /* BakeDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BakeDetailView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
-/* Begin PBXFileSystemSynchronizedRootGroup section */
-		8EBA90AA2F62F67800E941BE /* icons */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = icons; sourceTree = "<group>"; };
-/* End PBXFileSystemSynchronizedRootGroup section */
-
 /* Begin PBXGroup section */
+		04D9CF82215CD2526BEE6ABB /* icons */ = {
+			isa = PBXGroup;
+			children = (
+				7A93F72E454DE1667B080E9C /* bake.svg */,
+				0829A06D388058C26EB78A33 /* starter.svg */,
+			);
+			path = icons;
+			sourceTree = "<group>";
+		};
 		0592DE9A150160B3DCD0215D /* Persistence */ = {
 			isa = PBXGroup;
 			children = (
+				B4A8FBB9610077DD981D867C /* LevainSchema.swift */,
 				BCF69DF1AB4A6F4ADD87ECC4 /* ModelContainerFactory.swift */,
 				D9ECE5A0429356DA9B30ED63 /* SeedDataLoader.swift */,
 			);
@@ -217,6 +245,7 @@
 			children = (
 				2AC91F1BE2D66E6CA2B2D162 /* RefreshHistoryRow.swift */,
 				147E7D4B5D15D0D071744403 /* RefreshLogView.swift */,
+				9527884010C3C4CC2BA7DF2D /* SettingsView.swift */,
 				75D5700D7ACF9659E555318D /* StarterCardView.swift */,
 				8CBB82511329EC43AD7BC640 /* StarterDetailHeaderView.swift */,
 				33ED4DE51ECCE105E6EDF74F /* StarterDetailView.swift */,
@@ -262,12 +291,14 @@
 		365C754AB8819569DF2EFE1C /* Services */ = {
 			isa = PBXGroup;
 			children = (
+				6E01C62CC5536C52C2331B21 /* BackupService.swift */,
 				2F8DFC3E0B70BF05BE48DA6B /* BakeReminderPlanner.swift */,
 				C3719CAB830F30160F021B55 /* BakeScheduler.swift */,
 				3723F2A4189A29D9018AD0A5 /* DateFormattingService.swift */,
 				9069286C22B79776F290E460 /* KnowledgeLoader.swift */,
 				31CB45B80CFC5B3AB74316A6 /* NotificationService.swift */,
 				224FD5268CD696ECAA07AD82 /* StarterReminderPlanner.swift */,
+				88067D9DEA0402EE4E48496A /* SystemFormulaLoader.swift */,
 				306A250346AF197F29E21C03 /* TodayAgendaBuilder.swift */,
 			);
 			path = Services;
@@ -276,12 +307,12 @@
 		37667EEB5A3CDB90E3A6FFE9 /* Levain */ = {
 			isa = PBXGroup;
 			children = (
-				8EBA90AA2F62F67800E941BE /* icons */,
 				E9C70A97FB07D332B0B66E73 /* Assets.xcassets */,
 				176CFAD7509B1D39B858F3FD /* Info.plist */,
 				0B9250CBB1117EA21A609C90 /* App */,
 				A99DAF22A7E8AE1E5F63D967 /* DesignSystem */,
 				35BE0B3A583C21B9E460935E /* Features */,
+				04D9CF82215CD2526BEE6ABB /* icons */,
 				96C0161A7B4E177B9FB6A5CB /* Models */,
 				0592DE9A150160B3DCD0215D /* Persistence */,
 				94A1FE6DB1AB7DCCECF2EA08 /* Resources */,
@@ -294,6 +325,7 @@
 			isa = PBXGroup;
 			children = (
 				B103892E03A334196B1D10CE /* DomainFixtures.swift */,
+				EA9879766E0514881FB1C3B5 /* ModelTestSupport.swift */,
 			);
 			path = TestSupport;
 			sourceTree = "<group>";
@@ -330,6 +362,7 @@
 			isa = PBXGroup;
 			children = (
 				40446C7081740B9B23D8ADD4 /* knowledge.json */,
+				D88945036E9817121C4963FC /* system_formulas.json */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -344,9 +377,9 @@
 				240767BF4294389BF07F152B /* FormulaStepTemplate.swift */,
 				A061F753EFB622786D154A83 /* KnowledgeItem.swift */,
 				B18A695300F304A000928E5A /* RecipeFormula.swift */,
-				B1F880ED6926551889AA8A10 /* RecipeTemplates.swift */,
 				4EAE902CB2D317BA3DD3C564 /* Starter.swift */,
 				429113B9EA88560877F6998C /* StarterRefresh.swift */,
+				82808E94CC2A7217CDAAFE45 /* SystemFormula.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -362,6 +395,7 @@
 		A9580A03A39170BE0C418FE3 /* Shared */ = {
 			isa = PBXGroup;
 			children = (
+				12ACF366375F43B564C1D0C8 /* ActivityView.swift */,
 				05BB2A8E3BCF16B390C67996 /* FlourSelectionEditorView.swift */,
 				F5A5E14312B26145E7F011F7 /* RootTabView.swift */,
 				DF01B80A376C5C973BD17F65 /* TipGroupView.swift */,
@@ -394,6 +428,7 @@
 			isa = PBXGroup;
 			children = (
 				7BD7C03D5139BD3131B782AE /* AppRouterTests.swift */,
+				513ECE7BBD0FCB5758573E34 /* BackupServiceTests.swift */,
 				2F702B38C52B89746F9D8DE1 /* BakeReminderPlannerTests.swift */,
 				8B39BE3A6D9E872507ECAB51 /* BakeSchedulerTests.swift */,
 				A8DF65CB9BD3C97DD93D1E5B /* KnowledgeLibraryTests.swift */,
@@ -403,6 +438,7 @@
 				529741780FA026FA8C458250 /* StarterReminderPlannerTests.swift */,
 				DDDA7E52937AA625C6BE4336 /* StarterTests.swift */,
 				7762E15F65697D717FBB038F /* StateBadgeToneTests.swift */,
+				2974CC1E6E482DB4EAF2E6FE /* SystemFormulaLoaderTests.swift */,
 				471E4662846877A1B4A475C6 /* TodayAgendaBuilderTests.swift */,
 				5727B15E6E72B2B734EFFEFF /* TestSupport */,
 			);
@@ -482,9 +518,6 @@
 			);
 			dependencies = (
 			);
-			fileSystemSynchronizedGroups = (
-				8EBA90AA2F62F67800E941BE /* icons */,
-			);
 			name = Levain;
 			packageProductDependencies = (
 			);
@@ -509,6 +542,7 @@
 						TestTargetID = 8E84F0B210E0A11CDE4A5962;
 					};
 					8E84F0B210E0A11CDE4A5962 = {
+						DevelopmentTeam = "";
 						ProvisioningStyle = Automatic;
 					};
 				};
@@ -523,6 +557,7 @@
 			);
 			mainGroup = D9040A503A128437022B7221;
 			minimizedProjectReferenceProxies = 1;
+			preferredProjectObjectVersion = 77;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
@@ -539,7 +574,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				8040B7FDC41AEF93B266D79C /* Assets.xcassets in Resources */,
+				0AD978B4F088E30BC5FA053D /* bake.svg in Resources */,
 				1B203CD85910F7A753EA7B7E /* knowledge.json in Resources */,
+				F61E1B0737AD9DD1C7957726 /* starter.svg in Resources */,
+				C8B637AD08CBBF23DF0ABD9B /* system_formulas.json in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -564,16 +602,19 @@
 			buildActionMask = 2147483647;
 			files = (
 				00C08B1A12FB441F31D89271 /* AppRouterTests.swift in Sources */,
+				BAED026D7F966950C128061C /* BackupServiceTests.swift in Sources */,
 				20066B89AB8228C6E5C18C67 /* BakeReminderPlannerTests.swift in Sources */,
 				47704AD0CE398C15C49B22E5 /* BakeSchedulerTests.swift in Sources */,
 				1F99F650F9715E660F28D7D1 /* DomainFixtures.swift in Sources */,
 				E9B83EA939A647F16F9F6B31 /* KnowledgeLibraryTests.swift in Sources */,
 				6C983EBFAB2F79F6A2DECD69 /* KnowledgeLoaderTests.swift in Sources */,
+				E7D48580DF3D624D72BC1E87 /* ModelTestSupport.swift in Sources */,
 				4B0D6B3EC6DE9A8516EE27BF /* RecipeFormulaTests.swift in Sources */,
 				A6B6C10E319F7201014A093A /* SeedDataLoaderTests.swift in Sources */,
 				E51AA3D045B8F6386DBEE0FE /* StarterReminderPlannerTests.swift in Sources */,
 				B5E9CD6022D24A67C2CD7C74 /* StarterTests.swift in Sources */,
 				BA77CD1E23F1F5BFECFCE9F3 /* StateBadgeToneTests.swift in Sources */,
+				FF3F83DEF6AF4836D8A29A5D /* SystemFormulaLoaderTests.swift in Sources */,
 				8730BA6C0B1CDD586E6C36BB /* TodayAgendaBuilderTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -582,10 +623,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				BCF0E6F3ED93790D58CFE4FD /* ActivityView.swift in Sources */,
 				5EB74EA9B640052A5A1D8280 /* AppEnvironment.swift in Sources */,
 				8D52486D5B3CF8C5B1346BEA /* AppLaunchOptions.swift in Sources */,
 				2E8E0532906BFE9F5F6245D7 /* AppRouter.swift in Sources */,
 				DCCEBF31D5C991DFA2894BA6 /* AppSettings.swift in Sources */,
+				E1B4B8B57517B854F49572E0 /* BackupService.swift in Sources */,
 				0A238FB1DBE8C1B9BC48AD7F /* Bake.swift in Sources */,
 				E8FA6864F27D43ED3B365B93 /* BakeCreationView.swift in Sources */,
 				BB34A0D65EE95C89A7C10392 /* BakeDetailView.swift in Sources */,
@@ -613,15 +656,16 @@
 				A27CFCEF5C9066A462AF7CCD /* KnowledgeRowView.swift in Sources */,
 				9D9CDC426195372EFA36C5EA /* KnowledgeView.swift in Sources */,
 				46883F4ACF02D8FF8668B408 /* LevainApp.swift in Sources */,
+				7EA1604B83C128AC2B7AB1C5 /* LevainSchema.swift in Sources */,
 				AFE15E3C2C2B00406C25D6D8 /* ModelContainerFactory.swift in Sources */,
 				BFE0C3D56CAC5551D58E4F4D /* NotificationService.swift in Sources */,
 				F0344AC31906020B1B9D79ED /* RecipeFormula.swift in Sources */,
-				E97330E879BEE9169BA9E5CD /* RecipeTemplates.swift in Sources */,
 				5C2C5777C7AA7BA726A24B60 /* RefreshHistoryRow.swift in Sources */,
 				7DBF2B3CE6183DA9DFAC65AC /* RefreshLogView.swift in Sources */,
 				81D3ED37D019F6565F3BF8B9 /* RootTabView.swift in Sources */,
 				19909D6C120DD64EDE45A9BA /* SectionCard.swift in Sources */,
 				3A81CC4B558FB4DBF018955F /* SeedDataLoader.swift in Sources */,
+				2E2C9DBFC17FF0A91ED55588 /* SettingsView.swift in Sources */,
 				F1BC557DDA862B108D1A9109 /* ShiftTimelineView.swift in Sources */,
 				38A739CCAF6D529859D57B4B /* Starter.swift in Sources */,
 				0190AC4FAA6B07B051767923 /* StarterCardView.swift in Sources */,
@@ -632,6 +676,8 @@
 				EFEB9DD53AB12E97E532518B /* StarterReminderPlanner.swift in Sources */,
 				B8315A2AC7FED3BC8B133FD4 /* StarterView.swift in Sources */,
 				E97AB14C622B8A60CD53659F /* StateBadge.swift in Sources */,
+				A9950169D4FF9217C2B29CD8 /* SystemFormula.swift in Sources */,
+				117C421943BF09675D867489 /* SystemFormulaLoader.swift in Sources */,
 				043C0DCBBA47ECCC7A940446 /* Theme.swift in Sources */,
 				6B3C2EF47615A68D2BCBC14C /* TipGroupView.swift in Sources */,
 				328CEA6DCF4F2E21651079F3 /* ToastBannerView.swift in Sources */,
@@ -665,7 +711,6 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = C974BPN56D;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Levain/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = Levain;
@@ -888,7 +933,6 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = C974BPN56D;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Levain/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = Levain;

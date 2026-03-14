@@ -86,9 +86,9 @@ enum FlourCategory: String, CaseIterable, Codable, Identifiable {
 
     var title: String {
         switch self {
-        case .strong: "Forza (Manitoba, W300+)"
-        case .medium: "Media (00, 0, W200+)"
-        case .weak: "Debole (W170-)"
+        case .strong: "Manitoba"
+        case .medium: "00/0"
+        case .weak: "Debole"
         case .whole: "Integrale"
         case .rye: "Segale"
         case .semolina: "Semola"
@@ -100,14 +100,14 @@ enum FlourCategory: String, CaseIterable, Codable, Identifiable {
     /// Nome compatto senza specifica W — usato nei chip di dettaglio e nelle card
     var shortTitle: String {
         switch self {
-        case .strong:   "Forza (Manitoba)"
-        case .medium:   "Media (00/0)"
-        case .weak:     "Debole"
-        case .whole:    "Integrale"
-        case .rye:      "Segale"
-        case .semolina: "Semola"
-        case .special:  "Multicereale"
-        case .custom:   "Altro"
+        case .strong:    "Manitoba"
+        case .medium:    "Bianca"
+        case .weak:      "Debole"
+        case .whole:     "Integrale"
+        case .rye:       "Segale"
+        case .semolina:  "Semola"
+        case .special:   "Multicereale"
+        case .custom:    "Altra"
         }
     }
 }

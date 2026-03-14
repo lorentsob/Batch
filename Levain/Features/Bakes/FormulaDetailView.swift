@@ -118,7 +118,9 @@ struct FormulaDetailView: View {
             }
         }
         .sheet(isPresented: $showingBakeEditor) {
-            BakeCreationView(preselectedFormula: formula)
+            NavigationStack {
+                BakeCreationView(preselectedFormula: formula)
+            }
         }
     }
 }

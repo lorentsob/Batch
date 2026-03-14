@@ -110,6 +110,14 @@
 - [x] **REALIGN-17**: Cancelling a bake makes the detail experience visibly terminal: archived future steps, no active contextual guidance, and notification cleanup.
 - [x] **REALIGN-18**: Timeline rails and danger chips stay visually legible after the design-system refresh, including centered dots and bordered red states.
 
+## Phase 15 Memory Durability Requirements
+
+- [x] **MEM-01**: SwiftData uses an explicit `VersionedSchema` plus `SchemaMigrationPlan` as the source of truth for persisted models.
+- [x] **MEM-02**: Persistent bootstrap never auto-deletes the local store as a recovery path when container creation fails.
+- [x] **MEM-03**: User can export and import versioned JSON backups for starters, refresh logs, saved recipes, bakes, and bake steps.
+- [x] **MEM-04**: Knowledge and system formulas are bundled content, clearly separated from demo seed data and user-created SwiftData records.
+- [x] **MEM-05**: System templates remain available in the `Nuovo bake` flow even when the user has zero saved recipes.
+
 ## v2 Requirements
 
 ### Backlog
@@ -117,7 +125,7 @@
 - **BACKLOG-01**: Import or export formulas and bake history
 - **BACKLOG-02**: Localization beyond Italian-first MVP
 - **BACKLOG-03**: Rich bake journaling, media, and result evaluation
-- **BACKLOG-04**: Cross-device sync or backup
+- **BACKLOG-04**: Cross-device sync via CloudKit or equivalent
 
 ## Out of Scope
 
@@ -192,14 +200,19 @@
 | REALIGN-16 | Phase 14 | Complete (manual visual UAT pending) |
 | REALIGN-17 | Phase 14 | Complete (manual visual UAT pending) |
 | REALIGN-18 | Phase 14 | Complete (manual visual UAT pending) |
+| MEM-01 | Phase 15 | Complete (device upgrade verification pending) |
+| MEM-02 | Phase 15 | Complete (device upgrade verification pending) |
+| MEM-03 | Phase 15 | Complete (manual backup round-trip pending) |
+| MEM-04 | Phase 15 | Complete (manual fresh-launch verification pending) |
+| MEM-05 | Phase 15 | Complete (manual fresh-launch verification pending) |
 
 **Coverage:**
 
-- v1 + realignment + userflow requirements: 59 total
-- Mapped to phases: 59
+- v1 + realignment + userflow + memory requirements: 64 total
+- Mapped to phases: 64
 - Unmapped: 0
 
 ---
 
 _Requirements defined: 2026-03-10_  
-_Last updated: 2026-03-14 after adding Phase 13/14 trust and design-system regression requirements_
+_Last updated: 2026-03-14 after adding Phase 15 memory durability requirements_
