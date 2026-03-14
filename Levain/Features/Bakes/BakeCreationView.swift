@@ -45,38 +45,6 @@ struct BakeCreationView: View {
                     }
                 }
 
-                VStack(alignment: .leading, spacing: 4) {
-                    Text("Template rapidi")
-                        .font(.footnote.weight(.semibold))
-                        .foregroundStyle(Theme.ink)
-                    Text("I template bundled restano sempre disponibili anche se non hai ancora salvato ricette personalizzate.")
-                        .font(.footnote)
-                        .foregroundStyle(Theme.muted)
-                }
-
-                if preselectedFormula == nil {
-                    ScrollView(.horizontal, showsIndicators: false) {
-                        HStack(spacing: 8) {
-                            ForEach(systemFormulas) { formula in
-                                Button {
-                                    selectedFormulaID = formula.id
-                                    if name.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
-                                        name = formula.name
-                                    }
-                                } label: {
-                                    BakeSelectionChip(
-                                        title: formula.name,
-                                        systemImage: selectedFormulaID == formula.id ? "checkmark" : nil
-                                    )
-                                }
-                                .buttonStyle(.plain)
-                            }
-                        }
-                        .padding(.vertical, 2)
-                    }
-                    .accessibilityIdentifier("BakeTemplateScroller")
-                }
-
                 if let formula = selectedFormulaChoice {
                     VStack(alignment: .leading, spacing: 4) {
                         Text("\(formula.type.title) · \(Int(formula.hydrationPercent.rounded()))% idratazione")
