@@ -9,6 +9,8 @@ struct StarterDetailView: View {
 
     @State private var showingEditor = false
     @State private var showingRefreshSheet = false
+    @State private var selectedRefresh: StarterRefresh?
+    @State private var showingAllRefreshes = false
 
     private var sortedRefreshes: [StarterRefresh] {
         starter.refreshes.sorted { $0.dateTime > $1.dateTime }
@@ -32,8 +34,30 @@ struct StarterDetailView: View {
                         Text("Ancora nessun log.")
                             .foregroundStyle(Theme.muted)
                     } else {
-                        ForEach(sortedRefreshes.prefix(6)) { refresh in
-                            RefreshHistoryRow(refresh: refresh)
+                        ForEach(sortedRefreshes.prefix(3)) { refresh in
+                            Button {
+                                selectedRefresh = refresh
+                            } label: {
+                                RefreshHistoryRow(refresh: refresh)
+                            }
+                            .buttonStyle(.plain)
+                        }
+
+                        if sortedRefreshes.count > 3 {
+                            Button {
+                                showingAllRefreshes = true
+                            } label: {
+                                HStack {
+                                    Text("Vedi tutti i rinfreschi")
+                                        .font(.subheadline.weight(.semibold))
+                                    Spacer()
+                                    StateBadge(text: "\(sortedRefreshes.count)", tone: .count)
+                                    Image(systemName: "chevron.right")
+                                        .font(.footnote.weight(.semibold))
+                                        .foregroundStyle(Theme.muted)
+                                }
+                            }
+                            .buttonStyle(.plain)
                         }
                     }
                 }
@@ -102,6 +126,55 @@ struct StarterDetailView: View {
         .sheet(isPresented: $showingRefreshSheet) {
             NavigationStack {
                 RefreshLogView(starter: starter)
+            }
+        }
+        .sheet(item: $selectedRefresh) { refresh in
+            NavigationStack {
+                RefreshDetailView(refresh: refresh)
+            }
+        }
+        .sheet(isPresented: $showingAllRefreshes) {
+            NavigationStack {
+                AllRefreshesView(starter: starter, onSelect: { refresh in
+                    showingAllRefreshes = false
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.4) {
+                        selectedRefresh = refresh
+                    }
+                })
+            }
+        }
+    }
+}
+
+struct AllRefreshesView: View {
+    @Environment(\.dismiss) private var dismiss
+    let starter: Starter
+    let onSelect: (StarterRefresh) -> Void
+
+    private var sortedRefreshes: [StarterRefresh] {
+        starter.refreshes.sorted { $0.dateTime > $1.dateTime }
+    }
+
+    var body: some View {
+        ScrollView {
+            VStack(spacing: 8) {
+                ForEach(sortedRefreshes) { refresh in
+                    Button {
+                        onSelect(refresh)
+                    } label: {
+                        RefreshHistoryRow(refresh: refresh)
+                    }
+                    .buttonStyle(.plain)
+                }
+            }
+            .padding(.horizontal, 20)
+            .padding(.vertical, 16)
+        }
+        .background(Theme.background.ignoresSafeArea())
+        .navigationTitle("Tutti i rinfreschi")
+        .toolbar {
+            ToolbarItem(placement: .cancellationAction) {
+                Button("Chiudi") { dismiss() }
             }
         }
     }

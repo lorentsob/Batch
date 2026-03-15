@@ -11,6 +11,7 @@ struct BakeCreationView: View {
     @Query(sort: \Starter.name) private var starters: [Starter]
 
     let preselectedFormula: RecipeFormula?
+    let shouldPreselectFirstAvailable: Bool
     private let systemFormulas: [SystemFormula]
 
     @State private var selectedFormulaID: UUID?
@@ -21,10 +22,23 @@ struct BakeCreationView: View {
     @State private var showingBakeDatePicker = false
     @State private var showingBakeTimePicker = false
 
-    init(preselectedFormula: RecipeFormula?) {
+    init(preselectedFormula: RecipeFormula?, shouldPreselectFirstAvailable: Bool = false) {
         self.preselectedFormula = preselectedFormula
+        self.shouldPreselectFirstAvailable = shouldPreselectFirstAvailable
         self.systemFormulas = SystemFormulaLoader.loadSystemFormulas()
-        _selectedFormulaID = State(initialValue: preselectedFormula?.id)
+
+        // If should preselect and no user formula provided, use first available (user or system)
+        let initialFormulaID: UUID?
+        if let preselectedFormula {
+            initialFormulaID = preselectedFormula.id
+        } else if shouldPreselectFirstAvailable {
+            // Will be set in onAppear once formulas query is populated
+            initialFormulaID = nil
+        } else {
+            initialFormulaID = nil
+        }
+
+        _selectedFormulaID = State(initialValue: initialFormulaID)
         _selectedStarterID = State(initialValue: nil)
         _name = State(initialValue: preselectedFormula?.name ?? "")
         _targetBakeDateTime = State(initialValue: .now.adding(minutes: 12 * 60))
@@ -122,6 +136,17 @@ struct BakeCreationView: View {
         }
         .sheet(isPresented: $showingBakeTimePicker) {
             BakeTimePickerSheet(selection: targetBakeTimeBinding)
+        }
+        .onAppear {
+            // Preselect first available formula if requested and nothing is selected
+            if shouldPreselectFirstAvailable, selectedFormulaID == nil {
+                if let firstFormula = allAvailableFormulas.first {
+                    selectedFormulaID = firstFormula.id
+                    if name.isEmpty {
+                        name = firstFormula.name
+                    }
+                }
+            }
         }
     }
 

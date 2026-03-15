@@ -2,6 +2,7 @@ import SwiftData
 import SwiftUI
 
 struct BakesView: View {
+    @Environment(\.modelContext) private var modelContext
     @EnvironmentObject private var router: AppRouter
 
     @Query(sort: \Bake.targetBakeDateTime, order: .forward) private var bakes: [Bake]
@@ -11,11 +12,20 @@ struct BakesView: View {
     @State private var editingFormula: RecipeFormula?
     @State private var showingBakeEditor = false
     @State private var preselectedFormula: RecipeFormula?
-    @State private var isRicetteExpanded = false
+    @State private var shouldPreselectFirstAvailable = false
+    @State private var isArchiveExpanded = false
 
     private let metricColumns = [
         GridItem(.adaptive(minimum: 118), spacing: 8)
     ]
+
+    private var activeBakes: [Bake] {
+        bakes.filter { $0.derivedStatus != .cancelled && $0.derivedStatus != .completed }
+    }
+
+    private var archivedBakes: [Bake] {
+        bakes.filter { $0.derivedStatus == .cancelled || $0.derivedStatus == .completed }
+    }
 
     var body: some View {
         ScrollView {
@@ -27,32 +37,33 @@ struct BakesView: View {
                     Text("I tuoi bake in corso e in programma.")
                         .foregroundStyle(Theme.muted)
                     HStack(spacing: 12) {
-                        if bakes.isEmpty == false {
-                            StateBadge(text: "\(bakes.count) bake", tone: .count)
+                        if activeBakes.isEmpty == false {
+                            StateBadge(text: "\(activeBakes.count) attivi", tone: .count)
                         }
                         if formulas.isEmpty == false {
-                            StateBadge(text: "\(formulas.count) ricette", tone: .info)
+                            StateBadge(text: "\(formulas.count) ricette", tone: .count)
                         }
                     }
                 }
 
                 VStack(alignment: .leading, spacing: 12) {
-                    Text("Bake")
+                    Text("Bake attivi")
                         .font(.headline)
                         .foregroundStyle(Theme.ink)
 
-                    if bakes.isEmpty {
+                    if activeBakes.isEmpty {
                         EmptyStateView(
-                            title: "Nessun bake ancora",
+                            title: "Nessun bake attivo",
                             message: "Scegli una ricetta, imposta l'orario di sfornatura e Levain costruisce la timeline per te.",
-                            actionTitle: "Crea il tuo primo bake"
+                            actionTitle: emptyStateActionTitle
                         ) {
                             preselectedFormula = formulas.first
+                            shouldPreselectFirstAvailable = formulas.isEmpty
                             showingBakeEditor = true
                         }
                         .accessibilityIdentifier("BakesEmptyState")
                     } else {
-                        ForEach(bakes) { bake in
+                        ForEach(activeBakes) { bake in
                             NavigationLink(value: BakesRoute.bake(bake.id)) {
                                 SectionCard {
                                     VStack(alignment: .leading, spacing: 12) {
@@ -94,6 +105,50 @@ struct BakesView: View {
                     }
                 }
 
+                if archivedBakes.isEmpty == false {
+                    VStack(alignment: .leading, spacing: 12) {
+                        Button {
+                            withAnimation(Theme.Animation.standard) {
+                                isArchiveExpanded.toggle()
+                            }
+                        } label: {
+                            HStack {
+                                Text("Archivio")
+                                    .font(.headline)
+                                    .foregroundStyle(Theme.ink)
+                                StateBadge(text: "\(archivedBakes.count)", tone: .count)
+                                Spacer()
+                                Image(systemName: "chevron.right")
+                                    .rotationEffect(.degrees(isArchiveExpanded ? 90 : 0))
+                                    .foregroundStyle(Theme.muted)
+                            }
+                        }
+                        .buttonStyle(.plain)
+
+                        if isArchiveExpanded {
+                            ForEach(archivedBakes) { bake in
+                                NavigationLink(value: BakesRoute.bake(bake.id)) {
+                                    SectionCard(emphasis: .subtle) {
+                                        HStack(alignment: .top) {
+                                            VStack(alignment: .leading, spacing: 8) {
+                                                Text(bake.name)
+                                                    .font(.headline)
+                                                    .foregroundStyle(Theme.ink)
+                                                Text(DateFormattingService.dayTime(bake.targetBakeDateTime))
+                                                    .font(.subheadline)
+                                                    .foregroundStyle(Theme.muted)
+                                            }
+                                            Spacer()
+                                            StateBadge(bakeStatus: bake.derivedStatus)
+                                        }
+                                    }
+                                }
+                                .buttonStyle(.plain)
+                            }
+                        }
+                    }
+                }
+
                 VStack(alignment: .leading, spacing: 12) {
                     Text("Ricette")
                         .font(.headline)
@@ -131,6 +186,7 @@ struct BakesView: View {
             ToolbarItem(placement: .topBarTrailing) {
                 Button {
                     preselectedFormula = formulas.first
+                    shouldPreselectFirstAvailable = formulas.isEmpty
                     showingBakeEditor = true
                 } label: {
                     Text("Nuovo bake")
@@ -146,9 +202,19 @@ struct BakesView: View {
         }
         .sheet(isPresented: $showingBakeEditor) {
             NavigationStack {
-                BakeCreationView(preselectedFormula: preselectedFormula)
+                BakeCreationView(
+                    preselectedFormula: preselectedFormula,
+                    shouldPreselectFirstAvailable: shouldPreselectFirstAvailable
+                )
             }
         }
+    }
+
+    private var emptyStateActionTitle: String {
+        // Check if there have ever been any bakes (including completed/cancelled)
+        let allBakesQuery = FetchDescriptor<Bake>()
+        let allBakesCount = (try? modelContext.fetch(allBakesQuery).count) ?? 0
+        return allBakesCount == 0 ? "Crea il tuo primo bake" : "Nuovo Bake"
     }
 }
 

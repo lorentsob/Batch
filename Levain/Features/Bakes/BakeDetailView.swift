@@ -2,6 +2,7 @@ import SwiftData
 import SwiftUI
 
 struct BakeDetailView: View {
+    @Environment(\.dismiss) private var dismiss
     @Environment(\.modelContext) private var modelContext
     @EnvironmentObject private var environment: AppEnvironment
     @EnvironmentObject private var router: AppRouter
@@ -98,7 +99,7 @@ struct BakeDetailView: View {
                         .padding(.top, 12)
                     } else {
                         Button("Elimina impasto") {
-                            present(prompt: .delete)
+                            deleteBake()
                         }
                         .buttonStyle(DangerActionButtonStyle())
                         .padding(.top, 12)
@@ -109,16 +110,22 @@ struct BakeDetailView: View {
             }
             .allowsHitTesting(destructivePrompt == nil)
 
-            if let destructivePrompt {
-                destructivePromptOverlay(prompt: destructivePrompt)
+            Group {
+                if let destructivePrompt {
+                    destructivePromptOverlay(prompt: destructivePrompt)
+                }
             }
+            .animation(Theme.Animation.standard, value: destructivePrompt?.id)
         }
         .contentMargins(.bottom, 88, for: .scrollContent)
         .background(Theme.background.ignoresSafeArea())
         .navigationTitle(bake.name)
         .navigationBarTitleDisplayMode(.inline)
         .tint(Theme.Control.primaryFill)
-        .animation(Theme.Animation.standard, value: destructivePrompt?.id)
+        // No implicit .animation() here — it causes rendering deadlocks by
+        // animating ALL body changes when destructivePrompt toggles. Overlay
+        // animation is scoped via .transition() on the overlay itself and
+        // explicit withAnimation in present()/dismissPrompt().
         .sheet(item: $detailStep) { step in
             NavigationStack {
                 BakeStepDetailView(step: step)
@@ -192,22 +199,43 @@ struct BakeDetailView: View {
     }
 
     private func confirm(_ prompt: DestructiveBakePrompt) {
-        dismissPrompt()
-
         switch prompt {
         case .cancel:
-            bake.isCancelled = true
-            persistAndSync()
-            environment.showBanner("Bake annullato. La timeline resta in archivio.", duration: 4)
-        case .delete:
-            modelContext.delete(bake)
-            try? modelContext.save()
-            router.selectedTab = .bakes
+            // Navigate back BEFORE mutating to avoid the SwiftUI rendering
+            // deadlock caused by structural body changes while the view is live.
+            // The bake moves to the archive section in BakesView.
+            destructivePrompt = nil
             router.bakesPath.removeAll()
 
-            Task {
-                await environment.notificationService.resyncAll(using: modelContext)
+            let bakeRef = bake
+            let ctx = modelContext
+            let env = environment
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+                bakeRef.isCancelled = true
+                try? ctx.save()
+
+                Task {
+                    await env.notificationService.resyncAll(using: ctx)
+                    await MainActor.run {
+                        env.showBanner("Bake annullato e spostato in archivio.", duration: 4)
+                    }
+                }
             }
+
+        case .delete:
+            dismissPrompt()
+            deleteBake()
+        }
+    }
+
+    private func deleteBake() {
+        modelContext.delete(bake)
+        try? modelContext.save()
+        router.selectedTab = .bakes
+        router.bakesPath.removeAll()
+
+        Task {
+            await environment.notificationService.resyncAll(using: modelContext)
         }
     }
 }

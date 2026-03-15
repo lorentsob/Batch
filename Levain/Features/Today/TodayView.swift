@@ -58,6 +58,9 @@ struct TodayView: View {
                         TodayAllClearView {
                             router.selectedTab = .bakes
                         }
+                        TodayKnowledgeCard {
+                            router.showingKnowledge = true
+                        }
                     case .futureOnly:
                         if let preview = snapshot.agenda.futurePreview {
                             TodayFuturePreviewCard(preview: preview) {
@@ -68,6 +71,9 @@ struct TodayView: View {
                             TodayStarterStatusCard(starters: Array(starters)) { starter in
                                 refreshStarter = starter
                             }
+                        }
+                        TodayKnowledgeCard {
+                            router.showingKnowledge = true
                         }
                     case .actionable:
                         ForEach(TodayAgendaItem.Section.allCases) { section in
@@ -130,6 +136,10 @@ struct TodayView: View {
                             ) { starter in
                                 refreshStarter = starter
                             }
+                        }
+
+                        TodayKnowledgeCard {
+                            router.showingKnowledge = true
                         }
                     }
 
@@ -586,5 +596,47 @@ private struct FeaturePillCard: View {
         }
         .buttonStyle(.plain)
         .accessibilityIdentifier(accessibilityIdentifier)
+    }
+}
+
+// MARK: - Knowledge card
+
+private struct TodayKnowledgeCard: View {
+    let action: () -> Void
+
+    var body: some View {
+        Button(action: action) {
+            HStack(spacing: 14) {
+                Image(systemName: "book.pages.fill")
+                    .font(.system(size: 20, weight: .semibold))
+                    .foregroundStyle(Theme.accent)
+
+                VStack(alignment: .leading, spacing: 2) {
+                    Text("Guide e consigli")
+                        .font(.subheadline.weight(.semibold))
+                        .foregroundStyle(Theme.ink)
+                    Text("Scopri i segreti della lievitazione naturale.")
+                        .font(.caption)
+                        .foregroundStyle(Theme.muted)
+                }
+
+                Spacer()
+
+                Image(systemName: "chevron.right")
+                    .font(.footnote.weight(.semibold))
+                    .foregroundStyle(Theme.muted)
+            }
+            .padding(16)
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .background(
+                RoundedRectangle(cornerRadius: Theme.Radius.nestedCard, style: .continuous)
+                    .fill(Theme.Surface.card)
+            )
+            .overlay(
+                RoundedRectangle(cornerRadius: Theme.Radius.nestedCard, style: .continuous)
+                    .stroke(Theme.Border.defaultColor, lineWidth: 1)
+            )
+        }
+        .buttonStyle(.plain)
     }
 }

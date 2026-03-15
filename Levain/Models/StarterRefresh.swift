@@ -13,6 +13,7 @@ final class StarterRefresh {
     var notes: String
     var ambientTemp: Double
     var photoURI: String
+    var floursPayload: Data?
     var starter: Starter?
 
     init(
@@ -26,6 +27,7 @@ final class StarterRefresh {
         notes: String = "",
         ambientTemp: Double = 0,
         photoURI: String = "",
+        flours: [FlourSelection] = [],
         starter: Starter? = nil
     ) {
         self.id = id
@@ -38,7 +40,26 @@ final class StarterRefresh {
         self.notes = notes
         self.ambientTemp = ambientTemp
         self.photoURI = photoURI
+        self.floursPayload = Self.encode(flours: flours)
         self.starter = starter
+    }
+
+    var selectedFlours: [FlourSelection] {
+        get { Self.decode(flours: floursPayload) }
+        set { floursPayload = Self.encode(flours: newValue) }
+    }
+
+    private static func encode(flours: [FlourSelection]) -> Data {
+        guard let data = try? JSONEncoder().encode(flours) else { return Data() }
+        return data
+    }
+
+    private static func decode(flours payload: Data?) -> [FlourSelection] {
+        guard let payload = payload, !payload.isEmpty,
+              let flours = try? JSONDecoder().decode([FlourSelection].self, from: payload) else {
+            return []
+        }
+        return flours
     }
 }
 

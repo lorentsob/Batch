@@ -141,6 +141,31 @@ final class NotificationService: NSObject, ObservableObject, UNUserNotificationC
         await MainActor.run { pendingURL = url }
     }
 
+    func scheduleFridgeReminder(for refresh: StarterRefresh, starterName: String) async {
+        let fireDate = refresh.dateTime.adding(minutes: 180) // 3 hours after refresh
+        guard fireDate > Date.now else { return }
+
+        let plan = NotificationSyncPlan(
+            identifiersToRemove: [],
+            requests: [
+                NotificationRequestPayload(
+                    identifier: fridgeReminderIdentifier(refresh.id),
+                    title: starterName,
+                    body: "Sono passate 3 ore dal rinfresco. Vuoi mettere lo starter in frigo?",
+                    route: AppRouter.DeepLink.starter(id: refresh.starter?.id ?? UUID()),
+                    fireDate: fireDate
+                )
+            ]
+        )
+        await NotificationScheduler.apply([plan])
+    }
+
+    func cancelFridgeReminder(for refresh: StarterRefresh) async {
+        let center = UNUserNotificationCenter.current()
+        center.removePendingNotificationRequests(withIdentifiers: [fridgeReminderIdentifier(refresh.id)])
+    }
+
+    private func fridgeReminderIdentifier(_ id: UUID) -> String { "refresh-fridge-\(id.uuidString)" }
     private func dueIdentifier(_ id: UUID) -> String { "starter-due-\(id.uuidString)" }
     private func followUpIdentifier(_ id: UUID) -> String { "starter-followup-\(id.uuidString)" }
 

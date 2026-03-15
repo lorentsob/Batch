@@ -3,24 +3,30 @@ import SwiftUI
 struct RefreshHistoryRow: View {
     let refresh: StarterRefresh
 
-    private let columns = [
-        GridItem(.adaptive(minimum: 94), spacing: 8)
-    ]
-
     var body: some View {
-        VStack(alignment: .leading, spacing: 6) {
-            Text(DateFormattingService.dayTime(refresh.dateTime))
-                .font(.subheadline.weight(.semibold))
-                .foregroundStyle(Theme.ink)
-            LazyVGrid(columns: columns, alignment: .leading, spacing: 8) {
-                MetricChip(label: "Starter", value: "\(Int(refresh.starterWeightUsed)) g", tone: .info)
-                MetricChip(label: "Farina", value: "\(Int(refresh.flourWeight)) g", tone: .schedule)
-                MetricChip(label: "Acqua", value: "\(Int(refresh.waterWeight)) g", tone: .schedule)
+        HStack(spacing: 12) {
+            VStack(alignment: .leading, spacing: 2) {
+                Text(DateFormattingService.dayTime(refresh.dateTime))
+                    .font(.subheadline.weight(.semibold))
+                    .foregroundStyle(Theme.ink)
+                if !refresh.ratioText.isEmpty {
+                    Text("Rapporto \(refresh.ratioText)")
+                        .font(.caption)
+                        .foregroundStyle(Theme.muted)
+                }
             }
-            if refresh.ratioText.isEmpty == false {
-                StateBadge(text: "Rapporto \(refresh.ratioText)", tone: .info)
+            Spacer()
+            if refresh.putInFridgeAt != nil {
+                Image(systemName: "snowflake")
+                    .font(.footnote)
+                    .foregroundStyle(Theme.accent)
             }
+            Image(systemName: "chevron.right")
+                .font(.footnote.weight(.semibold))
+                .foregroundStyle(Theme.muted)
         }
-        .padding(.vertical, 6)
+        .padding(.vertical, 10)
+        .padding(.horizontal, 12)
+        .background(Theme.panel.cornerRadius(Theme.Radius.compact))
     }
 }
