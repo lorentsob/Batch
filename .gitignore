@@ -21,4 +21,7 @@ build_output*.log
 fix_*.py
 patch_*.rb
 
+.agent/
+.gsd
+adapters/
 stuff/

@@ -247,3 +247,11 @@ struct NumericField: View {
         }
     }
 }
+
+#Preview("Bakes") {
+    NavigationStack {
+        BakesView()
+    }
+    .environmentObject(AppRouter())
+    .modelContainer(ModelContainerFactory.makePreviewContainer())
+}

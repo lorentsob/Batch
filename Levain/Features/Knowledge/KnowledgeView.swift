@@ -90,3 +90,10 @@ struct KnowledgeView: View {
         }
     }
 }
+
+#Preview("Knowledge") {
+    NavigationStack {
+        KnowledgeView()
+    }
+    .environmentObject(AppEnvironment())
+}
