@@ -39,6 +39,9 @@ jobs:
       - name: Install XcodeGen
         run: brew install xcodegen
 
+      - name: Install xcpretty
+        run: sudo gem install xcpretty
+
       # ── 4. Bootstrap (generate project from project.yml) ─────────────────────
       - name: Bootstrap project
         run: bash scripts/ci_bootstrap.sh
