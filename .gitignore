@@ -20,3 +20,8 @@ build_output*.log
 # Temp dev scripts
 fix_*.py
 patch_*.rb
+
+.agent/
+.gsd
+adapters/
+stuff/
