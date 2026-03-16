@@ -46,6 +46,7 @@ jobs:
       # ── 5. Build ─────────────────────────────────────────────────────────────
       - name: Build (no signing)
         run: |
+          set -o pipefail
           xcodebuild \
             -project Levain.xcodeproj \
             -scheme Levain \
@@ -53,18 +54,8 @@ jobs:
             -derivedDataPath /tmp/LevainDerivedCI \
             -destination "platform=iOS Simulator,name=$SIMULATOR_NAME" \
             CODE_SIGNING_ALLOWED=NO \
-            clean build \
-            | xcpretty --color || true
-          # Rerun without xcpretty to capture exit code reliably
-          xcodebuild \
-            -project Levain.xcodeproj \
-            -scheme Levain \
-            -configuration Debug \
-            -derivedDataPath /tmp/LevainDerivedCI \
-            -destination "platform=iOS Simulator,name=$SIMULATOR_NAME" \
-            CODE_SIGNING_ALLOWED=NO \
-            build 2>&1 | tee /tmp/build.log
-          grep "BUILD SUCCEEDED" /tmp/build.log
+            SWIFT_TREAT_WARNINGS_AS_ERRORS=YES \
+            clean build 2>&1 | tee /tmp/build.log | xcpretty --color
 
       # ── 6. Test ──────────────────────────────────────────────────────────────
       - name: Run tests

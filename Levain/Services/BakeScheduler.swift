@@ -73,10 +73,36 @@ enum BakeScheduler {
 
     static func shiftFutureSteps(in bake: Bake, after anchorStep: BakeStep, by minutes: Int) {
         guard minutes != 0 else { return }
-        for step in bake.steps where step.orderIndex >= anchorStep.orderIndex && step.isTerminal == false {
-            step.plannedStart = step.plannedStart.adding(minutes: minutes)
-            step.flexibleWindowStart = step.flexibleWindowStart?.adding(minutes: minutes)
-            step.flexibleWindowEnd = step.flexibleWindowEnd?.adding(minutes: minutes)
+
+        // When the anchor is running, its plannedEnd = actualStart + duration (frozen — not
+        // affected by plannedStart). Shifting subsequent steps by `minutes` from their current
+        // plannedStart would leave a gap of `minutes` between the hero-card "Fine" and the
+        // timeline "Inizio" of the next step.
+        //
+        // Fix: re-anchor the first subsequent step to plannedEnd + minutes so the gap equals
+        // exactly the requested delay. Remaining steps keep their relative offsets.
+        let effectiveShift: Int
+        if anchorStep.status == .running,
+           let firstNext = bake.sortedSteps
+               .filter({ $0.orderIndex > anchorStep.orderIndex && !$0.isTerminal })
+               .min(by: { $0.orderIndex < $1.orderIndex }) {
+            let target = anchorStep.plannedEnd.adding(minutes: minutes)
+            effectiveShift = Int(target.timeIntervalSince(firstNext.plannedStart) / 60)
+        } else {
+            effectiveShift = minutes
+        }
+
+        for step in bake.steps where step.isTerminal == false {
+            // For a running anchor: only shift subsequent steps (shifting its own plannedStart
+            // has no effect on plannedEnd and would confuse the relative-offset calculation above).
+            // For a pending/overdue anchor: shift from it inclusive (fixes overdue rescheduling).
+            let minIndex = anchorStep.status == .running
+                ? anchorStep.orderIndex + 1
+                : anchorStep.orderIndex
+            guard step.orderIndex >= minIndex else { continue }
+            step.plannedStart = step.plannedStart.adding(minutes: effectiveShift)
+            step.flexibleWindowStart = step.flexibleWindowStart?.adding(minutes: effectiveShift)
+            step.flexibleWindowEnd = step.flexibleWindowEnd?.adding(minutes: effectiveShift)
         }
         bake.targetBakeDateTime = bake.sortedSteps.last?.plannedEnd ?? bake.targetBakeDateTime
     }
