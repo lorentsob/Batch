@@ -87,7 +87,8 @@ enum BakeScheduler {
                .filter { $0.orderIndex > anchorStep.orderIndex && !$0.isTerminal && $0.status == .pending }
                .min(by: { $0.orderIndex < $1.orderIndex }) {
             let target = anchorStep.plannedEnd.adding(minutes: minutes)
-            effectiveShift = Int(target.timeIntervalSince(firstNext.plannedStart) / 60)
+            let diffMinutes = target.timeIntervalSince(firstNext.plannedStart) / 60
+            effectiveShift = Int(diffMinutes.rounded())
         } else {
             effectiveShift = minutes
         }
