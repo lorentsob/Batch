@@ -640,3 +640,12 @@ private struct TodayKnowledgeCard: View {
         .buttonStyle(.plain)
     }
 }
+
+#Preview("Today") {
+    NavigationStack {
+        TodayView()
+    }
+    .environmentObject(AppRouter())
+    .environmentObject(AppEnvironment())
+    .modelContainer(ModelContainerFactory.makePreviewContainer())
+}

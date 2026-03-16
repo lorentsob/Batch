@@ -301,6 +301,54 @@ All files exist but views are stubs. The following is production-quality scaffol
 
 ---
 
+## Git Workflow Rules
+
+Full reference: `docs/levain-ios-git-workflow.md`
+
+### Branch discipline
+- **Never commit or push directly to `main`.** All work goes through feature branches + PR.
+- **One branch = one objective.** A branch must not mix feature + bugfix + refactor. If the scope drifts, stop and split.
+- **Branch naming:** `feature/`, `fix/`, `refactor/`, `chore/`, `docs/`, `test/` + descriptive slug (e.g. `feature/sourdough-timer`, `fix/recipe-detail-crash`).
+- **Start every branch from an up-to-date `main`:** `git switch main && git pull origin main && git switch -c <branch>`.
+
+### Commits
+- Small, focused, descriptive commits. No `"fix stuff"` or `"updates"`.
+- **Stage specific files** — never `git add .` or `git add -A` (risk of committing caches, .env, temp files).
+- **Build verification:** run `xcodebuild` build before pushing. If the build fails, do not push.
+
+### Pull Requests
+- Every branch merges via **PR to `main`** — no exceptions, even for small changes.
+- PR must include: what changed, why, how to test, risks.
+- **Squash merge** on PRs to keep `main` history clean (one commit per feature/fix).
+- After merge: delete the remote branch, switch to `main`, pull.
+
+### Pre-PR checklist
+1. Branch has a single clear scope
+2. No unrelated files in the diff
+3. Project compiles (`xcodebuild` passes)
+4. Feature/fix works on simulator
+5. No debug leftovers, temp files, or commented-out code
+6. Commits are readable
+7. PR is explainable in 3-5 lines
+
+### AI agent stop rules
+I (the AI agent) must **stop and propose a split** when:
+1. The task spans multiple distinct functional areas
+2. The request mixes feature + fix + refactor in one pass
+3. The solution touches many unrelated parts of the project
+4. The branch can no longer be described with a single objective
+5. The estimated diff is too large for simple review
+6. Secondary tasks emerge that deserve their own branch
+
+When I detect scope creep, I will not continue accumulating changes. I will propose a decomposition into separate branches.
+
+### iOS-specific rules
+- Never mix UI changes with deep technical refactors in the same branch
+- Keep branches vertical: prefer UI-only, logic-only, persistence-only, navigation-only, or tooling-only
+- If a branch touches assets + models + views + state + dependencies, evaluate splitting
+
+---
+
 ## Out of Scope (Do Not Implement)
 
 - Backend, server, or API of any kind
@@ -320,6 +368,7 @@ All files exist but views are stubs. The following is production-quality scaffol
 
 | File | Purpose |
 |---|---|
+| `docs/levain-ios-git-workflow.md` | **Git workflow reference** — full branching, PR, and CI rules |
 | `docs/levain-prd-complete-v2.md` | Full product spec — source of truth for scope |
 | `docs/UX-SPEC.md` | **Screen-by-screen UX specification** — layout, components, states, flows |
 | `docs/levain-knowledge.md` | Editorial source for `knowledge.json` |

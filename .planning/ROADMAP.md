@@ -20,7 +20,8 @@ The roadmap moves from a native iPhone foundation into core baking logic, then a
 - [x] **Phase 12: Userflow & UX Conformance** - Align app behavior, docs, and verification to the six operational flows defined in userflow v2.
 - [x] **Phase 13: MVP Closure** - Chiudere l'MVP con manual UAT su device reale, Home/Today operativa nei quattro stati, bake execution leggibile, notifiche robuste, starter flow veloce, naming/copy/empty states definitivi e sign-off finale.
 - [x] **Phase 14: Design System Regression Closure** - Forzare light mode nell'app, riallineare chrome e modali al design system, correggere il flow distruttivo di cancel/delete bake, e rendere cancellazione / ritardo / timeline visivamente affidabili dopo il refresh v2.0.
-- [ ] **Phase 15: Memory Durability & System Content Separation** - Proteggere i dati utente dagli update on-device, introdurre backup/restore JSON esplicito, e separare contenuti bundled di sistema da seed demo e user data.
+- [x] **Phase 15: Memory Durability & System Content Separation** - Proteggere i dati utente dagli update on-device, introdurre backup/restore JSON esplicito, e separare contenuti bundled di sistema da seed demo e user data.
+- [ ] **Phase 16: Baking Phase Ingredients UX** - Improve the baking workflow by displaying relevant ingredients and weights directly within the phase modal.
 
 ## Phase Details
 
@@ -296,10 +297,25 @@ Plans:
 - [x] 15-02: Backup and restore
 - [x] 15-03: Bundled system content separation
 
-## Progress: [██████████████░] 93% (14 of 15 phases complete)
+### Phase 16: Baking Phase Ingredients UX
+
+**Goal**: Display relevant ingredient weights directly within the phase modal to prevent navigation context loss.
+**Depends on**: Phase 15
+**Requirements**: [UX-01]
+**Success Criteria**:
+
+1. Step-specific ingredients are visible in the `BakeStepDetailView`.
+2. Content pipeline automatically scales ingredients for each step.
+3. No visual clutter for steps with no ingredients.
+
+Plans:
+
+- [ ] 16-01: Step-specific ingredient mapping and UI implementation
+
+## Progress: [███████████████░] 94% (15 of 16 phases complete)
 
 **Execution Order:**  
-Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6 → 7 → 8 → 9 → 10 → 11 → 12 → 13 → 14 → 15
+Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6 → 7 → 8 → 9 → 10 → 11 → 12 → 13 → 14 → 15 → 16
 
 | Phase                                          | Plans Complete | Status      | Completed  |
 | ---------------------------------------------- | -------------- | ----------- | ---------- |
@@ -317,4 +333,5 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6 → 7 → 8 →
 | 12. Userflow & UX Conformance                  | 3/3            | Complete    | 2026-03-12 |
 | 13. MVP Closure                                | 3/3            | Complete    | 2026-03-12 |
 | 14. Design System Regression Closure           | 1/1            | Complete    | 2026-03-14 |
-| 15. Memory Durability & System Content Separation | 3/3         | In Progress | —          |
+| 15. Memory Durability & System Content Separation | 3/3         | Complete    | 2026-03-16 |
+| 16. Baking Phase Ingredients UX                | 0/1            | Planned     | —          |

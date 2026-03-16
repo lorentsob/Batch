@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 63;
+	objectVersion = 77;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -44,6 +44,7 @@
 		6C983EBFAB2F79F6A2DECD69 /* KnowledgeLoaderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 019C5DED2589ED39E611C1A1 /* KnowledgeLoaderTests.swift */; };
 		6F7C689E9224FA177FE49E9D /* DateFormattingService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3723F2A4189A29D9018AD0A5 /* DateFormattingService.swift */; };
 		6FB2EAAC65EC1C0350BDCFCB /* DomainEnums.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3CC16D0B45CCF1757437239C /* DomainEnums.swift */; };
+		708AFEEADF44144BEEAFD348 /* BakeIngredientsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC0451D6E4DCF1F8EF2C78E7 /* BakeIngredientsView.swift */; };
 		746E199E505E72637497D225 /* BakeStepCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADB19A1BB4867DF590026CA3 /* BakeStepCardView.swift */; };
 		7D3DA6A05B6CB6132F859BC1 /* DesignPrimitives.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D09C0219515B0C58E80A791 /* DesignPrimitives.swift */; };
 		7DBF2B3CE6183DA9DFAC65AC /* RefreshLogView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 147E7D4B5D15D0D071744403 /* RefreshLogView.swift */; };
@@ -68,7 +69,6 @@
 		B855098278619B8C04F933DC /* NotificationRouteUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFF203DD5A6EA2502E937535 /* NotificationRouteUITests.swift */; };
 		BA77CD1E23F1F5BFECFCE9F3 /* StateBadgeToneTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7762E15F65697D717FBB038F /* StateBadgeToneTests.swift */; };
 		BAED026D7F966950C128061C /* BackupServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 513ECE7BBD0FCB5758573E34 /* BackupServiceTests.swift */; };
-		9772D61EC0D594F55210E6A2 /* BakeIngredientsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F56278687912A40D1B58B0D /* BakeIngredientsView.swift */; };
 		BB34A0D65EE95C89A7C10392 /* BakeDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC7E0BB47C494872009B35F0 /* BakeDetailView.swift */; };
 		BCF0E6F3ED93790D58CFE4FD /* ActivityView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12ACF366375F43B564C1D0C8 /* ActivityView.swift */; };
 		BFE0C3D56CAC5551D58E4F4D /* NotificationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31CB45B80CFC5B3AB74316A6 /* NotificationService.swift */; };
@@ -123,7 +123,7 @@
 		031DE41E33A5A47BB92E1B84 /* LevainApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LevainApp.swift; sourceTree = "<group>"; };
 		0488D5D97917ED1EDCE7A49E /* KnowledgeRowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KnowledgeRowView.swift; sourceTree = "<group>"; };
 		05BB2A8E3BCF16B390C67996 /* FlourSelectionEditorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlourSelectionEditorView.swift; sourceTree = "<group>"; };
-		0829A06D388058C26EB78A33 /* starter.svg */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = starter.svg; sourceTree = "<group>"; };
+		0829A06D388058C26EB78A33 /* starter.svg */ = {isa = PBXFileReference; path = starter.svg; sourceTree = "<group>"; };
 		0EF66CC37AE507FB215CFF22 /* SectionCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SectionCard.swift; sourceTree = "<group>"; };
 		0F73F2107220BBBBD20F36DA /* TodayStarterReminderRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodayStarterReminderRow.swift; sourceTree = "<group>"; };
 		1230562334B3FE09F3E01E83 /* AppRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppRouter.swift; sourceTree = "<group>"; };
@@ -168,7 +168,7 @@
 		75D5700D7ACF9659E555318D /* StarterCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StarterCardView.swift; sourceTree = "<group>"; };
 		7762E15F65697D717FBB038F /* StateBadgeToneTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StateBadgeToneTests.swift; sourceTree = "<group>"; };
 		79D4C487A002E34766EBC3F2 /* AppEnvironment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppEnvironment.swift; sourceTree = "<group>"; };
-		7A93F72E454DE1667B080E9C /* bake.svg */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = bake.svg; sourceTree = "<group>"; };
+		7A93F72E454DE1667B080E9C /* bake.svg */ = {isa = PBXFileReference; path = bake.svg; sourceTree = "<group>"; };
 		7BD7C03D5139BD3131B782AE /* AppRouterTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppRouterTests.swift; sourceTree = "<group>"; };
 		82808E94CC2A7217CDAAFE45 /* SystemFormula.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SystemFormula.swift; sourceTree = "<group>"; };
 		88067D9DEA0402EE4E48496A /* SystemFormulaLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SystemFormulaLoader.swift; sourceTree = "<group>"; };
@@ -177,7 +177,7 @@
 		8E9AA4021F43AE9655D8F68C /* StateBadge.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StateBadge.swift; sourceTree = "<group>"; };
 		9069286C22B79776F290E460 /* KnowledgeLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KnowledgeLoader.swift; sourceTree = "<group>"; };
 		9527884010C3C4CC2BA7DF2D /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
-		9B4004713422E6E47C0B76CD /* Levain.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Levain.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		9B4004713422E6E47C0B76CD /* Levain.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = Levain.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		A061F753EFB622786D154A83 /* KnowledgeItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KnowledgeItem.swift; sourceTree = "<group>"; };
 		A327533FEB9FDE64DDA58C58 /* AppLaunchOptions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppLaunchOptions.swift; sourceTree = "<group>"; };
 		A4FAA5A66043B616FE6D1EEB /* Date+Levain.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Date+Levain.swift"; sourceTree = "<group>"; };
@@ -188,6 +188,7 @@
 		B103892E03A334196B1D10CE /* DomainFixtures.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DomainFixtures.swift; sourceTree = "<group>"; };
 		B18A695300F304A000928E5A /* RecipeFormula.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecipeFormula.swift; sourceTree = "<group>"; };
 		B4A8FBB9610077DD981D867C /* LevainSchema.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LevainSchema.swift; sourceTree = "<group>"; };
+		BC0451D6E4DCF1F8EF2C78E7 /* BakeIngredientsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BakeIngredientsView.swift; sourceTree = "<group>"; };
 		BCF69DF1AB4A6F4ADD87ECC4 /* ModelContainerFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelContainerFactory.swift; sourceTree = "<group>"; };
 		C25872A58F8373FE1A2CF530 /* ToastBannerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToastBannerView.swift; sourceTree = "<group>"; };
 		C3719CAB830F30160F021B55 /* BakeScheduler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BakeScheduler.swift; sourceTree = "<group>"; };
@@ -209,7 +210,6 @@
 		EFFD3965E1ACFBC8C1DDABAA /* BakeCreationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BakeCreationView.swift; sourceTree = "<group>"; };
 		F2C6374ED12D33A5878CF5F3 /* KnowledgeFlowUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KnowledgeFlowUITests.swift; sourceTree = "<group>"; };
 		F5A5E14312B26145E7F011F7 /* RootTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootTabView.swift; sourceTree = "<group>"; };
-		7F56278687912A40D1B58B0D /* BakeIngredientsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BakeIngredientsView.swift; sourceTree = "<group>"; };
 		FC7E0BB47C494872009B35F0 /* BakeDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BakeDetailView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -350,8 +350,8 @@
 			isa = PBXGroup;
 			children = (
 				EFFD3965E1ACFBC8C1DDABAA /* BakeCreationView.swift */,
-				7F56278687912A40D1B58B0D /* BakeIngredientsView.swift */,
 				FC7E0BB47C494872009B35F0 /* BakeDetailView.swift */,
+				BC0451D6E4DCF1F8EF2C78E7 /* BakeIngredientsView.swift */,
 				ADB19A1BB4867DF590026CA3 /* BakeStepCardView.swift */,
 				5E8199167A33F653C5C7BD8E /* BakeStepDetailView.swift */,
 				1EE5E85F03317D648D13FDAA /* BakesView.swift */,
@@ -548,6 +548,7 @@
 						TestTargetID = 8E84F0B210E0A11CDE4A5962;
 					};
 					8E84F0B210E0A11CDE4A5962 = {
+						DevelopmentTeam = "";
 						ProvisioningStyle = Automatic;
 					};
 				};
@@ -562,6 +563,7 @@
 			);
 			mainGroup = D9040A503A128437022B7221;
 			minimizedProjectReferenceProxies = 1;
+			preferredProjectObjectVersion = 77;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
@@ -635,8 +637,8 @@
 				E1B4B8B57517B854F49572E0 /* BackupService.swift in Sources */,
 				0A238FB1DBE8C1B9BC48AD7F /* Bake.swift in Sources */,
 				E8FA6864F27D43ED3B365B93 /* BakeCreationView.swift in Sources */,
-				9772D61EC0D594F55210E6A2 /* BakeIngredientsView.swift in Sources */,
 				BB34A0D65EE95C89A7C10392 /* BakeDetailView.swift in Sources */,
+				708AFEEADF44144BEEAFD348 /* BakeIngredientsView.swift in Sources */,
 				464B3D3CE16145FEEB5671CC /* BakeReminderPlanner.swift in Sources */,
 				C4F8B17586A6584A2537F356 /* BakeScheduler.swift in Sources */,
 				D648CB0DAD33F1C6464B25B5 /* BakeStep.swift in Sources */,
@@ -717,7 +719,6 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = C974BPN56D;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Levain/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = Levain;
@@ -727,10 +728,13 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
+				ONLY_ACTIVE_ARCH = NO;
 				PRODUCT_BUNDLE_IDENTIFIER = com.lorentso.levain;
 				PRODUCT_NAME = Levain;
 				SDKROOT = iphoneos;
 				SUPPORTS_MACCATALYST = NO;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
 				SWIFT_STRICT_CONCURRENCY = complete;
 				TARGETED_DEVICE_FAMILY = 1;
 			};
@@ -940,7 +944,6 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = C974BPN56D;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Levain/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = Levain;
@@ -950,10 +953,13 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
+				ONLY_ACTIVE_ARCH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = com.lorentso.levain;
 				PRODUCT_NAME = Levain;
 				SDKROOT = iphoneos;
 				SUPPORTS_MACCATALYST = NO;
+				SWIFT_COMPILATION_MODE = singlefile;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_STRICT_CONCURRENCY = complete;
 				TARGETED_DEVICE_FAMILY = 1;
 			};

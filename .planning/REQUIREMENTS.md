@@ -127,6 +127,10 @@
 - **BACKLOG-03**: Rich bake journaling, media, and result evaluation
 - **BACKLOG-04**: Cross-device sync via CloudKit or equivalent
 
+## Phase 16 High-Utility UX Requirements
+
+- [ ] **UX-01**: User can see relevant ingredients and weights specific to the current phase directly within the `BakeStepDetailView` modal.
+
 ## Out of Scope
 
 | Feature | Reason |
@@ -205,11 +209,12 @@
 | MEM-03 | Phase 15 | Complete (manual backup round-trip pending) |
 | MEM-04 | Phase 15 | Complete (manual fresh-launch verification pending) |
 | MEM-05 | Phase 15 | Complete (manual fresh-launch verification pending) |
+| UX-01 | Phase 16 | Planned |
 
 **Coverage:**
 
-- v1 + realignment + userflow + memory requirements: 64 total
-- Mapped to phases: 64
+- v1 + realignment + userflow + memory + ux requirements: 65 total
+- Mapped to phases: 65
 - Unmapped: 0
 
 ---

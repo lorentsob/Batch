@@ -29,6 +29,15 @@ targets:
         TARGETED_DEVICE_FAMILY: 1
         ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME: AccentColor
         CODE_SIGN_STYLE: Automatic
+      configs:
+        Debug:
+          SWIFT_OPTIMIZATION_LEVEL: -Onone
+          SWIFT_COMPILATION_MODE: singlefile
+          ONLY_ACTIVE_ARCH: YES
+        Release:
+          SWIFT_OPTIMIZATION_LEVEL: -O
+          SWIFT_COMPILATION_MODE: wholemodule
+          ONLY_ACTIVE_ARCH: NO
   LevainTests:
     type: bundle.unit-test
     platform: iOS
@@ -61,8 +70,15 @@ schemes:
         Levain: all
         LevainTests: [test]
         LevainUITests: [test]
+    run:
+      config: Debug
     test:
+      config: Debug
       targets:
         - name: LevainTests
         - name: LevainUITests
           randomExecutionOrder: true
+    profile:
+      config: Release
+    archive:
+      config: Release

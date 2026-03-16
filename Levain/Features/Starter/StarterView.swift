@@ -85,3 +85,11 @@ struct StarterView: View {
         }
     }
 }
+
+#Preview("Starter") {
+    NavigationStack {
+        StarterView()
+    }
+    .environmentObject(AppRouter())
+    .modelContainer(ModelContainerFactory.makePreviewContainer())
+}
