@@ -84,7 +84,7 @@ enum BakeScheduler {
         let effectiveShift: Int
         if anchorStep.status == .running,
            let firstNext = bake.sortedSteps
-               .filter({ $0.orderIndex > anchorStep.orderIndex && !$0.isTerminal })
+               .filter { $0.orderIndex > anchorStep.orderIndex && !$0.isTerminal && $0.status == .pending }
                .min(by: { $0.orderIndex < $1.orderIndex }) {
             let target = anchorStep.plannedEnd.adding(minutes: minutes)
             effectiveShift = Int(target.timeIntervalSince(firstNext.plannedStart) / 60)
@@ -98,6 +98,8 @@ enum BakeScheduler {
             // re-anchored to `plannedEnd + minutes` without moving the anchor itself.
             let minIndex = anchorStep.orderIndex + 1
             guard step.orderIndex >= minIndex else { continue }
+            // Only shift steps that have not started yet; started/completed steps are driven by actual times.
+            guard step.status == .pending else { continue }
             step.plannedStart = step.plannedStart.adding(minutes: effectiveShift)
             step.flexibleWindowStart = step.flexibleWindowStart?.adding(minutes: effectiveShift)
             step.flexibleWindowEnd = step.flexibleWindowEnd?.adding(minutes: effectiveShift)
