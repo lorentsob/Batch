@@ -1,53 +1,61 @@
 # Phase 16: Baking Phase Ingredients UX — Context
 
-**Gathered:** 2026-03-16
-**Status:** Planning
+**Gathered:** 2026-03-16 (updated)
+**Status:** Ready for planning
 
 <domain>
 ## Phase Boundary
 
-Phase 16 addresses a critical UX gap in the baking workflow: the lack of visibility for ingredient weights while viewing a specific bake phase instructions. Currently, users must navigate back to the "Ricetta" detail view to see weights, which is disruptive during active baking.
-
-The goal is to map ingredients to their relevant baking steps (e.g., "Farina" and "Acqua" to the "Impasto" step) and display them directly within the phase modal.
+Display step-specific ingredient weights inside `BakeStepDetailView` so users don't need to navigate back to the recipe view while actively baking. This phase covers data model, authoring flow in formula templates, content pipeline update, and UI integration. It does NOT include interactive checkboxes or baker's math calculations beyond weight display.
 
 </domain>
 
 <decisions>
 ## Implementation Decisions
 
-### Step-Specific Ingredient Mapping
-- Add an `ingredients` metadata field to `FormulaStepTemplate` and `BakeStep`.
-- This field will store a JSON-encoded array of strings (e.g., `["Farina: 1000g", "Acqua: 700g"]`).
-- For "window-based" steps like proofing, this section will likely be empty.
+### Ingredient-to-step mapping
+- Mapping is **author-defined in the formula template** — the baker explicitly assigns ingredients to steps during formula authoring, not auto-inferred by step type
+- In the formula template editor, the baker selects from the formula's defined ingredients (not free text) and assigns each a **percentage of the total ingredient weight** for that step
+- Example: autolyse step gets 80% of farina + 100% of acqua; impasto step gets the remaining 20% farina + salt
+- When a bake is created, ingredient weights in step modals are **auto-scaled to the bake's actual totals** (not the formula template's fixed values)
+- The step modal displays computed **grams only** — no percentages shown to the baker during active baking
 
-### Content Automation
-- The `format_content.py` script will be updated to parse ingredients directly from formula Markdown files.
-- A new section or marker in the Markdown (e.g., `Ingredients: ...`) will be used to associate ingredients with specific steps.
-- This ensures consistency between the static recipe data and the generated bakes.
+### Display format
+- Each ingredient line shows: **name + grams** (e.g. `Farina 800g`)
+- Optional **short note per ingredient** is supported (e.g. `Acqua 700g · 15°C`) — rendered inline if present
+- **No baker's math** (percentages, hydration ratios) in the step modal — keeps focus on the task
+- Steps with no ingredients: ingredient section **hidden entirely** — no header, no placeholder
 
-### UI Integration
-- The `BakeStepDetailView` will include a new section for ingredients, positioned similarly to the "Procedimento" section.
-- The UI will remain minimal, showing only the relevant ingredients without "Baker's Math" metrics to keep the modal focused on the current task.
+### Visual placement in modal
+- Ingredients section appears **above the procedimento section** — baker sees what to gather before reading what to do
+- Section header: **"Ingredienti"** (matches recipe view, consistent language)
+- Visual style: **bulleted list**, same styling as the "Ingredienti" section in `FormulaDetailView`
+
+### Content pipeline
+- The existing formula Markdown files in `docs/content/formulas/` must be **updated to include step-ingredient mappings** for each step that has ingredients
+- After updating formula files, `format_content.py` must be **re-run** to regenerate JSON content and push updated data into the app bundle
+- This ensures all bundled formulas ship with correct step-specific ingredient data out of the box
 
 </decisions>
 
 <specifics>
 ## Specific Ideas
 
-- The ingredients in the modal should use the same styling as the "Ingredienti" section in the full recipe view (bulleted list with a theme-colored accent).
-- If a step has no specific ingredients (like "Bulk Fermentation" or "Shape"), the section should not appear at all to reduce clutter.
+- Ingredient display in the modal should feel identical to the recipe view's ingredient list — same bullet style, same accent color, familiar to the baker who has already seen the recipe
+- The authoring UX (assigning ingredients to steps) should leverage the formula's already-defined ingredient list — no duplicate data entry
 
 </specifics>
 
 <deferred>
-## Deferred
+## Deferred Ideas
 
-- Dynamic scaling of step ingredients (already handled by the formula calculation logic during bake creation).
-- Interactive checkboxes for ingredients within the modal (v2.1).
+- Interactive ingredient checkboxes within the step modal (check off as you add each) — v2.1
+- Auto-inferred mapping by step type (e.g. autolyse always gets flour + water) — possible optimization after MVP
+- Display of baker's math / percentages in step modal — explicitly excluded from this phase
 
 </deferred>
 
 ---
 
-_Phase: 16-baking-phase-ingredients-ux_  
-_Context gathered: 2026-03-16_
+*Phase: 16-baking-phase-ingredients-ux*
+*Context gathered: 2026-03-16*
