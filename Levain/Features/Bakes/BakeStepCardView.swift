@@ -30,15 +30,12 @@ struct ActiveStepHeroCard: View {
                             .foregroundStyle(Theme.muted)
 
                         Text(step.displayName)
-                            .font(.system(size: 28, weight: .bold))
+                            .font(.system(size: 22, weight: .bold))
                             .foregroundStyle(Theme.ink)
+                            .lineLimit(2)
+                            .minimumScaleFactor(0.8)
+                            .fixedSize(horizontal: false, vertical: true)
 
-                        if !step.descriptionText.isEmpty {
-                            Text(step.descriptionText)
-                                .font(.subheadline)
-                                .foregroundStyle(Theme.muted)
-                                .lineLimit(3)
-                        }
                     }
 
                     Spacer(minLength: 12)
@@ -78,7 +75,7 @@ struct ActiveStepHeroCard: View {
                     .buttonStyle(PrimaryActionButtonStyle())
 
                     HStack(spacing: 10) {
-                        Button("Dettaglio") {
+                        Button("Procedimento") {
                             onDetail()
                         }
                         .buttonStyle(SecondaryActionButtonStyle())
@@ -159,7 +156,7 @@ struct StepTimelineRow: View {
                         .frame(width: 2)
                 }
 
-                VStack(alignment: .leading, spacing: 8) {
+                VStack(alignment: .leading, spacing: 6) {
                     HStack(alignment: .firstTextBaseline, spacing: 8) {
                         Text(step.displayName)
                             .font(.subheadline.weight(.semibold))
@@ -169,16 +166,23 @@ struct StepTimelineRow: View {
                         statusBadge
                     }
 
-                    if !step.descriptionText.isEmpty {
-                        Text(step.descriptionText)
-                            .font(.footnote)
-                            .foregroundStyle(metaColor)
-                            .lineLimit(1)
-                    }
-
                     Text(statusLine)
                         .font(.footnote)
                         .foregroundStyle(metaColor)
+                    
+                    Button {
+                        action()
+                    } label: {
+                        HStack(spacing: 4) {
+                            Image(systemName: "list.bullet.clipboard")
+                            Text("Procedimento")
+                        }
+                        .font(.caption.weight(.semibold))
+                        .foregroundStyle(Theme.Control.primaryFill)
+                    }
+                    .padding(.top, 2)
+
+                    .padding(.top, 2)
                 }
 
                 Spacer(minLength: 8)
@@ -300,10 +304,11 @@ struct StepTimelineRow: View {
             if step.isOverdue() {
                 return "Scaduto alle \(DateFormattingService.time(step.isWindowBased ? step.windowEnd : step.plannedEnd))"
             }
-            return "Previsto \(DateFormattingService.dayTime(step.isWindowBased ? step.windowStart : step.plannedStart))"
+            let scheduled = DateFormattingService.smartDayTime(step.isWindowBased ? step.windowStart : step.plannedStart)
+            return scheduled
         case .running:
             if step.shouldShowCompactWindowState() {
-                return "Finestra dalle \(DateFormattingService.dayTime(step.windowStart))"
+                return "Finestra dalle \(DateFormattingService.smartDayTime(step.windowStart))"
             }
             return "Iniziato alle \(DateFormattingService.time(step.referenceStart))"
         case .done:
@@ -538,16 +543,16 @@ struct LiveTimerBlock: View {
         switch phase {
         case .upcoming:
             if step.isWindowBased {
-                return "Finestra prevista dalle \(DateFormattingService.time(step.windowStart)) alle \(DateFormattingService.time(step.windowEnd))."
+                return "Finestra: \(DateFormattingService.time(step.windowStart)) – \(DateFormattingService.time(step.windowEnd))"
             }
-            return "Inizio alle \(DateFormattingService.time(step.plannedStart)) con chiusura prevista alle \(DateFormattingService.time(step.plannedEnd))."
+            return "Inizio \(DateFormattingService.time(step.plannedStart))  ·  Fine \(DateFormattingService.time(step.plannedEnd))"
         case .running:
             if step.isWindowBased, step.hasWindowOpened(now: now) == false {
-                return "Fase in corso. La finestra operativa si apre alle \(DateFormattingService.time(step.windowStart)) e si chiude alle \(DateFormattingService.time(step.windowEnd))."
+                return "In corso · Inizio finestra alle \(DateFormattingService.time(step.windowStart))"
             }
-            return "Avviato alle \(DateFormattingService.time(step.referenceStart)); il ritmo previsto si chiude alle \(DateFormattingService.time(step.isWindowBased ? step.windowEnd : step.plannedEnd))."
+            return "Avviato \(DateFormattingService.time(step.referenceStart))  ·  Fine finestra alle \(DateFormattingService.time(step.isWindowBased ? step.windowEnd : step.plannedEnd))"
         case .overdue:
-            return "La chiusura prevista era alle \(DateFormattingService.time(step.isWindowBased ? step.windowEnd : step.plannedEnd)); puoi completare la fase o spostare il resto degli orari."
+            return "Chiusura finestra alle \(DateFormattingService.time(step.isWindowBased ? step.windowEnd : step.plannedEnd))  ·  Completa o sposta gli orari"
         case .completed:
             if let actualEnd = step.actualEnd {
                 return "Fase chiusa alle \(DateFormattingService.time(actualEnd))."

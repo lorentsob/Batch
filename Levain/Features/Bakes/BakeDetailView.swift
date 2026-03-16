@@ -244,6 +244,8 @@ struct BakeHeaderCard: View {
     let bake: Bake
     @EnvironmentObject private var router: AppRouter
 
+    @State private var showingIngredients = false
+
     private let metricColumns = [
         GridItem(.adaptive(minimum: 110), spacing: 8)
     ]
@@ -270,38 +272,58 @@ struct BakeHeaderCard: View {
                     MetricChip(label: "Porzioni", value: "\(bake.servings)", tone: metricTone)
                 }
 
-                if bake.formula != nil || bake.starter != nil {
-                    HStack(spacing: 12) {
-                        if let formula = bake.formula {
-                            Button {
-                                router.openFormula(formula.id)
-                            } label: {
-                                Label(formula.name, systemImage: "book.closed")
-                            }
-                            .buttonStyle(
-                                SecondaryActionButtonStyle(
-                                    fill: Theme.Surface.card,
-                                    tint: secondaryTint,
-                                    border: secondaryBorder
+                VStack(alignment: .leading, spacing: 8) {
+                    if bake.formula != nil || bake.starter != nil {
+                        HStack(spacing: 12) {
+                            if let formula = bake.formula {
+                                Button {
+                                    router.openFormula(formula.id)
+                                } label: {
+                                    Label(formula.name, systemImage: "book.closed")
+                                }
+                                .buttonStyle(
+                                    SecondaryActionButtonStyle(
+                                        fill: Theme.Surface.card,
+                                        tint: secondaryTint,
+                                        border: secondaryBorder
+                                    )
                                 )
-                            )
-                        }
-                        if let starter = bake.starter {
-                            Button {
-                                router.openStarter(starter.id)
-                            } label: {
-                                Label(starter.name, systemImage: "drop.fill")
                             }
-                            .buttonStyle(
-                                SecondaryActionButtonStyle(
-                                    fill: Theme.Surface.card,
-                                    tint: secondaryTint,
-                                    border: secondaryBorder
+                            if let starter = bake.starter {
+                                Button {
+                                    router.openStarter(starter.id)
+                                } label: {
+                                    Label(starter.name, systemImage: "drop.fill")
+                                }
+                                .buttonStyle(
+                                    SecondaryActionButtonStyle(
+                                        fill: Theme.Surface.card,
+                                        tint: secondaryTint,
+                                        border: secondaryBorder
+                                    )
                                 )
-                            )
+                            }
                         }
                     }
+
+                    Button {
+                        showingIngredients = true
+                    } label: {
+                        Label("Ricetta", systemImage: "list.bullet.clipboard")
+                    }
+                    .buttonStyle(
+                        SecondaryActionButtonStyle(
+                            fill: Theme.Surface.card,
+                            tint: secondaryTint,
+                            border: secondaryBorder
+                        )
+                    )
                 }
+            }
+        }
+        .sheet(isPresented: $showingIngredients) {
+            NavigationStack {
+                BakeIngredientsView(bake: bake)
             }
         }
     }

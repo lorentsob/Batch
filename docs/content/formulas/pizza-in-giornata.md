@@ -5,7 +5,7 @@ title: Pizza in giornata
 category: pizza
 hydration: 60
 salt_percent: 2
-inoculation_percent: 50
+inoculation_percent: 16.7
 servings: 3
 flour_mix: 100% farina 00 per pizza
 total_flour_weight: 600

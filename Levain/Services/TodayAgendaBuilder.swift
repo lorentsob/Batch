@@ -117,7 +117,7 @@ enum TodayAgendaBuilder {
                 section = .scheduled
                 sortDate = step.windowStart
                 state = "In maturazione"
-                subtitle = "\(step.displayName) in corso · finestra dalle \(DateFormattingService.time(step.windowStart))"
+                subtitle = "\(step.displayName) in corso · inizio finestra alle \(DateFormattingService.time(step.windowStart))"
                 actionTitle = "Apri fase"
             } else if step.isOperationallyUrgent(now: now) {
                 presentationStyle = .primaryCard

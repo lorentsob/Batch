@@ -65,7 +65,7 @@ enum BakeReminderPlanner {
                 BakeReminder(
                     identifier: identifier(for: bake, step: step, phase: .windowClose),
                     title: "\(step.displayName) · \(bake.name)",
-                    body: "La finestra si sta chiudendo.",
+                    body: "La finestra sta terminando.",
                     route: AppRouter.DeepLink.bake(id: bake.id, stepID: step.id),
                     fireDate: step.windowEnd
                 )

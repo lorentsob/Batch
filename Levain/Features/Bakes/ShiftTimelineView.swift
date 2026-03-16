@@ -15,7 +15,7 @@ struct ShiftTimelineView: View {
         Form {
             Section("Fase selezionata") {
                 Text(anchorStep.displayName)
-                Text("Sposterai solo le fasi future non completate.")
+                Text("Sposterai la fase selezionata e tutte le fasi successive non completate.")
                     .font(.footnote)
                     .foregroundStyle(Theme.muted)
             }

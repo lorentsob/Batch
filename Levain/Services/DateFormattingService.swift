@@ -15,12 +15,27 @@ enum DateFormattingService {
         return formatter
     }()
 
+    private static let shortDayTimeFormatter: DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.locale = Locale(identifier: "it_IT")
+        formatter.dateFormat = "d MMM · HH:mm"
+        return formatter
+    }()
+
     static func time(_ date: Date) -> String {
         timeFormatter.string(from: date)
     }
 
     static func dayTime(_ date: Date) -> String {
         dayTimeFormatter.string(from: date)
+    }
+
+    /// Mostra solo HH:mm se la data è oggi, altrimenti "d MMM · HH:mm" (senza abbreviazione giorno)
+    static func smartDayTime(_ date: Date) -> String {
+        if Calendar.current.isDateInToday(date) {
+            return timeFormatter.string(from: date)
+        }
+        return shortDayTimeFormatter.string(from: date)
     }
 
     static func duration(minutes: Int) -> String {

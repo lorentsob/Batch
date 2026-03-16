@@ -162,7 +162,7 @@ struct FormulaEditorView: View {
 
             Section {
                 LabeledContent("Note") {
-                    TextField("Procedimento o consigli", text: $notes, axis: .vertical)
+                    TextField("Dettagli o consigli", text: $notes, axis: .vertical)
                         .lineLimit(4...8)
                         .multilineTextAlignment(.trailing)
                 }

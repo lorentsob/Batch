@@ -68,6 +68,7 @@
 		B855098278619B8C04F933DC /* NotificationRouteUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFF203DD5A6EA2502E937535 /* NotificationRouteUITests.swift */; };
 		BA77CD1E23F1F5BFECFCE9F3 /* StateBadgeToneTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7762E15F65697D717FBB038F /* StateBadgeToneTests.swift */; };
 		BAED026D7F966950C128061C /* BackupServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 513ECE7BBD0FCB5758573E34 /* BackupServiceTests.swift */; };
+		9772D61EC0D594F55210E6A2 /* BakeIngredientsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F56278687912A40D1B58B0D /* BakeIngredientsView.swift */; };
 		BB34A0D65EE95C89A7C10392 /* BakeDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC7E0BB47C494872009B35F0 /* BakeDetailView.swift */; };
 		BCF0E6F3ED93790D58CFE4FD /* ActivityView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12ACF366375F43B564C1D0C8 /* ActivityView.swift */; };
 		BFE0C3D56CAC5551D58E4F4D /* NotificationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31CB45B80CFC5B3AB74316A6 /* NotificationService.swift */; };
@@ -208,6 +209,7 @@
 		EFFD3965E1ACFBC8C1DDABAA /* BakeCreationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BakeCreationView.swift; sourceTree = "<group>"; };
 		F2C6374ED12D33A5878CF5F3 /* KnowledgeFlowUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KnowledgeFlowUITests.swift; sourceTree = "<group>"; };
 		F5A5E14312B26145E7F011F7 /* RootTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootTabView.swift; sourceTree = "<group>"; };
+		7F56278687912A40D1B58B0D /* BakeIngredientsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BakeIngredientsView.swift; sourceTree = "<group>"; };
 		FC7E0BB47C494872009B35F0 /* BakeDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BakeDetailView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -348,6 +350,7 @@
 			isa = PBXGroup;
 			children = (
 				EFFD3965E1ACFBC8C1DDABAA /* BakeCreationView.swift */,
+				7F56278687912A40D1B58B0D /* BakeIngredientsView.swift */,
 				FC7E0BB47C494872009B35F0 /* BakeDetailView.swift */,
 				ADB19A1BB4867DF590026CA3 /* BakeStepCardView.swift */,
 				5E8199167A33F653C5C7BD8E /* BakeStepDetailView.swift */,
@@ -632,6 +635,7 @@
 				E1B4B8B57517B854F49572E0 /* BackupService.swift in Sources */,
 				0A238FB1DBE8C1B9BC48AD7F /* Bake.swift in Sources */,
 				E8FA6864F27D43ED3B365B93 /* BakeCreationView.swift in Sources */,
+				9772D61EC0D594F55210E6A2 /* BakeIngredientsView.swift in Sources */,
 				BB34A0D65EE95C89A7C10392 /* BakeDetailView.swift in Sources */,
 				464B3D3CE16145FEEB5671CC /* BakeReminderPlanner.swift in Sources */,
 				C4F8B17586A6584A2537F356 /* BakeScheduler.swift in Sources */,

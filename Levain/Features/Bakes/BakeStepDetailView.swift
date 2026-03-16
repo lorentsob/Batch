@@ -14,12 +14,23 @@ struct BakeStepDetailView: View {
 
     var body: some View {
         Form {
-            Section("Dettagli fase") {
+            Section("Procedimento") {
                 Text(step.displayName)
+                    .font(.headline)
+                
                 if !step.descriptionText.isEmpty {
-                    Text(step.descriptionText)
-                        .foregroundStyle(Theme.muted)
+                    VStack(alignment: .leading, spacing: 8) {
+                        Text("Istruzioni")
+                            .font(.caption.weight(.semibold))
+                            .foregroundStyle(Theme.Control.primaryFill)
+                        
+                        Text(step.descriptionText)
+                            .foregroundStyle(Theme.ink)
+                            .fixedSize(horizontal: false, vertical: true)
+                    }
+                    .padding(.vertical, 4)
                 }
+                
                 if step.startedOutOfOrder {
                     StateBadge(text: "Fuori ordine", tone: .info)
                 }
@@ -30,8 +41,8 @@ struct BakeStepDetailView: View {
                 MetricRow(label: "Durata pianificata", value: DateFormattingService.duration(minutes: step.plannedDurationMinutes))
 
                 if step.isWindowBased {
-                    MetricRow(label: "Apertura finestra", value: DateFormattingService.dayTime(step.windowStart))
-                    MetricRow(label: "Chiusura finestra", value: DateFormattingService.dayTime(step.windowEnd))
+                    MetricRow(label: "Inizio finestra", value: DateFormattingService.dayTime(step.windowStart))
+                    MetricRow(label: "Fine finestra", value: DateFormattingService.dayTime(step.windowEnd))
                 }
 
                 if let actualStart = step.actualStart {

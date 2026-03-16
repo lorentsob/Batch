@@ -3,6 +3,7 @@ id: bagel-levain
 type: formula
 title: Bagel
 category: bread
+bake_type: bagel
 hydration: 55.5
 salt_percent: 1.8
 inoculation_percent: 13.1

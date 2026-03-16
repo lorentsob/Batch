@@ -17,6 +17,9 @@ final class RecipeFormula {
     var flourMix: String
     var yeastTypeRaw: String?
     var floursPayload: Data?
+    var ingredients: String?
+    var procedure: String?
+    var bakingInstructions: String?
     private var defaultStepsPayload: Data
 
     @Relationship(inverse: \Bake.formula)
@@ -35,7 +38,10 @@ final class RecipeFormula {
         flourMix: String = "",
         yeastType: YeastType = .sourdough,
         flours: [FlourSelection] = [],
-        defaultSteps: [FormulaStepTemplate] = FormulaStepTemplate.defaultBreadSteps
+        defaultSteps: [FormulaStepTemplate] = FormulaStepTemplate.defaultBreadSteps,
+        ingredients: String = "",
+        procedure: String = "",
+        bakingInstructions: String = ""
     ) {
         self.id = id
         self.name = name
@@ -52,6 +58,9 @@ final class RecipeFormula {
         self.yeastTypeRaw = yeastType.rawValue
         self.floursPayload = RecipeFormula.encode(flours: flours)
         self.defaultStepsPayload = RecipeFormula.encode(defaultSteps: defaultSteps)
+        self.ingredients = ingredients
+        self.procedure = procedure
+        self.bakingInstructions = bakingInstructions
         self.bakes = []
     }
 
@@ -92,7 +101,10 @@ final class RecipeFormula {
             flourMix: flourMix,
             yeastType: yeastType,
             flours: selectedFlours,
-            defaultSteps: defaultSteps.map { FormulaStepTemplate(id: UUID(), type: $0.type, name: $0.name, details: $0.details, durationMinutes: $0.durationMinutes, reminderOffsetMinutes: $0.reminderOffsetMinutes, temperatureRange: $0.temperatureRange, volumeTarget: $0.volumeTarget, notes: $0.notes) }
+            defaultSteps: defaultSteps.map { FormulaStepTemplate(id: UUID(), type: $0.type, name: $0.name, details: $0.details, durationMinutes: $0.durationMinutes, reminderOffsetMinutes: $0.reminderOffsetMinutes, temperatureRange: $0.temperatureRange, volumeTarget: $0.volumeTarget, notes: $0.notes) },
+            ingredients: ingredients ?? "",
+            procedure: procedure ?? "",
+            bakingInstructions: bakingInstructions ?? ""
         )
     }
 

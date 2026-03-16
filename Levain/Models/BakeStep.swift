@@ -80,7 +80,7 @@ final class BakeStep {
     }
 
     var plannedEnd: Date {
-        plannedStart.adding(minutes: plannedDurationMinutes)
+        referenceStart.adding(minutes: plannedDurationMinutes)
     }
 
     var referenceStart: Date {

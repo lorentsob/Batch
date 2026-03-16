@@ -16,6 +16,9 @@ final class Bake {
     var servings: Int
     var notes: String
     var isCancelled: Bool
+    var ingredients: String?
+    var procedure: String?
+    var bakingInstructions: String?
     var formula: RecipeFormula?
     var starter: Starter?
 
@@ -35,7 +38,10 @@ final class Bake {
         totalDoughWeight: Double,
         hydrationPercent: Double,
         servings: Int,
-        notes: String = ""
+        notes: String = "",
+        ingredients: String = "",
+        procedure: String = "",
+        bakingInstructions: String = ""
     ) {
         self.id = id
         self.name = name
@@ -51,6 +57,9 @@ final class Bake {
         self.hydrationPercent = hydrationPercent
         self.servings = servings
         self.notes = notes
+        self.ingredients = ingredients
+        self.procedure = procedure
+        self.bakingInstructions = bakingInstructions
         self.isCancelled = false
         self.steps = []
     }

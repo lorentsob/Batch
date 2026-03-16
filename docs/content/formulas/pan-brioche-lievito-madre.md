@@ -3,6 +3,7 @@ id: pan-brioche-lievito-madre
 type: formula
 title: Pan Brioche
 category: sweet
+bake_type: pan-brioche
 hydration: 48
 salt_percent: 1.6
 inoculation_percent: 36
