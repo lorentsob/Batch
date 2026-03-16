@@ -93,12 +93,10 @@ enum BakeScheduler {
         }
 
         for step in bake.steps where step.isTerminal == false {
-            // For a running anchor: only shift subsequent steps (shifting its own plannedStart
-            // has no effect on plannedEnd and would confuse the relative-offset calculation above).
-            // For a pending/overdue anchor: shift from it inclusive (fixes overdue rescheduling).
-            let minIndex = anchorStep.status == .running
-                ? anchorStep.orderIndex + 1
-                : anchorStep.orderIndex
+            // Always shift only steps strictly after the anchor. The special-case logic above
+            // for a running anchor adjusts `effectiveShift` so the first subsequent step is
+            // re-anchored to `plannedEnd + minutes` without moving the anchor itself.
+            let minIndex = anchorStep.orderIndex + 1
             guard step.orderIndex >= minIndex else { continue }
             step.plannedStart = step.plannedStart.adding(minutes: effectiveShift)
             step.flexibleWindowStart = step.flexibleWindowStart?.adding(minutes: effectiveShift)
