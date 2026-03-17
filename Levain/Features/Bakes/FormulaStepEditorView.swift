@@ -85,7 +85,8 @@ struct FormulaStepEditorView: View {
                             reminderOffsetMinutes: reminderOffsetMinutes,
                             temperatureRange: temperatureRange,
                             volumeTarget: volumeTarget,
-                            notes: notes
+                            notes: notes,
+                            ingredients: initialStep.ingredients
                         )
                     )
                     dismiss()
