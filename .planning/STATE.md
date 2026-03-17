@@ -9,12 +9,12 @@ See: .planning/PROJECT.md (updated 2026-03-14)
 
 ## Current Position
 
-Phase: 15 of 15 (Memory Durability & System Content Separation)
-Plan: 3 of 3 executed in current phase
-Status: In Progress — implementation and local automated verification complete, manual device checks pending
-Last activity: 2026-03-14 — Phase 15 unit, Swift Testing, and serial UI verification completed locally; device UAT checklist still pending
+Phase: 16 of 16 (Baking Phase Ingredients UX)
+Plan: 1 of 1 executed in current phase
+Status: In Progress — Plan 01 complete; phase has 1 plan
+Last activity: 2026-03-17 — Completed 16-01-PLAN.md: step-level ingredients in modal
 
-Progress: [██████████████░] 93% (14 of 15 phases complete)
+Progress: [████████████████] 100% (16 of 16 phases, 1/1 plans in Phase 16)
 
 ## Performance Metrics
 
@@ -39,7 +39,8 @@ Progress: [██████████████░] 93% (14 of 15 phases c
 | 12 | 3/3 | Complete |
 | 13 | 3/3 | Complete |
 | 14 | 1/1 | Complete |
-| 15 | 3/3 | In Progress |
+| 15 | 3/3 | Complete |
+| 16 | 1/1 | In Progress |
 
 **Recent Trend**
 
@@ -55,6 +56,9 @@ Progress: [██████████████░] 93% (14 of 15 phases c
 - Phase 15 planning: bundled knowledge and bundled system formulas remain read-only app content, while demo seed stays launch-option-only
 - Phase 15 planning: backup/restore is explicit replace-current-data JSON import, not background sync or merge logic
 - Phase 15 planning: CloudKit remains backlog and does not enter the MVP memory-hardening phase
+- Phase 16 plan 01: step ingredients stored as [String] flat lines (display-only, no baker's math)
+- Phase 16 plan 01: ingredient subsection matching uses substring matching (case-insensitive) — "Per l'impasto" matches "Impasto"
+- Phase 16 plan 01: formula authoring UX for step-level ingredient assignment is deferred (editor preserves but does not expose field)
 
 ### Blockers/Concerns
 
@@ -63,6 +67,6 @@ Progress: [██████████████░] 93% (14 of 15 phases c
 
 ## Session Continuity
 
-Last session: 2026-03-14
-Stopped at: Phase 15 verification report written; complete the real-device upgrade and backup UAT checklist next.
-Resume file: .planning/phases/15-memory-durability-content-separation/15-UAT.md
+Last session: 2026-03-17
+Stopped at: Completed 16-01-PLAN.md — step-level ingredients in baking phase modal
+Resume file: None
