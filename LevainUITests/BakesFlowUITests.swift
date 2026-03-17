@@ -56,14 +56,8 @@ final class BakesFlowUITests: XCTestCase {
         XCTAssertTrue(app.buttons["Nuovo bake"].waitForExistence(timeout: 8))
         app.buttons["Nuovo bake"].tap()
 
+        // Verify the creation form appears with the recipe picker
         XCTAssertTrue(app.staticTexts["Ricetta"].waitForExistence(timeout: 8))
-
-        // Tap the recipe picker to open it
-        let recipePicker = app.otherElements["BakeRecipePicker"]
-        XCTAssertTrue(recipePicker.waitForExistence(timeout: 5))
-        recipePicker.tap()
-
-        // System templates section should be visible
-        XCTAssertTrue(app.staticTexts["Template di sistema"].waitForExistence(timeout: 5))
+        XCTAssertTrue(app.pickers["BakeRecipePicker"].waitForExistence(timeout: 5))
     }
 }

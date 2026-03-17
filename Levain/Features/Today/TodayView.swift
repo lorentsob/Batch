@@ -595,6 +595,7 @@ private struct FeaturePillCard: View {
             )
         }
         .buttonStyle(.plain)
+        .accessibilityLabel(title)
         .accessibilityIdentifier(accessibilityIdentifier)
     }
 }
