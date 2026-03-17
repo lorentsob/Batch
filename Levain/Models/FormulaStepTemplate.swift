@@ -14,6 +14,25 @@ struct FormulaStepTemplate: Codable, Hashable, Identifiable {
     /// Empty array means no ingredients are associated with this step.
     var ingredients: [String]
 
+    enum CodingKeys: String, CodingKey {
+        case id, typeRaw, name, details, durationMinutes, reminderOffsetMinutes
+        case temperatureRange, volumeTarget, notes, ingredients
+    }
+
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        id = try container.decode(UUID.self, forKey: .id)
+        typeRaw = try container.decode(String.self, forKey: .typeRaw)
+        name = try container.decode(String.self, forKey: .name)
+        details = try container.decodeIfPresent(String.self, forKey: .details) ?? ""
+        durationMinutes = try container.decode(Int.self, forKey: .durationMinutes)
+        reminderOffsetMinutes = try container.decodeIfPresent(Int.self, forKey: .reminderOffsetMinutes) ?? 0
+        temperatureRange = try container.decodeIfPresent(String.self, forKey: .temperatureRange) ?? ""
+        volumeTarget = try container.decodeIfPresent(String.self, forKey: .volumeTarget) ?? ""
+        notes = try container.decodeIfPresent(String.self, forKey: .notes) ?? ""
+        ingredients = try container.decodeIfPresent([String].self, forKey: .ingredients) ?? []
+    }
+
     init(
         id: UUID = UUID(),
         type: BakeStepType,

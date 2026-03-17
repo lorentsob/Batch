@@ -220,7 +220,12 @@ class ContentFormatter:
         return []
 
     def parse_steps(self, steps_text: str, parent_id: str, ingredient_sections: list = None) -> List[Dict[str, Any]]:
-        """Parse steps from markdown format to JSON format"""
+        """Parse steps from markdown format to JSON format.
+
+        Supported syntaxes:
+        - `- step_type | duration`
+        - `- step_type: Custom Label | duration`
+        """
         if not steps_text:
             raise ValidationError("Empty steps section")
 
@@ -236,13 +241,15 @@ class ContentFormatter:
             if not line or not line.startswith('-'):
                 continue
 
-            # Parse format: - step_type | duration
-            match = re.match(r'-\s*(\S+)\s*\|\s*(\d+)', line)
+            # Parse formats:
+            # - step_type | duration
+            # - step_type: Custom Label | duration
+            match = re.match(r'-\s*([^:|\s]+)(?:\s*:\s*(.+?))?\s*\|\s*(\d+)\s*$', line)
             if not match:
                 self.warnings.append(f"Could not parse step line: {line}")
                 continue
 
-            step_type_md, duration_str = match.groups()
+            step_type_md, explicit_name, duration_str = match.groups()
 
             # Map to Swift enum rawValue
             if step_type_md not in STEP_TYPE_MAPPING:
@@ -250,12 +257,12 @@ class ContentFormatter:
 
             step_type_raw = STEP_TYPE_MAPPING[step_type_md]
             duration = int(duration_str)
+            step_name = explicit_name.strip() if explicit_name else STEP_TITLES.get(step_type_raw, 'Fase personalizzata')
 
             # Generate stable step ID
-            step_seed = f"{parent_id}-{step_type_raw}-{i}"
+            step_seed = f"{parent_id}-{step_type_raw}-{step_name}-{i}"
             step_uuid = str(uuid.uuid5(step_namespace, step_seed)).upper()
 
-            step_name = STEP_TITLES.get(step_type_raw, 'Fase personalizzata')
             step_ingredients = self.match_step_ingredients(ingredient_sections, step_name, step_type_raw)
 
             step = {
