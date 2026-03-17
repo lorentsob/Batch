@@ -117,13 +117,13 @@ final class NotificationService: NSObject, ObservableObject, UNUserNotificationC
         await NotificationScheduler.apply(plans)
     }
 
-    func syncNotifications(for bakeID: UUID, in context: ModelContext) async {
+    func syncNotifications(forBake bakeID: UUID, in context: ModelContext) async {
         let descriptor = FetchDescriptor<Bake>(predicate: #Predicate { $0.id == bakeID })
         guard let bake = (try? context.fetch(descriptor))?.first else { return }
         await NotificationScheduler.apply([makeSyncPlan(for: bake)])
     }
 
-    func syncNotifications(for starterID: UUID, in context: ModelContext) async {
+    func syncNotifications(forStarter starterID: UUID, in context: ModelContext) async {
         let descriptor = FetchDescriptor<Starter>(predicate: #Predicate { $0.id == starterID })
         guard let starter = (try? context.fetch(descriptor))?.first else { return }
         await NotificationScheduler.apply([makeSyncPlan(for: starter)])

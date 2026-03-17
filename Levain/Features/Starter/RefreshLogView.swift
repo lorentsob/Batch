@@ -139,7 +139,7 @@ struct RefreshLogView: View {
         let starterID = starter.id
         let ctx = modelContext
         Task {
-            await environment.notificationService.syncNotifications(for: starterID, in: ctx)
+            await environment.notificationService.syncNotifications(forStarter: starterID, in: ctx)
             if !recordFridgeTime {
                 await environment.notificationService.scheduleFridgeReminder(for: refresh, starterName: starter.name)
             }

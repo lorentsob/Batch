@@ -167,9 +167,8 @@ struct BakeDetailView: View {
         }
 
         let ctx = modelContext
-        let notificationService = environment.notificationService
         Task {
-            await notificationService.syncNotifications(for: bakeID, in: ctx)
+            await environment.notificationService.syncNotifications(forBake: bakeID, in: ctx)
         }
     }
 
