@@ -62,6 +62,7 @@ enum BakeScheduler {
                 temperatureRange: template.temperatureRange,
                 volumeTarget: template.volumeTarget,
                 notes: template.notes,
+                ingredients: template.ingredients,
                 bake: bake
             )
             result.append(step)

@@ -27,6 +27,9 @@ final class BakeStep {
     var statusRaw: String
     var notes: String
     var photoURI: String
+    /// JSON-encoded [String] of ingredient lines for this step (e.g. "500 g farina").
+    /// nil or empty JSON means no ingredients to display.
+    var ingredientsPayload: String?
     var bake: Bake?
 
     init(
@@ -47,6 +50,7 @@ final class BakeStep {
         status: StepStatus = .pending,
         notes: String = "",
         photoURI: String = "",
+        ingredients: [String] = [],
         bake: Bake? = nil
     ) {
         self.id = id
@@ -66,7 +70,17 @@ final class BakeStep {
         self.statusRaw = status.rawValue
         self.notes = notes
         self.photoURI = photoURI
+        self.ingredientsPayload = ingredients.isEmpty ? nil : (try? JSONEncoder().encode(ingredients)).flatMap { String(data: $0, encoding: .utf8) }
         self.bake = bake
+    }
+
+    /// Decoded ingredient lines for this step. Empty array if none.
+    var stepIngredients: [String] {
+        guard let raw = ingredientsPayload, !raw.isEmpty,
+              let data = raw.data(using: .utf8),
+              let items = try? JSONDecoder().decode([String].self, from: data)
+        else { return [] }
+        return items
     }
 
     var type: BakeStepType {
