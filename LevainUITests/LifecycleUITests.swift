@@ -36,7 +36,7 @@ final class LifecycleUITests: XCTestCase {
 
         XCTAssertTrue(app.tabBars.buttons["Impasti"].waitForExistence(timeout: 5))
         app.tabBars.buttons["Impasti"].tap()
-        XCTAssertTrue(app.scrollViews["BakesScrollView"].waitForExistence(timeout: 8))
+        XCTAssertTrue(app.descendants(matching: .any).matching(identifier: "BakesScrollView").firstMatch.waitForExistence(timeout: 8))
 
         app.terminate()
         app.launchEmpty()

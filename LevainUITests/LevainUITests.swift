@@ -96,7 +96,7 @@ final class LevainUITests: XCTestCase {
         XCTAssertTrue(app.scrollViews["TodayScrollView"].waitForExistence(timeout: 5))
 
         app.tabBars.buttons["Impasti"].tap()
-        XCTAssertTrue(app.scrollViews["BakesScrollView"].waitForExistence(timeout: 5))
+        XCTAssertTrue(app.descendants(matching: .any).matching(identifier: "BakesScrollView").firstMatch.waitForExistence(timeout: 5))
 
         app.tabBars.buttons["Starter"].tap()
         XCTAssertTrue(app.scrollViews["StarterScrollView"].waitForExistence(timeout: 5))
@@ -122,7 +122,7 @@ final class LevainUITests: XCTestCase {
         XCTAssertTrue(bakesTab.waitForExistence(timeout: 5))
         bakesTab.tap()
 
-        XCTAssertTrue(app.scrollViews["BakesScrollView"].waitForExistence(timeout: 8))
+        XCTAssertTrue(app.descendants(matching: .any).matching(identifier: "BakesScrollView").firstMatch.waitForExistence(timeout: 8))
         XCTAssertTrue(app.staticTexts["Infornata del weekend"].waitForExistence(timeout: 8))
         XCTAssertFalse(app.staticTexts["Nessun bake ancora"].exists)
     }
