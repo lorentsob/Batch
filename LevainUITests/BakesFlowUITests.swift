@@ -14,7 +14,7 @@ final class BakesFlowUITests: XCTestCase {
         XCTAssertTrue(bakesTab.waitForExistence(timeout: 5))
         bakesTab.tap()
 
-        XCTAssertTrue(app.scrollViews["BakesScrollView"].waitForExistence(timeout: 8))
+        XCTAssertTrue(app.descendants(matching: .any).matching(identifier: "BakesScrollView").firstMatch.waitForExistence(timeout: 8))
         XCTAssertTrue(app.staticTexts["Nessun bake ancora"].waitForExistence(timeout: 8))
     }
 
@@ -26,7 +26,7 @@ final class BakesFlowUITests: XCTestCase {
         XCTAssertTrue(bakesTab.waitForExistence(timeout: 5))
         bakesTab.tap()
 
-        XCTAssertTrue(app.scrollViews["BakesScrollView"].waitForExistence(timeout: 8))
+        XCTAssertTrue(app.descendants(matching: .any).matching(identifier: "BakesScrollView").firstMatch.waitForExistence(timeout: 8))
         XCTAssertTrue(app.staticTexts["Infornata del weekend"].waitForExistence(timeout: 8))
         XCTAssertFalse(app.staticTexts["Nessun bake ancora"].exists)
     }
@@ -39,7 +39,7 @@ final class BakesFlowUITests: XCTestCase {
         XCTAssertTrue(bakesTab.waitForExistence(timeout: 5))
         bakesTab.tap()
 
-        XCTAssertTrue(app.scrollViews["BakesScrollView"].waitForExistence(timeout: 8))
+        XCTAssertTrue(app.descendants(matching: .any).matching(identifier: "BakesScrollView").firstMatch.waitForExistence(timeout: 8))
         XCTAssertTrue(app.staticTexts["Nessun bake ancora"].waitForExistence(timeout: 8))
         XCTAssertTrue(app.buttons["Crea il tuo primo bake"].waitForExistence(timeout: 8))
     }
@@ -52,7 +52,7 @@ final class BakesFlowUITests: XCTestCase {
         XCTAssertTrue(bakesTab.waitForExistence(timeout: 5))
         bakesTab.tap()
 
-        XCTAssertTrue(app.scrollViews["BakesScrollView"].waitForExistence(timeout: 8))
+        XCTAssertTrue(app.descendants(matching: .any).matching(identifier: "BakesScrollView").firstMatch.waitForExistence(timeout: 8))
         XCTAssertTrue(app.buttons["Nuovo bake"].waitForExistence(timeout: 8))
         app.buttons["Nuovo bake"].tap()
 
