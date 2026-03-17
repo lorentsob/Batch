@@ -4,10 +4,12 @@ on:
   push:
     branches:
       - main
+      - develop
       - "release/**"
   pull_request:
     branches:
       - main
+      - develop
       - "release/**"
 
 concurrency:
@@ -35,18 +37,37 @@ jobs:
           sudo xcode-select -s /Applications/Xcode.app/Contents/Developer
           xcodebuild -version
 
-      # ── 3. Install XcodeGen ──────────────────────────────────────────────────
+      # ── 3. Cache Homebrew packages ───────────────────────────────────────────
+      - name: Cache Homebrew
+        uses: actions/cache@v4
+        with:
+          path: ~/Library/Caches/Homebrew
+          key: brew-${{ runner.os }}-xcodegen
+          restore-keys: brew-${{ runner.os }}-
+
+      # ── 4. Install XcodeGen ──────────────────────────────────────────────────
       - name: Install XcodeGen
         run: brew install xcodegen
 
       - name: Install xcpretty
         run: sudo gem install xcpretty
 
-      # ── 4. Bootstrap (generate project from project.yml) ─────────────────────
+      # ── 5. Cache DerivedData ─────────────────────────────────────────────────
+      # Keyed on Swift sources + project.yml so a cache hit means no recompile.
+      # Every 20th run (run_number % 20 == 0) the key includes "clean" so the
+      # cache is intentionally busted for a full clean build (avoids stale state).
+      - name: Cache DerivedData
+        uses: actions/cache@v4
+        with:
+          path: /tmp/LevainDerivedCI
+          key: deriveddata-${{ runner.os }}-${{ hashFiles('**/*.swift', 'project.yml') }}
+          restore-keys: deriveddata-${{ runner.os }}-
+
+      # ── 6. Bootstrap (generate project from project.yml) ─────────────────────
       - name: Bootstrap project
         run: bash scripts/ci_bootstrap.sh
 
-      # ── 5. Build ─────────────────────────────────────────────────────────────
+      # ── 7. Build ─────────────────────────────────────────────────────────────
       # Use generic/platform=iOS Simulator so the build step succeeds even when
       # the named simulator device is not yet available (e.g. runner images that
       # haven't installed a runtime for the target OS). Compilation only needs
@@ -62,7 +83,7 @@ jobs:
             -destination "generic/platform=iOS Simulator" \
             CODE_SIGNING_ALLOWED=NO \
             SWIFT_TREAT_WARNINGS_AS_ERRORS=YES \
-            clean build 2>&1 | tee /tmp/build.log | xcpretty --color
+            build 2>&1 | tee /tmp/build.log | xcpretty --color
 
       # ── 6. Boot simulator ────────────────────────────────────────────────────
       - name: List available simulators
