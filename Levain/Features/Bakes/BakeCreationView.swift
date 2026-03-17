@@ -256,12 +256,14 @@ struct BakeCreationView: View {
         bake.steps.forEach { modelContext.insert($0) }
         try? modelContext.save()
 
+        let bakeID = bake.id
+        let ctx = modelContext
         Task {
-            await environment.notificationService.syncNotifications(for: bake)
+            await environment.notificationService.syncNotifications(for: bakeID, in: ctx)
         }
-        
+
         dismiss()
-        router.openBake(bake.id)
+        router.openBake(bakeID)
     }
 }
 

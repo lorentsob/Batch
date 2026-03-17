@@ -165,8 +165,10 @@ struct StarterEditorView: View {
 
         try? modelContext.save()
 
+        let starterID = savedStarter.id
+        let ctx = modelContext
         Task {
-            await environment.notificationService.syncNotifications(for: savedStarter)
+            await environment.notificationService.syncNotifications(for: starterID, in: ctx)
         }
 
         dismiss()

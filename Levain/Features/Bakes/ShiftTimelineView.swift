@@ -43,8 +43,10 @@ struct ShiftTimelineView: View {
                 Button("Applica") {
                     BakeScheduler.shiftFutureSteps(in: bake, after: anchorStep, by: shiftMinutes)
                     try? modelContext.save()
+                    let bakeID = bake.id
+                    let ctx = modelContext
                     Task {
-                        await environment.notificationService.syncNotifications(for: bake)
+                        await environment.notificationService.syncNotifications(for: bakeID, in: ctx)
                     }
                     dismiss()
                 }
