@@ -57,7 +57,7 @@ final class TodayFlowUITests: XCTestCase {
         }
 
         XCTAssertTrue(completeButton.waitForExistence(timeout: 5))
-        XCTAssertTrue(app.buttons["Dettaglio"].exists)
+        XCTAssertTrue(app.buttons["Procedimento"].exists)
     }
 
     func testStarterReminderDisappearsAfterRefreshSave() throws {
