@@ -100,7 +100,7 @@ struct StateBadge: View {
         self.text = dueState.title
         switch dueState {
         case .ok:
-            tone = .count
+            tone = .done
         case .dueToday:
             tone = .pending             // verde tenue — scade oggi, richiede attenzione
         case .overdue:
