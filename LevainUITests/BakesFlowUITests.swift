@@ -56,8 +56,10 @@ final class BakesFlowUITests: XCTestCase {
         XCTAssertTrue(app.buttons["Nuovo bake"].waitForExistence(timeout: 8))
         app.buttons["Nuovo bake"].tap()
 
-        // Verify the creation form appears with the recipe picker
-        XCTAssertTrue(app.staticTexts["Ricetta"].waitForExistence(timeout: 8))
-        XCTAssertTrue(app.pickers["BakeRecipePicker"].waitForExistence(timeout: 5))
+        // Wait for the creation sheet to finish presenting before checking controls.
+        XCTAssertTrue(app.navigationBars["Nuovo bake"].waitForExistence(timeout: 10))
+
+        // SwiftUI Form Picker with default style renders as a button in the accessibility tree.
+        XCTAssertTrue(app.buttons["BakeRecipePicker"].waitForExistence(timeout: 5))
     }
 }
