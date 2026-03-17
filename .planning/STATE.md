@@ -5,16 +5,16 @@
 See: .planning/PROJECT.md (updated 2026-03-14)
 
 **Core value:** The app must make the next baking action obvious without adding setup, infrastructure, or workflow friction.
-**Current focus:** Phase 15 memory durability is implemented and locally verified; the remaining work is manual device upgrade and backup round-trip UAT.
+**Current focus:** Phase 16 complete — step-specific ingredients visible in the baking phase modal, content pipeline automated via Python formatter.
 
 ## Current Position
 
 Phase: 16 of 16 (Baking Phase Ingredients UX)
 Plan: 1 of 1 executed in current phase
-Status: In Progress — Plan 01 complete; phase has 1 plan
-Last activity: 2026-03-17 — Completed 16-01-PLAN.md: step-level ingredients in modal
+Status: Complete — all plans executed, phase goal verified (3/3 must-haves passed)
+Last activity: 2026-03-17 — Phase 16 verified complete
 
-Progress: [████████████████] 100% (16 of 16 phases, 1/1 plans in Phase 16)
+Progress: [████████████████] 100% (16 of 16 phases complete)
 
 ## Performance Metrics
 
@@ -40,7 +40,7 @@ Progress: [████████████████] 100% (16 of 16 phas
 | 13 | 3/3 | Complete |
 | 14 | 1/1 | Complete |
 | 15 | 3/3 | Complete |
-| 16 | 1/1 | In Progress |
+| 16 | 1/1 | Complete |
 
 **Recent Trend**
 
