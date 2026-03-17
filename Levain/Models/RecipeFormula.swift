@@ -101,7 +101,7 @@ final class RecipeFormula {
             flourMix: flourMix,
             yeastType: yeastType,
             flours: selectedFlours,
-            defaultSteps: defaultSteps.map { FormulaStepTemplate(id: UUID(), type: $0.type, name: $0.name, details: $0.details, durationMinutes: $0.durationMinutes, reminderOffsetMinutes: $0.reminderOffsetMinutes, temperatureRange: $0.temperatureRange, volumeTarget: $0.volumeTarget, notes: $0.notes) },
+            defaultSteps: defaultSteps.map { FormulaStepTemplate(id: UUID(), type: $0.type, name: $0.name, details: $0.details, durationMinutes: $0.durationMinutes, reminderOffsetMinutes: $0.reminderOffsetMinutes, temperatureRange: $0.temperatureRange, volumeTarget: $0.volumeTarget, notes: $0.notes, ingredients: $0.ingredients) },
             ingredients: ingredients ?? "",
             procedure: procedure ?? "",
             bakingInstructions: bakingInstructions ?? ""

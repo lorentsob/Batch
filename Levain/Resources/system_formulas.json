@@ -12,23 +12,28 @@
     "flourMix": "100% farina forte per pane 12,7%–14% proteine",
     "flours": [],
     "notes": "",
-    "ingredients": "[{\"title\": \"Per il levain\", \"items\": [\"116 g farina forte per pane\", \"58 g acqua\", \"23 g lievito madre maturo al 100% di idratazione\"]}, {\"title\": \"Per l’impasto finale\", \"items\": [\"848 g farina forte per pane\", \"29 g zucchero semolato fine\", \"29 g sciroppo di malto d’orzo oppure miele\", \"472 g acqua\", \"7 g malto diastasico\", \"18 g sale fino\", \"197 g levain maturo\"]}, {\"title\": \"Per finire\", \"items\": [\"farina di mais o semola per spolverare la teglia\", \"semi di sesamo, papavero, mix everything bagel oppure fiocchi d’avena, facoltativi\", \"carta forno\"]}]",
+    "ingredients": "[{\"title\": \"Levain\", \"items\": [\"116 g farina forte per pane\", \"58 g acqua\", \"23 g lievito madre maturo al 100% di idratazione\"]}, {\"title\": \"Impasto\", \"items\": [\"848 g farina forte per pane\", \"29 g zucchero semolato fine\", \"29 g sciroppo di malto d’orzo oppure miele\", \"472 g acqua\", \"7 g malto diastasico\", \"18 g sale fino\", \"197 g levain maturo\"]}, {\"title\": \"Bollitura\", \"items\": [\"farina di mais o semola per spolverare la teglia\", \"semi di sesamo, papavero, mix everything bagel oppure fiocchi d’avena, facoltativi\", \"carta forno\"]}]",
     "procedure": "[{\"title\": \"Levain\", \"level\": 2, \"content\": \"- Mescola farina, acqua e lievito madre fino a ottenere un impasto compatto e abbastanza sodo.\\n- Lavora brevemente con le mani finché non restano parti asciutte.\\n- Metti in un contenitore.\\n- Copri senza sigillare del tutto.\\n- Lascia maturare per circa 12 ore a 23–24°C.\\n- Il levain pronto deve essere gonfio, ben aerato, morbido, leggermente appiccicoso e con profumo acidulo deciso.\"}, {\"title\": \"Dough mix\", \"level\": 2, \"content\": \"- In una ciotolina sciogli lo sciroppo di malto con poco della dose d’acqua.\\n- Aggiungi zucchero, malto diastasico e sale.\\n- Mescola fino a quasi sciogliere tutto.\\n- Spezzetta il levain nell’impastatrice oppure in una ciotola capiente.\\n- Aggiungi farina, acqua e la miscela preparata.\\n- Impasta in impastatrice per 5–6 minuti a bassa velocità, fino a ottenere un impasto liscio, elastico e piuttosto tenace.\\n- Oppure impasta a mano per 8–10 minuti, finché l’impasto diventa liscio ed elastico.\\n- Temperatura finale impasto ideale: circa 25°C.\\n- Copri l’impasto.\"}, {\"title\": \"Bulk\", \"level\": 2, \"content\": \"- Lascia fermentare per 3 ore a 23–24°C.\\n- Non servono pieghe.\\n- A fine lievitazione l’impasto deve essere cresciuto bene e può mostrare qualche bolla grande in superficie.\"}, {\"title\": \"Shape\", \"level\": 2, \"content\": \"- Spolvera una teglia 33 × 46 cm circa con un velo di farina di mais o semola.\\n- Rovescia l’impasto sul piano.\\n- Dividilo in 12 pezzi da circa 125 g.\\n- Schiaccia delicatamente ogni pezzo per sgonfiarlo un po’.\\n- Arrotola ogni pezzo in un piccolo cilindro.\\n- Fai rotolare il cilindro fino a ottenere un cordoncino lungo circa 30 cm.\\n- Avvolgi il cordoncino attorno alla mano.\\n- Sovrapponi le estremità nel palmo e sigillale facendole rotolare sul piano.\\n- Disponi i bagel sulla teglia in 4 file da 3 pezzi.\\n- Inserisci la teglia in un sacchetto grande richiudibile oppure coprila bene.\"}, {\"title\": \"Proof\", \"level\": 2, \"content\": \"- Lascia riposare i bagel per circa 2 ore a 23–24°C.\\n- Devono gonfiarsi leggermente.\\n- Se risultano ancora troppo compatti, prolunga di circa 30 minuti.\"}, {\"title\": \"Cold retard\", \"level\": 2, \"content\": \"- Metti la teglia in frigorifero per circa 17 ore, idealmente intorno ai 4°C.\"}, {\"title\": \"Boil and bake\", \"level\": 2, \"content\": \"\"}, {\"title\": \"Bollitura\", \"level\": 3, \"content\": \"- Rivesti due teglie con carta forno.\\n- Scalda il forno a 230°C ventilato oppure 245°C statico.\\n- Porta a lieve bollore una pentola capiente piena per circa tre quarti d’acqua.\\n- Tira fuori i bagel dal frigo solo quando forno e acqua sono pronti.\\n- Cuoci 3 bagel alla volta per 40 secondi sul primo lato e 40 secondi sul secondo lato.\\n- Scolali su una griglia o su un canovaccio.\\n- Se vuoi, appena scolati intingi la superficie nei semi o nel mix scelto.\\n- Sistemali sulle teglie rivestite, lasciando spazio tra un pezzo e l’altro.\"}, {\"title\": \"Forno\", \"level\": 3, \"content\": \"- Inforna sulla pietra refrattaria o su una teglia ben calda, se ce l’hai.\\n- Cuoci 10 minuti.\\n- Ruota la teglia e prosegui per 5 minuti.\\n- Abbassa la temperatura a 220°C ventilato oppure 230°C statico.\\n- Cuoci ancora 5–10 minuti, finché i bagel sono ben dorati e leggermente croccanti.\\n- Evita di spingerli troppo oltre, altrimenti diventano duri e troppo fitti.\"}, {\"title\": \"Cooling\", \"level\": 2, \"content\": \"- Lascia raffreddare su una griglia per almeno 15–20 minuti prima di tagliarli.\"}, {\"title\": \"Troubleshooting\", \"level\": 2, \"content\": \"\"}, {\"title\": \"Se l’impasto è troppo appiccicoso in formatura\", \"level\": 3, \"content\": \"- Probabilmente la farina assorbe meno del previsto oppure l’impasto è troppo caldo.\\n- La volta dopo riduci leggermente l’acqua.\"}, {\"title\": \"Se i bagel affondano in bollitura\", \"level\": 3, \"content\": \"- Se affondano per pochi secondi è normale.\\n- Se non tornano a galla dopo 10–20 secondi, probabilmente hanno fatto troppo appretto.\\n- La volta dopo riduci la lievitazione a temperatura ambiente da 2 ore a circa 1 ora e 30.\"}, {\"title\": \"Se si scuriscono troppo\", \"level\": 3, \"content\": \"- Abbassa la temperatura del forno di circa 20°C nella prossima infornata.\"}, {\"title\": \"Variante un po’ più dolce\", \"level\": 3, \"content\": \"- Per avvicinarti a uno stile più Montreal puoi aggiungere 2–4 cucchiai di sciroppo di malto d’orzo all’acqua di bollitura.\"}, {\"title\": \"Timeline\", \"level\": 2, \"content\": \"- Levain: 12 ore\\n- Impasto\\n- Prima lievitazione: 3 ore\\n- Formatura\\n- Appretto: circa 2 ore\\n- Frigo: circa 17 ore\\n- Bollitura: 1 minuto e 20 secondi per batch\\n- Cottura: 20–25 minuti\"}]",
     "bakingInstructions": "",
     "defaultSteps": [
       {
-        "id": "55FF3087-1248-5E28-8A9F-D07CD152338B",
-        "name": "Fase personalizzata",
+        "id": "C9AEF4E5-7FCC-57BB-A438-1E1A38CE8604",
+        "name": "Levain",
         "typeRaw": "custom",
         "durationMinutes": 720,
-        "details": "",
+        "details": "- Mescola farina, acqua e lievito madre fino a ottenere un impasto compatto e abbastanza sodo.\n- Lavora brevemente con le mani finché non restano parti asciutte.\n- Metti in un contenitore.\n- Copri senza sigillare del tutto.\n- Lascia maturare per circa 12 ore a 23–24°C.\n- Il levain pronto deve essere gonfio, ben aerato, morbido, leggermente appiccicoso e con profumo acidulo deciso.",
         "notes": "",
         "reminderOffsetMinutes": 0,
         "temperatureRange": "",
-        "volumeTarget": ""
+        "volumeTarget": "",
+        "ingredients": [
+          "116 g farina forte per pane",
+          "58 g acqua",
+          "23 g lievito madre maturo al 100% di idratazione"
+        ]
       },
       {
-        "id": "6A85E650-6F58-542C-BD10-479C4E1F3A49",
+        "id": "ECE97D65-D11A-55A5-AB15-967A9B404ABD",
         "name": "Impasto",
         "typeRaw": "mix",
         "durationMinutes": 20,
@@ -36,10 +41,19 @@
         "notes": "",
         "reminderOffsetMinutes": 0,
         "temperatureRange": "",
-        "volumeTarget": ""
+        "volumeTarget": "",
+        "ingredients": [
+          "848 g farina forte per pane",
+          "29 g zucchero semolato fine",
+          "29 g sciroppo di malto d’orzo oppure miele",
+          "472 g acqua",
+          "7 g malto diastasico",
+          "18 g sale fino",
+          "197 g levain maturo"
+        ]
       },
       {
-        "id": "643CE14D-59B8-5880-98EA-01ED9CA01307",
+        "id": "B37006CB-A40C-5ABA-B425-C39480B329AE",
         "name": "Bulk fermentation",
         "typeRaw": "bulk",
         "durationMinutes": 180,
@@ -47,10 +61,11 @@
         "notes": "",
         "reminderOffsetMinutes": 0,
         "temperatureRange": "",
-        "volumeTarget": ""
+        "volumeTarget": "",
+        "ingredients": []
       },
       {
-        "id": "9CDEC26D-9140-5426-A167-DF6E2103498C",
+        "id": "95AF4E10-5CB3-576F-A028-2117DB04D122",
         "name": "Formatura",
         "typeRaw": "shape",
         "durationMinutes": 30,
@@ -58,10 +73,11 @@
         "notes": "",
         "reminderOffsetMinutes": 0,
         "temperatureRange": "",
-        "volumeTarget": ""
+        "volumeTarget": "",
+        "ingredients": []
       },
       {
-        "id": "487580E8-25D3-561C-93BF-5E6E0710D64C",
+        "id": "565D0617-88EE-59C5-8AB6-92F1BCC157C1",
         "name": "Appretto",
         "typeRaw": "proof",
         "durationMinutes": 120,
@@ -69,10 +85,11 @@
         "notes": "",
         "reminderOffsetMinutes": 0,
         "temperatureRange": "",
-        "volumeTarget": ""
+        "volumeTarget": "",
+        "ingredients": []
       },
       {
-        "id": "178D44CE-552C-578B-AE9E-927AF87016C9",
+        "id": "9DE4B49A-B46F-531B-9CBE-409914800A86",
         "name": "Cold retard",
         "typeRaw": "coldRetard",
         "durationMinutes": 1020,
@@ -80,21 +97,27 @@
         "notes": "",
         "reminderOffsetMinutes": 0,
         "temperatureRange": "",
-        "volumeTarget": ""
+        "volumeTarget": "",
+        "ingredients": []
       },
       {
-        "id": "6731F35A-4CDE-576B-9556-D6D5D08EEE8C",
-        "name": "Fase personalizzata",
+        "id": "4B9BF06E-5300-5907-A0EA-BDBDE2CF2373",
+        "name": "Bollitura",
         "typeRaw": "custom",
         "durationMinutes": 10,
-        "details": "",
+        "details": "- Rivesti due teglie con carta forno.\n- Scalda il forno a 230°C ventilato oppure 245°C statico.\n- Porta a lieve bollore una pentola capiente piena per circa tre quarti d’acqua.\n- Tira fuori i bagel dal frigo solo quando forno e acqua sono pronti.\n- Cuoci 3 bagel alla volta per 40 secondi sul primo lato e 40 secondi sul secondo lato.\n- Scolali su una griglia o su un canovaccio.\n- Se vuoi, appena scolati intingi la superficie nei semi o nel mix scelto.\n- Sistemali sulle teglie rivestite, lasciando spazio tra un pezzo e l’altro.",
         "notes": "",
         "reminderOffsetMinutes": 0,
         "temperatureRange": "",
-        "volumeTarget": ""
+        "volumeTarget": "",
+        "ingredients": [
+          "farina di mais o semola per spolverare la teglia",
+          "semi di sesamo, papavero, mix everything bagel oppure fiocchi d’avena, facoltativi",
+          "carta forno"
+        ]
       },
       {
-        "id": "A7BD2551-566E-5675-8786-C165B9F25AB6",
+        "id": "1F3E3DE3-B9B1-505F-BA3D-565EC3CF5B71",
         "name": "Cottura",
         "typeRaw": "bake",
         "durationMinutes": 25,
@@ -102,10 +125,11 @@
         "notes": "",
         "reminderOffsetMinutes": 0,
         "temperatureRange": "",
-        "volumeTarget": ""
+        "volumeTarget": "",
+        "ingredients": []
       },
       {
-        "id": "82C23112-1DC1-5E26-85C6-2C4869C739CA",
+        "id": "7579FC5C-4148-5917-B92B-D7CFD9BE2062",
         "name": "Raffreddamento",
         "typeRaw": "cool",
         "durationMinutes": 20,
@@ -113,7 +137,8 @@
         "notes": "",
         "reminderOffsetMinutes": 0,
         "temperatureRange": "",
-        "volumeTarget": ""
+        "volumeTarget": "",
+        "ingredients": []
       }
     ]
   },
@@ -130,12 +155,12 @@
     "flourMix": "100% manitoba",
     "flours": [],
     "notes": "",
-    "ingredients": "[{\"title\": \"Impasto\", \"items\": [\"500 g farina manitoba\", \"125 g lievito madre maturo\", \"1 g lievito di birra\", \"400 g acqua\", \"12 g sale\", \"7 g olio extravergine di oliva\"]}, {\"title\": \"Condimento\", \"items\": [\"q.b. rosmarino\", \"q.b. sale in fiocchi\", \"q.b. olio extravergine di oliva per teglia e finitura\"]}]",
+    "ingredients": "[{\"title\": \"Impasto\", \"items\": [\"500 g farina manitoba\", \"125 g lievito madre maturo\", \"1 g lievito di birra\", \"400 g acqua\", \"12 g sale\", \"7 g olio extravergine di oliva\"]}, {\"title\": \"Cottura\", \"items\": [\"q.b. rosmarino\", \"q.b. sale in fiocchi\", \"q.b. olio extravergine di oliva per teglia e finitura\"]}]",
     "procedure": "[{\"title\": \"Starter prep\", \"level\": 2, \"content\": \"- Usa lievito madre maturo e attivo.\\n- Se vuoi dare una spinta iniziale alla fermentazione, aggiungi 1 g di lievito di birra.\\n- Aggiungi il lievito di birra all’inizio, insieme alla prima parte di acqua.\\n- La piccola quantità di lievito di birra serve soprattutto quando il lievito madre è meno attivo o la temperatura è più bassa.\\n- Una dose così contenuta non dovrebbe alterare in modo significativo il profilo aromatico della fermentazione naturale.\"}, {\"title\": \"Dough mix\", \"level\": 2, \"content\": \"- Comincia impastando in una ciotola o in impastatrice la farina insieme al lievito madre e a metà dell’acqua.\\n- Aggiungi la restante acqua poco alla volta e fai prendere corda all’impasto.\\n- Una volta formato, aggiungi il sale, l’ultimo goccio d’acqua e l’olio a filo.\\n- Continua fino a ottenere un impasto ben formato ed elastico.\"}, {\"title\": \"Bulk\", \"level\": 2, \"content\": \"- Lascia lievitare per 3 ore a temperatura ambiente.\\n- Durante questa fase fai 3 giri di pieghe, uno ogni 30 minuti.\"}, {\"title\": \"Cold retard\", \"level\": 2, \"content\": \"- Metti l’impasto in frigo per tutta la notte.\"}, {\"title\": \"Final proof\", \"level\": 2, \"content\": \"- La mattina successiva lascia lievitare per altre 2 ore a temperatura ambiente.\"}, {\"title\": \"Shape\", \"level\": 2, \"content\": \"- Versa l’impasto su una teglia unta con olio.\\n- Stendi la focaccia delicatamente.\\n- Condisci con olio, sale in fiocchi e rosmarino.\"}, {\"title\": \"Alternative same-day path\", \"level\": 2, \"content\": \"- Se vuoi saltare la lievitazione in frigo, continua la lievitazione per altre 3 ore a temperatura ambiente.\\n- Poi procedi con stesura, condimento e cottura.\"}, {\"title\": \"Bake\", \"level\": 2, \"content\": \"- Cuoci alla massima potenza del forno per circa 15 minuti.\\n- Poi sposta la focaccia su una griglia o sul ripiano più basso per far dorare bene la base.\\n- Sforna.\\n- Se vuoi, ripassa con un po’ di olio extravergine di oliva di qualità.\"}]",
     "bakingInstructions": "[\"Cuoci alla massima potenza del forno per circa 15 minuti.\", \"Poi sposta la focaccia su una griglia o sul ripiano più basso per far dorare bene la base.\", \"Sforna.\", \"Se vuoi, ripassa con un po’ di olio extravergine di oliva di qualità.\"]",
     "defaultSteps": [
       {
-        "id": "F06877B6-9054-53BD-8F81-5A56DF0922AE",
+        "id": "31D5247F-3639-5642-95CF-F0938A479D01",
         "name": "Impasto",
         "typeRaw": "mix",
         "durationMinutes": 30,
@@ -143,10 +168,18 @@
         "notes": "",
         "reminderOffsetMinutes": 0,
         "temperatureRange": "",
-        "volumeTarget": ""
+        "volumeTarget": "",
+        "ingredients": [
+          "500 g farina manitoba",
+          "125 g lievito madre maturo",
+          "1 g lievito di birra",
+          "400 g acqua",
+          "12 g sale",
+          "7 g olio extravergine di oliva"
+        ]
       },
       {
-        "id": "A2350031-3F3A-514C-A80E-9EAEDECB5E4A",
+        "id": "E11DA08B-2AEC-57B9-9C8E-AC808F1BA09D",
         "name": "Bulk fermentation",
         "typeRaw": "bulk",
         "durationMinutes": 180,
@@ -154,10 +187,11 @@
         "notes": "",
         "reminderOffsetMinutes": 0,
         "temperatureRange": "",
-        "volumeTarget": ""
+        "volumeTarget": "",
+        "ingredients": []
       },
       {
-        "id": "08A861C7-D973-552A-8907-CC45D837FC64",
+        "id": "7986E71B-ADF7-54FC-A98C-354B6CC5CD8E",
         "name": "Pieghe",
         "typeRaw": "fold",
         "durationMinutes": 90,
@@ -165,10 +199,11 @@
         "notes": "",
         "reminderOffsetMinutes": 0,
         "temperatureRange": "",
-        "volumeTarget": ""
+        "volumeTarget": "",
+        "ingredients": []
       },
       {
-        "id": "940F2B83-3CB0-58DD-88B2-474621841E83",
+        "id": "E4985087-A141-59DE-93F1-42F4D4A7A956",
         "name": "Cold retard",
         "typeRaw": "coldRetard",
         "durationMinutes": 720,
@@ -176,10 +211,11 @@
         "notes": "",
         "reminderOffsetMinutes": 0,
         "temperatureRange": "",
-        "volumeTarget": ""
+        "volumeTarget": "",
+        "ingredients": []
       },
       {
-        "id": "4BDEEC82-5500-556D-9869-3332A59314E8",
+        "id": "B30C62F7-5695-5D34-BA59-CE26980D2BFD",
         "name": "Formatura",
         "typeRaw": "shape",
         "durationMinutes": 20,
@@ -187,10 +223,11 @@
         "notes": "",
         "reminderOffsetMinutes": 0,
         "temperatureRange": "",
-        "volumeTarget": ""
+        "volumeTarget": "",
+        "ingredients": []
       },
       {
-        "id": "F05E9E1B-F8A0-5267-88C0-E0C9CA56D3CD",
+        "id": "6EEFAA51-2163-596D-BF00-C39434F4C0CD",
         "name": "Appretto",
         "typeRaw": "proof",
         "durationMinutes": 120,
@@ -198,10 +235,11 @@
         "notes": "",
         "reminderOffsetMinutes": 0,
         "temperatureRange": "",
-        "volumeTarget": ""
+        "volumeTarget": "",
+        "ingredients": []
       },
       {
-        "id": "6A4ED351-9702-5195-806E-C03ED6B5D1BA",
+        "id": "80A64F2F-0BD1-55B7-B1E7-48C93F930CC2",
         "name": "Cottura",
         "typeRaw": "bake",
         "durationMinutes": 20,
@@ -209,7 +247,12 @@
         "notes": "",
         "reminderOffsetMinutes": 0,
         "temperatureRange": "",
-        "volumeTarget": ""
+        "volumeTarget": "",
+        "ingredients": [
+          "q.b. rosmarino",
+          "q.b. sale in fiocchi",
+          "q.b. olio extravergine di oliva per teglia e finitura"
+        ]
       }
     ]
   },
@@ -226,12 +269,12 @@
     "flourMix": "80% manitoba, 20% farina 0",
     "flours": [],
     "notes": "",
-    "ingredients": "[{\"title\": \"Farina\", \"items\": [\"500 g farina forte W300 circa oppure 80% manitoba + 20% farina 0\"]}, {\"title\": \"Lievito\", \"items\": [\"180 g lievito madre solido rinfrescato con idratazione circa 40%\"]}, {\"title\": \"Liquidi e uova\", \"items\": [\"240 g latte intero\", \"1 uovo intero\", \"1 tuorlo\"]}, {\"title\": \"Zuccheri e aromi\", \"items\": [\"40 g zucchero\", \"facoltativo: 1 cucchiaino miele\"]}, {\"title\": \"Grassi\", \"items\": [\"70 g burro morbido a pomata\"]}, {\"title\": \"Sale\", \"items\": [\"8 g sale\"]}, {\"title\": \"Per spennellare\", \"items\": [\"1 tuorlo\", \"2 cucchiai latte\"]}]",
-    "procedure": "[{\"title\": \"Starter prep\", \"level\": 2, \"content\": \"- Rinfresca il lievito madre solido 1:1 con circa 40% acqua.\\n- Lascialo a 26–28°C fino a quando triplica.\\n- Usalo al picco o poco dopo.\"}, {\"title\": \"Dough mix\", \"level\": 2, \"content\": \"\"}, {\"title\": \"Autolisi\", \"level\": 3, \"content\": \"- In una ciotola mescola farina, latte, uovo intero e albume del secondo uovo.\\n- Mescola finché non resta farina asciutta.\\n- Copri e lascia riposare 20–30 minuti.\"}, {\"title\": \"Impasto\", \"level\": 3, \"content\": \"- Aggiungi il lievito madre a pezzetti.\\n- Impasta a mano fino a quando inizia a prendere struttura.\\n- Aggiungi in ordine zucchero, tuorlo e sale.\\n- Impasta finché torna elastico.\\n- Aggiungi il burro morbido in 2–3 volte, aspettando che venga assorbito prima di aggiungerne altro.\\n- Continua a impastare fino a ottenere un impasto liscio, elastico, non appiccicoso, tiepido ma non caldo.\\n- Forma una palla.\"}, {\"title\": \"First rise\", \"level\": 2, \"content\": \"- Metti l’impasto in una ciotola leggermente imburrata.\\n- Copri.\\n- Lascia a temperatura ambiente finché cresce circa 2×.\\n- In questa prova: circa 5 ore a temperatura ambiente, poi riposo in frigo per la notte, poi ripresa al mattino fino a volume corretto.\\n- La prima lievitazione deve arrivare circa a 2–2.5×.\"}, {\"title\": \"Shape\", \"level\": 2, \"content\": \"- Lascia l’impasto fuori frigo circa 30 minuti.\\n- Rovescialo sul piano leggermente imburrato.\\n- Sgonfialo delicatamente.\\n- Forma a piacere: filone, palline o treccia.\\n- Mettilo nello stampo da plumcake imburrato o rivestito con carta forno.\"}, {\"title\": \"Second rise\", \"level\": 2, \"content\": \"- Copri.\\n- Lascia a 26–28°C finché arriva circa a 1 cm dal bordo dello stampo.\\n- Indicativamente servono 2–3 ore, ma dipende dalla temperatura.\\n- Non farlo collassare.\"}, {\"title\": \"Bake\", \"level\": 2, \"content\": \"- Preriscalda il forno statico a 180°C.\\n- Prima di infornare spennella con 1 tuorlo e poco latte.\\n- Cuoci per 30–35 minuti.\\n- Se scurisce troppo, copri con alluminio.\\n- Se necessario, sforma negli ultimi minuti e termina la cottura su griglia.\\n- Il pan brioche è cotto quando è dorato in modo uniforme, il fondo è asciutto e l’interno è circa 92–94°C, oppure quando lo stecchino esce asciutto.\"}, {\"title\": \"Cooling\", \"level\": 2, \"content\": \"- Togli subito il pan brioche dallo stampo.\\n- Fallo raffreddare su gratella almeno 45 minuti prima di tagliarlo.\"}]",
-    "bakingInstructions": "[\"Preriscalda il forno statico a 180°C.\", \"Prima di infornare spennella con 1 tuorlo e poco latte.\", \"Cuoci per 30–35 minuti.\", \"Se scurisce troppo, copri con alluminio.\", \"Se necessario, sforma negli ultimi minuti e termina la cottura su griglia.\", \"Il pan brioche è cotto quando è dorato in modo uniforme, il fondo è asciutto e l’interno è circa 92–94°C, oppure quando lo stecchino esce asciutto.\"]",
+    "ingredients": "[{\"title\": \"Autolisi\", \"items\": [\"500 g farina forte W300 circa oppure 80% manitoba + 20% farina 0\", \"240 g latte intero\", \"1 uovo intero\"]}, {\"title\": \"Impasto\", \"items\": [\"180 g lievito madre solido rinfrescato con idratazione circa 40%\", \"1 tuorlo\", \"40 g zucchero\", \"facoltativo: 1 cucchiaino miele\", \"70 g burro morbido a pomata\", \"8 g sale\"]}, {\"title\": \"Cottura\", \"items\": [\"1 tuorlo\", \"2 cucchiai latte\"]}]",
+    "procedure": "[{\"title\": \"Starter prep\", \"level\": 2, \"content\": \"- Rinfresca il lievito madre solido 1:1 con circa 40% acqua.\\n- Lascialo a 26–28°C fino a quando triplica.\\n- Usalo al picco o poco dopo.\"}, {\"title\": \"Dough mix\", \"level\": 2, \"content\": \"\"}, {\"title\": \"Autolisi\", \"level\": 3, \"content\": \"- In una ciotola mescola farina, latte, uovo intero e albume del secondo uovo.\\n- Mescola finché non resta farina asciutta.\\n- Copri e lascia riposare 20–30 minuti.\"}, {\"title\": \"Impasto\", \"level\": 3, \"content\": \"- Aggiungi il lievito madre a pezzetti.\\n- Impasta a mano fino a quando inizia a prendere struttura.\\n- Aggiungi in ordine zucchero, tuorlo e sale.\\n- Impasta finché torna elastico.\\n- Aggiungi il burro morbido in 2–3 volte, aspettando che venga assorbito prima di aggiungerne altro.\\n- Continua a impastare fino a ottenere un impasto liscio, elastico, non appiccicoso, tiepido ma non caldo.\\n- Forma una palla.\"}, {\"title\": \"First rise\", \"level\": 2, \"content\": \"- Metti l’impasto in una ciotola leggermente imburrata.\\n- Copri.\\n- Lascia a temperatura ambiente finché cresce circa 2×.\\n- In questa prova: circa 5 ore a temperatura ambiente, poi riposo in frigo per la notte, poi ripresa al mattino fino a volume corretto.\\n- La prima lievitazione deve arrivare circa a 2–2.5×.\"}, {\"title\": \"Shape\", \"level\": 2, \"content\": \"- Lascia l’impasto fuori frigo circa 30 minuti.\\n- Rovescialo sul piano leggermente imburrato.\\n- Sgonfialo delicatamente.\\n- Forma a piacere: filone, palline o treccia.\\n- Mettilo nello stampo da plumcake imburrato o rivestito con carta forno.\"}, {\"title\": \"Second rise\", \"level\": 2, \"content\": \"- Copri.\\n- Lascia a 26–28°C finché arriva circa a 1 cm dal bordo dello stampo.\\n- Indicativamente servono 2–3 ore, ma dipende dalla temperatura.\\n- Non farlo collassare.\"}, {\"title\": \"Bake\", \"level\": 2, \"content\": \"- Preriscalda il forno statico a 180°C.\\n- Prima di infornare spennella con 1 tuorlo e poco latte.\\n- Cuoci per 20 minuti.\\n- Se scurisce troppo, copri con alluminio.\\n- Se necessario, sforma negli ultimi minuti e termina la cottura su griglia.\\n- Il pan brioche è cotto quando è dorato in modo uniforme, il fondo è asciutto e l’interno è circa 92–94°C, oppure quando lo stecchino esce asciutto.\"}, {\"title\": \"Cooling\", \"level\": 2, \"content\": \"- Togli subito il pan brioche dallo stampo.\\n- Fallo raffreddare su gratella almeno 45 minuti prima di tagliarlo.\"}]",
+    "bakingInstructions": "[\"Preriscalda il forno statico a 180°C.\", \"Prima di infornare spennella con 1 tuorlo e poco latte.\", \"Cuoci per 20 minuti.\", \"Se scurisce troppo, copri con alluminio.\", \"Se necessario, sforma negli ultimi minuti e termina la cottura su griglia.\", \"Il pan brioche è cotto quando è dorato in modo uniforme, il fondo è asciutto e l’interno è circa 92–94°C, oppure quando lo stecchino esce asciutto.\"]",
     "defaultSteps": [
       {
-        "id": "8BED4FAC-5098-5C2E-A76A-8542CFB47FDD",
+        "id": "4B38D42B-0D46-56AC-A550-F9D17CAEEED0",
         "name": "Autolisi",
         "typeRaw": "autolysis",
         "durationMinutes": 30,
@@ -239,10 +282,15 @@
         "notes": "",
         "reminderOffsetMinutes": 0,
         "temperatureRange": "",
-        "volumeTarget": ""
+        "volumeTarget": "",
+        "ingredients": [
+          "500 g farina forte W300 circa oppure 80% manitoba + 20% farina 0",
+          "240 g latte intero",
+          "1 uovo intero"
+        ]
       },
       {
-        "id": "0881E9A2-9563-5A3C-A02A-44C7434C02C3",
+        "id": "3B194999-F3B4-5165-ACE4-4AA4D5D19363",
         "name": "Impasto",
         "typeRaw": "mix",
         "durationMinutes": 40,
@@ -250,10 +298,18 @@
         "notes": "",
         "reminderOffsetMinutes": 0,
         "temperatureRange": "",
-        "volumeTarget": ""
+        "volumeTarget": "",
+        "ingredients": [
+          "180 g lievito madre solido rinfrescato con idratazione circa 40%",
+          "1 tuorlo",
+          "40 g zucchero",
+          "facoltativo: 1 cucchiaino miele",
+          "70 g burro morbido a pomata",
+          "8 g sale"
+        ]
       },
       {
-        "id": "456DBF9C-4CFB-55DB-BE01-3CC2B8D2DAD4",
+        "id": "4B2C91C9-4C4B-5E52-87F7-6D24ABD45DAD",
         "name": "Bulk fermentation",
         "typeRaw": "bulk",
         "durationMinutes": 300,
@@ -261,10 +317,11 @@
         "notes": "",
         "reminderOffsetMinutes": 0,
         "temperatureRange": "",
-        "volumeTarget": ""
+        "volumeTarget": "",
+        "ingredients": []
       },
       {
-        "id": "3A8E2608-6FD5-573F-A9A8-EBD48BB33918",
+        "id": "3138E9B1-024B-53B1-A497-D8AE22B48DF6",
         "name": "Cold retard",
         "typeRaw": "coldRetard",
         "durationMinutes": 480,
@@ -272,10 +329,11 @@
         "notes": "",
         "reminderOffsetMinutes": 0,
         "temperatureRange": "",
-        "volumeTarget": ""
+        "volumeTarget": "",
+        "ingredients": []
       },
       {
-        "id": "B1B05139-DE6B-5549-A224-CAFAE2980413",
+        "id": "98D13EB3-19E6-569A-AF35-3212F10D0DEB",
         "name": "Formatura",
         "typeRaw": "shape",
         "durationMinutes": 30,
@@ -283,10 +341,11 @@
         "notes": "",
         "reminderOffsetMinutes": 0,
         "temperatureRange": "",
-        "volumeTarget": ""
+        "volumeTarget": "",
+        "ingredients": []
       },
       {
-        "id": "28BF1053-DDC1-5FAA-B18C-6A1B8A96C879",
+        "id": "F274916D-93EA-570C-A4AA-685314F1070B",
         "name": "Appretto",
         "typeRaw": "proof",
         "durationMinutes": 180,
@@ -294,21 +353,26 @@
         "notes": "",
         "reminderOffsetMinutes": 0,
         "temperatureRange": "",
-        "volumeTarget": ""
+        "volumeTarget": "",
+        "ingredients": []
       },
       {
-        "id": "15D4F701-62EC-5217-AC0C-91A9AB29D802",
+        "id": "C4E6A8A6-7ECE-545C-8986-E69C7A180D75",
         "name": "Cottura",
         "typeRaw": "bake",
-        "durationMinutes": 35,
-        "details": "- Preriscalda il forno statico a 180°C.\n- Prima di infornare spennella con 1 tuorlo e poco latte.\n- Cuoci per 30–35 minuti.\n- Se scurisce troppo, copri con alluminio.\n- Se necessario, sforma negli ultimi minuti e termina la cottura su griglia.\n- Il pan brioche è cotto quando è dorato in modo uniforme, il fondo è asciutto e l’interno è circa 92–94°C, oppure quando lo stecchino esce asciutto.",
+        "durationMinutes": 20,
+        "details": "- Preriscalda il forno statico a 180°C.\n- Prima di infornare spennella con 1 tuorlo e poco latte.\n- Cuoci per 20 minuti.\n- Se scurisce troppo, copri con alluminio.\n- Se necessario, sforma negli ultimi minuti e termina la cottura su griglia.\n- Il pan brioche è cotto quando è dorato in modo uniforme, il fondo è asciutto e l’interno è circa 92–94°C, oppure quando lo stecchino esce asciutto.",
         "notes": "",
         "reminderOffsetMinutes": 0,
         "temperatureRange": "",
-        "volumeTarget": ""
+        "volumeTarget": "",
+        "ingredients": [
+          "1 tuorlo",
+          "2 cucchiai latte"
+        ]
       },
       {
-        "id": "D2C7DD96-10C7-53FB-85AF-E3B262FBA281",
+        "id": "4FAED6A7-F043-59AA-B3E6-1D50E519D80B",
         "name": "Raffreddamento",
         "typeRaw": "cool",
         "durationMinutes": 45,
@@ -316,7 +380,8 @@
         "notes": "",
         "reminderOffsetMinutes": 0,
         "temperatureRange": "",
-        "volumeTarget": ""
+        "volumeTarget": "",
+        "ingredients": []
       }
     ]
   },
@@ -333,45 +398,54 @@
     "flourMix": "100% farina 00 per pizza",
     "flours": [],
     "notes": "",
-    "ingredients": "[{\"title\": \"\", \"items\": [\"600 g farina 00 per pizza\", \"360 ml acqua\", \"2 cucchiai olio extravergine d'oliva\", \"12 g sale\", \"100 g lievito madre già rinfrescato la sera prima\", \"230 g salsa di pomodoro\", \"200 g mozzarella\", \"50 g salame piccante\"]}]",
-    "procedure": "[{\"title\": \"Starter prep\", \"level\": 2, \"content\": \"\"}, {\"title\": \"Oggi, ore 21:00\", \"level\": 3, \"content\": \"- Tira fuori il lievito madre dal frigo.\\n- Rinfrescalo.\\n- Lascialo a temperatura ambiente finché raddoppia.\\n- Quando ha raddoppiato, rimettilo in frigo fino a domattina.\"}, {\"title\": \"Domani, ore 8:30\", \"level\": 3, \"content\": \"- Tira fuori il lievito madre dal frigo per riportarlo a temperatura ambiente.\"}, {\"title\": \"Dough mix\", \"level\": 2, \"content\": \"\"}, {\"title\": \"Domani, ore 9:00\", \"level\": 3, \"content\": \"- Sciogli il lievito madre nell'acqua.\\n- Aggiungi la farina.\\n- Aggiungi il sale.\\n- Aggiungi infine l'olio.\\n- Lavora fino a ottenere un impasto liscio e omogeneo.\"}, {\"title\": \"Timeline\", \"level\": 2, \"content\": \"\"}, {\"title\": \"Domani\", \"level\": 3, \"content\": \"- 09:30 → primo giro di pieghe\\n- 11:00 → secondo giro di pieghe\\n- 11:30 → terzo giro di pieghe\\n- 11:30 - 17:30 → lievitazione coperta fino al raddoppio\\n- 17:30 → dividi in 3 panetti e forma le palline\\n- 17:30 - 19:30 → riposo finale dei panetti\\n- 19:30 → stesura, condimento e cottura\"}, {\"title\": \"Bake\", \"level\": 2, \"content\": \"- Stendi i panetti con le dita.\\n- Condisci con salsa di pomodoro, mozzarella e olio.\\n- Inforna alla massima potenza nella parte bassa del forno per circa 10 minuti.\\n- Aggiungi il salame piccante.\\n- Sposta la pizza nella parte alta del forno per altri 2 minuti.\\n- Servi subito.\"}]",
+    "ingredients": "[{\"title\": \"Impasto\", \"items\": [\"600 g farina 00 per pizza\", \"360 ml acqua\", \"2 cucchiai olio extravergine d'oliva\", \"12 g sale\", \"100 g lievito madre già rinfrescato la sera prima\"]}, {\"title\": \"Cottura\", \"items\": [\"230 g salsa di pomodoro\", \"200 g mozzarella\", \"50 g salame piccante\"]}]",
+    "procedure": "[{\"title\": \"Starter prep\", \"level\": 2, \"content\": \"\"}, {\"title\": \"Oggi, ore 21:00\", \"level\": 3, \"content\": \"- Tira fuori il lievito madre dal frigo.\\n- Rinfrescalo.\\n- Lascialo a temperatura ambiente finché raddoppia.\\n- Quando ha raddoppiato, rimettilo in frigo fino a domattina.\"}, {\"title\": \"Domani, ore 8:30\", \"level\": 3, \"content\": \"- Tira fuori il lievito madre dal frigo per riportarlo a temperatura ambiente.\"}, {\"title\": \"Dough mix\", \"level\": 2, \"content\": \"\"}, {\"title\": \"Impasto\", \"level\": 3, \"content\": \"- Alle 9:00 sciogli il lievito madre nell'acqua.\\n- Aggiungi la farina.\\n- Aggiungi il sale.\\n- Aggiungi infine l'olio.\\n- Lavora fino a ottenere un impasto liscio e omogeneo.\"}, {\"title\": \"Timeline\", \"level\": 2, \"content\": \"\"}, {\"title\": \"Bulk fermentation\", \"level\": 3, \"content\": \"- 09:30 → primo giro di pieghe\\n- 11:00 → secondo giro di pieghe\\n- 11:30 → terzo giro di pieghe\\n- 11:30 - 17:30 → lievitazione coperta fino al raddoppio\"}, {\"title\": \"Formatura\", \"level\": 3, \"content\": \"- 17:30 → dividi in 3 panetti e forma le palline\\n- 17:30 - 19:30 → riposo finale dei panetti\\n- 19:30 → stesura prima del condimento\"}, {\"title\": \"Bake\", \"level\": 2, \"content\": \"- Stendi i panetti con le dita.\\n- Condisci con salsa di pomodoro, mozzarella e olio.\\n- Inforna alla massima potenza nella parte bassa del forno per circa 10 minuti.\\n- Aggiungi il salame piccante.\\n- Sposta la pizza nella parte alta del forno per altri 2 minuti.\\n- Servi subito.\"}]",
     "bakingInstructions": "[\"Stendi i panetti con le dita.\", \"Condisci con salsa di pomodoro, mozzarella e olio.\", \"Inforna alla massima potenza nella parte bassa del forno per circa 10 minuti.\", \"Aggiungi il salame piccante.\", \"Sposta la pizza nella parte alta del forno per altri 2 minuti.\", \"Servi subito.\"]",
     "defaultSteps": [
       {
-        "id": "C5638FBB-72B9-5F59-8837-EDBDD0DCBE83",
+        "id": "3F125343-08BE-56B5-BCB4-FFD3C2FEE0BD",
         "name": "Impasto",
         "typeRaw": "mix",
         "durationMinutes": 30,
-        "details": "",
+        "details": "- Alle 9:00 sciogli il lievito madre nell'acqua.\n- Aggiungi la farina.\n- Aggiungi il sale.\n- Aggiungi infine l'olio.\n- Lavora fino a ottenere un impasto liscio e omogeneo.",
         "notes": "",
         "reminderOffsetMinutes": 0,
         "temperatureRange": "",
-        "volumeTarget": ""
+        "volumeTarget": "",
+        "ingredients": [
+          "600 g farina 00 per pizza",
+          "360 ml acqua",
+          "2 cucchiai olio extravergine d'oliva",
+          "12 g sale",
+          "100 g lievito madre già rinfrescato la sera prima"
+        ]
       },
       {
-        "id": "A070314D-5AE3-50C8-9E86-29D702A606BE",
+        "id": "2CB4ADAF-09CE-5B40-BD57-7753D19FB1F3",
         "name": "Bulk fermentation",
         "typeRaw": "bulk",
         "durationMinutes": 480,
-        "details": "",
+        "details": "- 09:30 → primo giro di pieghe\n- 11:00 → secondo giro di pieghe\n- 11:30 → terzo giro di pieghe\n- 11:30 - 17:30 → lievitazione coperta fino al raddoppio",
         "notes": "",
         "reminderOffsetMinutes": 0,
         "temperatureRange": "",
-        "volumeTarget": ""
+        "volumeTarget": "",
+        "ingredients": []
       },
       {
-        "id": "426FE2F9-0DE7-5AA1-BA38-76586352C8F8",
+        "id": "60D4DA4C-3D7A-53EE-A5E0-5E0E13062005",
         "name": "Formatura",
         "typeRaw": "shape",
         "durationMinutes": 120,
-        "details": "",
+        "details": "- 17:30 → dividi in 3 panetti e forma le palline\n- 17:30 - 19:30 → riposo finale dei panetti\n- 19:30 → stesura prima del condimento",
         "notes": "",
         "reminderOffsetMinutes": 0,
         "temperatureRange": "",
-        "volumeTarget": ""
+        "volumeTarget": "",
+        "ingredients": []
       },
       {
-        "id": "7A90D462-18C7-59A4-A64C-98CA7EAF142B",
+        "id": "16535DB2-1353-5863-A6A9-0E508B79B6CE",
         "name": "Cottura",
         "typeRaw": "bake",
         "durationMinutes": 12,
@@ -379,7 +453,12 @@
         "notes": "",
         "reminderOffsetMinutes": 0,
         "temperatureRange": "",
-        "volumeTarget": ""
+        "volumeTarget": "",
+        "ingredients": [
+          "230 g salsa di pomodoro",
+          "200 g mozzarella",
+          "50 g salame piccante"
+        ]
       }
     ]
   },
@@ -396,23 +475,28 @@
     "flourMix": "100% farina bianca circa 11,5% proteine",
     "flours": [],
     "notes": "",
-    "ingredients": "[{\"title\": \"Per il levain\", \"items\": [\"61 g farina bianca con circa 11,5% di proteine\", \"61 g acqua\", \"61 g lievito madre maturo al 100% di idratazione\"]}, {\"title\": \"Per l’impasto\", \"items\": [\"447 g farina bianca con circa 11,5% di proteine\", \"178 g latte intero\", \"91 g uovo sbattuto, circa 2 uova medie\", \"112 g burro non salato\", \"25 g zucchero semolato fine\", \"203 g patate tipo russet cotte al forno, pelate, schiacciate e raffreddate\", \"11 g sale fino marino\", \"183 g levain maturo\"]}, {\"title\": \"Per finire\", \"items\": [\"1 uovo\", \"1 cucchiaio di latte intero oppure panna liquida\", \"semi di sesamo bianchi, neri, semi di papavero oppure un mix, facoltativi\"]}]",
+    "ingredients": "[{\"title\": \"Per il levain\", \"items\": [\"61 g farina bianca con circa 11,5% di proteine\", \"61 g acqua\", \"61 g lievito madre maturo al 100% di idratazione\"]}, {\"title\": \"Per l’impasto\", \"items\": [\"447 g farina bianca con circa 11,5% di proteine\", \"178 g latte intero\", \"91 g uovo sbattuto, circa 2 uova medie\", \"112 g burro non salato\", \"25 g zucchero semolato fine\", \"203 g patate tipo russet cotte al forno, pelate, schiacciate e raffreddate\", \"11 g sale fino marino\", \"183 g levain maturo\"]}, {\"title\": \"Cottura\", \"items\": [\"1 uovo\", \"1 cucchiaio di latte intero oppure panna liquida\", \"semi di sesamo bianchi, neri, semi di papavero oppure un mix, facoltativi\"]}]",
     "procedure": "[{\"title\": \"Levain\", \"level\": 2, \"content\": \"- Porta l’acqua a circa 25°C.\\n- In un barattolo o in una ciotola media mescola farina, acqua e lievito madre fino a ottenere un composto uniforme.\\n- Il levain sarà piuttosto fluido.\\n- Copri senza chiudere ermeticamente.\\n- Lascia maturare per circa 3 ore a 23–24°C.\"}, {\"title\": \"Potato prep\", \"level\": 2, \"content\": \"- Lava bene le patate e bucherellale con una forchetta.\\n- Cuocile in forno su una teglia rivestita di carta forno a 220°C per 45–60 minuti, girandole a metà cottura.\\n- Sono pronte quando al cuore arrivano a circa 98–99°C.\\n- Lasciale intiepidire.\\n- Pelale.\\n- Schiacciale con uno schiacciapatate oppure passale fino a ottenere una purea liscia.\\n- Falle raffreddare completamente prima di usarle.\"}, {\"title\": \"Dough mix\", \"level\": 2, \"content\": \"- Controlla il levain: deve essere attivo, con bollicine moderate in superficie e un leggero profumo acidulo.\\n- Se non è ancora pronto, aspetta altri 30 minuti.\\n- Taglia il burro a fettine spesse circa mezzo centimetro e lascialo ammorbidire a temperatura ambiente.\\n- In planetaria con gancio metti farina, latte, uova, zucchero, sale e levain maturo.\\n- Impasta a bassa velocità finché gli ingredienti stanno insieme, poi pulisci bordi e gancio.\\n- Passa a velocità media e impasta per 3–5 minuti, finché l’impasto inizia a staccarsi dalle pareti e ad aggrapparsi al gancio.\\n- Lascia riposare 10 minuti.\\n- Riprendi a impastare a velocità media per altri 2–3 minuti, finché l’impasto torna liscio e inizia a formare una membrana sottile.\\n- Verifica il burro: deve essere morbido ma non sciolto.\\n- Con la macchina a bassa velocità aggiungi il burro un pezzetto alla volta, aspettando che venga assorbito prima di aggiungerne altro.\\n- Quando tutto il burro è incorporato, impasta ancora 1–2 minuti a velocità media.\\n- L’impasto deve risultare liscio, elastico e leggermente lucido.\\n- Aggiungi metà delle patate schiacciate e impasta a bassa velocità per circa 1 minuto.\\n- Aggiungi il resto delle patate e continua finché sono quasi del tutto incorporate, circa 1 minuto ancora.\\n- L’impasto sarà morbido, elastico e un po’ appiccicoso.\\n- Trasferiscilo in un contenitore leggermente unto o adatto alla lievitazione.\"}, {\"title\": \"Bulk\", \"level\": 2, \"content\": \"- Lascia fermentare per circa 3 ore e 30 minuti a 23–24°C.\\n- Durante la prima parte fai 3 giri di pieghe ogni 30 minuti.\\n- Per ogni giro, con le mani bagnate prendi un lato dell’impasto e portalo verso il centro oppure sul lato opposto.\\n- Ruota la ciotola e ripeti fino a completare i 4 lati.\\n- Dopo il terzo giro di pieghe, copri e lascia riposare l’impasto fino al termine della lievitazione, circa 2 ore.\"}, {\"title\": \"Shape\", \"level\": 2, \"content\": \"- Rivesti con carta forno due teglie.\\n- Rovescia delicatamente l’impasto su un piano ben infarinato.\\n- Infarina leggermente la superficie e le mani.\\n- Dividi l’impasto in 10 pezzi da circa 120 g.\\n- Forma ogni pezzo in una pallina ben stretta.\\n- Disponi i buns sulle teglie lasciando circa 7–8 cm di distanza tra uno e l’altro.\\n- Copri bene ogni teglia con un sacchetto grande riutilizzabile oppure con pellicola senza stringere.\"}, {\"title\": \"Proof\", \"level\": 2, \"content\": \"- Lascia lievitare per circa 2 ore e 30 minuti a 23–24°C.\\n- Dopo le prime 2 ore controlla periodicamente.\\n- I buns devono essere molto gonfi, leggeri e delicati al tatto.\"}, {\"title\": \"Bake\", \"level\": 2, \"content\": \"- Metti una griglia nel terzo superiore del forno e una nel terzo inferiore.\\n- Preriscalda il forno a 230°C.\\n- Mescola 1 uovo con 1 cucchiaio di latte oppure panna e spennella delicatamente la superficie dei buns.\\n- Aggiungi i semi, se li vuoi.\\n- Cuoci per 25–30 minuti.\"}]",
     "bakingInstructions": "[\"Metti una griglia nel terzo superiore del forno e una nel terzo inferiore.\", \"Preriscalda il forno a 230°C.\", \"Mescola 1 uovo con 1 cucchiaio di latte oppure panna e spennella delicatamente la superficie dei buns.\", \"Aggiungi i semi, se li vuoi.\", \"Cuoci per 25–30 minuti.\"]",
     "defaultSteps": [
       {
-        "id": "2121D213-4DC0-50DB-BB28-62BB0AF76040",
-        "name": "Fase personalizzata",
+        "id": "CDD4060B-600C-5F97-BB3C-1CCC791D03CA",
+        "name": "Levain",
         "typeRaw": "custom",
         "durationMinutes": 180,
-        "details": "",
+        "details": "- Porta l’acqua a circa 25°C.\n- In un barattolo o in una ciotola media mescola farina, acqua e lievito madre fino a ottenere un composto uniforme.\n- Il levain sarà piuttosto fluido.\n- Copri senza chiudere ermeticamente.\n- Lascia maturare per circa 3 ore a 23–24°C.",
         "notes": "",
         "reminderOffsetMinutes": 0,
         "temperatureRange": "",
-        "volumeTarget": ""
+        "volumeTarget": "",
+        "ingredients": [
+          "61 g farina bianca con circa 11,5% di proteine",
+          "61 g acqua",
+          "61 g lievito madre maturo al 100% di idratazione"
+        ]
       },
       {
-        "id": "B542F46B-C799-5826-8714-3C3E756023CB",
+        "id": "667BEC4D-FFCB-5270-B9AC-CE7178B7A208",
         "name": "Impasto",
         "typeRaw": "mix",
         "durationMinutes": 25,
@@ -420,10 +504,20 @@
         "notes": "",
         "reminderOffsetMinutes": 0,
         "temperatureRange": "",
-        "volumeTarget": ""
+        "volumeTarget": "",
+        "ingredients": [
+          "447 g farina bianca con circa 11,5% di proteine",
+          "178 g latte intero",
+          "91 g uovo sbattuto, circa 2 uova medie",
+          "112 g burro non salato",
+          "25 g zucchero semolato fine",
+          "203 g patate tipo russet cotte al forno, pelate, schiacciate e raffreddate",
+          "11 g sale fino marino",
+          "183 g levain maturo"
+        ]
       },
       {
-        "id": "CC2E96A0-8DEC-5B31-BBB0-8015E247A64B",
+        "id": "E4E284F6-EC9A-553E-88C2-ED5BACAFC533",
         "name": "Bulk fermentation",
         "typeRaw": "bulk",
         "durationMinutes": 210,
@@ -431,10 +525,11 @@
         "notes": "",
         "reminderOffsetMinutes": 0,
         "temperatureRange": "",
-        "volumeTarget": ""
+        "volumeTarget": "",
+        "ingredients": []
       },
       {
-        "id": "43A3E56D-63F5-5A1D-9DC0-55FDCECFB669",
+        "id": "F18D8E81-0144-5EB2-AA6E-FB3746593A62",
         "name": "Formatura",
         "typeRaw": "shape",
         "durationMinutes": 30,
@@ -442,10 +537,11 @@
         "notes": "",
         "reminderOffsetMinutes": 0,
         "temperatureRange": "",
-        "volumeTarget": ""
+        "volumeTarget": "",
+        "ingredients": []
       },
       {
-        "id": "AAFB196B-6F6F-5DC6-9C57-8FAEB8BBEEDE",
+        "id": "5E76C22A-DEDE-5B0E-B4D0-FF509C961892",
         "name": "Appretto",
         "typeRaw": "proof",
         "durationMinutes": 150,
@@ -453,10 +549,11 @@
         "notes": "",
         "reminderOffsetMinutes": 0,
         "temperatureRange": "",
-        "volumeTarget": ""
+        "volumeTarget": "",
+        "ingredients": []
       },
       {
-        "id": "9172A6F8-60FD-58BD-B9E3-D48BFF01EAFD",
+        "id": "DD611312-32AF-5650-A0BD-679C5CD64716",
         "name": "Cottura",
         "typeRaw": "bake",
         "durationMinutes": 30,
@@ -464,10 +561,15 @@
         "notes": "",
         "reminderOffsetMinutes": 0,
         "temperatureRange": "",
-        "volumeTarget": ""
+        "volumeTarget": "",
+        "ingredients": [
+          "1 uovo",
+          "1 cucchiaio di latte intero oppure panna liquida",
+          "semi di sesamo bianchi, neri, semi di papavero oppure un mix, facoltativi"
+        ]
       },
       {
-        "id": "CD931E9B-F9D9-5F44-A1B9-6F07D847E4F9",
+        "id": "6E5FAA91-0DA8-5632-BA6C-0F10136F1031",
         "name": "Raffreddamento",
         "typeRaw": "cool",
         "durationMinutes": 20,
@@ -475,7 +577,8 @@
         "notes": "",
         "reminderOffsetMinutes": 0,
         "temperatureRange": "",
-        "volumeTarget": ""
+        "volumeTarget": "",
+        "ingredients": []
       }
     ]
   }

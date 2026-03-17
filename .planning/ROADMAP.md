@@ -310,11 +310,11 @@ Plans:
 
 Plans:
 
-- [ ] 16-01: Step-specific ingredient mapping and UI implementation
+- [x] 16-01: Step-specific ingredient mapping and UI implementation
 
-## Progress: [███████████████░] 94% (15 of 16 phases complete)
+## Progress: [████████████████] 100% (16 of 16 phases complete)
 
-**Execution Order:**  
+**Execution Order:**
 Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6 → 7 → 8 → 9 → 10 → 11 → 12 → 13 → 14 → 15 → 16
 
 | Phase                                          | Plans Complete | Status      | Completed  |
@@ -334,4 +334,4 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6 → 7 → 8 →
 | 13. MVP Closure                                | 3/3            | Complete    | 2026-03-12 |
 | 14. Design System Regression Closure           | 1/1            | Complete    | 2026-03-14 |
 | 15. Memory Durability & System Content Separation | 3/3         | Complete    | 2026-03-16 |
-| 16. Baking Phase Ingredients UX                | 0/1            | Planned     | —          |
+| 16. Baking Phase Ingredients UX                | 1/1            | Complete    | 2026-03-17 |

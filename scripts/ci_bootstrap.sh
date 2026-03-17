@@ -39,7 +39,8 @@ if ! command -v xcodebuild &>/dev/null; then
   exit 1
 fi
 
-XCODE_VERSION=$(xcodebuild -version | head -1)
+XCODE_VERSION=$(xcodebuild -version)
+XCODE_VERSION=${XCODE_VERSION%%$'\n'*}
 echo "✅ Xcode: $XCODE_VERSION"
 
 # ── Install or locate XcodeGen ───────────────────────────────────────────────
@@ -64,7 +65,8 @@ else
   exit 1
 fi
 
-XCODEGEN_VERSION=$("$XCODEGEN_BIN" --version 2>&1 | head -1 || echo "unknown")
+XCODEGEN_VERSION=$({ "$XCODEGEN_BIN" --version 2>&1 || echo "unknown"; })
+XCODEGEN_VERSION=${XCODEGEN_VERSION%%$'\n'*}
 echo "   Version: $XCODEGEN_VERSION"
 echo ""
 

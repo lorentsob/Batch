@@ -12,25 +12,47 @@ struct BakeStepDetailView: View {
     @State private var stepStartedTrigger = false
     @State private var stepCompletedTrigger = false
 
+    private var stepIngredients: [String] { step.stepIngredients }
+
     var body: some View {
         Form {
+            if !stepIngredients.isEmpty {
+                Section("Ingredienti") {
+                    VStack(alignment: .leading, spacing: 6) {
+                        ForEach(stepIngredients, id: \.self) { item in
+                            HStack(alignment: .top, spacing: 10) {
+                                RoundedRectangle(cornerRadius: 1)
+                                    .fill(Theme.Control.primaryFill.opacity(0.55))
+                                    .frame(width: 3, height: 16)
+                                    .padding(.top, 3)
+                                Text(item)
+                                    .font(.subheadline)
+                                    .foregroundStyle(Theme.ink)
+                                    .fixedSize(horizontal: false, vertical: true)
+                            }
+                        }
+                    }
+                    .padding(.vertical, 4)
+                }
+            }
+
             Section("Procedimento") {
                 Text(step.displayName)
                     .font(.headline)
-                
+
                 if !step.descriptionText.isEmpty {
                     VStack(alignment: .leading, spacing: 8) {
                         Text("Istruzioni")
                             .font(.caption.weight(.semibold))
                             .foregroundStyle(Theme.Control.primaryFill)
-                        
+
                         Text(step.descriptionText)
                             .foregroundStyle(Theme.ink)
                             .fixedSize(horizontal: false, vertical: true)
                     }
                     .padding(.vertical, 4)
                 }
-                
+
                 if step.startedOutOfOrder {
                     StateBadge(text: "Fuori ordine", tone: .info)
                 }
