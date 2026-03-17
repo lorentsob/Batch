@@ -25,7 +25,8 @@
         "notes": "",
         "reminderOffsetMinutes": 0,
         "temperatureRange": "",
-        "volumeTarget": ""
+        "volumeTarget": "",
+        "ingredients": []
       },
       {
         "id": "6A85E650-6F58-542C-BD10-479C4E1F3A49",
@@ -36,7 +37,16 @@
         "notes": "",
         "reminderOffsetMinutes": 0,
         "temperatureRange": "",
-        "volumeTarget": ""
+        "volumeTarget": "",
+        "ingredients": [
+          "848 g farina forte per pane",
+          "29 g zucchero semolato fine",
+          "29 g sciroppo di malto d’orzo oppure miele",
+          "472 g acqua",
+          "7 g malto diastasico",
+          "18 g sale fino",
+          "197 g levain maturo"
+        ]
       },
       {
         "id": "643CE14D-59B8-5880-98EA-01ED9CA01307",
@@ -47,7 +57,8 @@
         "notes": "",
         "reminderOffsetMinutes": 0,
         "temperatureRange": "",
-        "volumeTarget": ""
+        "volumeTarget": "",
+        "ingredients": []
       },
       {
         "id": "9CDEC26D-9140-5426-A167-DF6E2103498C",
@@ -58,7 +69,8 @@
         "notes": "",
         "reminderOffsetMinutes": 0,
         "temperatureRange": "",
-        "volumeTarget": ""
+        "volumeTarget": "",
+        "ingredients": []
       },
       {
         "id": "487580E8-25D3-561C-93BF-5E6E0710D64C",
@@ -69,7 +81,8 @@
         "notes": "",
         "reminderOffsetMinutes": 0,
         "temperatureRange": "",
-        "volumeTarget": ""
+        "volumeTarget": "",
+        "ingredients": []
       },
       {
         "id": "178D44CE-552C-578B-AE9E-927AF87016C9",
@@ -80,7 +93,8 @@
         "notes": "",
         "reminderOffsetMinutes": 0,
         "temperatureRange": "",
-        "volumeTarget": ""
+        "volumeTarget": "",
+        "ingredients": []
       },
       {
         "id": "6731F35A-4CDE-576B-9556-D6D5D08EEE8C",
@@ -91,7 +105,8 @@
         "notes": "",
         "reminderOffsetMinutes": 0,
         "temperatureRange": "",
-        "volumeTarget": ""
+        "volumeTarget": "",
+        "ingredients": []
       },
       {
         "id": "A7BD2551-566E-5675-8786-C165B9F25AB6",
@@ -102,7 +117,8 @@
         "notes": "",
         "reminderOffsetMinutes": 0,
         "temperatureRange": "",
-        "volumeTarget": ""
+        "volumeTarget": "",
+        "ingredients": []
       },
       {
         "id": "82C23112-1DC1-5E26-85C6-2C4869C739CA",
@@ -113,7 +129,8 @@
         "notes": "",
         "reminderOffsetMinutes": 0,
         "temperatureRange": "",
-        "volumeTarget": ""
+        "volumeTarget": "",
+        "ingredients": []
       }
     ]
   },
@@ -143,7 +160,15 @@
         "notes": "",
         "reminderOffsetMinutes": 0,
         "temperatureRange": "",
-        "volumeTarget": ""
+        "volumeTarget": "",
+        "ingredients": [
+          "500 g farina manitoba",
+          "125 g lievito madre maturo",
+          "1 g lievito di birra",
+          "400 g acqua",
+          "12 g sale",
+          "7 g olio extravergine di oliva"
+        ]
       },
       {
         "id": "A2350031-3F3A-514C-A80E-9EAEDECB5E4A",
@@ -154,7 +179,8 @@
         "notes": "",
         "reminderOffsetMinutes": 0,
         "temperatureRange": "",
-        "volumeTarget": ""
+        "volumeTarget": "",
+        "ingredients": []
       },
       {
         "id": "08A861C7-D973-552A-8907-CC45D837FC64",
@@ -165,7 +191,8 @@
         "notes": "",
         "reminderOffsetMinutes": 0,
         "temperatureRange": "",
-        "volumeTarget": ""
+        "volumeTarget": "",
+        "ingredients": []
       },
       {
         "id": "940F2B83-3CB0-58DD-88B2-474621841E83",
@@ -176,7 +203,8 @@
         "notes": "",
         "reminderOffsetMinutes": 0,
         "temperatureRange": "",
-        "volumeTarget": ""
+        "volumeTarget": "",
+        "ingredients": []
       },
       {
         "id": "4BDEEC82-5500-556D-9869-3332A59314E8",
@@ -187,7 +215,8 @@
         "notes": "",
         "reminderOffsetMinutes": 0,
         "temperatureRange": "",
-        "volumeTarget": ""
+        "volumeTarget": "",
+        "ingredients": []
       },
       {
         "id": "F05E9E1B-F8A0-5267-88C0-E0C9CA56D3CD",
@@ -198,7 +227,8 @@
         "notes": "",
         "reminderOffsetMinutes": 0,
         "temperatureRange": "",
-        "volumeTarget": ""
+        "volumeTarget": "",
+        "ingredients": []
       },
       {
         "id": "6A4ED351-9702-5195-806E-C03ED6B5D1BA",
@@ -209,7 +239,8 @@
         "notes": "",
         "reminderOffsetMinutes": 0,
         "temperatureRange": "",
-        "volumeTarget": ""
+        "volumeTarget": "",
+        "ingredients": []
       }
     ]
   },
@@ -239,7 +270,8 @@
         "notes": "",
         "reminderOffsetMinutes": 0,
         "temperatureRange": "",
-        "volumeTarget": ""
+        "volumeTarget": "",
+        "ingredients": []
       },
       {
         "id": "0881E9A2-9563-5A3C-A02A-44C7434C02C3",
@@ -250,7 +282,8 @@
         "notes": "",
         "reminderOffsetMinutes": 0,
         "temperatureRange": "",
-        "volumeTarget": ""
+        "volumeTarget": "",
+        "ingredients": []
       },
       {
         "id": "456DBF9C-4CFB-55DB-BE01-3CC2B8D2DAD4",
@@ -261,7 +294,8 @@
         "notes": "",
         "reminderOffsetMinutes": 0,
         "temperatureRange": "",
-        "volumeTarget": ""
+        "volumeTarget": "",
+        "ingredients": []
       },
       {
         "id": "3A8E2608-6FD5-573F-A9A8-EBD48BB33918",
@@ -272,7 +306,8 @@
         "notes": "",
         "reminderOffsetMinutes": 0,
         "temperatureRange": "",
-        "volumeTarget": ""
+        "volumeTarget": "",
+        "ingredients": []
       },
       {
         "id": "B1B05139-DE6B-5549-A224-CAFAE2980413",
@@ -283,7 +318,8 @@
         "notes": "",
         "reminderOffsetMinutes": 0,
         "temperatureRange": "",
-        "volumeTarget": ""
+        "volumeTarget": "",
+        "ingredients": []
       },
       {
         "id": "28BF1053-DDC1-5FAA-B18C-6A1B8A96C879",
@@ -294,7 +330,8 @@
         "notes": "",
         "reminderOffsetMinutes": 0,
         "temperatureRange": "",
-        "volumeTarget": ""
+        "volumeTarget": "",
+        "ingredients": []
       },
       {
         "id": "15D4F701-62EC-5217-AC0C-91A9AB29D802",
@@ -305,7 +342,8 @@
         "notes": "",
         "reminderOffsetMinutes": 0,
         "temperatureRange": "",
-        "volumeTarget": ""
+        "volumeTarget": "",
+        "ingredients": []
       },
       {
         "id": "D2C7DD96-10C7-53FB-85AF-E3B262FBA281",
@@ -316,7 +354,8 @@
         "notes": "",
         "reminderOffsetMinutes": 0,
         "temperatureRange": "",
-        "volumeTarget": ""
+        "volumeTarget": "",
+        "ingredients": []
       }
     ]
   },
@@ -346,7 +385,8 @@
         "notes": "",
         "reminderOffsetMinutes": 0,
         "temperatureRange": "",
-        "volumeTarget": ""
+        "volumeTarget": "",
+        "ingredients": []
       },
       {
         "id": "A070314D-5AE3-50C8-9E86-29D702A606BE",
@@ -357,7 +397,8 @@
         "notes": "",
         "reminderOffsetMinutes": 0,
         "temperatureRange": "",
-        "volumeTarget": ""
+        "volumeTarget": "",
+        "ingredients": []
       },
       {
         "id": "426FE2F9-0DE7-5AA1-BA38-76586352C8F8",
@@ -368,7 +409,8 @@
         "notes": "",
         "reminderOffsetMinutes": 0,
         "temperatureRange": "",
-        "volumeTarget": ""
+        "volumeTarget": "",
+        "ingredients": []
       },
       {
         "id": "7A90D462-18C7-59A4-A64C-98CA7EAF142B",
@@ -379,7 +421,8 @@
         "notes": "",
         "reminderOffsetMinutes": 0,
         "temperatureRange": "",
-        "volumeTarget": ""
+        "volumeTarget": "",
+        "ingredients": []
       }
     ]
   },
@@ -409,7 +452,8 @@
         "notes": "",
         "reminderOffsetMinutes": 0,
         "temperatureRange": "",
-        "volumeTarget": ""
+        "volumeTarget": "",
+        "ingredients": []
       },
       {
         "id": "B542F46B-C799-5826-8714-3C3E756023CB",
@@ -420,7 +464,17 @@
         "notes": "",
         "reminderOffsetMinutes": 0,
         "temperatureRange": "",
-        "volumeTarget": ""
+        "volumeTarget": "",
+        "ingredients": [
+          "447 g farina bianca con circa 11,5% di proteine",
+          "178 g latte intero",
+          "91 g uovo sbattuto, circa 2 uova medie",
+          "112 g burro non salato",
+          "25 g zucchero semolato fine",
+          "203 g patate tipo russet cotte al forno, pelate, schiacciate e raffreddate",
+          "11 g sale fino marino",
+          "183 g levain maturo"
+        ]
       },
       {
         "id": "CC2E96A0-8DEC-5B31-BBB0-8015E247A64B",
@@ -431,7 +485,8 @@
         "notes": "",
         "reminderOffsetMinutes": 0,
         "temperatureRange": "",
-        "volumeTarget": ""
+        "volumeTarget": "",
+        "ingredients": []
       },
       {
         "id": "43A3E56D-63F5-5A1D-9DC0-55FDCECFB669",
@@ -442,7 +497,8 @@
         "notes": "",
         "reminderOffsetMinutes": 0,
         "temperatureRange": "",
-        "volumeTarget": ""
+        "volumeTarget": "",
+        "ingredients": []
       },
       {
         "id": "AAFB196B-6F6F-5DC6-9C57-8FAEB8BBEEDE",
@@ -453,7 +509,8 @@
         "notes": "",
         "reminderOffsetMinutes": 0,
         "temperatureRange": "",
-        "volumeTarget": ""
+        "volumeTarget": "",
+        "ingredients": []
       },
       {
         "id": "9172A6F8-60FD-58BD-B9E3-D48BFF01EAFD",
@@ -464,7 +521,8 @@
         "notes": "",
         "reminderOffsetMinutes": 0,
         "temperatureRange": "",
-        "volumeTarget": ""
+        "volumeTarget": "",
+        "ingredients": []
       },
       {
         "id": "CD931E9B-F9D9-5F44-A1B9-6F07D847E4F9",
@@ -475,7 +533,8 @@
         "notes": "",
         "reminderOffsetMinutes": 0,
         "temperatureRange": "",
-        "volumeTarget": ""
+        "volumeTarget": "",
+        "ingredients": []
       }
     ]
   }
