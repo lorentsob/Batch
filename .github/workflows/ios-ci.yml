@@ -32,22 +32,7 @@ jobs:
           sudo xcode-select -s /Applications/Xcode.app/Contents/Developer
           xcodebuild -version
 
-      # ── 3. Cache Homebrew packages ───────────────────────────────────────────
-      - name: Cache Homebrew
-        uses: actions/cache@v4
-        with:
-          path: ~/Library/Caches/Homebrew
-          key: brew-${{ runner.os }}-xcodegen
-          restore-keys: brew-${{ runner.os }}-
-
-      # ── 4. Install XcodeGen ──────────────────────────────────────────────────
-      - name: Install XcodeGen
-        run: brew install xcodegen
-
-      - name: Install xcpretty
-        run: sudo gem install xcpretty
-
-      # ── 5. Cache DerivedData ─────────────────────────────────────────────────
+      # ── 3. Cache DerivedData ─────────────────────────────────────────────────
       # Keyed on Swift sources + project.yml so a cache hit means no recompile.
       # Every 20th run (run_number % 20 == 0) the key includes "clean" so the
       # cache is intentionally busted for a full clean build (avoids stale state).
