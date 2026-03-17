@@ -10,6 +10,9 @@ struct FormulaStepTemplate: Codable, Hashable, Identifiable {
     var temperatureRange: String
     var volumeTarget: String
     var notes: String
+    /// Step-specific ingredient lines (e.g. "500 g farina", "400 g acqua").
+    /// Empty array means no ingredients are associated with this step.
+    var ingredients: [String]
 
     init(
         id: UUID = UUID(),
@@ -20,7 +23,8 @@ struct FormulaStepTemplate: Codable, Hashable, Identifiable {
         reminderOffsetMinutes: Int = 0,
         temperatureRange: String = "",
         volumeTarget: String = "",
-        notes: String = ""
+        notes: String = "",
+        ingredients: [String] = []
     ) {
         self.id = id
         self.typeRaw = type.rawValue
@@ -31,6 +35,7 @@ struct FormulaStepTemplate: Codable, Hashable, Identifiable {
         self.temperatureRange = temperatureRange
         self.volumeTarget = volumeTarget
         self.notes = notes
+        self.ingredients = ingredients
     }
 
     var type: BakeStepType {
