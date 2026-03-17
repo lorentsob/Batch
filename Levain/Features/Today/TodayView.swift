@@ -1,6 +1,7 @@
 import SwiftData
 import SwiftUI
 
+@MainActor
 struct TodayView: View {
     @Environment(\.modelContext) private var modelContext
     @EnvironmentObject private var environment: AppEnvironment
@@ -187,9 +188,6 @@ struct TodayView: View {
         if step.status == .running {
             step.complete()
             stepCompletedTrigger.toggle()
-            if selection.bake.derivedStatus == .completed {
-                environment.showBanner("Bake completato! Buona lievitazione 🎉", duration: 4)
-            }
         } else if step.isTerminal == false {
             step.start()
             stepStartedTrigger.toggle()
@@ -217,10 +215,17 @@ struct TodayView: View {
     }
 
     private func persistAndSync(for bake: Bake) {
+        let bakeID = bake.id
         try? modelContext.save()
 
+        if bake.derivedStatus == .completed {
+            environment.showBanner("Bake completato! Buona lievitazione 🎉", duration: 4)
+        }
+
+        let ctx = modelContext
+        let notificationService = environment.notificationService
         Task {
-            await environment.notificationService.syncNotifications(for: bake)
+            await notificationService.syncNotifications(for: bakeID, in: ctx)
         }
     }
 }
