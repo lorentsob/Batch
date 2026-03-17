@@ -19,28 +19,20 @@ status: draft
 20% farina 0
 
 ## Ingredients
-### Farina
+### Autolisi
 - 500 g farina forte W300 circa oppure 80% manitoba + 20% farina 0
-
-### Lievito
-- 180 g lievito madre solido rinfrescato con idratazione circa 40%
-
-### Liquidi e uova
 - 240 g latte intero
 - 1 uovo intero
-- 1 tuorlo
 
-### Zuccheri e aromi
+### Impasto
+- 180 g lievito madre solido rinfrescato con idratazione circa 40%
+- 1 tuorlo
 - 40 g zucchero
 - facoltativo: 1 cucchiaino miele
-
-### Grassi
 - 70 g burro morbido a pomata
-
-### Sale
 - 8 g sale
 
-### Per spennellare
+### Cottura
 - 1 tuorlo
 - 2 cucchiai latte
 
@@ -91,13 +83,13 @@ status: draft
 - cold-retard | 480
 - shape | 30
 - proof | 180
-- bake | 35
+- bake | 20
 - cool | 45
 
 ## Bake
 - Preriscalda il forno statico a 180°C.
 - Prima di infornare spennella con 1 tuorlo e poco latte.
-- Cuoci per 30–35 minuti.
+- Cuoci per 20 minuti.
 - Se scurisce troppo, copri con alluminio.
 - Se necessario, sforma negli ultimi minuti e termina la cottura su griglia.
 - Il pan brioche è cotto quando è dorato in modo uniforme, il fondo è asciutto e l’interno è circa 92–94°C, oppure quando lo stecchino esce asciutto.

@@ -19,12 +19,12 @@ status: draft
 Proteine circa 12,7%–14%
 
 ## Ingredients
-### Per il levain
+### Levain
 - 116 g farina forte per pane
 - 58 g acqua
 - 23 g lievito madre maturo al 100% di idratazione
 
-### Per l’impasto finale
+### Impasto
 - 848 g farina forte per pane
 - 29 g zucchero semolato fine
 - 29 g sciroppo di malto d’orzo oppure miele
@@ -33,7 +33,7 @@ Proteine circa 12,7%–14%
 - 18 g sale fino
 - 197 g levain maturo
 
-### Per finire
+### Bollitura
 - farina di mais o semola per spolverare la teglia
 - semi di sesamo, papavero, mix everything bagel oppure fiocchi d’avena, facoltativi
 - carta forno
@@ -131,13 +131,13 @@ Proteine circa 12,7%–14%
 - Cottura: 20–25 minuti
 
 ## Steps
-- custom | 720
+- custom: Levain | 720
 - mix | 20
 - bulk | 180
 - shape | 30
 - proof | 120
 - cold-retard | 1020
-- custom | 10
+- custom: Bollitura | 10
 - bake | 25
 - cool | 20
 
@@ -153,5 +153,5 @@ Le percentuali nel frontmatter sono calcolate in modo tecnico perché qui la com
 
 Gli step `custom` sono usati perché il vocabolario attuale non include ancora step type dedicati per maturazione levain e bollitura.
 Nel dettaglio:
-- `custom | 720` = maturazione del levain
-- `custom | 10` = bollitura totale indicativa in batch prima del forno
+- `custom: Levain | 720` = maturazione del levain
+- `custom: Bollitura | 10` = bollitura totale indicativa in batch prima del forno

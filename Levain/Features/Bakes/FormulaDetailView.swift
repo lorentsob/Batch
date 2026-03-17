@@ -11,6 +11,34 @@ struct FormulaDetailView: View {
         GridItem(.adaptive(minimum: 110), spacing: 8)
     ]
 
+    // MARK: - Parsed data (same structure as BakeIngredientsView)
+
+    private struct IngredientSection: Decodable {
+        let title: String
+        let items: [String]
+    }
+
+    private struct ProcedureSection: Decodable {
+        let title: String
+        let content: String
+    }
+
+    private var ingredientSections: [IngredientSection] {
+        guard let raw = formula.ingredients, !raw.isEmpty,
+              let data = raw.data(using: .utf8),
+              let sections = try? JSONDecoder().decode([IngredientSection].self, from: data)
+        else { return [] }
+        return sections
+    }
+
+    private var procedureSections: [ProcedureSection] {
+        guard let raw = formula.procedure, !raw.isEmpty,
+              let data = raw.data(using: .utf8),
+              let sections = try? JSONDecoder().decode([ProcedureSection].self, from: data)
+        else { return [] }
+        return sections
+    }
+
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 20) {
@@ -31,8 +59,7 @@ struct FormulaDetailView: View {
                     Text("Baker's math")
                         .font(.headline)
                         .foregroundStyle(Theme.ink)
-
-                    LazyVGrid(columns: metricColumns, alignment: .leading, spacing: 8) {
+                   LazyVGrid(columns: metricColumns, alignment: .leading, spacing: 8) {
                         MetricChip(label: "Farina totale", value: "\(Int(formula.totalFlourWeight)) g", tone: .info)
                         MetricChip(label: "Acqua totale", value: "\(Int(formula.totalWaterWeight)) g", tone: .info)
                         MetricChip(label: "Sale", value: "\(Int(formula.saltWeight)) g", tone: .schedule)

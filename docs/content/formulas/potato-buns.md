@@ -33,7 +33,7 @@ bake_type: buns
 - 11 g sale fino marino
 - 183 g levain maturo
 
-### Per finire
+### Cottura
 - 1 uovo
 - 1 cucchiaio di latte intero oppure panna liquida
 - semi di sesamo bianchi, neri, semi di papavero oppure un mix, facoltativi
@@ -94,7 +94,7 @@ bake_type: buns
 - I buns devono essere molto gonfi, leggeri e delicati al tatto.
 
 ## Steps
-- custom | 180
+- custom: Levain | 180
 - mix | 25
 - bulk | 210
 - shape | 30
@@ -121,4 +121,4 @@ Le percentuali nel frontmatter sono state mantenute conservative e leggibili per
 - inoculation_percent: calcolata sui 183 g di levain rispetto ai 447 g di farina principale
 
 Uova, patate, latte come ingrediente complesso e quota interna di farina e acqua del levain non sono stati scomposti in baker’s percentages tecniche complete perché la ricetta non fornisce una definizione univoca dell’idratazione effettiva finale.
-Lo step `custom | 180` rappresenta la maturazione del levain.
+Lo step `custom: Levain | 180` rappresenta la maturazione del levain.

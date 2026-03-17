@@ -26,7 +26,7 @@ bake_type: focaccia-in-teglia
 - 12 g sale
 - 7 g olio extravergine di oliva
 
-### Condimento
+### Cottura
 - q.b. rosmarino
 - q.b. sale in fiocchi
 - q.b. olio extravergine di oliva per teglia e finitura
