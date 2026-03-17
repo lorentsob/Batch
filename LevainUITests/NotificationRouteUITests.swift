@@ -21,7 +21,7 @@ final class NotificationRouteUITests: XCTestCase {
         let route = "levain://bake/\(UUID().uuidString)?step=\(UUID().uuidString)"
         app.launchSeededWithPendingNotificationRoute(route)
 
-        XCTAssertTrue(app.scrollViews["BakesScrollView"].waitForExistence(timeout: 8))
+        XCTAssertTrue(app.descendants(matching: .any).matching(identifier: "BakesScrollView").firstMatch.waitForExistence(timeout: 8))
         let bannerProbe = app.otherElements["ToastBannerProbe"]
         XCTAssertTrue(bannerProbe.waitForExistence(timeout: 8))
         XCTAssertEqual(bannerProbe.label, "Questo bake non è più disponibile")
