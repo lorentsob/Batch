@@ -53,7 +53,7 @@ struct BakesView: View {
 
                     if activeBakes.isEmpty {
                         EmptyStateView(
-                            title: "Nessun bake attivo",
+                            title: "Nessun bake ancora",
                             message: "Scegli una ricetta, imposta l'orario di sfornatura e Levain costruisce la timeline per te.",
                             actionTitle: emptyStateActionTitle
                         ) {

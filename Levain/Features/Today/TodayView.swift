@@ -537,7 +537,7 @@ private struct TodayOnboardingView: View {
             HStack(spacing: 12) {
                 FeaturePillCard(
                     systemImage: "drop.fill",
-                    title: "Aggiungi uno starter",
+                    title: "Aggiungi starter",
                     subtitle: "Traccia rinfreschi e ricevi promemoria.",
                     accessibilityIdentifier: "TodayAddStarterButton",
                     action: onAddStarter
@@ -595,6 +595,7 @@ private struct FeaturePillCard: View {
             )
         }
         .buttonStyle(.plain)
+        .accessibilityLabel(title)
         .accessibilityIdentifier(accessibilityIdentifier)
     }
 }
