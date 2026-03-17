@@ -75,12 +75,18 @@ final class Bake {
 
     var derivedStatus: BakeStatus {
         if isCancelled { return .cancelled }
-        if sortedSteps.isEmpty == false && sortedSteps.allSatisfy({ [.done, .skipped].contains($0.status) }) {
+        
+        let allSteps = sortedSteps
+        guard allSteps.isEmpty == false else { return .planned }
+        
+        if allSteps.allSatisfy({ [.done, .skipped].contains($0.status) }) {
             return .completed
         }
-        if sortedSteps.contains(where: { $0.status == .running || $0.actualStart != nil }) {
+        
+        if allSteps.contains(where: { $0.status == .running || $0.actualStart != nil }) {
             return .inProgress
         }
+        
         return .planned
     }
 

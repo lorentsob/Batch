@@ -1,8 +1,10 @@
 import SwiftData
 import SwiftUI
 
+@MainActor
 struct BakesView: View {
     @Environment(\.modelContext) private var modelContext
+    @EnvironmentObject private var environment: AppEnvironment
     @EnvironmentObject private var router: AppRouter
 
     @Query(sort: \Bake.targetBakeDateTime, order: .forward) private var bakes: [Bake]
@@ -28,8 +30,8 @@ struct BakesView: View {
     }
 
     var body: some View {
-        ScrollView {
-            VStack(alignment: .leading, spacing: 20) {
+        List {
+            Group {
                 SectionCard(emphasis: .tinted) {
                     Text("Impasti")
                         .font(.system(size: 30, weight: .bold))
@@ -45,6 +47,9 @@ struct BakesView: View {
                         }
                     }
                 }
+                .listRowSeparator(.hidden)
+                .listRowBackground(Color.clear)
+                .listRowInsets(EdgeInsets(top: 24, leading: 20, bottom: 20, trailing: 20))
 
                 VStack(alignment: .leading, spacing: 12) {
                     Text("Bake attivi")
@@ -62,46 +67,67 @@ struct BakesView: View {
                             showingBakeEditor = true
                         }
                         .accessibilityIdentifier("BakesEmptyState")
-                    } else {
-                        ForEach(activeBakes) { bake in
+                    }
+                }
+                .listRowSeparator(.hidden)
+                .listRowBackground(Color.clear)
+                .listRowInsets(EdgeInsets(top: 0, leading: 20, bottom: 12, trailing: 20))
+
+                if activeBakes.isEmpty == false {
+                    ForEach(activeBakes) { bake in
+                        ZStack {
                             NavigationLink(value: BakesRoute.bake(bake.id)) {
-                                SectionCard {
-                                    VStack(alignment: .leading, spacing: 12) {
-                                        HStack(alignment: .top) {
-                                            VStack(alignment: .leading, spacing: 8) {
-                                                Text(bake.name)
-                                                    .font(.headline)
-                                                    .foregroundStyle(Theme.ink)
-                                                Text(bake.type.title)
-                                                    .font(.subheadline)
-                                                    .foregroundStyle(Theme.muted)
-                                            }
-                                            Spacer()
-                                            StateBadge(bakeStatus: bake.derivedStatus)
-                                        }
-
-                                        LazyVGrid(columns: metricColumns, alignment: .leading, spacing: 8) {
-                                            MetricChip(
-                                                label: "Utilizzo",
-                                                value: DateFormattingService.dayTime(bake.targetBakeDateTime),
-                                                tone: .schedule
-                                            )
-                                            if let step = bake.activeStep {
-                                                MetricChip(label: "Prossima fase", value: step.displayName, tone: .info)
-                                            }
-                                        }
-
-                                        if let step = bake.activeStep {
-                                            Text(step.descriptionText.isEmpty ? "La fase attiva è pronta da seguire." : step.descriptionText)
-                                                .font(.footnote)
+                                EmptyView()
+                            }
+                            .opacity(0)
+                            
+                            SectionCard {
+                                VStack(alignment: .leading, spacing: 12) {
+                                    HStack(alignment: .top) {
+                                        VStack(alignment: .leading, spacing: 8) {
+                                            Text(bake.name)
+                                                .font(.headline)
+                                                .foregroundStyle(Theme.ink)
+                                            Text(bake.type.title)
+                                                .font(.subheadline)
                                                 .foregroundStyle(Theme.muted)
-                                                .lineLimit(2)
                                         }
+                                        Spacer()
+                                        StateBadge(bakeStatus: bake.derivedStatus)
+                                    }
+
+                                    LazyVGrid(columns: metricColumns, alignment: .leading, spacing: 8) {
+                                        MetricChip(
+                                            label: "Utilizzo",
+                                            value: DateFormattingService.dayTime(bake.targetBakeDateTime),
+                                            tone: .schedule
+                                        )
+                                        if let step = bake.activeStep {
+                                            MetricChip(label: "Prossima fase", value: step.displayName, tone: .info)
+                                        }
+                                    }
+
+                                    if let step = bake.activeStep {
+                                        Text(step.descriptionText.isEmpty ? "La fase attiva è pronta da seguire." : step.descriptionText)
+                                            .font(.footnote)
+                                            .foregroundStyle(Theme.muted)
+                                            .lineLimit(2)
                                     }
                                 }
                             }
-                            .buttonStyle(.plain)
                         }
+                        .swipeActions(edge: .trailing, allowsFullSwipe: true) {
+                            Button(role: .destructive) {
+                                withAnimation {
+                                    archive(bake)
+                                }
+                            } label: {
+                                Label("Archivia", systemImage: "archivebox")
+                            }
+                        }
+                        .listRowSeparator(.hidden)
+                        .listRowBackground(Color.clear)
+                        .listRowInsets(EdgeInsets(top: 0, leading: 20, bottom: 12, trailing: 20))
                     }
                 }
 
@@ -127,7 +153,12 @@ struct BakesView: View {
 
                         if isArchiveExpanded {
                             ForEach(archivedBakes) { bake in
-                                NavigationLink(value: BakesRoute.bake(bake.id)) {
+                                ZStack {
+                                    NavigationLink(value: BakesRoute.bake(bake.id)) {
+                                        EmptyView()
+                                    }
+                                    .opacity(0)
+                                    
                                     SectionCard(emphasis: .subtle) {
                                         HStack(alignment: .top) {
                                             VStack(alignment: .leading, spacing: 8) {
@@ -143,10 +174,12 @@ struct BakesView: View {
                                         }
                                     }
                                 }
-                                .buttonStyle(.plain)
                             }
                         }
                     }
+                    .listRowSeparator(.hidden)
+                    .listRowBackground(Color.clear)
+                    .listRowInsets(EdgeInsets(top: 8, leading: 20, bottom: 12, trailing: 20))
                 }
 
                 VStack(alignment: .leading, spacing: 12) {
@@ -155,7 +188,12 @@ struct BakesView: View {
                         .foregroundStyle(Theme.ink)
 
                     SectionCard {
-                        NavigationLink(value: BakesRoute.formulaList) {
+                        ZStack {
+                            NavigationLink(value: BakesRoute.formulaList) {
+                                EmptyView()
+                            }
+                            .opacity(0)
+                            
                             HStack {
                                 VStack(alignment: .leading, spacing: 8) {
                                     Text("Le tue ricette")
@@ -171,14 +209,19 @@ struct BakesView: View {
                                     .foregroundStyle(Theme.muted)
                             }
                         }
-                        .buttonStyle(.plain)
                     }
                 }
+                .listRowSeparator(.hidden)
+                .listRowBackground(Color.clear)
+                .listRowInsets(EdgeInsets(top: 8, leading: 20, bottom: 12, trailing: 20))
+                
+                // Bottom spacing for FAB
+                Color.clear.frame(height: 80)
+                    .listRowSeparator(.hidden)
+                    .listRowBackground(Color.clear)
             }
-            .padding(.horizontal, 20)
-            .padding(.vertical, 24)
         }
-        .contentMargins(.bottom, 88, for: .scrollContent)
+        .listStyle(.plain)
         .background(Theme.background.ignoresSafeArea())
         .tint(Theme.Control.primaryFill)
         .accessibilityIdentifier("BakesScrollView")
@@ -207,6 +250,18 @@ struct BakesView: View {
                     shouldPreselectFirstAvailable: shouldPreselectFirstAvailable
                 )
             }
+        }
+    }
+
+    private func archive(_ bake: Bake) {
+        let bakeID = bake.id
+        bake.isCancelled = true
+        try? modelContext.save()
+        
+        let ctx = modelContext
+        let notificationService = environment.notificationService
+        Task {
+            await notificationService.syncNotifications(for: bakeID, in: ctx)
         }
     }
 
