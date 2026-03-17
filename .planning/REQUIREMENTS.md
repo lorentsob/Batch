@@ -129,7 +129,7 @@
 
 ## Phase 16 High-Utility UX Requirements
 
-- [ ] **UX-01**: User can see relevant ingredients and weights specific to the current phase directly within the `BakeStepDetailView` modal.
+- [x] **UX-01**: User can see relevant ingredients and weights specific to the current phase directly within the `BakeStepDetailView` modal.
 
 ## Out of Scope
 
@@ -209,7 +209,7 @@
 | MEM-03 | Phase 15 | Complete (manual backup round-trip pending) |
 | MEM-04 | Phase 15 | Complete (manual fresh-launch verification pending) |
 | MEM-05 | Phase 15 | Complete (manual fresh-launch verification pending) |
-| UX-01 | Phase 16 | Planned |
+| UX-01 | Phase 16 | Complete |
 
 **Coverage:**
 
