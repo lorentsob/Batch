@@ -70,6 +70,10 @@ jobs:
         run: xcrun simctl list devices available | grep -i iphone || true
 
       # ── 7. Test ──────────────────────────────────────────────────────────────
+      # Remove stale xcresult from previous runs (self-hosted runner reuses /tmp).
+      - name: Clean previous test results
+        run: rm -rf /tmp/LevainDerivedCI/Levain.xcresult
+
       # xcodebuild boots the simulator automatically — no manual boot step needed.
       - name: Run tests
         run: |
