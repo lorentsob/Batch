@@ -1,1 +1,82 @@
-[]
+[
+  {
+    "id": "starter-basics",
+    "title": "Basi del lievito madre",
+    "category": "starter",
+    "tags": ["starter", "rinfresco", "manutenzione"],
+    "summary": "Cos'è lo starter, come funziona e i segnali di uno starter sano.",
+    "content": "Lo starter è un impasto di farina e acqua fermentato in modo continuo, che ospita lieviti e batteri lattici in equilibrio stabile. La sua forza dipende da: regolarità dei rinfreschi, temperatura di conservazione, rapporto di rinfresco (es. 1:4:4) e tipo di farina usata. Dovrebbe raddoppiare o quasi entro 4–8 ore dopo un rinfresco. Segnali positivi: molte bolle diffuse, superficie leggermente bombata, odore lattico/fruttato, consistenza aerata.",
+    "relatedStepTypes": ["starterRefresh"],
+    "relatedStarterStates": ["ok", "dueToday"]
+  },
+  {
+    "id": "starter-maintenance-fridge",
+    "title": "Manutenzione starter in frigo",
+    "category": "starter",
+    "tags": ["frigo", "conservazione", "rinfresco"],
+    "summary": "Come conservare e rinfrescare lo starter in frigorifero.",
+    "content": "Conservare lo starter in frigo a 4–8 °C rallentera la fermentazione. Fai un rinfresco con rapporto alto (es. 1:4:4), lascialo partire un po' a temperatura ambiente, poi mettilo in frigo. Ripeti ogni 5–7 giorni circa. Prima di un bake importante, fai 1–2 rinfreschi a temperatura ambiente per riportarlo in piena forma.",
+    "relatedStepTypes": ["starterRefresh"],
+    "relatedStarterStates": ["dueToday", "overdue"]
+  },
+  {
+    "id": "starter-recovery",
+    "title": "Recuperare uno starter pigro",
+    "category": "starter",
+    "tags": ["recupero", "attività", "troubleshooting"],
+    "summary": "Come riattivare uno starter che cresce lentamente o mostra segni di stanchezza.",
+    "content": "Aumenta temporaneamente la temperatura (22–26 °C). Fai rinfreschi più frequenti per alcuni giorni. Integra una quota di farina integrale o di segale (25–50%) per stimolare l'attività. Usa acqua leggermente tiepida, evitando temperature troppo alte. Se compare il 'hooch' (strato liquido in superficie), è un segnale di acidità alta: scarta parte dello starter e rinfresca con più farina.",
+    "relatedStepTypes": ["starterRefresh"],
+    "relatedStarterStates": ["overdue"]
+  },
+  {
+    "id": "bulk-fermentation-basics",
+    "title": "Bulk fermentation",
+    "category": "fermentation",
+    "tags": ["bulk", "fermentazione", "temperatura"],
+    "summary": "Come leggere e gestire la bulk fermentation per un impasto ben sviluppato.",
+    "content": "La bulk fermentation è la fase di lievitazione principale dopo l'impasto. L'impasto è pronto quando è aumentato del 50–75%, è ben aerato e si stacca pulito dalle pareti del contenitore. La temperatura incide molto: a 24 °C la bulk dura 4–5 ore, a 22 °C circa 6–7 ore. Durante questa fase si eseguono le pieghe (stretch & fold) per rinforzare la struttura del glutine.",
+    "relatedStepTypes": ["bulk", "fold"],
+    "relatedStarterStates": []
+  },
+  {
+    "id": "bakers-math",
+    "title": "Baker's math e idratazione",
+    "category": "bakerMath",
+    "tags": ["percentuale", "idratazione", "calcolo"],
+    "summary": "Come usare la baker's percentage per calcolare e scalare le ricette.",
+    "content": "Nella baker's math la farina totale è sempre 100%. Tutti gli altri ingredienti sono espressi come percentuale della farina. Formula: (peso ingrediente ÷ peso farina) × 100. Idratazioni tipiche: 65–72% per sourdough artigianale, 75–85% per focaccia e ciabatta. Il sale è tipicamente al 2%, l'inoculazione (starter) tra il 10% e il 20%.",
+    "relatedStepTypes": ["mix"],
+    "relatedStarterStates": []
+  },
+  {
+    "id": "shaping-guide",
+    "title": "Formatura e preforma",
+    "category": "fermentation",
+    "tags": ["formatura", "tensione", "bench rest"],
+    "summary": "Tecniche di preforma e formatura per costruire tensione superficiale.",
+    "content": "La preforma crea una tensione iniziale e dà all'impasto una struttura temporanea prima del bench rest. Dopo 20–30 minuti di riposo, la formatura finale costruisce la tensione superficiale necessaria per trattenere i gas durante la lievitazione finale. Un buon filo di tensione si vede dalla superficie liscia e leggermente tesa del pane formato.",
+    "relatedStepTypes": ["preshape", "benchRest", "shape"],
+    "relatedStarterStates": []
+  },
+  {
+    "id": "cold-retard-guide",
+    "title": "Cold retard",
+    "category": "fermentation",
+    "tags": ["frigo", "retarder", "sapore"],
+    "summary": "Come e perché usare il frigo durante la lievitazione finale.",
+    "content": "Il cold retard (lievitazione finale in frigo a 4–6 °C) sviluppa sapore e facilita il taglio grazie all'impasto freddo e compatto. La finestra è tipicamente tra le 12 e le 48 ore. Un impasto ben formato e non sovralievitato prima dell'ingresso in frigo darà risultati migliori. Si può infornare direttamente dal frigo senza bisogno di riportare a temperatura.",
+    "relatedStepTypes": ["coldRetard", "proof"],
+    "relatedStarterStates": []
+  },
+  {
+    "id": "common-problems",
+    "title": "Problemi comuni e soluzioni",
+    "category": "troubleshooting",
+    "tags": ["troubleshooting", "crosta", "mollica", "pane piatto"],
+    "summary": "Diagnosi e soluzioni per i problemi più frequenti nella panificazione con lievito madre.",
+    "content": "Pane piatto: starter non abbastanza attivo oppure sovralievitazione. Mollica troppo fitta: underproofing (lievitazione insufficiente) o farina debole. Crosta troppo spessa: temperatura forno troppo alta o cottura troppo lunga senza vapore. Acidità eccessiva: bulk troppo lunga o temperatura troppo alta. Taglio che non apre: tensione superficiale insufficiente nella formatura o lama non abbastanza affilata.",
+    "relatedStepTypes": ["bake"],
+    "relatedStarterStates": ["overdue"]
+  }
+]

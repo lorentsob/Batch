@@ -44,7 +44,7 @@ final class BakesFlowUITests: XCTestCase {
         XCTAssertTrue(app.buttons["Crea il tuo primo bake"].waitForExistence(timeout: 8))
     }
 
-    func testNewBakeUsesBundledTemplates() throws {
+    func testNewBakeShowsSystemTemplatesInRecipePicker() throws {
         let app = XCUIApplication()
         app.launchEmpty()
 
@@ -57,11 +57,13 @@ final class BakesFlowUITests: XCTestCase {
         app.buttons["Nuovo bake"].tap()
 
         XCTAssertTrue(app.staticTexts["Ricetta"].waitForExistence(timeout: 8))
-        XCTAssertTrue(app.staticTexts["Template rapidi"].waitForExistence(timeout: 5))
-        XCTAssertTrue(app.scrollViews["BakeTemplateScroller"].waitForExistence(timeout: 5))
-        XCTAssertTrue(app.buttons["Pane di campagna"].waitForExistence(timeout: 5))
-        app.buttons["Pane di campagna"].tap()
 
-        XCTAssertTrue(app.staticTexts["Starter"].waitForExistence(timeout: 8))
+        // Tap the recipe picker to open it
+        let recipePicker = app.otherElements["BakeRecipePicker"]
+        XCTAssertTrue(recipePicker.waitForExistence(timeout: 5))
+        recipePicker.tap()
+
+        // System templates section should be visible
+        XCTAssertTrue(app.staticTexts["Template di sistema"].waitForExistence(timeout: 5))
     }
 }
