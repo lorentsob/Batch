@@ -4,7 +4,6 @@ import SwiftUI
 struct FormulaDetailView: View {
     let formula: RecipeFormula
 
-    @State private var formulaToEdit: RecipeFormula?
     @State private var showingBakeEditor = false
 
     private let metricColumns = [
@@ -128,20 +127,9 @@ struct FormulaDetailView: View {
         .tint(Theme.Control.primaryFill)
         .toolbar {
             ToolbarItemGroup(placement: .topBarTrailing) {
-                //  Button("Duplica") {
-                //      formulaToEdit = formula.duplicate()
-                //  }
-                // Button("Modifica") {
-                //     formulaToEdit = formula
-                // }
                 Button("Nuovo bake") {
                     showingBakeEditor = true
                 }
-            }
-        }
-        .sheet(item: $formulaToEdit) { formula in
-            NavigationStack {
-                FormulaEditorView(formula: formula)
             }
         }
         .sheet(isPresented: $showingBakeEditor) {
