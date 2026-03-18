@@ -131,9 +131,9 @@ struct FormulaDetailView: View {
                 //  Button("Duplica") {
                 //      formulaToEdit = formula.duplicate()
                 //  }
-                Button("Modifica") {
-                    formulaToEdit = formula
-                }
+                // Button("Modifica") {
+                //     formulaToEdit = formula
+                // }
                 Button("Nuovo bake") {
                     showingBakeEditor = true
                 }
