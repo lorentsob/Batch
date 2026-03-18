@@ -150,7 +150,19 @@ struct BakeDetailView: View {
             stepStartedTrigger.toggle()
         }
 
-        persistAndSync()
+        if bake.derivedStatus == .completed {
+            router.bakesPath.removeAll()
+
+            let bakeID = bake.id
+            Task { @MainActor in
+                try? await Task.sleep(for: .milliseconds(300))
+                try? modelContext.save()
+                await environment.notificationService.syncNotifications(forBake: bakeID, in: modelContext)
+                environment.showBanner("Bake completato!", duration: 4)
+            }
+        } else {
+            persistAndSync()
+        }
     }
 
     private func shift(_ step: BakeStep, by minutes: Int) {
@@ -162,12 +174,8 @@ struct BakeDetailView: View {
         let bakeID = bake.id
         try? modelContext.save()
 
-        if bake.derivedStatus == .completed {
-            environment.showBanner("Bake completato! Buona lievitazione 🎉", duration: 4)
-        }
-
         let ctx = modelContext
-        Task {
+        Task { @MainActor in
             await environment.notificationService.syncNotifications(forBake: bakeID, in: ctx)
         }
     }
@@ -212,18 +220,12 @@ struct BakeDetailView: View {
             router.bakesPath.removeAll()
 
             let bakeRef = bake
-            let ctx = modelContext
-            let env = environment
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+            Task { @MainActor in
+                try? await Task.sleep(for: .milliseconds(300))
                 bakeRef.isCancelled = true
-                try? ctx.save()
-
-                Task {
-                    await env.notificationService.resyncAll(using: ctx)
-                    await MainActor.run {
-                        env.showBanner("Bake annullato e spostato in archivio.", duration: 4)
-                    }
-                }
+                try? modelContext.save()
+                await environment.notificationService.resyncAll(using: modelContext)
+                environment.showBanner("Bake annullato e spostato in archivio.", duration: 4)
             }
 
         case .delete:
@@ -238,7 +240,7 @@ struct BakeDetailView: View {
         router.selectedTab = .bakes
         router.bakesPath.removeAll()
 
-        Task {
+        Task { @MainActor in
             await environment.notificationService.resyncAll(using: modelContext)
         }
     }

@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 63;
+	objectVersion = 77;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -553,7 +553,6 @@
 				};
 			};
 			buildConfigurationList = EF84E45622C51C9F15998F15 /* Build configuration list for PBXProject "Levain" */;
-			compatibilityVersion = "Xcode 14.0";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
@@ -562,6 +561,8 @@
 			);
 			mainGroup = D9040A503A128437022B7221;
 			minimizedProjectReferenceProxies = 1;
+			preferredProjectObjectVersion = 77;
+			productRefGroup = 2C9B600D6A369C19979105D9 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (

@@ -30,7 +30,7 @@ struct LevainApp: App {
             }
             .task {
                 try? await Task.sleep(for: .seconds(1.3))
-                withAnimation(.easeOut(duration: 0.45)) {
+                withAnimation(.easeOut(duration: 0.8)) {
                     showSplash = false
                 }
             }

@@ -1,3 +1,8 @@
+---
+description: 
+alwaysApply: true
+---
+
 # CLAUDE.md — Levain
 
 This file is the single source of context for AI-assisted development of Levain. It is derived from `docs/levain-prd-complete-v2.md`, the `.planning/` folder, and the current state of the codebase.

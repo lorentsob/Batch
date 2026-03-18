@@ -156,7 +156,9 @@ final class AppRouter: ObservableObject {
     }
 
     private func presentBanner(_ message: String, duration: TimeInterval = 3) {
-        bannerPresenter?(message, duration)
+        Task { @MainActor in
+            bannerPresenter?(message, duration)
+        }
     }
 }
 
