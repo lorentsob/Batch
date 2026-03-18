@@ -258,7 +258,7 @@ struct BakeCreationView: View {
 
         let bakeID = bake.id
         let ctx = modelContext
-        Task {
+        Task { @MainActor in
             await environment.notificationService.syncNotifications(forBake: bakeID, in: ctx)
         }
 

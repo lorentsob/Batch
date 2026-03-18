@@ -94,12 +94,9 @@ enum BakeScheduler {
             effectiveShift = minutes
         }
 
-        // When the anchor is pending (not yet started), include it in the shift so the
-        // hero card reflects the new planned time immediately. Running anchors are excluded
-        // because their actual start is already recorded.
-        let minIndex = anchorStep.status == .pending
-            ? anchorStep.orderIndex
-            : anchorStep.orderIndex + 1
+        // L'ancora non si sposta mai: solo gli step FUTURI (con indice maggiore)
+        // e ancora incompleti vengono traslati.
+        let minIndex = anchorStep.orderIndex + 1
 
         for step in bake.steps where step.isTerminal == false {
             guard step.orderIndex >= minIndex else { continue }
