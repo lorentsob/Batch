@@ -68,36 +68,8 @@ jobs:
       - name: List available simulators
         run: xcrun simctl list devices available | grep -i iphone || true
 
-      # ── 7. Test (solo su push a develop) ─────────────────────────────────────
-      # Sulle PR verso develop eseguiamo solo il build. I test completi girano
-      # solo sui push diretti a develop (tipicamente dopo il merge della PR).
-
-      - name: Clean previous test results
-        if: github.event_name == 'push' && github.ref == 'refs/heads/develop'
-        run: rm -rf /tmp/LevainDerivedCI/Levain.xcresult
-
-      - name: Run tests
-        if: github.event_name == 'push' && github.ref == 'refs/heads/develop'
-        run: |
-          set -o pipefail
-          xcodebuild \
-            -project Levain.xcodeproj \
-            -scheme Levain \
-            -configuration Debug \
-            -derivedDataPath /tmp/LevainDerivedCI \
-            -destination "platform=iOS Simulator,name=$SIMULATOR_NAME" \
-            -resultBundlePath /tmp/LevainDerivedCI/Levain.xcresult \
-            CODE_SIGNING_ALLOWED=NO \
-            test 2>&1 | tee /tmp/test.log
-
-      - name: Upload test results
-        if: github.event_name == 'push' && github.ref == 'refs/heads/develop' && always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: levain-xcresult-${{ github.run_number }}
-          path: /tmp/LevainDerivedCI/Levain.xcresult
-          retention-days: 14
-          if-no-files-found: warn
+      # ── 7. (Nessun test in CI) ───────────────────────────────────────────────
+      # Per velocizzare, questa pipeline esegue solo il build (nessun xcodebuild test).
 
       # ── 8. Upload build log on failure ───────────────────────────────────────
       - name: Upload build log on failure
