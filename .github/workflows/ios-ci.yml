@@ -3,14 +3,10 @@ name: iOS CI
 on:
   push:
     branches:
-      - main
       - develop
-      - "release/**"
   pull_request:
     branches:
-      - main
       - develop
-      - "release/**"
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -72,34 +68,10 @@ jobs:
       - name: List available simulators
         run: xcrun simctl list devices available | grep -i iphone || true
 
-      # ── 7. Test ──────────────────────────────────────────────────────────────
-      # Remove stale xcresult from previous runs (self-hosted runner reuses /tmp).
-      - name: Clean previous test results
-        run: rm -rf /tmp/LevainDerivedCI/Levain.xcresult
-
-      # xcodebuild boots the simulator automatically — no manual boot step needed.
-      - name: Run tests
-        run: |
-          set -o pipefail
-          xcodebuild \
-            -project Levain.xcodeproj \
-            -scheme Levain \
-            -configuration Debug \
-            -derivedDataPath /tmp/LevainDerivedCI \
-            -destination "platform=iOS Simulator,name=$SIMULATOR_NAME" \
-            -resultBundlePath /tmp/LevainDerivedCI/Levain.xcresult \
-            CODE_SIGNING_ALLOWED=NO \
-            test 2>&1 | tee /tmp/test.log
-
-      # ── 7. Upload xcresult for debugging failures ─────────────────────────────
-      - name: Upload test results
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: levain-xcresult-${{ github.run_number }}
-          path: /tmp/LevainDerivedCI/Levain.xcresult
-          retention-days: 14
-          if-no-files-found: warn
+      # ── 7. (Opzionale) step di test completo ─────────────────────────────────
+      # I test completi (inclusi UI tests) sono eseguiti solo quando si fa merge
+      # da develop verso main tramite il workflow di release, per velocizzare
+      # la CI quotidiana su develop.
 
       # ── 8. Upload build log on failure ───────────────────────────────────────
       - name: Upload build log on failure
