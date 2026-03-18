@@ -18,7 +18,7 @@ struct FormulaListView: View {
                     Text("Ricette")
                         .font(.system(size: 30, weight: .bold))
                         .foregroundStyle(Theme.ink)
-                    Text("Le tue ricette salvate. I template di sistema restano disponibili nel flow Nuovo bake.")
+                    Text("Le tue ricette salvate")
                         .foregroundStyle(Theme.muted)
                     StateBadge(text: "\(formulas.count) ricette", tone: .count)
                 }
