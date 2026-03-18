@@ -58,6 +58,8 @@ struct FormulaEditorView: View {
                     }
                 }
                 Stepper("Porzioni: \(servings)", value: $servings, in: 1...12)
+                    // Extra trailing inset so the stepper control doesn't kiss the card edge
+                    .listRowInsets(EdgeInsets(top: 12, leading: 16, bottom: 12, trailing: 24))
             }
 
             Section("Ingredienti") {
@@ -121,7 +123,7 @@ struct FormulaEditorView: View {
                 }
             }
 
-            Section("Fasi di default") {
+            Section("Preparazione") {
                 if steps.isEmpty {
                     Text("Aggiungi almeno una fase.")
                         .foregroundStyle(Theme.muted)
@@ -175,9 +177,6 @@ struct FormulaEditorView: View {
         .toolbar {
             ToolbarItem(placement: .cancellationAction) {
                 Button("Chiudi") { dismiss() }
-            }
-            ToolbarItem(placement: .topBarLeading) {
-                EditButton()
             }
             ToolbarItem(placement: .confirmationAction) {
                 Button("Salva") { save() }

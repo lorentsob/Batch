@@ -14,6 +14,8 @@ struct FormulaStepEditorView: View {
     @State private var temperatureRange: String
     @State private var volumeTarget: String
     @State private var notes: String
+    @State private var showingDurationPicker = false
+    @State private var showingReminderPicker = false
 
     init(step: FormulaStepTemplate, onSave: @escaping (FormulaStepTemplate) -> Void) {
         initialStep = step
@@ -48,8 +50,29 @@ struct FormulaStepEditorView: View {
             }
 
             Section("Timing") {
-                Stepper("Durata: \(DateFormattingService.duration(minutes: durationMinutes))", value: $durationMinutes, in: 5...24 * 60, step: 5)
-                Stepper("Promemoria: \(reminderOffsetMinutes) min prima", value: $reminderOffsetMinutes, in: 0...180, step: 5)
+                Button {
+                    showingDurationPicker = true
+                } label: {
+                    HStack {
+                        Text("Durata")
+                        Spacer()
+                        Text(DateFormattingService.duration(minutes: durationMinutes))
+                            .foregroundStyle(Theme.muted)
+                    }
+                }
+                .buttonStyle(.plain)
+
+                Button {
+                    showingReminderPicker = true
+                } label: {
+                    HStack {
+                        Text("Promemoria")
+                        Spacer()
+                        Text(reminderOffsetMinutes == 0 ? "Nessun promemoria" : "\(reminderOffsetMinutes) min prima")
+                            .foregroundStyle(Theme.muted)
+                    }
+                }
+                .buttonStyle(.plain)
             }
 
             Section("Target qualitativi") {
@@ -68,7 +91,7 @@ struct FormulaStepEditorView: View {
                 }
             }
         }
-        .navigationTitle("Fase della ricetta")
+        .navigationTitle(name.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty ? "Fase" : name)
         .toolbar {
             ToolbarItem(placement: .cancellationAction) {
                 Button("Chiudi") { dismiss() }
@@ -94,5 +117,87 @@ struct FormulaStepEditorView: View {
                 .disabled(name.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
             }
         }
+        .sheet(isPresented: $showingDurationPicker) {
+            DurationPickerSheet(selection: $durationMinutes)
+        }
+        .sheet(isPresented: $showingReminderPicker) {
+            ReminderOffsetPickerSheet(selection: $reminderOffsetMinutes)
+        }
+    }
+}
+
+private struct DurationPickerSheet: View {
+    @Environment(\.dismiss) private var dismiss
+
+    @Binding var selection: Int
+    private let values: [Int] = Array(stride(from: 5, through: 24 * 60, by: 5))
+
+    var body: some View {
+        NavigationStack {
+            VStack(spacing: 0) {
+                Picker("Durata fase", selection: $selection) {
+                    ForEach(values, id: \.self) { value in
+                        Text(DateFormattingService.duration(minutes: value))
+                            .tag(value)
+                    }
+                }
+                .pickerStyle(.wheel)
+                .labelsHidden()
+                .frame(maxWidth: .infinity)
+            }
+            .navigationTitle("Durata fase")
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .cancellationAction) {
+                    Button("Chiudi") { dismiss() }
+                }
+                ToolbarItem(placement: .confirmationAction) {
+                    Button("Conferma") { dismiss() }
+                }
+            }
+        }
+        .presentationDetents([.fraction(0.38)])
+        .presentationBackground(Theme.Surface.app)
+    }
+}
+
+private struct ReminderOffsetPickerSheet: View {
+    @Environment(\.dismiss) private var dismiss
+
+    @Binding var selection: Int
+
+    private let values: [Int] = Array(stride(from: 0, through: 180, by: 5))
+
+    var body: some View {
+        NavigationStack {
+            VStack(spacing: 0) {
+                Picker("Promemoria", selection: $selection) {
+                    ForEach(values, id: \.self) { value in
+                        if value == 0 {
+                            Text("Nessun promemoria")
+                                .tag(value)
+                        } else {
+                            Text("\(value) min prima")
+                                .tag(value)
+                        }
+                    }
+                }
+                .pickerStyle(.wheel)
+                .labelsHidden()
+                .frame(maxWidth: .infinity)
+            }
+            .navigationTitle("Promemoria")
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .cancellationAction) {
+                    Button("Chiudi") { dismiss() }
+                }
+                ToolbarItem(placement: .confirmationAction) {
+                    Button("Conferma") { dismiss() }
+                }
+            }
+        }
+        .presentationDetents([.fraction(0.38)])
+        .presentationBackground(Theme.Surface.app)
     }
 }
