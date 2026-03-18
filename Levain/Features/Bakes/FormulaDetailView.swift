@@ -128,9 +128,9 @@ struct FormulaDetailView: View {
         .tint(Theme.Control.primaryFill)
         .toolbar {
             ToolbarItemGroup(placement: .topBarTrailing) {
-                Button("Duplica") {
-                    formulaToEdit = formula.duplicate()
-                }
+                //  Button("Duplica") {
+                //      formulaToEdit = formula.duplicate()
+                //  }
                 Button("Modifica") {
                     formulaToEdit = formula
                 }
