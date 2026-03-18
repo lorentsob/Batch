@@ -154,20 +154,32 @@ struct BakeStepDetailView: View {
     private func complete() {
         step.complete()
         stepCompletedTrigger.toggle()
-        persistAndSync()
+
+        // When this was the last step the bake transitions to .completed.
+        // Saving immediately would trigger a re-render of the parent
+        // BakeDetailView while its ActiveStepHeroCard / TimelineView is
+        // being torn down — causing a crash.  Defer the save so the sheet
+        // dismisses first.
+        if let bake = step.bake, bake.derivedStatus == .completed {
+            let bakeID = bake.id
+            Task { @MainActor in
+                try? await Task.sleep(for: .milliseconds(300))
+                try? modelContext.save()
+                await environment.notificationService.syncNotifications(forBake: bakeID, in: modelContext)
+                environment.showBanner("Bake completato!", duration: 4)
+            }
+        } else {
+            persistAndSync()
+        }
     }
 
     private func persistAndSync() {
         let bakeID = step.bake?.id
         try? modelContext.save()
 
-        if let bake = step.bake, bake.derivedStatus == .completed {
-            environment.showBanner("Bake completato! Buona lievitazione 🎉", duration: 4)
-        }
-
         if let bakeID {
             let ctx = modelContext
-            Task {
+            Task { @MainActor in
                 await environment.notificationService.syncNotifications(forBake: bakeID, in: ctx)
             }
         }

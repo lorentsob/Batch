@@ -30,7 +30,7 @@ final class TodayFlowUITests: XCTestCase {
         app.launchSeeded(scenario: "futureOnly")
 
         XCTAssertTrue(app.scrollViews["TodayScrollView"].waitForExistence(timeout: 8))
-        XCTAssertTrue(app.staticTexts["La prossima cosa da seguire è già programmata."].waitForExistence(timeout: 5))
+                XCTAssertTrue(app.staticTexts["Tieni d'occhio gli starter"].waitForExistence(timeout: 5))
         XCTAssertTrue(app.buttons["Vai a Starter"].waitForExistence(timeout: 5))
     }
 

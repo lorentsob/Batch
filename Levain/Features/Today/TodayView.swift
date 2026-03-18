@@ -193,7 +193,21 @@ struct TodayView: View {
             stepStartedTrigger.toggle()
         }
 
-        persistAndSync(for: selection.bake)
+        // If the bake just became complete (in-memory, before save), persist
+        // on a short delay so SwiftUI never re-renders the TodayStepCardView
+        // with a stale ActiveStepHeroCard / TimelineView being torn down.
+        let bake = selection.bake
+        if bake.derivedStatus == .completed {
+            let bakeID = bake.id
+            Task { @MainActor in
+                try? await Task.sleep(for: .milliseconds(300))
+                try? modelContext.save()
+                await environment.notificationService.syncNotifications(forBake: bakeID, in: modelContext)
+                environment.showBanner("Bake completato!", duration: 4)
+            }
+        } else {
+            persistAndSync(for: bake)
+        }
     }
 
     private func shift(_ selection: TodayBakeSelection, by minutes: Int) {
@@ -218,12 +232,8 @@ struct TodayView: View {
         let bakeID = bake.id
         try? modelContext.save()
 
-        if bake.derivedStatus == .completed {
-            environment.showBanner("Bake completato! Buona lievitazione 🎉", duration: 4)
-        }
-
         let ctx = modelContext
-        Task {
+        Task { @MainActor in
             await environment.notificationService.syncNotifications(forBake: bakeID, in: ctx)
         }
     }
@@ -264,7 +274,7 @@ private struct TodaySnapshot {
             heroSubtitle = "Tutto in pari — nessuna azione urgente per oggi."
         case .futureOnly:
             if let preview = agenda.futurePreview {
-                heroSubtitle = "Oggi è libero: la prossima cosa da seguire sarà \(preview.title)."
+                heroSubtitle = "Oggi sei libero, ma ricordati di: \(preview.title)."
             } else {
                 heroSubtitle = "Oggi è libero: non c'è ancora nulla in programma."
             }
@@ -300,7 +310,7 @@ private struct TodayFuturePreviewCard: View {
             VStack(alignment: .leading, spacing: 12) {
                 StateBadge(text: "In programma", tone: .count)
 
-                Text("La prossima cosa da seguire è già programmata.")
+                Text("Tieni d'occhio gli starter")
                     .foregroundStyle(Theme.muted)
 
                 VStack(alignment: .leading, spacing: 4) {

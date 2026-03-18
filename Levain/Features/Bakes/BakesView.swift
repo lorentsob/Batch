@@ -4,6 +4,7 @@ import SwiftUI
 @MainActor
 struct BakesView: View {
     @Environment(\.modelContext) private var modelContext
+    @Environment(\.dismiss) private var dismiss
     @EnvironmentObject private var environment: AppEnvironment
     @EnvironmentObject private var router: AppRouter
 
@@ -15,7 +16,8 @@ struct BakesView: View {
     @State private var showingBakeEditor = false
     @State private var preselectedFormula: RecipeFormula?
     @State private var shouldPreselectFirstAvailable = false
-    @State private var isArchiveExpanded = false
+    @State private var isArchiveExpanded = false // legacy flag, kept for now
+    @State private var showingArchiveSheet = false
 
     private let metricColumns = [
         GridItem(.adaptive(minimum: 118), spacing: 8)
@@ -134,9 +136,7 @@ struct BakesView: View {
                 if archivedBakes.isEmpty == false {
                     VStack(alignment: .leading, spacing: 12) {
                         Button {
-                            withAnimation(Theme.Animation.standard) {
-                                isArchiveExpanded.toggle()
-                            }
+                            showingArchiveSheet = true
                         } label: {
                             HStack {
                                 Text("Archivio")
@@ -145,37 +145,10 @@ struct BakesView: View {
                                 StateBadge(text: "\(archivedBakes.count)", tone: .count)
                                 Spacer()
                                 Image(systemName: "chevron.right")
-                                    .rotationEffect(.degrees(isArchiveExpanded ? 90 : 0))
                                     .foregroundStyle(Theme.muted)
                             }
                         }
                         .buttonStyle(.plain)
-
-                        if isArchiveExpanded {
-                            ForEach(archivedBakes) { bake in
-                                ZStack {
-                                    NavigationLink(value: BakesRoute.bake(bake.id)) {
-                                        EmptyView()
-                                    }
-                                    .opacity(0)
-                                    
-                                    SectionCard(emphasis: .subtle) {
-                                        HStack(alignment: .top) {
-                                            VStack(alignment: .leading, spacing: 8) {
-                                                Text(bake.name)
-                                                    .font(.headline)
-                                                    .foregroundStyle(Theme.ink)
-                                                Text(DateFormattingService.dayTime(bake.targetBakeDateTime))
-                                                    .font(.subheadline)
-                                                    .foregroundStyle(Theme.muted)
-                                            }
-                                            Spacer()
-                                            StateBadge(bakeStatus: bake.derivedStatus)
-                                        }
-                                    }
-                                }
-                            }
-                        }
                     }
                     .listRowSeparator(.hidden)
                     .listRowBackground(Color.clear)
@@ -251,6 +224,14 @@ struct BakesView: View {
                 )
             }
         }
+        .sheet(isPresented: $showingArchiveSheet) {
+            NavigationStack {
+                BakesArchiveView(
+                    allBakes: bakes,
+                    onClose: { showingArchiveSheet = false }
+                )
+            }
+        }
     }
 
     private func archive(_ bake: Bake) {
@@ -260,7 +241,7 @@ struct BakesView: View {
         
         let ctx = modelContext
         let notificationService = environment.notificationService
-        Task {
+        Task { @MainActor in
             await notificationService.syncNotifications(forBake: bakeID, in: ctx)
         }
     }
@@ -270,6 +251,175 @@ struct BakesView: View {
         let allBakesQuery = FetchDescriptor<Bake>()
         let allBakesCount = (try? modelContext.fetch(allBakesQuery).count) ?? 0
         return allBakesCount == 0 ? "Crea il tuo primo bake" : "Nuovo Bake"
+    }
+}
+
+private struct BakesArchiveView: View {
+    enum ArchiveFilter: String, CaseIterable, Identifiable {
+        case all = "Tutti"
+        case completed = "Completati"
+        case cancelled = "Annullati"
+
+        var id: String { rawValue }
+    }
+
+    @Environment(\.modelContext) private var modelContext
+
+    let allBakes: [Bake]
+    let onClose: () -> Void
+
+    @State private var filter: ArchiveFilter = .all
+    @State private var selectedIDs: Set<UUID> = []
+
+    private var hasAnyArchived: Bool {
+        allBakes.contains { bake in
+            switch bake.derivedStatus {
+            case .completed, .cancelled:
+                return true
+            default:
+                return false
+            }
+        }
+    }
+
+    private var archivedBakes: [Bake] {
+        allBakes.filter { bake in
+            switch bake.derivedStatus {
+            case .completed:
+                return filter == .all || filter == .completed
+            case .cancelled:
+                return filter == .all || filter == .cancelled
+            default:
+                return false
+            }
+        }
+        .sorted { $0.targetBakeDateTime > $1.targetBakeDateTime }
+    }
+
+    var body: some View {
+        List {
+            if hasAnyArchived == false {
+                Section {
+                    EmptyStateView(
+                        title: "Nessun bake in archivio",
+                        message: "Qui trovi gli impasti completati o annullati. Archivia un bake dalla lista principale per vederlo qui.",
+                        actionTitle: "Chiudi",
+                        action: onClose
+                    )
+                }
+            } else {
+                Section {
+                    Picker("Filtro", selection: $filter) {
+                        ForEach(ArchiveFilter.allCases) { option in
+                            Text(option.rawValue).tag(option)
+                        }
+                    }
+                    .pickerStyle(.segmented)
+                }
+
+                if archivedBakes.isEmpty {
+                    Section {
+                        Text("Nessun bake per questo filtro.")
+                            .font(.subheadline)
+                            .foregroundStyle(Theme.muted)
+                    }
+                } else {
+                    Section {
+                        ForEach(archivedBakes) { bake in
+                        let isSelected = selectedIDs.contains(bake.id)
+
+                        SectionCard(emphasis: .subtle) {
+                            HStack(alignment: .top, spacing: 12) {
+                                VStack(alignment: .leading, spacing: 8) {
+                                    Text(bake.name)
+                                        .font(.headline)
+                                        .foregroundStyle(Theme.ink)
+                                    Text(DateFormattingService.dayTime(bake.targetBakeDateTime))
+                                        .font(.subheadline)
+                                        .foregroundStyle(Theme.muted)
+                                }
+                                Spacer()
+
+                                VStack(alignment: .trailing, spacing: 6) {
+                                    let isCompleted = bake.derivedStatus == .completed
+                                    let badgeText = isCompleted ? "Completato" : "Annullato"
+                                    // In archivio vogliamo un verde evidente per i completati,
+                                    // quindi usiamo il tono .running al posto di .done (che è neutro).
+                                    let badgeTone: StateBadge.Tone = isCompleted ? .running : .danger
+
+                                    StateBadge(text: badgeText, tone: badgeTone)
+
+                                    if isSelected {
+                                        Image(systemName: "checkmark.circle.fill")
+                                            .foregroundStyle(Theme.Status.doneForeground)
+                                    }
+                                }
+                            }
+                        }
+                        .contentShape(Rectangle())
+                        .onTapGesture {
+                            if isSelected {
+                                selectedIDs.remove(bake.id)
+                            } else {
+                                selectedIDs.insert(bake.id)
+                            }
+                        }
+                            .swipeActions(edge: .trailing, allowsFullSwipe: true) {
+                                Button(role: .destructive) {
+                                    withAnimation {
+                                        delete(bakes: [bake])
+                                    }
+                                } label: {
+                                    Label("Elimina", systemImage: "trash")
+                                }
+                                .tint(.red)
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        .navigationTitle("Archivio impasti")
+        .navigationBarTitleDisplayMode(.inline)
+        .toolbar {
+            ToolbarItemGroup(placement: .bottomBar) {
+                let visibleIDs = Set(archivedBakes.map(\.id))
+                let allVisibleSelected = !visibleIDs.isEmpty && visibleIDs.isSubset(of: selectedIDs)
+
+                Button(allVisibleSelected ? "Deseleziona" : "Seleziona") {
+
+                    if allVisibleSelected {
+                        // Se tutto ciò che vedi è già selezionato, deseleziona tutto
+                        selectedIDs.subtract(visibleIDs)
+                    } else {
+                        // Altrimenti seleziona tutto ciò che è in questa vista (rispettando il filtro)
+                        selectedIDs.formUnion(visibleIDs)
+                    }
+                }
+
+                Spacer()
+
+                Button(role: .destructive) {
+                    let toDelete = archivedBakes.filter { selectedIDs.contains($0.id) }
+                    guard toDelete.isEmpty == false else { return }
+
+                    withAnimation {
+                        delete(bakes: toDelete)
+                        selectedIDs.removeAll()
+                    }
+                } label: {
+                    Text("Elimina selezionati")
+                }
+                .disabled(selectedIDs.isEmpty)
+            }
+        }
+    }
+
+    private func delete(bakes: [Bake]) {
+        for bake in bakes {
+            modelContext.delete(bake)
+        }
+        try? modelContext.save()
     }
 }
 
