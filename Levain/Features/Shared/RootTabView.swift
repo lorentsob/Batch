@@ -44,7 +44,47 @@ struct RootTabView: View {
         .onOpenURL { url in
             router.open(url: url, modelContext: modelContext)
         }
-        .sheet(isPresented: $router.showingKnowledge) {
+    }
+
+    private var tabs: some View {
+        TabView(selection: $router.selectedTab) {
+            TodayView()
+                .tabItem {
+                    Label("Oggi", systemImage: "house.fill")
+                }
+                .tag(RootTab.oggi)
+
+            NavigationStack(path: $router.preparationsPath) {
+                PreparationsView()
+                    .navigationDestination(for: PreparationsRoute.self) { route in
+                        switch route {
+                        case .breadHub:
+                            BreadHubView()
+                        case .kefirHub:
+                            KefirHubView()
+                        case .bakesList:
+                            BakesView()
+                        case .formulaList:
+                            FormulaListView()
+                        case .starterList:
+                            StarterView()
+                        case let .bake(id):
+                            BakeLookupView(id: id)
+                        case let .formula(id):
+                            FormulaLookupView(id: id)
+                        case let .starter(id):
+                            StarterLookupView(id: id)
+                        }
+                    }
+            }
+            .toolbarColorScheme(.light, for: .navigationBar)
+            .toolbarBackground(Theme.Surface.app, for: .navigationBar)
+            .toolbarBackground(.visible, for: .navigationBar)
+            .tabItem {
+                Label("Preparazioni", systemImage: "square.grid.2x2.fill")
+            }
+            .tag(RootTab.preparazioni)
+
             NavigationStack(path: $router.knowledgePath) {
                 KnowledgeView()
                     .navigationDestination(for: KnowledgeRoute.self) { route in
@@ -57,58 +97,10 @@ struct RootTabView: View {
             .toolbarColorScheme(.light, for: .navigationBar)
             .toolbarBackground(Theme.Surface.app, for: .navigationBar)
             .toolbarBackground(.visible, for: .navigationBar)
-        }
-    }
-
-    private var tabs: some View {
-        TabView(selection: $router.selectedTab) {
-            TodayView()
-                .tabItem {
-                    Label("Home", systemImage: "house.fill")
-                }
-                .tag(RootTab.today)
-
-            NavigationStack(path: $router.bakesPath) {
-                BakesView()
-                    .navigationDestination(for: BakesRoute.self) { route in
-                        switch route {
-                        case let .bake(id):
-                            BakeLookupView(id: id)
-                        case let .formula(id):
-                            FormulaLookupView(id: id)
-                        case .formulaList:
-                            FormulaListView()
-                        }
-                    }
-            }
-            .toolbarColorScheme(.light, for: .navigationBar)
-            .toolbarBackground(Theme.Surface.app, for: .navigationBar)
-            .toolbarBackground(.visible, for: .navigationBar)
             .tabItem {
-                Image("navbar-bake")
-                    .renderingMode(.template)
-                Text("Impasti")
+                Label("Conoscenza", systemImage: "book.fill")
             }
-            .tag(RootTab.bakes)
-
-            NavigationStack(path: $router.starterPath) {
-                StarterView()
-                    .navigationDestination(for: StarterRoute.self) { route in
-                        switch route {
-                        case let .detail(id):
-                            StarterLookupView(id: id)
-                        }
-                    }
-            }
-            .toolbarColorScheme(.light, for: .navigationBar)
-            .toolbarBackground(Theme.Surface.app, for: .navigationBar)
-            .toolbarBackground(.visible, for: .navigationBar)
-            .tabItem {
-                Image("navbar-starter")
-                    .renderingMode(.template)
-                Text("Starter")
-            }
-            .tag(RootTab.starter)
+            .tag(RootTab.knowledge)
         }
         .tint(Theme.Control.tabActiveTint)
         .toolbarColorScheme(.light, for: .tabBar)
@@ -183,8 +175,6 @@ struct RootTabView: View {
             }
 
             if authorizationState == .denied {
-                // Mark the bootstrap as handled so a denied state does not force
-                // another startup-time notification pass on every launch.
                 if appSettings.lastNotificationSync == nil {
                     appSettings.lastNotificationSync = .now
                     try? modelContext.save()
@@ -194,6 +184,8 @@ struct RootTabView: View {
         }
     }
 }
+
+// MARK: - Lookup helpers (reusable across tab navigation destinations)
 
 private struct BakeLookupView: View {
     @Environment(\.modelContext) private var modelContext

@@ -2,71 +2,70 @@
 
 ## Project Reference
 
-See: .planning/PROJECT.md (updated 2026-03-14)
+See: .planning/PROJECT.md (updated 2026-03-29)
 
-**Core value:** The app must make the next baking action obvious without adding setup, infrastructure, or workflow friction.
-**Current focus:** Phase 16 complete — step-specific ingredients visible in the baking phase modal, content pipeline automated via Python formatter.
+**Core value:** The app must make the next fermentation action obvious without adding setup, infrastructure, or workflow friction.
+**Current focus:** Phase 17 is ready to execute, and Phases 18-19 are now planned around cross-domain Oggi, batch-first milk kefir, and storage-aware routing/reminder semantics.
 
 ## Current Position
 
-Phase: 16 of 16 (Baking Phase Ingredients UX)
-Plan: 1 of 1 executed in current phase
-Status: Complete — all plans executed, phase goal verified (3/3 must-haves passed)
-Last activity: 2026-03-17 — Phase 16 verified complete
+Phase: 17 of 21 (V2 Shell & Preparation Hubs)
+Plan: 0 of 4 executed in current phase
+Status: Ready to execute — shell, Oggi, and milk-kefir batch-core planning are in place for the next implementation wave
+Last activity: 2026-03-29 — planned Phase 19 around the batch model, no-culture-required flows, and storage-aware reminder defaults
 
-Progress: [████████████████] 100% (16 of 16 phases complete)
+Progress: [░░░░░░░░░░░░░░░░] 0% (0 of 17 v2 plans complete)
 
 ## Performance Metrics
 
-- Total plans planned: 43
-- Total plans completed: 43
-- Average duration: N/A
-- Total execution time: N/A
+- Historical plans completed (archived v1): 43
+- Current milestone plans planned: 17
+- Current milestone plans completed: 0
 
 | Phase | Plans Completed | Status |
 | ----- | --------------- | ------ |
-| 1 | 3/3 | Complete |
-| 2 | 3/3 | Complete |
-| 3 | 3/3 | Complete |
-| 4 | 3/3 | Complete |
-| 5 | 3/3 | Complete |
-| 6 | 3/3 | Complete |
-| 7 | 3/3 | Complete |
-| 8 | 3/3 | Complete |
-| 9 | 3/3 | Complete |
-| 10 | 3/3 | Complete |
-| 11 | 3/3 | Complete |
-| 12 | 3/3 | Complete |
-| 13 | 3/3 | Complete |
-| 14 | 1/1 | Complete |
-| 15 | 3/3 | Complete |
-| 16 | 1/1 | Complete |
+| 17 | 0/4 | Planned |
+| 18 | 0/3 | Planned |
+| 19 | 0/4 | Planned |
+| 20 | 0/3 | Not started |
+| 21 | 0/3 | Not started |
 
 **Recent Trend**
 
-- Last 5 plans: 13-03 complete, 14-01 complete, 15-01 complete, 15-02 complete, 15-03 complete
-- Trend: persistence hardening implemented and locally verified; only device durability UAT remains
+- Last archived milestone: v1 baseline completed in code, then archived for planning clarity
+- Trend: v2 planning started from PRD with explicit shell migration before kefir feature work
 
 ## Accumulated Context
 
 ### Recent decisions
 
-- Phase 15 planning: user data stays local-first in SwiftData, but persisted-model changes now require explicit schema versioning before commit
-- Phase 15 planning: persistent bootstrap must never auto-delete the on-disk store; failure falls back to in-memory only
-- Phase 15 planning: bundled knowledge and bundled system formulas remain read-only app content, while demo seed stays launch-option-only
-- Phase 15 planning: backup/restore is explicit replace-current-data JSON import, not background sync or merge logic
-- Phase 15 planning: CloudKit remains backlog and does not enter the MVP memory-hardening phase
-- Phase 16 plan 01: step ingredients stored as [String] flat lines (display-only, no baker's math)
-- Phase 16 plan 01: ingredient subsection matching uses substring matching (case-insensitive) — "Per l'impasto" matches "Impasto"
-- Phase 16 plan 01: formula authoring UX for step-level ingredient assignment is deferred (editor preserves but does not expose field)
+- V2 keeps the app action-first: `Oggi` stays the operational center even after the product expands beyond bread
+- `Preparazioni` becomes the scalable root for domain hubs; bread stays internally split into Impasti, Starter, and Formule
+- `Preparazioni` keeps always-visible quick actions and hub cards that remain visible even when empty
+- Milk kefir is modeled batch-first; culture/grain tracking is optional and secondary
+- Storage mode is a primary kefir dimension that affects state, reminder cadence, and microcopy
+- `Oggi` will become a daily dashboard of all active objects, ordered by urgency and time rather than fixed section buckets
+- Operational taps from `Oggi` must deep-link directly to the underlying object and bypass the Preparazioni hierarchy
+- All UI work must reuse the current `Theme`, design-system components, router conventions, and similar service logic where possible
+- Phase 18 will replace fixed Today sections with one ordered Oggi feed whose urgency is expressed on each card
+- Phase 18 will ship the cross-domain agenda and routing contract before Phase 19 plugs in persisted kefir batches
+- Phase 19 will use `KefirBatch` as the operational core, with `sourceBatchId` in place before richer lineage UI
+- Phase 19 will treat room temperature, fridge, and freezer as first-class kefir storage modes with different urgency and reminder semantics
+- Phase 19 will allow first-batch creation without a culture prerequisite and defer culture/journal depth to later phases
+
+### Pending Todos
+
+- None captured yet for the new milestone
 
 ### Blockers/Concerns
 
-- No code blocker is open.
-- Remaining risk is verification on real hardware: upgrade over existing data, backup round-trip, and fresh-launch bundled-template checks.
+- Phase 17 must preserve existing bread/starter deep links and local-notification entry while the shell changes
+- Phase 18 must absorb a third domain cleanly before real kefir persistence exists, so the agenda and router contracts need a temporary kefir-ready no-data path
+- Phase 19 must add kefir persistence and reminders without over-generalizing existing bread/starter enums or introducing a fake universal fermentation model
+- Archived v1 documents still record manual device-side checks that were never closed; treat them as historical risk, not active phase blockers
 
 ## Session Continuity
 
-Last session: 2026-03-17
-Stopped at: Completed 16-01-PLAN.md — step-level ingredients in baking phase modal
+Last session: 2026-03-29
+Stopped at: Planned Phase 19 from the v2 roadmap after Phase 18 Oggi planning
 Resume file: None

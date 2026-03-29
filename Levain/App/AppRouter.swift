@@ -2,20 +2,20 @@ import Foundation
 import SwiftData
 
 enum RootTab: String, Hashable {
-    case today
-    case bakes
-    case starter
+    case oggi
+    case preparazioni
     case knowledge
 }
 
-enum BakesRoute: Hashable {
+enum PreparationsRoute: Hashable {
+    case breadHub
+    case kefirHub
+    case bakesList
+    case formulaList
+    case starterList
     case bake(UUID)
     case formula(UUID)
-    case formulaList
-}
-
-enum StarterRoute: Hashable {
-    case detail(UUID)
+    case starter(UUID)
 }
 
 enum KnowledgeRoute: Hashable {
@@ -24,30 +24,32 @@ enum KnowledgeRoute: Hashable {
 
 @MainActor
 final class AppRouter: ObservableObject {
-    @Published var selectedTab: RootTab = .today
-    @Published var bakesPath: [BakesRoute] = []
-    @Published var starterPath: [StarterRoute] = []
+    @Published var selectedTab: RootTab = .oggi
+    @Published var preparationsPath: [PreparationsRoute] = []
     @Published var knowledgePath: [KnowledgeRoute] = []
-    @Published var showingKnowledge: Bool = false
     var bannerPresenter: ((String, TimeInterval) -> Void)?
 
+    // MARK: - Navigation helpers (direct-object routing rule)
+    // Operational taps and deep links navigate directly to the object
+    // without forcing Preparazioni → hub traversal.
+
     func openBake(_ id: UUID) {
-        selectedTab = .bakes
-        bakesPath = [.bake(id)]
+        selectedTab = .preparazioni
+        preparationsPath = [.bake(id)]
     }
 
     func openFormula(_ id: UUID) {
-        selectedTab = .bakes
-        bakesPath = [.formula(id)]
+        selectedTab = .preparazioni
+        preparationsPath = [.formula(id)]
     }
 
     func openStarter(_ id: UUID) {
-        selectedTab = .starter
-        starterPath = [.detail(id)]
+        selectedTab = .preparazioni
+        preparationsPath = [.starter(id)]
     }
 
     func openKnowledge(_ id: String?) {
-        showingKnowledge = true
+        selectedTab = .knowledge
         if let id = id {
             knowledgePath = [.article(id)]
         } else {
@@ -102,8 +104,8 @@ final class AppRouter: ObservableObject {
 
     func navigateFromNotificationPayload(bakeId: UUID, stepId: UUID?, modelContext: ModelContext) {
         guard let bake = fetchBake(id: bakeId, modelContext: modelContext) else {
-            selectedTab = .bakes
-            bakesPath = []
+            selectedTab = .preparazioni
+            preparationsPath = []
             presentBanner("Questo bake non è più disponibile", duration: 8)
             return
         }
@@ -131,8 +133,8 @@ final class AppRouter: ObservableObject {
 
     func navigateFromNotificationPayload(starterId: UUID, modelContext: ModelContext) {
         guard let starter = fetchStarter(id: starterId, modelContext: modelContext) else {
-            selectedTab = .starter
-            starterPath = []
+            selectedTab = .preparazioni
+            preparationsPath = []
             presentBanner("Starter non trovato", duration: 8)
             return
         }
@@ -141,7 +143,7 @@ final class AppRouter: ObservableObject {
     }
 
     func showNotificationsDisabledBanner() {
-        selectedTab = .today
+        selectedTab = .oggi
         presentBanner("Attiva le notifiche per ricevere i promemoria", duration: 8)
     }
 
@@ -156,31 +158,29 @@ final class AppRouter: ObservableObject {
     }
 
     private func presentBanner(_ message: String, duration: TimeInterval = 3) {
-        Task { @MainActor in
-            bannerPresenter?(message, duration)
-        }
+        bannerPresenter?(message, duration)
     }
 }
 
 extension AppRouter {
     enum DeepLink {
         static let scheme = "levain"
-        
+
         static func bake(id: UUID, stepID: UUID? = nil) -> String {
             guard let stepID else {
                 return "\(scheme)://bake/\(id.uuidString)"
             }
             return "\(scheme)://bake/\(id.uuidString)?step=\(stepID.uuidString)"
         }
-        
+
         static func formula(id: UUID) -> String {
             "\(scheme)://formula/\(id.uuidString)"
         }
-        
+
         static func starter(id: UUID) -> String {
             "\(scheme)://starter/\(id.uuidString)"
         }
-        
+
         static func knowledge(id: String) -> String {
             "\(scheme)://knowledge/\(id)"
         }

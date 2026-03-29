@@ -6,25 +6,40 @@ final class BakesFlowUITests: XCTestCase {
         continueAfterFailure = false
     }
 
-    func testBakesTabShownEmptyWithNoData() throws {
+    // MARK: - Helpers
+
+    /// Navigate from app launch to BakesView via Preparazioni > Pane e lievito madre > Impasti.
+    private func navigateToBakesView(app: XCUIApplication, timeout: TimeInterval = 8) {
+        let prepTab = app.tabBars.buttons["Preparazioni"]
+        XCTAssertTrue(prepTab.waitForExistence(timeout: 5))
+        prepTab.tap()
+
+        let breadCard = app.descendants(matching: .any).matching(identifier: "BreadHubCard").firstMatch
+        XCTAssertTrue(breadCard.waitForExistence(timeout: timeout))
+        breadCard.tap()
+
+        let impastiRow = app.descendants(matching: .any).matching(identifier: "BreadHubImpastiRow").firstMatch
+        XCTAssertTrue(impastiRow.waitForExistence(timeout: timeout))
+        impastiRow.tap()
+    }
+
+    // MARK: - Tests
+
+    func testBakesViewShownEmptyWithNoData() throws {
         let app = XCUIApplication()
         app.launchEmpty()
 
-        let bakesTab = app.tabBars.buttons["Impasti"]
-        XCTAssertTrue(bakesTab.waitForExistence(timeout: 5))
-        bakesTab.tap()
+        navigateToBakesView(app: app)
 
         XCTAssertTrue(app.descendants(matching: .any).matching(identifier: "BakesScrollView").firstMatch.waitForExistence(timeout: 8))
         XCTAssertTrue(app.staticTexts["Nessun bake ancora"].waitForExistence(timeout: 8))
     }
 
-    func testBakesTabShowsOperationalDataWithSeedData() throws {
+    func testBakesViewShowsOperationalDataWithSeedData() throws {
         let app = XCUIApplication()
         app.launchSeeded()
 
-        let bakesTab = app.tabBars.buttons["Impasti"]
-        XCTAssertTrue(bakesTab.waitForExistence(timeout: 5))
-        bakesTab.tap()
+        navigateToBakesView(app: app)
 
         XCTAssertTrue(app.descendants(matching: .any).matching(identifier: "BakesScrollView").firstMatch.waitForExistence(timeout: 8))
         XCTAssertTrue(app.staticTexts["Infornata del weekend"].waitForExistence(timeout: 8))
@@ -35,9 +50,7 @@ final class BakesFlowUITests: XCTestCase {
         let app = XCUIApplication()
         app.launchEmpty()
 
-        let bakesTab = app.tabBars.buttons["Impasti"]
-        XCTAssertTrue(bakesTab.waitForExistence(timeout: 5))
-        bakesTab.tap()
+        navigateToBakesView(app: app)
 
         XCTAssertTrue(app.descendants(matching: .any).matching(identifier: "BakesScrollView").firstMatch.waitForExistence(timeout: 8))
         XCTAssertTrue(app.staticTexts["Nessun bake ancora"].waitForExistence(timeout: 8))
@@ -48,9 +61,7 @@ final class BakesFlowUITests: XCTestCase {
         let app = XCUIApplication()
         app.launchEmpty()
 
-        let bakesTab = app.tabBars.buttons["Impasti"]
-        XCTAssertTrue(bakesTab.waitForExistence(timeout: 5))
-        bakesTab.tap()
+        navigateToBakesView(app: app)
 
         XCTAssertTrue(app.descendants(matching: .any).matching(identifier: "BakesScrollView").firstMatch.waitForExistence(timeout: 8))
         XCTAssertTrue(app.buttons["Nuovo bake"].waitForExistence(timeout: 8))
