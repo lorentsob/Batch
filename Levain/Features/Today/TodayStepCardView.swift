@@ -3,7 +3,7 @@ import SwiftUI
 struct TodayStepCardView: View {
     let bake: Bake
     let step: BakeStep
-    let section: TodayAgendaItem.Section
+    let urgency: TodayAgendaItem.Urgency
     let onPrimaryAction: () -> Void
     let onOpenDetail: () -> Void
     let onOpenShift: () -> Void
@@ -11,7 +11,7 @@ struct TodayStepCardView: View {
 
     var body: some View {
         ActiveStepHeroCard(
-            contextLabel: sectionLabel,
+            contextLabel: urgencyLabel,
             contextValue: bake.name,
             step: step,
             onPrimaryAction: onPrimaryAction,
@@ -26,14 +26,12 @@ struct TodayStepCardView: View {
         step.status == .running || step.isOverdue()
     }
 
-    private var sectionLabel: String {
-        switch section {
-        case .urgent:
-            return "Da fare"
-        case .scheduled:
-            return "Oggi"
-        case .tomorrow:
-            return "Domani"
+    private var urgencyLabel: String {
+        switch urgency {
+        case .overdue: return "In ritardo"
+        case .warning: return "Da fare"
+        case .active:  return "Oggi"
+        case .preview: return "Domani"
         }
     }
 }

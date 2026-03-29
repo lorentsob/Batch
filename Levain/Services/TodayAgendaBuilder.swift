@@ -1,5 +1,7 @@
 import Foundation
 
+// MARK: - Future Preview
+
 struct TodayFuturePreview: Hashable {
     enum Kind: Hashable {
         case bake(TodayAgendaItem.BakeSummary)
@@ -12,6 +14,11 @@ struct TodayFuturePreview: Hashable {
     let referenceDate: Date
 }
 
+// MARK: - Snapshot
+
+/// The v2 agenda snapshot exposes a single ranked cross-domain feed.
+/// `sections` is kept as a computed backward-compat property so `TodayView`
+/// continues to work until Phase 18-02 replaces the section-based rendering.
 struct TodayAgendaSnapshot {
     enum EmptyStateMode: String {
         case firstLaunch
@@ -20,12 +27,57 @@ struct TodayAgendaSnapshot {
         case actionable
     }
 
-    let sections: [TodayAgendaItem.Section: [TodayAgendaItem]]
+    /// Single ordered operational feed — the canonical v2 surface.
+    /// Sorted by urgency first, then by time-based tie-breaker within each group.
+    let feed: [TodayAgendaItem]
     let emptyState: EmptyStateMode
     let futurePreview: TodayFuturePreview?
+
+    /// Backward-compat section buckets derived from the feed.
+    /// Removed in Phase 18-02 when TodayView switches to the feed.
+    var sections: [TodayAgendaItem.Section: [TodayAgendaItem]] {
+        var grouped: [TodayAgendaItem.Section: [TodayAgendaItem]] = [:]
+        for item in feed {
+            grouped[item.section, default: []].append(item)
+        }
+        return grouped
+    }
 }
 
+// MARK: - Agenda Item
+
 struct TodayAgendaItem: Identifiable {
+    // MARK: Domain
+
+    /// The preparation domain the item belongs to. Used for the card domain cue.
+    enum Domain: String {
+        case pane
+        case starter
+        case kefir  // Phase 19 — kefir-ready hook
+    }
+
+    // MARK: Urgency
+
+    /// Cross-domain urgency level. Drives feed ordering in preference to
+    /// section membership or sort-priority integers.
+    /// Tie-breakers within each level are time-based:
+    ///   - overdue: oldest missed time first (sortDate ascending)
+    ///   - warning: nearest due time first (sortDate ascending)
+    ///   - active:  soonest upcoming action first (sortDate ascending)
+    ///   - preview: chronological (sortDate ascending)
+    enum Urgency: Int, Comparable {
+        case overdue = 0   // missed timing — needs action now
+        case warning = 1   // actionable today — running or due today
+        case active  = 2   // in-progress but not immediately critical
+        case preview = 3   // tomorrow / future
+
+        static func < (lhs: Urgency, rhs: Urgency) -> Bool {
+            lhs.rawValue < rhs.rawValue
+        }
+    }
+
+    // MARK: Bake Summary
+
     struct BakeSummary: Hashable {
         enum PresentationStyle: Hashable {
             case primaryCard
@@ -50,10 +102,15 @@ struct TodayAgendaItem: Identifiable {
         let windowEnd: Date?
     }
 
+    // MARK: Kind
+
     enum Kind: Hashable {
         case bake(BakeSummary)
         case starter(starterID: UUID)
+        case kefir  // Phase 19 — placeholder for batch detail route
     }
+
+    // MARK: Section (backward compat)
 
     enum Section: String, CaseIterable, Identifiable {
         case urgent
@@ -71,21 +128,26 @@ struct TodayAgendaItem: Identifiable {
         }
     }
 
+    // MARK: Fields
+
     let id: String
-    let section: Section
+    let domain: Domain
+    let urgency: Urgency
+    let section: Section          // backward compat — derived from urgency + timing
     let kind: Kind
     let title: String
     let subtitle: String
     let state: String
     let actionTitle: String
-    let sortPriority: Int
-    let sortDate: Date
+    let sortDate: Date            // tie-breaker within urgency group
 
     var bakeSummary: BakeSummary? {
         guard case let .bake(summary) = kind else { return nil }
         return summary
     }
 }
+
+// MARK: - Builder
 
 enum TodayAgendaBuilder {
     static func buildSnapshot(
@@ -94,9 +156,12 @@ enum TodayAgendaBuilder {
         hasPersistedData: Bool,
         now: Date = .now
     ) -> TodayAgendaSnapshot {
-        var grouped: [TodayAgendaItem.Section: [TodayAgendaItem]] = [:]
         let calendar = Calendar.current
         let tomorrow = calendar.date(byAdding: .day, value: 1, to: now.startOfDay) ?? now.addingTimeInterval(24 * 60 * 60)
+
+        var items: [TodayAgendaItem] = []
+
+        // MARK: Bread bakes
 
         for bake in bakes {
             guard bake.derivedStatus != .cancelled,
@@ -107,6 +172,7 @@ enum TodayAgendaBuilder {
 
             let presentationStyle: TodayAgendaItem.BakeSummary.PresentationStyle
             let section: TodayAgendaItem.Section
+            let urgency: TodayAgendaItem.Urgency
             let sortDate: Date
             let state: String
             let subtitle: String
@@ -115,26 +181,33 @@ enum TodayAgendaBuilder {
             if step.shouldShowCompactWindowState(now: now) {
                 presentationStyle = .compactWindow
                 section = .scheduled
+                urgency = .active
                 sortDate = step.windowStart
                 state = "In maturazione"
                 subtitle = "\(step.displayName) in corso · inizio finestra alle \(DateFormattingService.time(step.windowStart))"
                 actionTitle = "Apri fase"
+
             } else if step.isOperationallyUrgent(now: now) {
                 presentationStyle = .primaryCard
                 section = .urgent
+                let isOverdue = step.isOverdue(now: now)
+                urgency = isOverdue ? .overdue : .warning
                 sortDate = step.isWindowBased ? step.windowEnd : step.plannedStart
-                state = step.isOverdue(now: now) ? "In ritardo" : "In corso"
+                state = isOverdue ? "In ritardo" : "In corso"
                 subtitle = step.displayName
                 actionTitle = step.status == .running ? "Completa fase" : "Avvia fase"
+
             } else {
                 let referenceDate = step.isWindowBased ? step.windowStart : step.plannedStart
 
                 if calendar.isDate(referenceDate, inSameDayAs: now) {
                     presentationStyle = .primaryCard
                     section = .scheduled
+                    urgency = .active
                 } else if calendar.isDate(referenceDate, inSameDayAs: tomorrow) {
                     presentationStyle = .tomorrowPreview
                     section = .tomorrow
+                    urgency = .preview
                 } else {
                     continue
                 }
@@ -163,55 +236,76 @@ enum TodayAgendaBuilder {
                 windowEnd: step.isWindowBased ? step.windowEnd : nil
             )
 
-            grouped[section, default: []].append(
+            items.append(
                 TodayAgendaItem(
                     id: "bake-\(bake.id.uuidString)",
+                    domain: .pane,
+                    urgency: urgency,
                     section: section,
                     kind: .bake(summary),
                     title: bake.name,
                     subtitle: subtitle,
                     state: state,
                     actionTitle: actionTitle,
-                    sortPriority: presentationStyle == .compactWindow ? 0 : 1,
                     sortDate: sortDate
                 )
             )
         }
+
+        // MARK: Starters
 
         for starter in starters {
             let dueState = starter.dueState(now: now)
             guard dueState != .ok else { continue }
 
             let section: TodayAgendaItem.Section = dueState == .overdue ? .urgent : .scheduled
-            grouped[section, default: []].append(
+            let urgency: TodayAgendaItem.Urgency = dueState == .overdue ? .overdue : .warning
+            let sortDate = starter.nextDueDate.settingTime(
+                hour: dueState == .overdue ? 8 : 21,
+                minute: 0
+            )
+
+            items.append(
                 TodayAgendaItem(
                     id: "starter-\(starter.id.uuidString)",
+                    domain: .starter,
+                    urgency: urgency,
                     section: section,
                     kind: .starter(starterID: starter.id),
                     title: starter.name,
                     subtitle: dueState == .overdue ? "Rinfresco in ritardo" : "Rinfresco previsto oggi",
                     state: dueState.title,
                     actionTitle: "Rinfresca",
-                    sortPriority: dueState == .overdue ? 2 : 3,
-                    sortDate: starter.nextDueDate.settingTime(hour: dueState == .overdue ? 8 : 21, minute: 0)
+                    sortDate: sortDate
                 )
             )
         }
 
-        for key in grouped.keys {
-            grouped[key]?.sort {
-                if $0.sortPriority == $1.sortPriority {
-                    return $0.sortDate < $1.sortDate
-                }
-                return $0.sortPriority < $1.sortPriority
+        // MARK: Sort feed
+
+        // Primary: urgency ascending (overdue → warning → active → preview)
+        // Secondary: sortDate ascending within each urgency group
+        items.sort {
+            if $0.urgency == $1.urgency {
+                return $0.sortDate < $1.sortDate
+            }
+            return $0.urgency < $1.urgency
+        }
+
+        // Limit tomorrow/preview items to two entries (same rule as before)
+        let previewCount = items.filter { $0.urgency == .preview }.count
+        if previewCount > 2 {
+            var seen = 0
+            items = items.filter { item in
+                guard item.urgency == .preview else { return true }
+                seen += 1
+                return seen <= 2
             }
         }
 
-        if let tomorrowItems = grouped[.tomorrow] {
-            grouped[.tomorrow] = Array(tomorrowItems.prefix(2))
-        }
+        // MARK: Empty state
 
-        let hasActionableWork = grouped[.urgent]?.isEmpty == false || grouped[.scheduled]?.isEmpty == false
+        let hasActionableWork = items.contains { $0.urgency == .overdue || $0.urgency == .warning || $0.urgency == .active }
         let futurePreview = makeFuturePreview(bakes: bakes, starters: starters, now: now)
 
         let emptyState: TodayAgendaSnapshot.EmptyStateMode
@@ -226,11 +320,13 @@ enum TodayAgendaBuilder {
         }
 
         return TodayAgendaSnapshot(
-            sections: grouped,
+            feed: items,
             emptyState: emptyState,
             futurePreview: futurePreview
         )
     }
+
+    // MARK: Future Preview
 
     private static func makeFuturePreview(
         bakes: [Bake],

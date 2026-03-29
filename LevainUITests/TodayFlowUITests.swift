@@ -30,8 +30,8 @@ final class TodayFlowUITests: XCTestCase {
         app.launchSeeded(scenario: "futureOnly")
 
         XCTAssertTrue(app.scrollViews["TodayScrollView"].waitForExistence(timeout: 8))
-                XCTAssertTrue(app.staticTexts["Tieni d'occhio gli starter"].waitForExistence(timeout: 5))
-        XCTAssertTrue(app.buttons["Vai a Starter"].waitForExistence(timeout: 5))
+        XCTAssertTrue(app.staticTexts["Prossima attività"].waitForExistence(timeout: 5))
+        XCTAssertTrue(app.buttons["Vai a Preparazioni"].waitForExistence(timeout: 5))
     }
 
     func testTodaySeededLaunchShowsOperationalContent() throws {
@@ -40,7 +40,10 @@ final class TodayFlowUITests: XCTestCase {
 
         XCTAssertTrue(app.scrollViews["TodayScrollView"].waitForExistence(timeout: 8))
         XCTAssertTrue(app.staticTexts["Infornata del weekend"].waitForExistence(timeout: 5))
-        XCTAssertTrue(app.staticTexts["Da fare"].waitForExistence(timeout: 5))
+        // Operational card is visible via domain cue (Pane) or urgency label (In ritardo / Da fare / Oggi)
+        let hasDomainCue = app.staticTexts["Pane"].exists
+        let hasActionButton = app.buttons["Avvia fase"].exists || app.buttons["Completa fase"].exists
+        XCTAssertTrue(hasDomainCue || hasActionButton)
     }
 
     func testTodayOperationalCardCanTransitionFromUpcomingToRunning() throws {

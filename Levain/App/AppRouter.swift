@@ -16,6 +16,7 @@ enum PreparationsRoute: Hashable {
     case bake(UUID)
     case formula(UUID)
     case starter(UUID)
+    case kefirBatch(UUID)  // Phase 19 — wired to real batch detail when kefir models land
 }
 
 enum KnowledgeRoute: Hashable {
@@ -48,6 +49,12 @@ final class AppRouter: ObservableObject {
         preparationsPath = [.starter(id)]
     }
 
+    // Phase 19 hook — kefir batch detail route. Wires into KefirHubView when batch CRUD lands.
+    func openKefirBatch(_ id: UUID) {
+        selectedTab = .preparazioni
+        preparationsPath = [.kefirBatch(id)]
+    }
+
     func openKnowledge(_ id: String?) {
         selectedTab = .knowledge
         if let id = id {
@@ -72,6 +79,11 @@ final class AppRouter: ObservableObject {
         case "starter":
             if let value = segments.first, let id = UUID(uuidString: value) {
                 openStarter(id)
+            }
+        case "kefir":
+            // Phase 19 — kefir batch deep link; no-ops safely until batch detail view exists
+            if let value = segments.first, let id = UUID(uuidString: value) {
+                openKefirBatch(id)
             }
         case "knowledge":
             if let value = segments.first {
@@ -183,6 +195,11 @@ extension AppRouter {
 
         static func knowledge(id: String) -> String {
             "\(scheme)://knowledge/\(id)"
+        }
+
+        // Phase 19 — kefir batch deep link
+        static func kefirBatch(id: UUID) -> String {
+            "\(scheme)://kefir/\(id.uuidString)"
         }
     }
 }
