@@ -23,6 +23,7 @@
 		1B203CD85910F7A753EA7B7E /* knowledge.json in Resources */ = {isa = PBXBuildFile; fileRef = 40446C7081740B9B23D8ADD4 /* knowledge.json */; };
 		1F99F650F9715E660F28D7D1 /* DomainFixtures.swift in Sources */ = {isa = PBXBuildFile; fileRef = B103892E03A334196B1D10CE /* DomainFixtures.swift */; };
 		20066B89AB8228C6E5C18C67 /* BakeReminderPlannerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F702B38C52B89746F9D8DE1 /* BakeReminderPlannerTests.swift */; };
+		21CA3CFE43B3EDC7290C5241 /* TodayOperationalCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B78544D1490C8484385BAFBD /* TodayOperationalCardView.swift */; };
 		26045D68DC5B6B88BC79FA0D /* BakeStepDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E8199167A33F653C5C7BD8E /* BakeStepDetailView.swift */; };
 		2C9CAFB2E374A422B8C0300F /* BreadHubView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC0432E086D78A39B2D5BBA0 /* BreadHubView.swift */; };
 		2E13F4E70163C63C375428A3 /* KefirHubView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35A255E467AE4B2697A50F7D /* KefirHubView.swift */; };
@@ -198,6 +199,7 @@
 		B103892E03A334196B1D10CE /* DomainFixtures.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DomainFixtures.swift; sourceTree = "<group>"; };
 		B18A695300F304A000928E5A /* RecipeFormula.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecipeFormula.swift; sourceTree = "<group>"; };
 		B4A8FBB9610077DD981D867C /* LevainSchema.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LevainSchema.swift; sourceTree = "<group>"; };
+		B78544D1490C8484385BAFBD /* TodayOperationalCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodayOperationalCardView.swift; sourceTree = "<group>"; };
 		BC0451D6E4DCF1F8EF2C78E7 /* BakeIngredientsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BakeIngredientsView.swift; sourceTree = "<group>"; };
 		BCF69DF1AB4A6F4ADD87ECC4 /* ModelContainerFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelContainerFactory.swift; sourceTree = "<group>"; };
 		C25872A58F8373FE1A2CF530 /* ToastBannerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToastBannerView.swift; sourceTree = "<group>"; };
@@ -455,6 +457,7 @@
 		AE273D162A6F1E335C21B4A0 /* Today */ = {
 			isa = PBXGroup;
 			children = (
+				B78544D1490C8484385BAFBD /* TodayOperationalCardView.swift */,
 				0F73F2107220BBBBD20F36DA /* TodayStarterReminderRow.swift */,
 				31ACC0C6A03A5AD48C0AD04A /* TodayStepCardView.swift */,
 				4D4D579B87EF9D7EB8FF64CD /* TodayView.swift */,
@@ -738,6 +741,7 @@
 				6B3C2EF47615A68D2BCBC14C /* TipGroupView.swift in Sources */,
 				328CEA6DCF4F2E21651079F3 /* ToastBannerView.swift in Sources */,
 				C5F7D28B986CFB8C2F4C70E2 /* TodayAgendaBuilder.swift in Sources */,
+				21CA3CFE43B3EDC7290C5241 /* TodayOperationalCardView.swift in Sources */,
 				C2649F9ACF555DAF1A53C1C4 /* TodayStarterReminderRow.swift in Sources */,
 				5B3C0E436D498776AC28559D /* TodayStepCardView.swift in Sources */,
 				CFCF408602B7737A42EE82C9 /* TodayView.swift in Sources */,

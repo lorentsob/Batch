@@ -72,7 +72,7 @@ struct PreparationsView: View {
                 }
 
                 QuickActionButton(
-                    label: "Nuovo kefir",
+                    label: "Nuovo batch",
                     systemImage: "drop.fill",
                     accessibilityIdentifier: "QuickNewKefirButton"
                 ) {

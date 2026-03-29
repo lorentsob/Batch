@@ -2,9 +2,11 @@ import SwiftUI
 
 struct TodayStarterReminderRow: View {
     let item: TodayAgendaItem
-    let isUrgent: Bool
+    let urgency: TodayAgendaItem.Urgency
     let action: () -> Void
-    
+
+    private var isUrgent: Bool { urgency == .overdue || urgency == .warning }
+
     var body: some View {
         Group {
             if isUrgent {

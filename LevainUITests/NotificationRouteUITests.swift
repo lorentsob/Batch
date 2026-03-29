@@ -16,23 +16,25 @@ final class NotificationRouteUITests: XCTestCase {
         XCTAssertTrue(app.scrollViews["KnowledgeScrollView"].waitForExistence(timeout: 8))
     }
 
-    func testColdLaunchMissingBakeRouteFallsBackToBakesTab() throws {
+    func testColdLaunchMissingBakeRouteFallsBackToPreparazioni() throws {
         let app = XCUIApplication()
         let route = "levain://bake/\(UUID().uuidString)?step=\(UUID().uuidString)"
         app.launchSeededWithPendingNotificationRoute(route)
 
-        XCTAssertTrue(app.descendants(matching: .any).matching(identifier: "BakesScrollView").firstMatch.waitForExistence(timeout: 8))
+        // Direct-object routing: missing bake → preparazioni with empty path → PreparationsView
+        XCTAssertTrue(app.descendants(matching: .any).matching(identifier: "PreparationsView").firstMatch.waitForExistence(timeout: 8))
         let bannerProbe = app.otherElements["ToastBannerProbe"]
         XCTAssertTrue(bannerProbe.waitForExistence(timeout: 8))
         XCTAssertEqual(bannerProbe.label, "Questo bake non è più disponibile")
     }
 
-    func testColdLaunchMissingStarterRouteFallsBackToStarterTab() throws {
+    func testColdLaunchMissingStarterRouteFallsBackToPreparazioni() throws {
         let app = XCUIApplication()
         let route = "levain://starter/\(UUID().uuidString)"
         app.launchSeededWithPendingNotificationRoute(route)
 
-        XCTAssertTrue(app.scrollViews["StarterScrollView"].waitForExistence(timeout: 8))
+        // Direct-object routing: missing starter → preparazioni with empty path → PreparationsView
+        XCTAssertTrue(app.descendants(matching: .any).matching(identifier: "PreparationsView").firstMatch.waitForExistence(timeout: 8))
         let bannerProbe = app.otherElements["ToastBannerProbe"]
         XCTAssertTrue(bannerProbe.waitForExistence(timeout: 8))
         XCTAssertEqual(bannerProbe.label, "Starter non trovato")

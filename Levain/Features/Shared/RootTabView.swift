@@ -74,6 +74,8 @@ struct RootTabView: View {
                             FormulaLookupView(id: id)
                         case let .starter(id):
                             StarterLookupView(id: id)
+                        case .kefirBatch:
+                            KefirHubView()  // Phase 19 — replace with KefirBatchDetailView
                         }
                     }
             }
