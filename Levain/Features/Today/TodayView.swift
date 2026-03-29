@@ -52,15 +52,15 @@ struct TodayView: View {
                     switch snapshot.agenda.emptyState {
                     case .firstLaunch:
                         TodayOnboardingView(
-                            onNewBake: { router.selectedTab = .bakes },
-                            onAddStarter: { router.selectedTab = .starter }
+                            onNewBake: { router.selectedTab = .preparazioni },
+                            onAddStarter: { router.selectedTab = .preparazioni }
                         )
                     case .allClear:
                         TodayAllClearView {
-                            router.selectedTab = .bakes
+                            router.selectedTab = .preparazioni
                         }
                         TodayKnowledgeCard {
-                            router.showingKnowledge = true
+                            router.openKnowledge(nil)
                         }
                     case .futureOnly:
                         if let preview = snapshot.agenda.futurePreview {
@@ -74,7 +74,7 @@ struct TodayView: View {
                             }
                         }
                         TodayKnowledgeCard {
-                            router.showingKnowledge = true
+                            router.openKnowledge(nil)
                         }
                     case .actionable:
                         ForEach(TodayAgendaItem.Section.allCases) { section in
@@ -140,7 +140,7 @@ struct TodayView: View {
                         }
 
                         TodayKnowledgeCard {
-                            router.showingKnowledge = true
+                            router.openKnowledge(nil)
                         }
                     }
 
@@ -562,7 +562,7 @@ private struct TodayOnboardingView: View {
                     title: "Sfoglia le guide",
                     subtitle: "Scopri i segreti della lievitazione naturale.",
                     accessibilityIdentifier: "TodayBrowseGuidesButton",
-                    action: { router.showingKnowledge = true }
+                    action: { router.openKnowledge(nil) }
                 )
             }
         }

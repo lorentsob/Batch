@@ -34,7 +34,7 @@ struct StarterView: View {
                     }
                 } else {
                     ForEach(starters) { starter in
-                        NavigationLink(value: StarterRoute.detail(starter.id)) {
+                        NavigationLink(value: PreparationsRoute.starter(starter.id)) {
                             StarterCardView(starter: starter)
                         }
                         .buttonStyle(.plain)
