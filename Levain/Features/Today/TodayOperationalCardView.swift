@@ -48,7 +48,7 @@ struct TodayOperationalCardView<Content: View>: View {
                     .foregroundStyle(domain.tintColor)
             }
             .padding(.leading, 2)
-            .accessibilityLabel("\(domain.displayName) domain")
+            .accessibilityLabel("Dominio: \(domain.displayName)")
 
             content()
         }

@@ -17,8 +17,8 @@ struct TodayFuturePreview: Hashable {
 // MARK: - Snapshot
 
 /// The v2 agenda snapshot exposes a single ranked cross-domain feed.
-/// `sections` is kept as a computed backward-compat property so `TodayView`
-/// continues to work until Phase 18-02 replaces the section-based rendering.
+/// `sections` is retained as a backward-compat computed property for any
+/// consumers that still reference section buckets.
 struct TodayAgendaSnapshot {
     enum EmptyStateMode: String {
         case firstLaunch
@@ -34,7 +34,6 @@ struct TodayAgendaSnapshot {
     let futurePreview: TodayFuturePreview?
 
     /// Backward-compat section buckets derived from the feed.
-    /// Removed in Phase 18-02 when TodayView switches to the feed.
     var sections: [TodayAgendaItem.Section: [TodayAgendaItem]] {
         var grouped: [TodayAgendaItem.Section: [TodayAgendaItem]] = [:]
         for item in feed {
