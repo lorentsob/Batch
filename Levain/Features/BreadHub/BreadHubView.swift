@@ -152,43 +152,43 @@ private struct BreadHubEntryRow: View {
     let onEmptyCTA: () -> Void
 
     var body: some View {
-        Button(action: onTap) {
-            SectionCard {
-                HStack(spacing: 14) {
-                    Image(systemName: systemImage)
-                        .font(.system(size: 22, weight: .semibold))
-                        .foregroundStyle(Theme.accent)
-                        .frame(width: 32)
+        SectionCard {
+            HStack(spacing: 14) {
+                Image(systemName: systemImage)
+                    .font(.system(size: 22, weight: .semibold))
+                    .foregroundStyle(Theme.accent)
+                    .frame(width: 32)
 
-                    VStack(alignment: .leading, spacing: 4) {
-                        HStack(spacing: 8) {
-                            Text(title)
-                                .font(.headline)
-                                .foregroundStyle(Theme.ink)
-                            if let badge {
-                                StateBadge(text: badge, tone: .count)
-                            }
-                        }
-                        if isEmpty {
-                            Button(emptyLabel, action: onEmptyCTA)
-                                .font(.subheadline.weight(.medium))
-                                .foregroundStyle(Theme.accent)
-                        } else {
-                            Text(subtitle)
-                                .font(.subheadline)
-                                .foregroundStyle(Theme.muted)
+                VStack(alignment: .leading, spacing: 4) {
+                    HStack(spacing: 8) {
+                        Text(title)
+                            .font(.headline)
+                            .foregroundStyle(Theme.ink)
+                        if let badge {
+                            StateBadge(text: badge, tone: .count)
                         }
                     }
-
-                    Spacer(minLength: 0)
-
-                    Image(systemName: "chevron.right")
-                        .font(.system(size: 13, weight: .semibold))
-                        .foregroundStyle(Theme.muted)
+                    if isEmpty {
+                        Button(emptyLabel, action: onEmptyCTA)
+                            .font(.subheadline.weight(.medium))
+                            .foregroundStyle(Theme.accent)
+                    } else {
+                        Text(subtitle)
+                            .font(.subheadline)
+                            .foregroundStyle(Theme.muted)
+                    }
                 }
+
+                Spacer(minLength: 0)
+
+                Image(systemName: "chevron.right")
+                    .font(.system(size: 13, weight: .semibold))
+                    .foregroundStyle(Theme.muted)
             }
         }
-        .buttonStyle(.plain)
+        .contentShape(Rectangle())
+        .onTapGesture { onTap() }
         .accessibilityIdentifier(accessibilityIdentifier)
+        .accessibilityAddTraits(.isButton)
     }
 }

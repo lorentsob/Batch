@@ -254,6 +254,43 @@ struct AppRouterTests {
         #expect(duration == 5)
     }
 
+    @Test("AppRouter parses kefir batch deep link correctly — Phase 19 hook")
+    func testKefirBatchDeepLink() {
+        let router = AppRouter()
+        let id = UUID()
+        let url = URL(string: AppRouter.DeepLink.kefirBatch(id: id))!
+
+        router.open(url: url)
+
+        #expect(router.selectedTab == .preparazioni)
+        #expect(router.preparationsPath.count == 1)
+        if case .kefirBatch(let parsedID) = router.preparationsPath.first {
+            #expect(parsedID == id)
+        } else {
+            Issue.record("Expected kefirBatch route, got something else")
+        }
+    }
+
+    @Test("Router direct-object routing from Oggi bypasses Preparazioni hub — no hub traversal")
+    func testOggiDirectObjectRoutingBypassesHub() {
+        let router = AppRouter()
+        let bakeID = UUID()
+
+        router.openBake(bakeID)
+
+        // Direct-object rule: preparationsPath goes straight to .bake without .breadHub
+        #expect(router.selectedTab == .preparazioni)
+        #expect(router.preparationsPath.count == 1)
+        if case .bake(let parsedID) = router.preparationsPath.first {
+            #expect(parsedID == bakeID)
+        } else {
+            Issue.record("Expected direct bake route without hub prefix")
+        }
+        // Verify no hub step was inserted
+        let hasHubStep = router.preparationsPath.contains { $0 == .breadHub || $0 == .kefirHub }
+        #expect(hasHubStep == false)
+    }
+
     @Test("Router can surface the notifications-disabled banner without leaving Oggi")
     func testNotificationsDisabledBanner() {
         let router = AppRouter()

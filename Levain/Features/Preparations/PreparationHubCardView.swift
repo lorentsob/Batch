@@ -31,47 +31,47 @@ struct PreparationHubCardView: View {
     }
 
     var body: some View {
-        Button(action: onTap) {
-            SectionCard {
-                HStack(alignment: .top, spacing: 14) {
-                    Image(systemName: systemImage)
-                        .font(.system(size: 28, weight: .semibold))
-                        .foregroundStyle(Theme.accent)
-                        .frame(width: 40)
+        SectionCard {
+            HStack(alignment: .top, spacing: 14) {
+                Image(systemName: systemImage)
+                    .font(.system(size: 28, weight: .semibold))
+                    .foregroundStyle(Theme.accent)
+                    .frame(width: 40)
 
-                    VStack(alignment: .leading, spacing: 6) {
-                        HStack(spacing: 8) {
-                            Text(title)
-                                .font(.headline)
-                                .foregroundStyle(Theme.ink)
+                VStack(alignment: .leading, spacing: 6) {
+                    HStack(spacing: 8) {
+                        Text(title)
+                            .font(.headline)
+                            .foregroundStyle(Theme.ink)
 
-                            if let badge {
-                                StateBadge(text: badge, tone: .count)
-                            }
-                        }
-
-                        Text(subtitle)
-                            .font(.subheadline)
-                            .foregroundStyle(Theme.muted)
-                            .lineLimit(2)
-
-                        if isEmpty {
-                            Button(emptyLabel, action: onEmptyCTA)
-                                .font(.subheadline.weight(.medium))
-                                .foregroundStyle(Theme.accent)
-                                .padding(.top, 2)
+                        if let badge {
+                            StateBadge(text: badge, tone: .count)
                         }
                     }
 
-                    Spacer(minLength: 0)
-
-                    Image(systemName: "chevron.right")
-                        .font(.system(size: 13, weight: .semibold))
+                    Text(subtitle)
+                        .font(.subheadline)
                         .foregroundStyle(Theme.muted)
+                        .lineLimit(2)
+
+                    if isEmpty {
+                        Button(emptyLabel, action: onEmptyCTA)
+                            .font(.subheadline.weight(.medium))
+                            .foregroundStyle(Theme.accent)
+                            .padding(.top, 2)
+                    }
                 }
+
+                Spacer(minLength: 0)
+
+                Image(systemName: "chevron.right")
+                    .font(.system(size: 13, weight: .semibold))
+                    .foregroundStyle(Theme.muted)
             }
         }
-        .buttonStyle(.plain)
+        .contentShape(Rectangle())
+        .onTapGesture { onTap() }
         .accessibilityLabel(title)
+        .accessibilityAddTraits(.isButton)
     }
 }

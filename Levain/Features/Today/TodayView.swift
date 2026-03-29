@@ -77,56 +77,46 @@ struct TodayView: View {
                             router.openKnowledge(nil)
                         }
                     case .actionable:
-                        ForEach(TodayAgendaItem.Section.allCases) { section in
-                            if let items = snapshot.agenda.sections[section], items.isEmpty == false {
-                                VStack(alignment: .leading, spacing: 12) {
-                                    HStack {
-                                        Text(section.title)
-                                            .font(.headline)
-                                            .foregroundStyle(Theme.ink)
-                                        Spacer()
-                                        StateBadge(text: "\(items.count)", tone: .count)
-                                    }
-
-                                    ForEach(items) { item in
-                                        switch item.kind {
-                                        case let .bake(summary):
-                                            if let selection = resolve(summary) {
-                                                switch summary.presentationStyle {
-                                                case .tomorrowPreview:
-                                                    TodayTomorrowPreviewRow(bake: selection.bake, step: selection.step) {
-                                                        detailSelection = selection
-                                                    }
-                                                case .compactWindow:
-                                                    TodayWindowedBakeRow(item: item) {
-                                                        detailSelection = selection
-                                                    }
-                                                case .primaryCard:
-                                                    TodayStepCardView(
-                                                        bake: selection.bake,
-                                                        step: selection.step,
-                                                        section: item.section,
-                                                        onPrimaryAction: {
-                                                            handlePrimary(selection)
-                                                        },
-                                                        onOpenDetail: {
-                                                            detailSelection = selection
-                                                        },
-                                                        onOpenShift: {
-                                                            shiftSelection = selection
-                                                        },
-                                                        onQuickShift: { minutes in
-                                                            shift(selection, by: minutes)
-                                                        }
-                                                    )
+                        ForEach(snapshot.agenda.feed) { item in
+                            TodayOperationalCardView(domain: item.domain) {
+                                switch item.kind {
+                                case let .bake(summary):
+                                    if let selection = resolve(summary) {
+                                        switch summary.presentationStyle {
+                                        case .tomorrowPreview:
+                                            TodayTomorrowPreviewRow(bake: selection.bake, step: selection.step) {
+                                                router.openBake(selection.bake.id)
+                                            }
+                                        case .compactWindow:
+                                            TodayWindowedBakeRow(item: item) {
+                                                detailSelection = selection
+                                            }
+                                        case .primaryCard:
+                                            TodayStepCardView(
+                                                bake: selection.bake,
+                                                step: selection.step,
+                                                urgency: item.urgency,
+                                                onPrimaryAction: {
+                                                    handlePrimary(selection)
+                                                },
+                                                onOpenDetail: {
+                                                    detailSelection = selection
+                                                },
+                                                onOpenShift: {
+                                                    shiftSelection = selection
+                                                },
+                                                onQuickShift: { minutes in
+                                                    shift(selection, by: minutes)
                                                 }
-                                            }
-                                        case let .starter(starterID):
-                                            TodayStarterReminderRow(item: item, isUrgent: item.section == .urgent) {
-                                                openStarter(starterID)
-                                            }
+                                            )
                                         }
                                     }
+                                case let .starter(starterID):
+                                    TodayStarterReminderRow(item: item, urgency: item.urgency) {
+                                        openStarter(starterID)
+                                    }
+                                case .kefir:
+                                    EmptyView()
                                 }
                             }
                         }
@@ -259,7 +249,7 @@ private struct TodaySnapshot {
             hasPersistedData: bakes.isEmpty == false || starters.isEmpty == false || formulas.isEmpty == false
         )
 
-        let todayCount = (agenda.sections[.urgent]?.count ?? 0) + (agenda.sections[.scheduled]?.count ?? 0)
+        let todayCount = agenda.feed.filter { $0.urgency != .preview }.count
         let inProgressCount = bakes.reduce(into: 0) { count, bake in
             if bake.derivedStatus == .inProgress {
                 count += 1
@@ -279,13 +269,15 @@ private struct TodaySnapshot {
                 heroSubtitle = "Oggi è libero: non c'è ancora nulla in programma."
             }
         case .actionable:
-            if let first = agenda.sections[.urgent]?.first, let summary = first.bakeSummary {
+            let urgentItem = agenda.feed.first { $0.urgency == .overdue || $0.urgency == .warning }
+            let anyItem = agenda.feed.first
+            if let first = urgentItem, let summary = first.bakeSummary {
                 heroSubtitle = "Hai una fase da seguire in \(summary.bakeName): \(summary.stepName)."
-            } else if let first = agenda.sections[.urgent]?.first {
+            } else if let first = urgentItem {
                 heroSubtitle = "C'è uno starter da rinfrescare: \(first.title)."
-            } else if let first = agenda.sections[.scheduled]?.first, let summary = first.bakeSummary {
+            } else if let first = anyItem, let summary = first.bakeSummary {
                 heroSubtitle = "Più tardi ti aspetta \(summary.stepName) per \(summary.bakeName)."
-            } else if let first = agenda.sections[.scheduled]?.first {
+            } else if let first = anyItem {
                 heroSubtitle = "Oggi è previsto il rinfresco di \(first.title)."
             } else {
                 heroSubtitle = "Tutto sotto controllo per ora."
@@ -310,7 +302,7 @@ private struct TodayFuturePreviewCard: View {
             VStack(alignment: .leading, spacing: 12) {
                 StateBadge(text: "In programma", tone: .count)
 
-                Text("Tieni d'occhio gli starter")
+                Text("Prossima attività")
                     .foregroundStyle(Theme.muted)
 
                 VStack(alignment: .leading, spacing: 4) {
@@ -330,10 +322,8 @@ private struct TodayFuturePreviewCard: View {
 
     private var buttonTitle: String {
         switch preview.kind {
-        case .bake:
-            return "Vai a Impasti"
-        case .starter:
-            return "Vai a Starter"
+        case .bake:    return "Vai a Preparazioni"
+        case .starter: return "Vai a Preparazioni"
         }
     }
 }
