@@ -1,6 +1,7 @@
 import SwiftUI
 import SwiftData
 
+@MainActor
 struct StarterEditorView: View {
     @Environment(\.dismiss) private var dismiss
     @Environment(\.modelContext) private var modelContext
@@ -108,12 +109,15 @@ struct StarterEditorView: View {
         }
         .navigationTitle(starter == nil ? "Nuovo starter" : "Modifica starter")
         .tint(Theme.Control.primaryFill)
+        .scrollContentBackground(.hidden)
+        .background(Theme.Surface.app)
+        .presentationBackground(Theme.Surface.app)
         .toolbar {
             ToolbarItem(placement: .cancellationAction) {
                 Button("Chiudi") { dismiss() }
             }
             ToolbarItem(placement: .confirmationAction) {
-                Button("Salva") { save() }
+                Button(starter == nil ? "Crea" : "Salva") { save() }
                     .disabled(name.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
             }
         }
@@ -165,8 +169,10 @@ struct StarterEditorView: View {
 
         try? modelContext.save()
 
+        let starterID = savedStarter.id
+        let ctx = modelContext
         Task {
-            await environment.notificationService.syncNotifications(for: savedStarter)
+            await environment.notificationService.syncNotifications(forStarter: starterID, in: ctx)
         }
 
         dismiss()

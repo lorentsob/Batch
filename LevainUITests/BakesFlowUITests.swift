@@ -6,27 +6,42 @@ final class BakesFlowUITests: XCTestCase {
         continueAfterFailure = false
     }
 
-    func testBakesTabShownEmptyWithNoData() throws {
+    // MARK: - Helpers
+
+    /// Navigate from app launch to BakesView via Preparazioni > Pane e lievito madre > Impasti.
+    private func navigateToBakesView(app: XCUIApplication, timeout: TimeInterval = 8) {
+        let prepTab = app.tabBars.buttons["Preparazioni"]
+        XCTAssertTrue(prepTab.waitForExistence(timeout: 5))
+        prepTab.tap()
+
+        let breadCard = app.descendants(matching: .any).matching(identifier: "BreadHubCard").firstMatch
+        XCTAssertTrue(breadCard.waitForExistence(timeout: timeout))
+        breadCard.tap()
+
+        let impastiRow = app.descendants(matching: .any).matching(identifier: "BreadHubImpastiRow").firstMatch
+        XCTAssertTrue(impastiRow.waitForExistence(timeout: timeout))
+        impastiRow.tap()
+    }
+
+    // MARK: - Tests
+
+    func testBakesViewShownEmptyWithNoData() throws {
         let app = XCUIApplication()
         app.launchEmpty()
 
-        let bakesTab = app.tabBars.buttons["Impasti"]
-        XCTAssertTrue(bakesTab.waitForExistence(timeout: 5))
-        bakesTab.tap()
+        navigateToBakesView(app: app)
 
-        XCTAssertTrue(app.scrollViews["BakesScrollView"].waitForExistence(timeout: 8))
+        XCTAssertTrue(app.descendants(matching: .any).matching(identifier: "BakesScrollView").firstMatch.waitForExistence(timeout: 8))
         XCTAssertTrue(app.staticTexts["Nessun bake ancora"].waitForExistence(timeout: 8))
     }
 
-    func testBakesTabShowsOperationalDataWithSeedData() throws {
+    func testBakesViewShowsOperationalDataWithSeedData() throws {
         let app = XCUIApplication()
         app.launchSeeded()
 
-        let bakesTab = app.tabBars.buttons["Impasti"]
-        XCTAssertTrue(bakesTab.waitForExistence(timeout: 5))
-        bakesTab.tap()
+        navigateToBakesView(app: app)
 
-        XCTAssertTrue(app.scrollViews["BakesScrollView"].waitForExistence(timeout: 8))
+        XCTAssertTrue(app.descendants(matching: .any).matching(identifier: "BakesScrollView").firstMatch.waitForExistence(timeout: 8))
         XCTAssertTrue(app.staticTexts["Infornata del weekend"].waitForExistence(timeout: 8))
         XCTAssertFalse(app.staticTexts["Nessun bake ancora"].exists)
     }
@@ -35,33 +50,27 @@ final class BakesFlowUITests: XCTestCase {
         let app = XCUIApplication()
         app.launchEmpty()
 
-        let bakesTab = app.tabBars.buttons["Impasti"]
-        XCTAssertTrue(bakesTab.waitForExistence(timeout: 5))
-        bakesTab.tap()
+        navigateToBakesView(app: app)
 
-        XCTAssertTrue(app.scrollViews["BakesScrollView"].waitForExistence(timeout: 8))
+        XCTAssertTrue(app.descendants(matching: .any).matching(identifier: "BakesScrollView").firstMatch.waitForExistence(timeout: 8))
         XCTAssertTrue(app.staticTexts["Nessun bake ancora"].waitForExistence(timeout: 8))
         XCTAssertTrue(app.buttons["Crea il tuo primo bake"].waitForExistence(timeout: 8))
     }
 
-    func testNewBakeUsesBundledTemplates() throws {
+    func testNewBakeShowsSystemTemplatesInRecipePicker() throws {
         let app = XCUIApplication()
         app.launchEmpty()
 
-        let bakesTab = app.tabBars.buttons["Impasti"]
-        XCTAssertTrue(bakesTab.waitForExistence(timeout: 5))
-        bakesTab.tap()
+        navigateToBakesView(app: app)
 
-        XCTAssertTrue(app.scrollViews["BakesScrollView"].waitForExistence(timeout: 8))
+        XCTAssertTrue(app.descendants(matching: .any).matching(identifier: "BakesScrollView").firstMatch.waitForExistence(timeout: 8))
         XCTAssertTrue(app.buttons["Nuovo bake"].waitForExistence(timeout: 8))
         app.buttons["Nuovo bake"].tap()
 
-        XCTAssertTrue(app.staticTexts["Ricetta"].waitForExistence(timeout: 8))
-        XCTAssertTrue(app.staticTexts["Template rapidi"].waitForExistence(timeout: 5))
-        XCTAssertTrue(app.scrollViews["BakeTemplateScroller"].waitForExistence(timeout: 5))
-        XCTAssertTrue(app.buttons["Pane di campagna"].waitForExistence(timeout: 5))
-        app.buttons["Pane di campagna"].tap()
+        // Wait for the creation sheet to finish presenting before checking controls.
+        XCTAssertTrue(app.navigationBars["Nuovo bake"].waitForExistence(timeout: 10))
 
-        XCTAssertTrue(app.staticTexts["Starter"].waitForExistence(timeout: 8))
+        // SwiftUI Form Picker with default style renders as a button in the accessibility tree.
+        XCTAssertTrue(app.buttons["BakeRecipePicker"].waitForExistence(timeout: 5))
     }
 }

@@ -7,6 +7,8 @@ struct SettingsView: View {
     @Environment(\.modelContext) private var modelContext
     @EnvironmentObject private var environment: AppEnvironment
 
+    @Query private var appSettingsList: [AppSettings]
+
     @State private var exportURL: URL?
     @State private var showingExporter = false
     @State private var showingImporter = false
@@ -15,8 +17,55 @@ struct SettingsView: View {
     @State private var errorMessage: String?
     @State private var isProcessing = false
 
+    private var appSettings: AppSettings? { appSettingsList.first }
+
     var body: some View {
         Form {
+            if let settings = appSettings {
+                Section("Sezioni attive") {
+                    Text("Attiva o disattiva le sezioni. Le sezioni disattivate non compaiono in Home o in Fermenti.")
+                        .font(.footnote)
+                        .foregroundStyle(Theme.muted)
+
+                    Toggle(isOn: Binding(
+                        get: { settings.isBakeEnabled },
+                        set: { settings.isBakeEnabled = $0 }
+                    )) {
+                        Label {
+                            Text("Impasti")
+                        } icon: {
+                            Image("navbar-bake")
+                                .renderingMode(.template)
+                                .resizable()
+                                .scaledToFit()
+                                .frame(width: 22, height: 22)
+                        }
+                    }
+
+                    Toggle(isOn: Binding(
+                        get: { settings.isStarterEnabled },
+                        set: { settings.isStarterEnabled = $0 }
+                    )) {
+                        Label {
+                            Text("Starter (lievito madre)")
+                        } icon: {
+                            Image("navbar-starter")
+                                .renderingMode(.template)
+                                .resizable()
+                                .scaledToFit()
+                                .frame(width: 22, height: 22)
+                        }
+                    }
+
+                    Toggle(isOn: Binding(
+                        get: { settings.isKefirEnabled },
+                        set: { settings.isKefirEnabled = $0 }
+                    )) {
+                        Label("Kefir", systemImage: "drop.fill")
+                    }
+                }
+            }
+
             Section("Backup") {
                 Text("Esporta o ripristina solo i dati utente. Knowledge e template di sistema restano nel bundle dell'app.")
                     .font(.footnote)

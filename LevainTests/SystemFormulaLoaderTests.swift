@@ -25,4 +25,18 @@ struct SystemFormulaLoaderTests {
         #expect(transient.name == formula.name)
         #expect(transient.defaultSteps == formula.defaultSteps)
     }
+
+    @Test("Bundled formulas preserve explicit labels for custom steps")
+    func testCustomStepLabelsAreLoadedFromBundle() throws {
+        let formulas = SystemFormulaLoader.loadSystemFormulas()
+
+        let bagel = try #require(formulas.first(where: { $0.name == "Bagel" }))
+        #expect(bagel.defaultSteps.contains(where: { $0.type == .custom && $0.name == "Levain" }))
+        #expect(bagel.defaultSteps.contains(where: { $0.type == .custom && $0.name == "Bollitura" }))
+
+        let potatoBuns = try #require(formulas.first(where: { $0.name == "Potato Buns" }))
+        let levainStep = try #require(potatoBuns.defaultSteps.first(where: { $0.type == .custom && $0.name == "Levain" }))
+        #expect(levainStep.ingredients.isEmpty == false)
+        #expect(levainStep.details.isEmpty == false)
+    }
 }

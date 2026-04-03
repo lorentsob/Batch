@@ -116,9 +116,6 @@ struct BakeCreationView: View {
         }
         .navigationTitle("Nuovo bake")
         .tint(Theme.Control.primaryFill)
-        .toolbarColorScheme(.light, for: .navigationBar)
-        .toolbarBackground(Theme.Surface.app, for: .navigationBar)
-        .toolbarBackground(.visible, for: .navigationBar)
         .toolbar {
             ToolbarItem(placement: .cancellationAction) {
                 Button("Chiudi") { dismiss() }
@@ -256,12 +253,14 @@ struct BakeCreationView: View {
         bake.steps.forEach { modelContext.insert($0) }
         try? modelContext.save()
 
-        Task {
-            await environment.notificationService.syncNotifications(for: bake)
+        let bakeID = bake.id
+        let ctx = modelContext
+        Task { @MainActor in
+            await environment.notificationService.syncNotifications(forBake: bakeID, in: ctx)
         }
-        
+
         dismiss()
-        router.openBake(bake.id)
+        router.openBake(bakeID)
     }
 }
 

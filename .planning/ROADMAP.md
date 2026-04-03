@@ -1,337 +1,150 @@
-# Roadmap: Levain
+# Roadmap: Levain v2
 
 ## Overview
 
-The roadmap moves from a native iPhone foundation into core baking logic, then adds formula authoring, bake execution, operational Today workflows, starter management, bundled knowledge, and final hardening for internal testing. After the v1 audit, the UAT-driven UX realignment, MVP closure, and design-system regression cleanup, Phase 15 hardens memory durability: persisted user data must survive app updates, backup or restore must be explicit and versioned, and bundled system content must stay separate from user data and demo seed paths.
+Archived v1 planning remains in `.planning/milestones/v1-roadmap.md`, `.planning/milestones/v1-requirements.md`, and `.planning/milestones/v1-state.md`. The active roadmap opens the v2 milestone from the multi-fermentation PRD: Levain becomes a planner operativo e journal leggero for domestic fermentations, keeps the current bread/starter workflows intact, and adds a milk kefir vertical through a shared shell that reuses the current design system, routing, and service patterns.
+
+## Active Milestone
+
+**Milestone:** v2 multi-fermentation expansion  
+**Primary source:** `docs/levain-prd-v2-multi-fermentations.md`  
+**Supporting addendum:** `docs/levain-prd-v2-addendum.md`  
+**Delivery rule:** extend the existing app shell, views, models, and services; do not fork a second UI language or invent a generic fermentation abstraction.
+**Current state:** Phases 17 through 21 are complete in code and verification. `21-03` closed the runtime-hardening wave by surfacing explicit persistence failures, guarding starter reminder routes, and syncing the active/codebase docs. Phase 22 is the final open milestone wave and still needs its execution plans.
+
+## Archived Milestones
+
+- [v1 roadmap](/Users/lorentso/lievito-app/.planning/milestones/v1-roadmap.md)
+- [v1 requirements](/Users/lorentso/lievito-app/.planning/milestones/v1-requirements.md)
+- [v1 state snapshot](/Users/lorentso/lievito-app/.planning/milestones/v1-state.md)
 
 ## Phases
 
-- [x] **Phase 1: Foundation App Shell** - Bootstrap the repository, native project, persistence container, and navigation shell.
-- [x] **Phase 2: Domain Scheduling** - Implement the core models, derived logic, and backward schedule generation.
-- [x] **Phase 3: Formula Authoring** - Build reusable formula CRUD with editable default step templates.
-- [x] **Phase 4: Bake Creation Execution** - Create and run bakes with step actions, timers, and timeline shifting.
-- [x] **Phase 5: Today Notifications** - Build the operational Today experience and local reminder orchestration.
-- [x] **Phase 6: Starter Management** - Add starter CRUD, refresh logging, and due-state reminders.
-- [x] **Phase 7: Knowledge Tips** - Bundle static knowledge, browse it, and surface contextual tips.
-- [x] **Phase 8: Hardening UAT** - Finish tests, empty states, internal-seed polish, and release readiness.
-- [x] **Phase 9: v1 Audit CI/CD** - Audit v1 readiness, automate CI, and add controlled release delivery.
-- [x] **Phase 10: Operational UX Realignment** - Realign Home, Impasti, Ricette, bake lifecycle, and visual-system behavior after real UAT feedback.
-- [x] **Phase 11: Naming, Today Semantics & Router Hardening** - Remove product naming drift, clarify Today urgency semantics, and harden notification routing against stale IDs.
-- [x] **Phase 12: Userflow & UX Conformance** - Align app behavior, docs, and verification to the six operational flows defined in userflow v2.
-- [x] **Phase 13: MVP Closure** - Chiudere l'MVP con manual UAT su device reale, Home/Today operativa nei quattro stati, bake execution leggibile, notifiche robuste, starter flow veloce, naming/copy/empty states definitivi e sign-off finale.
-- [x] **Phase 14: Design System Regression Closure** - Forzare light mode nell'app, riallineare chrome e modali al design system, correggere il flow distruttivo di cancel/delete bake, e rendere cancellazione / ritardo / timeline visivamente affidabili dopo il refresh v2.0.
-- [x] **Phase 15: Memory Durability & System Content Separation** - Proteggere i dati utente dagli update on-device, introdurre backup/restore JSON esplicito, e separare contenuti bundled di sistema da seed demo e user data.
-- [ ] **Phase 16: Baking Phase Ingredients UX** - Improve the baking workflow by displaying relevant ingredients and weights directly within the phase modal.
+- [x] **Phase 17: V2 Shell & Preparation Hubs** - Replace the v1 top-level shell with Oggi / Preparazioni / Knowledge, keep direct operational routing intact, add always-visible quick actions, and prepare the additive v2 schema migration.
+- [x] **Phase 18: Oggi Cross-Domain Agenda** - Rebuild Today as a daily operational dashboard foundation with card-level urgency, time-based ordering, and direct-object routing for the shipped domains while keeping the kefir contract ready for Phase 19.
+- [x] **Phase 19: Milk Kefir Batch Core** - Introduce the batch-first milk kefir vertical with local persistence, no-culture-first batch creation, storage-aware state derivation, core screens, and local reminder defaults.
+- [x] **Phase 20: Kefir Lineage & Journal** - Add derived batch genealogy, structured event history, and archive/journal surfaces that support the planner instead of replacing it.
+- [x] **Phase 21: Runtime Hardening & Planning Sync** - Harden `Oggi`, Knowledge, kefir lineage lookups, persistence/routing safety, and `.planning`/codebase memory before new product scope lands.
+- [ ] **Phase 22: Culture Tracking & Knowledge Expansion** - Add lightweight culture/grain tracking, kefir knowledge filters/content, contextual tips, and final v2 UAT closure.
 
 ## Phase Details
 
-### Phase 1: Foundation App Shell
+### Phase 17: V2 Shell & Preparation Hubs
 
-**Goal**: Create the repo, Xcode app, SwiftData container, app environment, and four-tab shell.  
-**Depends on**: Nothing (first phase)  
-**Requirements**: [QUAL-01]  
+**Goal**: Reframe the app around the v2 shell while preserving the current bread/starter/formula flows, keeping direct operational routing intact, and preparing the additive v2 schema migration.  
+**Depends on**: Archived v1 shell and current bread/starter feature set  
+**Requirements**: [SHELL-01, SHELL-02, BREAD-01, SCHEMA-01]  
 **Success Criteria**:
 
-1. App launches into the final tab structure on iPhone.
-2. SwiftData container and app-level services are configured without placeholder wiring.
-3. Sample data can be seeded for local internal testing.  
-   **Plans**: 3 plans
+1. The app exposes exactly three top-level tabs: `Oggi`, `Preparazioni`, `Knowledge`.
+2. Preparazioni shows domain hubs for `Pane e lievito madre` and `Milk kefir`, keeps both cards visible even when empty, and exposes always-visible compact quick actions.
+3. Existing bread workflows remain reachable through the bread hub by reusing current views, router logic, and design-system primitives while preserving direct operational entry from existing Today cards.
+4. The v1 → v2 SwiftData migration is prepared as an additive VersionedSchema change before kefir models land.
 
 Plans:
 
-- [x] 01-01: Workspace bootstrap and repository setup
-- [x] 01-02: Persistence and environment shell
-- [x] 01-03: Navigation and design system skeleton
+- [x] 17-01: Root shell, tabs, and direct-router migration
+- [x] 17-02: Preparations root, always-visible quick actions, and bread hub composition
+- [x] 17-03: Empty states, shell polish, and regression coverage
+- [x] 17-04: Additive schema migration preparation
 
-### Phase 2: Domain Scheduling
+### Phase 18: Oggi Cross-Domain Agenda
 
-**Goal**: Define the domain model, derived-state rules, and backward schedule generation.  
-**Depends on**: Phase 1  
-**Requirements**: [BAKE-02, STEP-02, STEP-03, QUAL-02]  
+**Goal**: Make `Oggi` a daily operational dashboard foundation that keeps active bread and starter objects visible with clear urgency and direct navigation, while preparing the kefir-ready agenda and routing contract for Phase 19.  
+**Depends on**: Phase 17  
+**Requirements**: [TODAY-01, TODAY-02, TODAY-03, ROUTE-01]  
 **Success Criteria**:
 
-1. A formula can generate ordered bake steps from a target bake time.
-2. Shifted timelines affect only incomplete future steps.
-3. Derived bake and starter logic is covered by unit tests.  
-   **Plans**: 3 plans
+1. Oggi shows all active bread and starter objects through one shared feed and card grammar, with a kefir-ready agenda contract that Phase 19 can plug real batches into.
+2. Ordering is time-based across domains, including explicit tie-breaker rules, with no special priority for bread, starter, or kefir as categories.
+3. Taps from Oggi route directly to the underlying bake or starter detail without traversing the Preparazioni hierarchy, and the router/deep-link surface is kefir-ready for Phase 19 batch detail.
 
 Plans:
 
-- [x] 02-01: Model layer and persistence relationships
-- [x] 02-02: Scheduler and derived-logic services
-- [x] 02-03: Unit test foundation for core logic
+- [x] 18-01: Dashboard feed model, urgency scoring, and time-based tie-breakers
+- [x] 18-02: Oggi card UI for always-visible active objects
+- [x] 18-03: Direct object routing from Oggi and cross-domain regression coverage
 
-### Phase 3: Formula Authoring
+### Phase 19: Milk Kefir Batch Core
 
-**Goal**: Let the user create and maintain reusable formulas with editable default step templates.  
-**Depends on**: Phase 2  
-**Requirements**: [FORM-01, FORM-02, FORM-03, FORM-04]  
+**Goal**: Ship the first usable milk kefir vertical around persistent batches, direct-first batch creation, storage-aware routine management, and local reminders.  
+**Depends on**: Phase 18  
+**Requirements**: [KEFIR-01, KEFIR-02, KEFIR-03, NOTIF-01]  
 **Success Criteria**:
 
-1. User can create, edit, and save formulas locally.
-2. Default steps can be added, edited, deleted, and reordered inside a formula.
-3. Formula values remain coherent enough to drive bake generation.  
-   **Plans**: 3 plans
+1. User can create, view, update, and archive multiple milk kefir batches, including the very first batch without forcing prior culture creation.
+2. Batch state, severity, and microcopy derive from routine plus storage mode, using explicit default reminder windows for room temperature, fridge, and freezer behavior.
+3. The core batch flow supports one dominant operational action plus quick actions for renew, derive, change state/storage, and archive.
 
 Plans:
 
-- [x] 03-01: Formula list and detail views
-- [x] 03-02: Step template editor flow
-- [x] 03-03: Validation and persistence polish
+- [x] 19-01: Kefir model, schema, and derived-state foundation
+- [x] 19-02: Batch list, detail, and hub entry UI
+- [x] 19-03: First-batch and manage-batch flows without culture prerequisite
+- [x] 19-04: Storage-aware reminder defaults and automated coverage
 
-### Phase 4: Bake Creation Execution
+### Phase 20: Kefir Lineage & Journal
 
-**Goal**: Generate real bakes from formulas and support real-time step execution.  
-**Depends on**: Phase 3  
-**Requirements**: [BAKE-01, BAKE-03, BAKE-04, STEP-01, STEP-04, STEP-05]  
+**Goal**: Add the structured history needed to understand how kefir batches evolve without turning the app into a heavy diary, while keeping bread on the existing bake-history model.  
+**Depends on**: Phase 19  
+**Requirements**: [LINEAGE-01, JOURNAL-01]  
 **Success Criteria**:
 
-1. User can create a bake from a formula and optional starter.
-2. Bake detail shows readable step cards with one primary action per state.
-3. Running a bake preserves planned and actual timing separately.  
-   **Plans**: 3 plans
+1. A new batch can be derived from an existing batch with preserved origin linkage.
+2. Structured kefir events capture renewals, storage changes, derivations, notes, and archive events.
+3. Journal/archive UI helps compare and understand kefir batches while bread intentionally keeps using the existing bake history instead of gaining a parallel journal.
 
 Plans:
 
-- [x] 04-01: Bake creation flow
-- [x] 04-02: Bake detail and step execution
-- [x] 04-03: Timer UI and timeline shifting
+- [x] 20-01: Batch derivation and provenance UI
+- [x] 20-02: Structured kefir events and journal surfaces
+- [x] 20-03: Archive states, comparison notes, and workflow polish
+- [x] 20-04: Verification closeout, accessibility hardening, and planning sync
 
-### Phase 5: Today Notifications
+### Phase 21: Runtime Hardening & Planning Sync
 
-**Goal**: Make the app operational day-to-day with prioritized work and local reminders.  
-**Depends on**: Phase 4  
-**Requirements**: [TODAY-01, TODAY-02, TODAY-03, NOTIF-01, NOTIF-02, NOTIF-04]  
+**Goal**: Harden the shipped v2 shell before any new product scope by addressing runtime cost, state propagation, persistence-safety, and stale planning memory.  
+**Depends on**: Phase 20  
+**Requirements**: [TODAY-01, ROUTE-01, NOTIF-01]  
 **Success Criteria**:
 
-1. Today clearly prioritizes now and overdue items.
-2. Notification scheduling stays aligned with bake timelines.
-3. Notification taps reopen the related bake or starter context.  
-   **Plans**: 3 plans
+1. `Oggi` and bread operational helpers stop doing repeated render-time scans and sorts while preserving the shipped dashboard semantics.
+2. Knowledge navigation/state ownership and kefir lineage lookup surfaces are centralized and regression-covered.
+3. Persistence/bootstrap failures and reminder route anomalies become explicit, and active/codebase planning docs match the real three-tab shell and feature map.
 
 Plans:
 
-- [x] 05-01: Today aggregation and prioritization
-- [x] 05-02: Bake reminder scheduling and resync
-- [x] 05-03: Deep-link routing and action handling
+- [x] 21-01: `Oggi` and bread operational data-flow hardening
+- [x] 21-02: Knowledge and kefir state/navigation hardening
+- [x] 21-03: Persistence, routing, and planning sync
 
-### Phase 6: Starter Management
+### Phase 22: Culture Tracking & Knowledge Expansion
 
-**Goal**: Support ongoing starter maintenance as a secondary but complete workflow.  
-**Depends on**: Phase 5  
-**Requirements**: [STARTER-01, STARTER-02, STARTER-03, STARTER-04, NOTIF-03]  
+**Goal**: Close the v2 milestone with optional culture/grain tracking, kefir knowledge integration, and final cross-domain verification.  
+**Depends on**: Phase 21  
+**Requirements**: [CULTURE-01, KNOW-01, KNOW-02]  
 **Success Criteria**:
 
-1. User can manage multiple starters and refresh logs.
-2. Starter due status derives from simple maintenance data.
-3. Starter reminders surface correctly in Today and notifications.  
-   **Plans**: 3 plans
+1. Culture/grain tracking exists but stays ignorable for users who only manage batches.
+2. Knowledge supports kefir-aware filters and contextual tips without splitting into a separate editorial system.
+3. Final UAT verifies that bread, starter, and kefir coexist cleanly under the v2 shell.
 
 Plans:
 
-- [x] 06-01: Starter list and detail flows
-- [x] 06-02: Refresh logging flow
-- [x] 06-03: Starter reminder integration
+- [ ] 22-01: Culture and grain tracking surfaces
+- [ ] 22-02: Knowledge filters, kefir content wiring, and contextual tips
+- [ ] 22-03: Cross-domain UAT, release notes, and milestone closure
 
-### Phase 7: Knowledge Tips
-
-**Goal**: Make bundled baking knowledge available both as articles and contextual tips.  
-**Depends on**: Phase 6  
-**Requirements**: [KNOW-01, KNOW-02, KNOW-03]  
-**Success Criteria**:
-
-1. Knowledge content ships as local JSON and loads offline.
-2. User can browse categories and article details.
-3. Relevant tips appear inside bake and starter workflows.  
-   **Plans**: 3 plans
-
-Plans:
-
-- [x] 07-01: Content schema and JSON bundle
-- [x] 07-02: Knowledge tab and article view
-- [x] 07-03: Contextual tip surfacing
-
-### Phase 8: Hardening UAT
-
-**Goal**: Improve confidence, first-launch polish, and internal release readiness.  
-**Depends on**: Phase 7  
-**Requirements**: [QUAL-03, QUAL-04]  
-**Success Criteria**:
-
-1. Baseline automated tests cover the highest-risk workflows.
-2. First launch feels useful even before the user adds their own data.
-3. The app survives relaunch and background or foreground notification paths cleanly.  
-   **Plans**: 3 plans
-
-Plans:
-
-- [x] 08-01: UI and unit test completion
-- [x] 08-02: Empty states and internal polish
-- [x] 08-03: Release-readiness verification
-
-### Phase 9: v1 Audit CI/CD
-
-**Goal**: Convert internal-release confidence into a repeatable v1 audit and delivery workflow.  
-**Depends on**: Phase 8  
-**Requirements**: [QUAL-05, QUAL-06, QUAL-07]  
-**Success Criteria**:
-
-1. A written v1 audit captures requirement coverage, manual test results, and explicit residual risks.
-2. CI runs deterministic build and agreed automated test suites on repository changes with debuggable artifacts.
-3. CD can produce a controlled release candidate or TestFlight-ready build with documented secrets and operator steps.  
-   **Plans**: 3 plans
-
-Plans:
-
-- [x] 09-01: Final audit baseline and release checklist
-- [x] 09-02: Continuous integration workflow
-- [x] 09-03: Delivery automation and release runbook
-
-### Phase 10: Operational UX Realignment
-
-**Goal**: Resolve the UAT gaps that make the current MVP feel misaligned with real baking use, especially around Home, Impasti, Ricette, bake lifecycle semantics, and visual trust.  
-**Depends on**: Phase 9  
-**Requirements**: [REALIGN-01, REALIGN-02, REALIGN-03, REALIGN-04, REALIGN-05, REALIGN-06, REALIGN-07, REALIGN-08, REALIGN-09, REALIGN-10]  
-**Success Criteria**:
-
-1. Home and Impasti prioritize active or planned bakes, grouped by bake context instead of a flat stream of pending steps.
-2. Ricette and Starter authoring use structured, labeled inputs with directly reusable presets, flour multi-select, and yeast-aware planning.
-3. Cancelled or terminal bake behavior, visual-system states, and App Icon handling are reliable enough to restore product trust after UAT.  
-   **Plans**: 3 plans
-
-Plans:
-
-- [x] 10-01: Home and navigation realignment
-- [x] 10-02: Recipe and starter authoring realignment
-- [x] 10-03: Bake lifecycle, visual polish, and app icon closure
-
-### Phase 11: Naming, Today Semantics & Router Hardening
-
-**Goal**: Close the remaining trust gaps after UAT by aligning product naming, clarifying Today semantics, and making notification deep links resilient to stale data.  
-**Depends on**: Phase 10  
-**Requirements**: [REALIGN-11, REALIGN-12, REALIGN-13]  
-**Success Criteria**:
-
-1. Product and AI context naming consistently use `Levain` with no conflicting markdown product references.
-2. Today clearly separates urgent work, same-day scheduled work, and tomorrow preview without surfacing later noise.
-3. Notification taps degrade safely when bake, step, or starter entities are missing or terminal.  
-   **Plans**: 3 plans
-
-Plans:
-
-- [x] 11-01: Naming unification
-- [x] 11-02: Today semantics
-- [x] 11-03: Router hardening and flow docs
-
-### Phase 12: Userflow & UX Conformance
-
-**Goal**: Make the app conform explicitly to the six operational flows defined in userflow v2, including Today states, bake creation/execution semantics, window-based urgency, starter refresh speed, and notification fallback behavior.  
-**Depends on**: Phase 11  
-**Requirements**: [USERFLOW-01, USERFLOW-02, USERFLOW-03, USERFLOW-04, USERFLOW-05, USERFLOW-06]  
-**Success Criteria**:
-
-1. `docs/levain-user-flows.md`, app behavior, and automated verification all match the updated userflow v2.
-2. The six operational flows behave consistently across Today, Impasti, Starter, and notification entry points.
-3. Phase closure is blocked until manual on-device UAT is completed against the six flow checklist.  
-   **Plans**: 3 plans
-
-Plans:
-
-- [x] 12-01: Source of truth and operational audit
-- [x] 12-02: Bake execution and starter refresh conformance
-- [x] 12-03: Window-based flows, notification conformance, and sign-off prep
-
-### Phase 13: MVP Closure
-
-**Goal**: Chiudere l'MVP senza aprire nuovo scope. Manual UAT su device reale, Home/Today come dashboard operativa nei quattro stati, esecuzione bake leggibile, notifiche robuste in tutti gli scenari, starter flow veloce, naming/copy/empty states definitivi, e sign-off finale.  
-**Depends on**: Phase 12  
-**Requirements**: [QUAL-08, REALIGN-14]  
-**Success Criteria**:
-
-1. Manual UAT su iPhone reale completato per i flow principali senza bug critici.
-2. Home risponde a "cosa devo fare adesso?" nei quattro stati (`firstLaunch`, `allClear`, `futureOnly`, `actionable`).
-3. Notifiche robuste in tutti gli scenari (warm/cold launch, entità mancante, entità terminale).
-4. Starter refresh in ≤ 2 tap principali con risultato visibile immediatamente.
-5. Naming, copy ed empty state definitivi in tutta l'app.  
-   **Plans**: 3 plans
-
-Plans:
-
-- [x] 13-01: Manual UAT su device reale e Home/Today refinement
-- [x] 13-02: Bake execution polish, notifiche robuste, starter flow veloce
-- [x] 13-03: Naming/copy, empty states, micro-UX e audit finale di layout
-
-### Phase 14: Design System Regression Closure
-
-**Goal**: Chiudere le regressioni emerse dopo il design-system v2.0 senza aprire nuovo scope prodotto: light-only chrome, modali coerenti, destructive flow posizionato correttamente, detail dei bake cancellati/late leggibile e affidabile.  
-**Depends on**: Phase 13  
-**Requirements**: [REALIGN-15, REALIGN-16, REALIGN-17, REALIGN-18]  
-**Success Criteria**:
-
-1. Dark mode iOS non altera tab bar, navigation bar, toolbar CTA, o sheet background.
-2. Cancel/delete bake usa una conferma bottom-aligned coerente con il design system e pulisce reminder + navigazione.
-3. Un bake annullato comunica subito stato terminale: header rosso, future steps archiviate, no tips attivi, CTA finale di delete.
-4. Timeline rail e chip danger restano leggibili e stabili visivamente.  
-   **Plans**: 1 plan
-
-Plans:
-
-- [x] 14-01: Light-mode enforcement, destructive flow anchoring, and cancelled timeline trust pass
-
-### Phase 15: Memory Durability & System Content Separation
-
-**Goal**: Rendere i dati utente durabili tra build installate sopra dati reali, introdurre un backup/restore manuale e versionato, e separare in modo definitivo SwiftData utente, contenuti bundled di sistema e demo seed interno.
-**Depends on**: Phase 14
-**Requirements**: [MEM-01, MEM-02, MEM-03, MEM-04, MEM-05]
-**Success Criteria**:
-
-1. Un aggiornamento dell'app sopra una build esistente non resetta piu silenziosamente il database locale.
-2. L'utente puo esportare e ripristinare i propri dati tramite backup JSON validato e versionato.
-3. I template di sistema restano disponibili nel flow `Nuovo bake` anche con zero ricette salvate.
-4. Seed/demo data resta un percorso interno esplicito via launch options e non rappresenta piu il contenuto ufficiale dell'app.
-   **Plans**: 3 plans
-
-Plans:
-
-- [x] 15-01: Schema durability and safe container bootstrap
-- [x] 15-02: Backup and restore
-- [x] 15-03: Bundled system content separation
-
-### Phase 16: Baking Phase Ingredients UX
-
-**Goal**: Display relevant ingredient weights directly within the phase modal to prevent navigation context loss.
-**Depends on**: Phase 15
-**Requirements**: [UX-01]
-**Success Criteria**:
-
-1. Step-specific ingredients are visible in the `BakeStepDetailView`.
-2. Content pipeline automatically scales ingredients for each step.
-3. No visual clutter for steps with no ingredients.
-
-Plans:
-
-- [ ] 16-01: Step-specific ingredient mapping and UI implementation
-
-## Progress: [███████████████░] 94% (15 of 16 phases complete)
+## Progress: [█████████████████░░] 86% (18 of 21 v2 plans complete)
 
 **Execution Order:**  
-Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6 → 7 → 8 → 9 → 10 → 11 → 12 → 13 → 14 → 15 → 16
+Phases execute in numeric order: 17 → 18 → 19 → 20 → 21 → 22
 
-| Phase                                          | Plans Complete | Status      | Completed  |
-| ---------------------------------------------- | -------------- | ----------- | ---------- |
-| 1. Foundation App Shell                        | 3/3            | Complete    | 2026-03-10 |
-| 2. Domain Scheduling                           | 3/3            | Complete    | 2026-03-10 |
-| 3. Formula Authoring                           | 3/3            | Complete    | 2026-03-10 |
-| 4. Bake Creation Execution                     | 3/3            | Complete    | 2026-03-10 |
-| 5. Today Notifications                         | 3/3            | Complete    | 2026-03-10 |
-| 6. Starter Management                          | 3/3            | Complete    | 2026-03-10 |
-| 7. Knowledge Tips                              | 3/3            | Complete    | 2026-03-10 |
-| 8. Hardening UAT                               | 3/3            | Complete    | 2026-03-10 |
-| 9. v1 Audit CI/CD                              | 3/3            | Complete    | 2026-03-10 |
-| 10. Operational UX Realignment                 | 3/3            | Complete    | 2026-03-11 |
-| 11. Naming, Today Semantics & Router Hardening | 3/3            | Complete    | 2026-03-12 |
-| 12. Userflow & UX Conformance                  | 3/3            | Complete    | 2026-03-12 |
-| 13. MVP Closure                                | 3/3            | Complete    | 2026-03-12 |
-| 14. Design System Regression Closure           | 1/1            | Complete    | 2026-03-14 |
-| 15. Memory Durability & System Content Separation | 3/3         | Complete    | 2026-03-16 |
-| 16. Baking Phase Ingredients UX                | 0/1            | Planned     | —          |
+| Phase | Plans Complete | Status | Completed |
+| ----- | -------------- | ------ | --------- |
+| 17. V2 Shell & Preparation Hubs | 4/4 | Complete | 2026-03-29 |
+| 18. Oggi Cross-Domain Agenda | 3/3 | Complete | 2026-03-29 |
+| 19. Milk Kefir Batch Core | 4/4 | Complete | 2026-03-30 |
+| 20. Kefir Lineage & Journal | 4/4 | Complete | 2026-04-02 |
+| 21. Runtime Hardening & Planning Sync | 3/3 | Complete | 2026-04-03 |
+| 22. Culture Tracking & Knowledge Expansion | 0/3 | Not started | - |

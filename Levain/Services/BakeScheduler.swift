@@ -62,6 +62,7 @@ enum BakeScheduler {
                 temperatureRange: template.temperatureRange,
                 volumeTarget: template.volumeTarget,
                 notes: template.notes,
+                ingredients: template.ingredients,
                 bake: bake
             )
             result.append(step)
@@ -93,11 +94,11 @@ enum BakeScheduler {
             effectiveShift = minutes
         }
 
+        // L'ancora non si sposta mai: solo gli step FUTURI (con indice maggiore)
+        // e ancora incompleti vengono traslati.
+        let minIndex = anchorStep.orderIndex + 1
+
         for step in bake.steps where step.isTerminal == false {
-            // Always shift only steps strictly after the anchor. The special-case logic above
-            // for a running anchor adjusts `effectiveShift` so the first subsequent step is
-            // re-anchored to `plannedEnd + minutes` without moving the anchor itself.
-            let minIndex = anchorStep.orderIndex + 1
             guard step.orderIndex >= minIndex else { continue }
             // Only shift steps that have not started yet; started/completed steps are driven by actual times.
             guard step.status == .pending else { continue }
@@ -105,6 +106,17 @@ enum BakeScheduler {
             step.flexibleWindowStart = step.flexibleWindowStart?.adding(minutes: effectiveShift)
             step.flexibleWindowEnd = step.flexibleWindowEnd?.adding(minutes: effectiveShift)
         }
+
+        // When the anchor is running, extend its window so the overdue
+        // indicator reflects the shift.  Without this the hero card shows
+        // unchanged times (actualStart is frozen) and the user perceives
+        // "no effect."  The raw `minutes` value is used (not effectiveShift)
+        // because effectiveShift may differ due to gap re-anchoring logic.
+        if anchorStep.status == .running {
+            anchorStep.flexibleWindowEnd = (anchorStep.flexibleWindowEnd ?? anchorStep.plannedEnd)
+                .adding(minutes: minutes)
+        }
+
         bake.targetBakeDateTime = bake.sortedSteps.last?.plannedEnd ?? bake.targetBakeDateTime
     }
 }

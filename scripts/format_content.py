@@ -191,10 +191,46 @@ class ContentFormatter:
                 steps.append(stripped)
         return steps
 
-    def parse_steps(self, steps_text: str, parent_id: str) -> List[Dict[str, Any]]:
-        """Parse steps from markdown format to JSON format"""
+    def match_step_ingredients(self, ingredient_sections: list, step_name: str, step_type_raw: str) -> list:
+        """Return ingredient items for the given step by matching ingredient section titles.
+
+        Matching strategy (in priority order):
+        1. Exact case-insensitive match on section title == step name
+        2. Exact case-insensitive match on section title == step type title
+        3. Section title contains step name (or vice-versa)
+        If no subsection matches, returns an empty list (section hidden in UI).
+        """
+        # Only attempt matching when subsections exist (title non-empty)
+        named_sections = [s for s in ingredient_sections if s.get('title', '').strip()]
+        if not named_sections:
+            return []
+
+        step_name_lower = step_name.lower()
+        step_type_lower = step_type_raw.lower()
+        step_type_title_lower = STEP_TITLES.get(step_type_raw, '').lower()
+
+        for section in named_sections:
+            title_lower = section['title'].lower()
+            if (title_lower == step_name_lower
+                    or title_lower == step_type_title_lower
+                    or step_name_lower in title_lower
+                    or title_lower in step_name_lower):
+                return section.get('items', [])
+
+        return []
+
+    def parse_steps(self, steps_text: str, parent_id: str, ingredient_sections: list = None) -> List[Dict[str, Any]]:
+        """Parse steps from markdown format to JSON format.
+
+        Supported syntaxes:
+        - `- step_type | duration`
+        - `- step_type: Custom Label | duration`
+        """
         if not steps_text:
             raise ValidationError("Empty steps section")
+
+        if ingredient_sections is None:
+            ingredient_sections = []
 
         steps = []
         # Use a deterministic namespace for steps
@@ -205,13 +241,15 @@ class ContentFormatter:
             if not line or not line.startswith('-'):
                 continue
 
-            # Parse format: - step_type | duration
-            match = re.match(r'-\s*(\S+)\s*\|\s*(\d+)', line)
+            # Parse formats:
+            # - step_type | duration
+            # - step_type: Custom Label | duration
+            match = re.match(r'-\s*([^:|\s]+)(?:\s*:\s*(.+?))?\s*\|\s*(\d+)\s*$', line)
             if not match:
                 self.warnings.append(f"Could not parse step line: {line}")
                 continue
 
-            step_type_md, duration_str = match.groups()
+            step_type_md, explicit_name, duration_str = match.groups()
 
             # Map to Swift enum rawValue
             if step_type_md not in STEP_TYPE_MAPPING:
@@ -219,21 +257,25 @@ class ContentFormatter:
 
             step_type_raw = STEP_TYPE_MAPPING[step_type_md]
             duration = int(duration_str)
+            step_name = explicit_name.strip() if explicit_name else STEP_TITLES.get(step_type_raw, 'Fase personalizzata')
 
             # Generate stable step ID
-            step_seed = f"{parent_id}-{step_type_raw}-{i}"
+            step_seed = f"{parent_id}-{step_type_raw}-{step_name}-{i}"
             step_uuid = str(uuid.uuid5(step_namespace, step_seed)).upper()
+
+            step_ingredients = self.match_step_ingredients(ingredient_sections, step_name, step_type_raw)
 
             step = {
                 'id': step_uuid,
-                'name': STEP_TITLES.get(step_type_raw, 'Fase personalizzata'),
+                'name': step_name,
                 'typeRaw': step_type_raw,
                 'durationMinutes': duration,
                 'details': '',
                 'notes': '',
                 'reminderOffsetMinutes': 0,
                 'temperatureRange': '',
-                'volumeTarget': ''
+                'volumeTarget': '',
+                'ingredients': step_ingredients
             }
             steps.append(step)
 
@@ -289,22 +331,22 @@ class ContentFormatter:
         formula_namespace = uuid.UUID('f00d0000-0000-0000-0000-000000000000')
         formula_uuid = str(uuid.uuid5(formula_namespace, frontmatter['id'])).upper()
 
-        # Extract and parse steps
+        # Extract ingredients and bake instructions (needed before parse_steps for ingredient mapping)
+        ingredients_text = self.extract_ingredients_section(body)
+        baking_text = self.extract_bake_section(body)
+        procedure_sections = self.extract_procedure_sections(body)
+
+        # Extract and parse steps (pass ingredient sections so step-level ingredients can be matched)
         steps_text = self.extract_steps_section(body)
         if not steps_text:
             raise ValidationError(f"{file_path.name}: No ## Steps section found")
 
-        steps = self.parse_steps(steps_text, formula_uuid)
+        steps = self.parse_steps(steps_text, formula_uuid, ingredient_sections=ingredients_text)
 
         # Calculate salt weight
         total_flour = frontmatter['total_flour_weight']
         salt_percent = frontmatter['salt_percent']
         salt_weight = round(total_flour * salt_percent / 100, 1)
-
-        # Extract ingredients and bake instructions
-        ingredients_text = self.extract_ingredients_section(body)
-        baking_text = self.extract_bake_section(body)
-        procedure_sections = self.extract_procedure_sections(body)
 
         # Mapping logic: try to fill step details from procedure sections
         for step in steps:

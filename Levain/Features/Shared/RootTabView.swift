@@ -17,10 +17,6 @@ struct RootTabView: View {
             if let banner = environment.banner {
                 VStack(spacing: 0) {
                     ToastBannerView(message: banner.message)
-                    Color.clear
-                        .frame(width: 1, height: 1)
-                        .accessibilityIdentifier("ToastBannerProbe")
-                        .accessibilityLabel(banner.message)
                 }
                 .padding(.horizontal, 16)
                 .padding(.top, 12)
@@ -44,9 +40,56 @@ struct RootTabView: View {
         .onOpenURL { url in
             router.open(url: url, modelContext: modelContext)
         }
-        .sheet(isPresented: $router.showingKnowledge) {
+    }
+
+    private var tabs: some View {
+        TabView(selection: $router.selectedTab) {
+            NavigationStack {
+                TodayView()
+            }
+            .toolbarColorScheme(.light, for: .navigationBar)
+            .toolbarBackground(Theme.Surface.app, for: .navigationBar)
+            .toolbarBackground(.visible, for: .navigationBar)
+            .tabItem {
+                Label("Home", systemImage: "house.fill")
+            }
+            .tag(RootTab.oggi)
+
+            NavigationStack(path: $router.fermentationsPath) {
+                FermentationsView()
+                    .navigationDestination(for: FermentationsRoute.self) { route in
+                        switch route {
+                        case .breadHub:
+                            BreadHubView()
+                        case .kefirHub:
+                            KefirHubView()
+                        case .bakesList:
+                            BakesView()
+                        case .formulaList:
+                            FormulaListView()
+                        case .starterList:
+                            StarterView()
+                        case let .bake(id):
+                            BakeLookupView(id: id)
+                        case let .formula(id):
+                            FormulaLookupView(id: id)
+                        case let .starter(id):
+                            StarterLookupView(id: id)
+                        case .kefirBatch:
+                            KefirBatchLookupView(id: route.kefirBatchID)
+                        }
+                    }
+            }
+            .toolbarColorScheme(.light, for: .navigationBar)
+            .toolbarBackground(Theme.Surface.app, for: .navigationBar)
+            .toolbarBackground(.visible, for: .navigationBar)
+            .tabItem {
+                Label("Batch", systemImage: "square.grid.2x2.fill")
+            }
+            .tag(RootTab.fermentations)
+
             NavigationStack(path: $router.knowledgePath) {
-                KnowledgeView()
+                KnowledgeView(library: environment.knowledgeLibrary)
                     .navigationDestination(for: KnowledgeRoute.self) { route in
                         switch route {
                         case let .article(id):
@@ -57,58 +100,10 @@ struct RootTabView: View {
             .toolbarColorScheme(.light, for: .navigationBar)
             .toolbarBackground(Theme.Surface.app, for: .navigationBar)
             .toolbarBackground(.visible, for: .navigationBar)
-        }
-    }
-
-    private var tabs: some View {
-        TabView(selection: $router.selectedTab) {
-            TodayView()
-                .tabItem {
-                    Label("Home", systemImage: "house.fill")
-                }
-                .tag(RootTab.today)
-
-            NavigationStack(path: $router.bakesPath) {
-                BakesView()
-                    .navigationDestination(for: BakesRoute.self) { route in
-                        switch route {
-                        case let .bake(id):
-                            BakeLookupView(id: id)
-                        case let .formula(id):
-                            FormulaLookupView(id: id)
-                        case .formulaList:
-                            FormulaListView()
-                        }
-                    }
-            }
-            .toolbarColorScheme(.light, for: .navigationBar)
-            .toolbarBackground(Theme.Surface.app, for: .navigationBar)
-            .toolbarBackground(.visible, for: .navigationBar)
             .tabItem {
-                Image("navbar-bake")
-                    .renderingMode(.template)
-                Text("Impasti")
+                Label("Guide", systemImage: "book.fill")
             }
-            .tag(RootTab.bakes)
-
-            NavigationStack(path: $router.starterPath) {
-                StarterView()
-                    .navigationDestination(for: StarterRoute.self) { route in
-                        switch route {
-                        case let .detail(id):
-                            StarterLookupView(id: id)
-                        }
-                    }
-            }
-            .toolbarColorScheme(.light, for: .navigationBar)
-            .toolbarBackground(Theme.Surface.app, for: .navigationBar)
-            .toolbarBackground(.visible, for: .navigationBar)
-            .tabItem {
-                Image("navbar-starter")
-                    .renderingMode(.template)
-                Text("Starter")
-            }
-            .tag(RootTab.starter)
+            .tag(RootTab.knowledge)
         }
         .tint(Theme.Control.tabActiveTint)
         .toolbarColorScheme(.light, for: .tabBar)
@@ -183,8 +178,6 @@ struct RootTabView: View {
             }
 
             if authorizationState == .denied {
-                // Mark the bootstrap as handled so a denied state does not force
-                // another startup-time notification pass on every launch.
                 if appSettings.lastNotificationSync == nil {
                     appSettings.lastNotificationSync = .now
                     try? modelContext.save()
@@ -194,6 +187,8 @@ struct RootTabView: View {
         }
     }
 }
+
+// MARK: - Lookup helpers (reusable across tab navigation destinations)
 
 private struct BakeLookupView: View {
     @Environment(\.modelContext) private var modelContext
@@ -289,6 +284,41 @@ private struct KnowledgeLookupView: View {
         .task {
             environment.knowledgeLibrary.loadIfNeeded()
         }
+    }
+}
+
+private struct KefirBatchLookupView: View {
+    @Environment(\.modelContext) private var modelContext
+
+    let id: UUID
+
+    @State private var batch: KefirBatch?
+
+    var body: some View {
+        Group {
+            if let batch {
+                KefirBatchDetailView(batch: batch)
+            } else {
+                ContentUnavailableView("Batch non trovato", systemImage: "exclamationmark.triangle")
+            }
+        }
+        .task(id: id) {
+            batch = load()
+        }
+    }
+
+    private func load() -> KefirBatch? {
+        let descriptor = FetchDescriptor<KefirBatch>(predicate: #Predicate { $0.id == id })
+        return try? modelContext.fetch(descriptor).first
+    }
+}
+
+private extension FermentationsRoute {
+    var kefirBatchID: UUID {
+        guard case .kefirBatch(let id) = self else {
+            preconditionFailure("Expected kefir batch route")
+        }
+        return id
     }
 }
 

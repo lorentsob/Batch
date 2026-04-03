@@ -64,10 +64,6 @@ struct ActiveStepHeroCard: View {
 
                 LiveTimerBlock(step: step, now: now, appearance: appearance)
 
-                if let onQuickShift, let onCustomShift, phase == .running || phase == .overdue {
-                    StepQuickShiftStrip(onShift: onQuickShift, onCustom: onCustomShift)
-                }
-
                 VStack(spacing: 10) {
                     Button(primaryActionTitle) {
                         onPrimaryAction()
@@ -87,6 +83,10 @@ struct ActiveStepHeroCard: View {
                             .buttonStyle(SecondaryActionButtonStyle())
                         }
                     }
+                }
+
+                if let onQuickShift, let onCustomShift, phase == .running || phase == .overdue {
+                    StepQuickShiftStrip(onShift: onQuickShift, onCustom: onCustomShift)
                 }
             }
             .padding(20)

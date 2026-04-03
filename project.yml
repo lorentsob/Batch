@@ -19,7 +19,7 @@ targets:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.lorentso.levain
         PRODUCT_NAME: Levain
-        INFOPLIST_KEY_CFBundleDisplayName: Levain
+        INFOPLIST_KEY_CFBundleDisplayName: Batch
         GENERATE_INFOPLIST_FILE: YES
         INFOPLIST_KEY_UILaunchScreen_Generation: YES
         ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon

@@ -1,3 +1,8 @@
+---
+description: 
+alwaysApply: true
+---
+
 # CLAUDE.md — Levain
 
 This file is the single source of context for AI-assisted development of Levain. It is derived from `docs/levain-prd-complete-v2.md`, the `.planning/` folder, and the current state of the codebase.
@@ -306,10 +311,11 @@ All files exist but views are stubs. The following is production-quality scaffol
 Full reference: `docs/levain-ios-git-workflow.md`
 
 ### Branch discipline
-- **Never commit or push directly to `main`.** All work goes through feature branches + PR.
+- **Never commit or push directly to `main` or `develop`.** All work goes through feature branches + PR targeting `develop`.
 - **One branch = one objective.** A branch must not mix feature + bugfix + refactor. If the scope drifts, stop and split.
 - **Branch naming:** `feature/`, `fix/`, `refactor/`, `chore/`, `docs/`, `test/` + descriptive slug (e.g. `feature/sourdough-timer`, `fix/recipe-detail-crash`).
-- **Start every branch from an up-to-date `main`:** `git switch main && git pull origin main && git switch -c <branch>`.
+- **Start every branch from an up-to-date `develop`:** `git switch develop && git pull origin develop && git switch -c <branch>`.
+- **`develop` → `main`** only when the milestone is stable and ready for production.
 
 ### Commits
 - Small, focused, descriptive commits. No `"fix stuff"` or `"updates"`.
@@ -317,10 +323,13 @@ Full reference: `docs/levain-ios-git-workflow.md`
 - **Build verification:** run `xcodebuild` build before pushing. If the build fails, do not push.
 
 ### Pull Requests
-- Every branch merges via **PR to `main`** — no exceptions, even for small changes.
+- Every branch merges via **PR to `develop`** — no exceptions, even for small changes.
 - PR must include: what changed, why, how to test, risks.
-- **Squash merge** on PRs to keep `main` history clean (one commit per feature/fix).
-- After merge: delete the remote branch, switch to `main`, pull.
+- **Squash merge** on PRs to keep history clean (one commit per feature/fix).
+- After merge: delete the remote branch, switch to `develop`, pull.
+
+### CI cache — periodic clean build
+The CI caches DerivedData keyed on Swift sources + `project.yml`. This speeds up incremental builds but can accumulate stale state. **Every ~20 PRs** (or when CI passes locally but fails remotely for no clear reason), force a clean build by temporarily adding a suffix to the cache key in `.github/workflows/ios-ci.yml`, then reverting it after the run.
 
 ### Pre-PR checklist
 1. Branch has a single clear scope

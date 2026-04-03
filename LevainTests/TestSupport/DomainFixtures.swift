@@ -42,6 +42,61 @@ enum DomainFixtures {
             formula: actualFormula
         )
     }
+
+    static func makeKefirBatch(
+        name: String = "Batch kefir principale",
+        storageMode: KefirStorageMode = .roomTemperature,
+        lastManagedAt: Date = .now,
+        expectedRoutineHours: Int? = nil,
+        sourceBatchId: UUID? = nil,
+        useLabel: String = "",
+        notes: String = "",
+        differentiationNote: String = "",
+        plannedReactivationAt: Date? = nil,
+        archivedAt: Date? = nil,
+        alertsEnabled: Bool = true
+    ) -> KefirBatch {
+        KefirBatch(
+            name: name,
+            createdAt: lastManagedAt,
+            lastManagedAt: lastManagedAt,
+            expectedRoutineHours: expectedRoutineHours,
+            storageMode: storageMode,
+            alertsEnabled: alertsEnabled,
+            sourceBatchId: sourceBatchId,
+            useLabel: useLabel,
+            notes: notes,
+            differentiationNote: differentiationNote,
+            plannedReactivationAt: plannedReactivationAt,
+            archivedAt: archivedAt
+        )
+    }
+
+    static func makeKefirEvent(
+        batchID: UUID = UUID(),
+        createdAt: Date = .now,
+        kind: KefirEventKind = .created,
+        relatedBatchID: UUID? = nil,
+        relatedBatchName: String? = nil,
+        note: String = "",
+        previousStorageMode: KefirStorageMode? = nil,
+        storageMode: KefirStorageMode? = nil,
+        expectedRoutineHours: Int? = nil,
+        plannedReactivationAt: Date? = nil
+    ) -> KefirEvent {
+        KefirEvent(
+            batchID: batchID,
+            createdAt: createdAt,
+            kind: kind,
+            relatedBatchID: relatedBatchID,
+            relatedBatchName: relatedBatchName,
+            note: note,
+            previousStorageMode: previousStorageMode,
+            storageMode: storageMode,
+            expectedRoutineHours: expectedRoutineHours,
+            plannedReactivationAt: plannedReactivationAt
+        )
+    }
 }
 
 extension Date {
