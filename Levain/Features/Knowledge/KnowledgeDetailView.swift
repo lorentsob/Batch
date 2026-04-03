@@ -45,6 +45,7 @@ struct KnowledgeDetailView: View {
             .padding(.vertical, 24)
             .padding(.bottom, 64)
         }
+        .accessibilityIdentifier("KnowledgeDetailView")
         .background(Theme.background.ignoresSafeArea())
         .navigationTitle("")
         .navigationBarTitleDisplayMode(.inline)

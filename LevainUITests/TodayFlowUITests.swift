@@ -2,6 +2,8 @@ import XCTest
 
 @MainActor
 final class TodayFlowUITests: XCTestCase {
+    private let seededMainKefirBatchID = "11111111-1111-1111-1111-111111111111"
+
     override func setUpWithError() throws {
         continueAfterFailure = false
     }
@@ -30,8 +32,8 @@ final class TodayFlowUITests: XCTestCase {
         app.launchSeeded(scenario: "futureOnly")
 
         XCTAssertTrue(app.scrollViews["TodayScrollView"].waitForExistence(timeout: 8))
-        XCTAssertTrue(app.staticTexts["La prossima cosa da seguire è già programmata."].waitForExistence(timeout: 5))
-        XCTAssertTrue(app.buttons["Vai a Starter"].waitForExistence(timeout: 5))
+        XCTAssertTrue(app.staticTexts["Prossima attività"].waitForExistence(timeout: 5))
+        XCTAssertTrue(app.buttons["Vai a Preparazioni"].waitForExistence(timeout: 5))
     }
 
     func testTodaySeededLaunchShowsOperationalContent() throws {
@@ -40,7 +42,24 @@ final class TodayFlowUITests: XCTestCase {
 
         XCTAssertTrue(app.scrollViews["TodayScrollView"].waitForExistence(timeout: 8))
         XCTAssertTrue(app.staticTexts["Infornata del weekend"].waitForExistence(timeout: 5))
-        XCTAssertTrue(app.staticTexts["Da fare"].waitForExistence(timeout: 5))
+        // Operational card is visible via domain cue (Pane) or urgency label (In ritardo / Da fare / Oggi)
+        let hasDomainCue = app.staticTexts["Pane"].exists
+        let hasActionButton = app.buttons["Avvia fase"].exists || app.buttons["Completa fase"].exists
+        XCTAssertTrue(hasDomainCue || hasActionButton)
+    }
+
+    func testTodaySeededLaunchCanOpenKefirBatchFromAgenda() throws {
+        let app = XCUIApplication()
+        app.launchSeeded()
+
+        XCTAssertTrue(app.scrollViews["TodayScrollView"].waitForExistence(timeout: 8))
+
+        let kefirRow = app.buttons["TodayKefirRow-\(seededMainKefirBatchID)"]
+        XCTAssertTrue(scrollUntilVisible(kefirRow, in: app))
+        kefirRow.tap()
+
+        XCTAssertTrue(app.descendants(matching: .any).matching(identifier: "KefirBatchDetailView").firstMatch.waitForExistence(timeout: 8))
+        XCTAssertTrue(app.staticTexts["Batch kefir cucina"].waitForExistence(timeout: 8))
     }
 
     func testTodayOperationalCardCanTransitionFromUpcomingToRunning() throws {
@@ -57,7 +76,7 @@ final class TodayFlowUITests: XCTestCase {
         }
 
         XCTAssertTrue(completeButton.waitForExistence(timeout: 5))
-        XCTAssertTrue(app.buttons["Dettaglio"].exists)
+        XCTAssertTrue(app.buttons["Procedimento"].exists)
     }
 
     func testStarterReminderDisappearsAfterRefreshSave() throws {
@@ -75,5 +94,24 @@ final class TodayFlowUITests: XCTestCase {
 
         XCTAssertTrue(app.scrollViews["TodayScrollView"].waitForExistence(timeout: 5))
         XCTAssertFalse(app.buttons["Rinfresca"].firstMatch.exists)
+    }
+
+    private func scrollUntilVisible(
+        _ element: XCUIElement,
+        in app: XCUIApplication,
+        maxSwipes: Int = 4
+    ) -> Bool {
+        if element.exists {
+            return true
+        }
+
+        for _ in 0..<maxSwipes {
+            app.swipeUp()
+            if element.exists {
+                return true
+            }
+        }
+
+        return element.exists
     }
 }

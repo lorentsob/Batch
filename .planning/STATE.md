@@ -2,67 +2,63 @@
 
 ## Project Reference
 
-See: .planning/PROJECT.md (updated 2026-03-14)
+See: .planning/PROJECT.md (updated 2026-04-03)
 
-**Core value:** The app must make the next baking action obvious without adding setup, infrastructure, or workflow friction.
-**Current focus:** Phase 15 memory durability is implemented and locally verified; the remaining work is manual device upgrade and backup round-trip UAT.
+**Core value:** The app must make the next fermentation action obvious without adding setup, infrastructure, or workflow friction.
+**Current focus:** Phase 22 now owns optional culture/grain tracking plus kefir-aware knowledge expansion after Phase 21 closed through `21-01` render-path hardening, `21-02` state-ownership cleanup, and `21-03` persistence/planning sync.
 
 ## Current Position
 
-Phase: 15 of 15 (Memory Durability & System Content Separation)
-Plan: 3 of 3 executed in current phase
-Status: In Progress — implementation and local automated verification complete, manual device checks pending
-Last activity: 2026-03-14 — Phase 15 unit, Swift Testing, and serial UI verification completed locally; device UAT checklist still pending
+Phase: 22 of 22 (Culture Tracking & Knowledge Expansion)
+Plan: 0 of 3 executed in current phase
+Status: Ready — Phase 21 is complete in code, targeted regression coverage, and planning memory; the remaining milestone work is the optional culture/knowledge expansion wave
+Last activity: 2026-04-03 — completed `21-03` with explicit `ModelContainerFactory` failure surfacing, safe starter reminder routing, and refreshed active/codebase docs
 
-Progress: [██████████████░] 93% (14 of 15 phases complete)
+Progress: [█████████████████░░] 86% (18 of 21 v2 plans complete)
 
 ## Performance Metrics
 
-- Total plans planned: 43
-- Total plans completed: 43
-- Average duration: N/A
-- Total execution time: N/A
+- Historical plans completed (archived v1): 43
+- Current milestone plans planned: 21
+- Current milestone plans completed: 18
 
 | Phase | Plans Completed | Status |
 | ----- | --------------- | ------ |
-| 1 | 3/3 | Complete |
-| 2 | 3/3 | Complete |
-| 3 | 3/3 | Complete |
-| 4 | 3/3 | Complete |
-| 5 | 3/3 | Complete |
-| 6 | 3/3 | Complete |
-| 7 | 3/3 | Complete |
-| 8 | 3/3 | Complete |
-| 9 | 3/3 | Complete |
-| 10 | 3/3 | Complete |
-| 11 | 3/3 | Complete |
-| 12 | 3/3 | Complete |
-| 13 | 3/3 | Complete |
-| 14 | 1/1 | Complete |
-| 15 | 3/3 | In Progress |
+| 17 | 4/4 | Complete |
+| 18 | 3/3 | Complete |
+| 19 | 4/4 | Complete |
+| 20 | 4/4 | Complete |
+| 21 | 3/3 | Complete |
+| 22 | 0/3 | Not started |
 
 **Recent Trend**
 
-- Last 5 plans: 13-03 complete, 14-01 complete, 15-01 complete, 15-02 complete, 15-03 complete
-- Trend: persistence hardening implemented and locally verified; only device durability UAT remains
+- Last completed plans: 21-01, 21-02, 21-03
+- Trend: Phase 21 closed cleanly by reducing repeated operational recomputation, consolidating Knowledge/kefir ownership, and restoring accurate project memory before the final scope wave
 
 ## Accumulated Context
 
 ### Recent decisions
 
-- Phase 15 planning: user data stays local-first in SwiftData, but persisted-model changes now require explicit schema versioning before commit
-- Phase 15 planning: persistent bootstrap must never auto-delete the on-disk store; failure falls back to in-memory only
-- Phase 15 planning: bundled knowledge and bundled system formulas remain read-only app content, while demo seed stays launch-option-only
-- Phase 15 planning: backup/restore is explicit replace-current-data JSON import, not background sync or merge logic
-- Phase 15 planning: CloudKit remains backlog and does not enter the MVP memory-hardening phase
+- `TodayView` now caches a revision-keyed `TodaySnapshot`, while `TodayAgendaBuilder` consumes `TodayAgendaBakeInput` values built from `Bake.OperationalSnapshot` so render paths stop repeatedly resorting bake steps
+- `RootTabView` owns the only Knowledge `NavigationStack`, `KnowledgeView` observes `KnowledgeLibrary` directly, and `KefirBatchPresentation.swift` now hosts shared lineage/presentation helpers used by detail, journal, archive, and comparison surfaces
+- `ModelContainerFactory` now surfaces explicit `FactoryError` cases for persistent, in-memory, and preview bootstrap failures instead of silently degrading, and `NotificationService.scheduleFridgeReminder` refuses to fabricate fake starter routes
+- `.planning` and `.planning/codebase` docs are synced to the shipped three-tab shell, V4 schema, kefir vertical, and current regression suites
+
+### Pending Todos
+
+- Plan and execute `22-01` culture and grain tracking surfaces
+- Execute `22-02` kefir-aware knowledge filters, content wiring, and contextual tips
+- Execute `22-03` cross-domain UAT, release notes, and milestone closure
 
 ### Blockers/Concerns
 
-- No code blocker is open.
-- Remaining risk is verification on real hardware: upgrade over existing data, backup round-trip, and fresh-launch bundled-template checks.
+- Culture/grain tracking must remain optional-first; kefir stays batch-first operationally
+- Notification deep links and denied-permission banners are regression-covered, but final production confidence still benefits from one on-device notification pass
+- No dedicated Instruments artifact was stored for `21-01`; performance confidence comes from eliminating repeated recomputation and keeping Today regressions green
 
 ## Session Continuity
 
-Last session: 2026-03-14
-Stopped at: Phase 15 verification report written; complete the real-device upgrade and backup UAT checklist next.
-Resume file: .planning/phases/15-memory-durability-content-separation/15-UAT.md
+Last session: 2026-04-03
+Stopped at: Closed Phase 21 through `21-03`; next work is Phase 22 planning/execution
+Resume file: None

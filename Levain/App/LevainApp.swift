@@ -30,7 +30,7 @@ struct LevainApp: App {
             }
             .task {
                 try? await Task.sleep(for: .seconds(1.3))
-                withAnimation(.easeOut(duration: 0.45)) {
+                withAnimation(.easeOut(duration: 0.8)) {
                     showSplash = false
                 }
             }
@@ -43,43 +43,33 @@ struct LevainApp: App {
 
 private struct SplashView: View {
     var body: some View {
-        ZStack {
-            Theme.Palette.green500
-                .ignoresSafeArea()
+        GeometryReader { geo in
+            ZStack {
+                Theme.Palette.green800
+                    .ignoresSafeArea()
 
-            VStack(spacing: 0) {
-                Spacer()
+                VStack(spacing: 28) {
+                    Image("AppLogo")
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: geo.size.width * 0.72)
+                        .shadow(color: Color.black.opacity(0.18), radius: 32, x: 0, y: 12)
 
-                VStack(spacing: 20) {
-                    ZStack {
-                        Circle()
-                            .fill(Color.white.opacity(0.15))
-                            .frame(width: 88, height: 88)
-
-                        Image(systemName: "drop.fill")
-                            .font(.system(size: 40, weight: .semibold))
+                    VStack(spacing: 10) {
+                        Text("Batch")
+                            .font(.system(size: 40, weight: .bold, design: .rounded))
                             .foregroundStyle(Color.white)
-                    }
+                            .kerning(-0.3)
 
-                    VStack(spacing: 8) {
-                        Text("Levain")
-                            .font(.system(size: 44, weight: .bold))
-                            .foregroundStyle(Color.white)
-                            .kerning(-0.5)
-
-                        Text("La lievitazione al tuo ritmo")
-                            .font(.subheadline)
-                            .foregroundStyle(Color.white.opacity(0.70))
+                        Text("Fermenti vivi")
+                            .font(.system(size: 17, weight: .regular))
+                            .foregroundStyle(Color.white.opacity(0.55))
+                            .kerning(0.3)
                     }
                 }
-
-                Spacer()
-
-                Text("Fatto in casa, con cura")
-                    .font(.caption)
-                    .foregroundStyle(Color.white.opacity(0.45))
-                    .padding(.bottom, 48)
+                .frame(maxWidth: .infinity)
             }
         }
+        .ignoresSafeArea()
     }
 }

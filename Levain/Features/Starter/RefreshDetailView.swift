@@ -77,7 +77,7 @@ struct RefreshDetailView: View {
 
                         if refresh.ambientTemp > 0 {
                             HStack {
-                                Text("Temperatura ambiente")
+                                Text("Fuori frigo")
                                     .foregroundStyle(Theme.ink)
                                 Spacer()
                                 Text("\(Int(refresh.ambientTemp))°C")

@@ -1,6 +1,7 @@
 import SwiftData
 import SwiftUI
 
+@MainActor
 struct BakeDetailView: View {
     @Environment(\.dismiss) private var dismiss
     @Environment(\.modelContext) private var modelContext
@@ -144,15 +145,24 @@ struct BakeDetailView: View {
         if step.status == .running {
             step.complete()
             stepCompletedTrigger.toggle()
-            if bake.derivedStatus == .completed {
-                environment.showBanner("Bake completato! Buona lievitazione 🎉", duration: 4)
-            }
         } else if step.isTerminal == false {
             step.start()
             stepStartedTrigger.toggle()
         }
 
-        persistAndSync()
+        if bake.derivedStatus == .completed {
+            router.fermentationsPath.removeAll()
+
+            let bakeID = bake.id
+            Task { @MainActor in
+                try? await Task.sleep(for: .milliseconds(300))
+                try? modelContext.save()
+                await environment.notificationService.syncNotifications(forBake: bakeID, in: modelContext)
+                environment.showBanner("Bake completato!", duration: 4)
+            }
+        } else {
+            persistAndSync()
+        }
     }
 
     private func shift(_ step: BakeStep, by minutes: Int) {
@@ -161,10 +171,12 @@ struct BakeDetailView: View {
     }
 
     private func persistAndSync() {
+        let bakeID = bake.id
         try? modelContext.save()
 
-        Task {
-            await environment.notificationService.syncNotifications(for: bake)
+        let ctx = modelContext
+        Task { @MainActor in
+            await environment.notificationService.syncNotifications(forBake: bakeID, in: ctx)
         }
     }
 
@@ -205,21 +217,15 @@ struct BakeDetailView: View {
             // deadlock caused by structural body changes while the view is live.
             // The bake moves to the archive section in BakesView.
             destructivePrompt = nil
-            router.bakesPath.removeAll()
+            router.fermentationsPath.removeAll()
 
             let bakeRef = bake
-            let ctx = modelContext
-            let env = environment
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+            Task { @MainActor in
+                try? await Task.sleep(for: .milliseconds(300))
                 bakeRef.isCancelled = true
-                try? ctx.save()
-
-                Task {
-                    await env.notificationService.resyncAll(using: ctx)
-                    await MainActor.run {
-                        env.showBanner("Bake annullato e spostato in archivio.", duration: 4)
-                    }
-                }
+                try? modelContext.save()
+                await environment.notificationService.resyncAll(using: modelContext)
+                environment.showBanner("Bake annullato e spostato in archivio.", duration: 4)
             }
 
         case .delete:
@@ -231,10 +237,10 @@ struct BakeDetailView: View {
     private func deleteBake() {
         modelContext.delete(bake)
         try? modelContext.save()
-        router.selectedTab = .bakes
-        router.bakesPath.removeAll()
+        router.selectedTab = .fermentations
+        router.fermentationsPath.removeAll()
 
-        Task {
+        Task { @MainActor in
             await environment.notificationService.resyncAll(using: modelContext)
         }
     }

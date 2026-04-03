@@ -241,4 +241,232 @@ struct TodayAgendaBuilderTests {
         #expect(snapshot.sections.values.allSatisfy { $0.isEmpty })
         #expect(snapshot.emptyState == .allClear)
     }
+
+    // MARK: - v2 Feed Ordering Contract
+
+    @Test("Feed items carry explicit domain and urgency metadata")
+    func testFeedItemsHaveDomainAndUrgency() {
+        let now = Date(timeIntervalSince1970: 1_000_000)
+
+        // duration 30 min → plannedEnd = now - 3600 + 1800 = now - 1800 → overdue
+        let bake = DomainFixtures.makeBake(name: "My bake", target: now.addingTimeInterval(3600 * 24))
+        let step = BakeStep(
+            orderIndex: 0,
+            type: .autolysis,
+            nameOverride: "Autolisi",
+            plannedStart: now.addingTimeInterval(-3600),
+            plannedDurationMinutes: 30,
+            bake: bake
+        )
+        bake.steps = [step]
+
+        let overdueStarter = DomainFixtures.makeStarter(
+            name: "Lievito",
+            refreshIntervalDays: 7,
+            lastRefresh: now.addingTimeInterval(-3600 * 24 * 8)
+        )
+
+        let snapshot = TodayAgendaBuilder.buildSnapshot(
+            bakes: [bake],
+            starters: [overdueStarter],
+            hasPersistedData: true,
+            now: now
+        )
+
+        let bakeItem = snapshot.feed.first { $0.domain == .pane }
+        let starterItem = snapshot.feed.first { $0.domain == .starter }
+        #expect(bakeItem != nil)
+        #expect(starterItem != nil)
+        #expect(bakeItem?.urgency == .overdue)
+        #expect(starterItem?.urgency == .overdue)
+    }
+
+    @Test("Feed is ordered overdue → warning → active → preview with no domain bias")
+    func testFeedCrossDomainOrdering() {
+        let now = Date(timeIntervalSince1970: 1_000_000)
+
+        // Overdue bread step (oldest overdue first)
+        let overdueBake = DomainFixtures.makeBake(name: "Overdue bread", target: now.addingTimeInterval(3600 * 24))
+        let overdueStep = BakeStep(
+            orderIndex: 0, type: .mix, nameOverride: "Mix",
+            plannedStart: now.addingTimeInterval(-7200),
+            plannedDurationMinutes: 30, bake: overdueBake
+        )
+        overdueBake.steps = [overdueStep]
+
+        // Overdue starter — should rank by sortDate tie-breaker vs overdue bread
+        let overdueStarter = DomainFixtures.makeStarter(
+            name: "Overdue starter",
+            refreshIntervalDays: 7,
+            lastRefresh: now.addingTimeInterval(-3600 * 24 * 9) // older overdue
+        )
+
+        // Active bread step today (not operationally urgent, not overdue)
+        let activeBake = DomainFixtures.makeBake(name: "Active bread", target: now.addingTimeInterval(3600 * 24))
+        let activeStep = BakeStep(
+            orderIndex: 0, type: .bulk, nameOverride: "Bulk",
+            plannedStart: now.addingTimeInterval(3600 * 2),
+            plannedDurationMinutes: 240, bake: activeBake
+        )
+        activeBake.steps = [activeStep]
+
+        let snapshot = TodayAgendaBuilder.buildSnapshot(
+            bakes: [activeBake, overdueBake],
+            starters: [overdueStarter],
+            hasPersistedData: true,
+            now: now
+        )
+
+        // All overdue items appear before active items
+        let overdueIndices = snapshot.feed.enumerated()
+            .filter { $0.element.urgency == .overdue }
+            .map(\.offset)
+        let activeIndices = snapshot.feed.enumerated()
+            .filter { $0.element.urgency == .active }
+            .map(\.offset)
+
+        #expect(overdueIndices.allSatisfy { oi in activeIndices.allSatisfy { ai in oi < ai } })
+    }
+
+    @Test("Overdue items are sorted oldest-first within the overdue tier")
+    func testOverdueTierSortedOldestFirst() {
+        let now = Date(timeIntervalSince1970: 1_000_000)
+
+        // Oldest overdue step: plannedEnd = now - 7200 + 1800 = now - 5400 < now
+        let oldBake = DomainFixtures.makeBake(name: "Old overdue", target: now.addingTimeInterval(3600 * 24))
+        let oldStep = BakeStep(
+            orderIndex: 0, type: .mix, nameOverride: "Mix",
+            plannedStart: now.addingTimeInterval(-7200),
+            plannedDurationMinutes: 30, bake: oldBake
+        )
+        oldBake.steps = [oldStep]
+
+        // Newer overdue step: plannedEnd = now - 3600 + 1800 = now - 1800 < now
+        let newBake = DomainFixtures.makeBake(name: "New overdue", target: now.addingTimeInterval(3600 * 24))
+        let newStep = BakeStep(
+            orderIndex: 0, type: .autolysis, nameOverride: "Autolisi",
+            plannedStart: now.addingTimeInterval(-3600),
+            plannedDurationMinutes: 30, bake: newBake
+        )
+        newBake.steps = [newStep]
+
+        let snapshot = TodayAgendaBuilder.buildSnapshot(
+            bakes: [newBake, oldBake],
+            starters: [],
+            hasPersistedData: true,
+            now: now
+        )
+
+        let overdueItems = snapshot.feed.filter { $0.urgency == .overdue }
+        #expect(overdueItems.count == 2)
+        #expect(overdueItems[0].title == "Old overdue")
+        #expect(overdueItems[1].title == "New overdue")
+    }
+
+    @Test("Feed sections backward-compat property maps urgency tiers correctly")
+    func testSectionsBackwardCompatDerivation() {
+        let now = Date(timeIntervalSince1970: 1_000_000)
+
+        let overdueBake = DomainFixtures.makeBake(name: "Overdue", target: now.addingTimeInterval(3600 * 24))
+        let overdueStep = BakeStep(
+            orderIndex: 0, type: .mix, nameOverride: "Mix",
+            plannedStart: now.addingTimeInterval(-3600),
+            plannedDurationMinutes: 30, bake: overdueBake
+        )
+        overdueBake.steps = [overdueStep]
+
+        let snapshot = TodayAgendaBuilder.buildSnapshot(
+            bakes: [overdueBake],
+            starters: [],
+            hasPersistedData: true,
+            now: now
+        )
+
+        // sections are derived from feed — overdue step should appear in .urgent
+        #expect(snapshot.sections[.urgent]?.isEmpty == false)
+        // feed and sections cover the same items
+        let feedCount = snapshot.feed.count
+        let sectionCount = snapshot.sections.values.reduce(0) { $0 + $1.count }
+        #expect(feedCount == sectionCount)
+    }
+
+    @Test("Overdue room-temperature kefir batch enters the feed as an overdue kefir item")
+    func testOverdueRoomTemperatureKefirItem() {
+        let now = Date.fixedNow
+        let batch = DomainFixtures.makeKefirBatch(
+            name: "Batch cucina",
+            storageMode: .roomTemperature,
+            lastManagedAt: now.addingTimeInterval(-(24 * 60 * 60))
+        )
+
+        let snapshot = TodayAgendaBuilder.buildSnapshot(
+            bakes: [],
+            starters: [],
+            kefirBatches: [batch],
+            hasPersistedData: true,
+            now: now
+        )
+
+        let item = snapshot.feed.first
+        #expect(snapshot.emptyState == .actionable)
+        #expect(item?.domain == .kefir)
+        #expect(item?.urgency == .overdue)
+        #expect(item?.section == .urgent)
+        if let item, case let .kefir(batchID) = item.kind {
+            #expect(batchID == batch.id)
+        } else {
+            Issue.record("Expected kefir agenda item")
+        }
+    }
+
+    @Test("Overdue fridge kefir batch stays softer than room-temperature overdue work")
+    func testOverdueFridgeKefirUsesWarningTier() {
+        let now = Date.fixedNow
+        let batch = DomainFixtures.makeKefirBatch(
+            name: "Backup frigo",
+            storageMode: .fridge,
+            lastManagedAt: now.addingTimeInterval(-(7 * 24 * 60 * 60))
+        )
+
+        let snapshot = TodayAgendaBuilder.buildSnapshot(
+            bakes: [],
+            starters: [],
+            kefirBatches: [batch],
+            hasPersistedData: true,
+            now: now
+        )
+
+        let item = snapshot.feed.first
+        #expect(item?.domain == .kefir)
+        #expect(item?.urgency == .warning)
+        #expect(item?.section == .scheduled)
+        #expect(item?.state == KefirBatchState.overdue.title)
+    }
+
+    @Test("Future preview can surface the next kefir reactivation")
+    func testFuturePreviewIncludesKefirBatch() {
+        let now = Date.fixedNow
+        let batch = DomainFixtures.makeKefirBatch(
+            name: "Scorta freezer",
+            storageMode: .freezer,
+            lastManagedAt: now.addingTimeInterval(-(14 * 24 * 60 * 60)),
+            plannedReactivationAt: now.addingTimeInterval(3 * 24 * 60 * 60)
+        )
+
+        let snapshot = TodayAgendaBuilder.buildSnapshot(
+            bakes: [],
+            starters: [],
+            kefirBatches: [batch],
+            hasPersistedData: true,
+            now: now
+        )
+
+        #expect(snapshot.emptyState == .futureOnly)
+        #expect(snapshot.futurePreview?.title == "Scorta freezer")
+        if let preview = snapshot.futurePreview, case let .kefir(batchID) = preview.kind {
+            #expect(batchID == batch.id)
+        } else {
+            Issue.record("Expected kefir future preview")
+        }
+    }
 }

@@ -6,7 +6,6 @@ struct StarterView: View {
     @Query(sort: \Starter.name) private var starters: [Starter]
 
     @State private var showingEditor = false
-    @State private var showingSettings = false
     @State private var editingStarter: Starter?
 
     var body: some View {
@@ -34,7 +33,7 @@ struct StarterView: View {
                     }
                 } else {
                     ForEach(starters) { starter in
-                        NavigationLink(value: StarterRoute.detail(starter.id)) {
+                        NavigationLink(value: FermentationsRoute.starter(starter.id)) {
                             StarterCardView(starter: starter)
                         }
                         .buttonStyle(.plain)
@@ -55,14 +54,6 @@ struct StarterView: View {
         .tint(Theme.Control.primaryFill)
         .accessibilityIdentifier("StarterScrollView")
         .toolbar {
-            ToolbarItem(placement: .topBarLeading) {
-                Button {
-                    showingSettings = true
-                } label: {
-                    Image(systemName: "gearshape")
-                }
-                .accessibilityIdentifier("StarterSettingsButton")
-            }
             ToolbarItem(placement: .topBarTrailing) {
                 Button {
                     editingStarter = nil
@@ -76,11 +67,6 @@ struct StarterView: View {
         .sheet(isPresented: $showingEditor) {
             NavigationStack {
                 StarterEditorView(starter: editingStarter)
-            }
-        }
-        .sheet(isPresented: $showingSettings) {
-            NavigationStack {
-                SettingsView()
             }
         }
     }

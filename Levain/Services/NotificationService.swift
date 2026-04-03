@@ -16,6 +16,7 @@ private struct NotificationSyncPlan: Sendable {
 }
 
 private enum NotificationScheduler {
+    @MainActor
     static func apply(_ plans: [NotificationSyncPlan]) async {
         let center = UNUserNotificationCenter.current()
 
@@ -112,17 +113,31 @@ final class NotificationService: NSObject, ObservableObject, UNUserNotificationC
     func resyncAll(using modelContext: ModelContext) async {
         let bakes = (try? modelContext.fetch(FetchDescriptor<Bake>())) ?? []
         let starters = (try? modelContext.fetch(FetchDescriptor<Starter>())) ?? []
+        let kefirBatches = (try? modelContext.fetch(FetchDescriptor<KefirBatch>())) ?? []
 
-        let plans = bakes.map(makeSyncPlan(for:)) + starters.map(makeSyncPlan(for:))
+        let plans =
+            bakes.map { makeSyncPlan(for: $0) } +
+            starters.map { makeSyncPlan(for: $0) } +
+            kefirBatches.map { makeSyncPlan(for: $0) }
         await NotificationScheduler.apply(plans)
     }
 
-    func syncNotifications(for bake: Bake) async {
+    func syncNotifications(forBake bakeID: UUID, in context: ModelContext) async {
+        let descriptor = FetchDescriptor<Bake>(predicate: #Predicate { $0.id == bakeID })
+        guard let bake = (try? context.fetch(descriptor))?.first else { return }
         await NotificationScheduler.apply([makeSyncPlan(for: bake)])
     }
 
-    func syncNotifications(for starter: Starter) async {
+    func syncNotifications(forStarter starterID: UUID, in context: ModelContext) async {
+        let descriptor = FetchDescriptor<Starter>(predicate: #Predicate { $0.id == starterID })
+        guard let starter = (try? context.fetch(descriptor))?.first else { return }
         await NotificationScheduler.apply([makeSyncPlan(for: starter)])
+    }
+
+    func syncNotifications(forKefirBatch batchID: UUID, in context: ModelContext) async {
+        let descriptor = FetchDescriptor<KefirBatch>(predicate: #Predicate { $0.id == batchID })
+        guard let batch = (try? context.fetch(descriptor))?.first else { return }
+        await NotificationScheduler.apply([makeSyncPlan(for: batch)])
     }
 
     nonisolated func userNotificationCenter(
@@ -144,6 +159,11 @@ final class NotificationService: NSObject, ObservableObject, UNUserNotificationC
     func scheduleFridgeReminder(for refresh: StarterRefresh, starterName: String) async {
         let fireDate = refresh.dateTime.adding(minutes: 180) // 3 hours after refresh
         guard fireDate > Date.now else { return }
+        guard let route = fridgeReminderRoute(for: refresh) else {
+            assertionFailure("Unable to schedule fridge reminder without a real starter route")
+            await cancelFridgeReminder(for: refresh)
+            return
+        }
 
         let plan = NotificationSyncPlan(
             identifiersToRemove: [],
@@ -152,7 +172,7 @@ final class NotificationService: NSObject, ObservableObject, UNUserNotificationC
                     identifier: fridgeReminderIdentifier(refresh.id),
                     title: starterName,
                     body: "Sono passate 3 ore dal rinfresco. Vuoi mettere lo starter in frigo?",
-                    route: AppRouter.DeepLink.starter(id: refresh.starter?.id ?? UUID()),
+                    route: route,
                     fireDate: fireDate
                 )
             ]
@@ -168,6 +188,11 @@ final class NotificationService: NSObject, ObservableObject, UNUserNotificationC
     private func fridgeReminderIdentifier(_ id: UUID) -> String { "refresh-fridge-\(id.uuidString)" }
     private func dueIdentifier(_ id: UUID) -> String { "starter-due-\(id.uuidString)" }
     private func followUpIdentifier(_ id: UUID) -> String { "starter-followup-\(id.uuidString)" }
+
+    func fridgeReminderRoute(for refresh: StarterRefresh) -> String? {
+        guard let starterID = refresh.starter?.id else { return nil }
+        return AppRouter.DeepLink.starter(id: starterID)
+    }
 
     private func makeSyncPlan(for bake: Bake) -> NotificationSyncPlan {
         NotificationSyncPlan(
@@ -188,6 +213,21 @@ final class NotificationService: NSObject, ObservableObject, UNUserNotificationC
         NotificationSyncPlan(
             identifiersToRemove: [dueIdentifier(starter.id), followUpIdentifier(starter.id)],
             requests: StarterReminderPlanner.planReminders(for: starter).map { reminder in
+                NotificationRequestPayload(
+                    identifier: reminder.identifier,
+                    title: reminder.title,
+                    body: reminder.body,
+                    route: reminder.route,
+                    fireDate: reminder.fireDate
+                )
+            }
+        )
+    }
+
+    private func makeSyncPlan(for batch: KefirBatch) -> NotificationSyncPlan {
+        NotificationSyncPlan(
+            identifiersToRemove: KefirReminderPlanner.identifiers(for: batch),
+            requests: KefirReminderPlanner.planReminders(for: batch).map { reminder in
                 NotificationRequestPayload(
                     identifier: reminder.identifier,
                     title: reminder.title,

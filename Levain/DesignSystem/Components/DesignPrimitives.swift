@@ -121,6 +121,30 @@ struct SecondaryActionButtonStyle: ButtonStyle {
     }
 }
 
+// MARK: - Destructive Outline Button
+// Red border + red text, transparent bg — reversible destructive actions (archive, remove)
+// Distinct from DangerActionButtonStyle (solid red) which is for urgent/irreversible actions
+
+struct DestructiveOutlineButtonStyle: ButtonStyle {
+    func makeBody(configuration: Configuration) -> some View {
+        configuration.label
+            .font(.subheadline.weight(.semibold))
+            .foregroundStyle(Theme.Control.dangerFill)
+            .frame(maxWidth: .infinity)
+            .padding(.vertical, 13)
+            .background(
+                RoundedRectangle(cornerRadius: Theme.Radius.compact, style: .continuous)
+                    .fill(Color.clear)
+            )
+            .overlay(
+                RoundedRectangle(cornerRadius: Theme.Radius.compact, style: .continuous)
+                    .stroke(Theme.Control.dangerFill, lineWidth: 1.5)
+            )
+            .scaleEffect(configuration.isPressed ? 0.99 : 1)
+            .animation(.easeOut(duration: 0.15), value: configuration.isPressed)
+    }
+}
+
 // MARK: - Danger Action Button
 // Solid red fill, white text — destructive actions and overdue primary CTAs
 // v2.0: was errorLight bg + error text (outlined danger) — updated to solid fill for visual weight

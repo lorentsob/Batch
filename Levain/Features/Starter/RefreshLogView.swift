@@ -1,6 +1,7 @@
 import SwiftUI
 import SwiftData
 
+@MainActor
 struct RefreshLogView: View {
     @Environment(\.dismiss) private var dismiss
     @Environment(\.modelContext) private var modelContext
@@ -42,7 +43,7 @@ struct RefreshLogView: View {
             Section("Dettagli") {
                 DatePicker("Quando", selection: $dateTime)
                 TextField("Rapporto", text: $ratioText)
-                NumericField(title: "Temperatura ambiente (°C)", value: $ambientTemp)
+                NumericField(title: "Fuori frigo (°C)", value: $ambientTemp)
             }
 
             Section("Mix Farine") {
@@ -135,8 +136,10 @@ struct RefreshLogView: View {
         modelContext.insert(refresh)
         try? modelContext.save()
 
+        let starterID = starter.id
+        let ctx = modelContext
         Task {
-            await environment.notificationService.syncNotifications(for: starter)
+            await environment.notificationService.syncNotifications(forStarter: starterID, in: ctx)
             if !recordFridgeTime {
                 await environment.notificationService.scheduleFridgeReminder(for: refresh, starterName: starter.name)
             }

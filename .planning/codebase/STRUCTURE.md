@@ -5,6 +5,9 @@
 ```text
 lievito-app/
 ├── .planning/
+│   ├── codebase/
+│   ├── milestones/
+│   └── phases/
 ├── Levain/
 │   ├── App/
 │   ├── Assets.xcassets/
@@ -17,50 +20,55 @@ lievito-app/
 ├── LevainTests/
 ├── LevainUITests/
 ├── docs/
-│   ├── UX-SPEC.md
-│   ├── levain-knowledge.md
-│   └── levain-prd-complete-v2.md
-└── project.yml
+└── Levain.xcodeproj
 ```
 
 ## Important Directories
 
-**Levain/**
+**`.planning/`**
 
-- Native iOS source tree for the only app target
-- Key files: `App/LevainApp.swift`, `Persistence/ModelContainerFactory.swift`, `Features/Shared/RootTabView.swift`
+- Active project memory: `STATE.md`, `ROADMAP.md`, `PROJECT.md`, `REQUIREMENTS.md`
+- Codebase snapshots live in `.planning/codebase/`
+- Per-phase plans and summaries live in `.planning/phases/`
 
-**LevainTests/**
+**`Levain/`**
 
-- Unit tests for scheduling and derived model logic
+- Only application target source tree
+- Key entry points: `App/LevainApp.swift`, `App/AppRouter.swift`, `Features/Shared/RootTabView.swift`, `Persistence/ModelContainerFactory.swift`
 
-**LevainUITests/**
+**`LevainTests/`**
 
-- UI smoke tests for app launch and core shell behavior
+- Unit and integration coverage for routing, scheduling, persistence, seeding, knowledge lookup, and kefir domain logic
 
-**docs/**
+**`LevainUITests/`**
+
+- Deterministic launch-harness UI regressions for `Oggi`, `Preparazioni`, Knowledge, kefir flows, and notification routing
+
+**`docs/`**
 
 - Product source material and UX references
-- `levain-prd-complete-v2.md` is the planning scope source
-- `levain-knowledge.md` is the editorial source for bundled knowledge items
+- Current v2 scope lives primarily in `levain-prd-v2-multi-fermentations.md` plus `levain-prd-v2-addendum.md`
+- `levain-knowledge.md` remains the editorial source for bundled knowledge content
 
 ## Feature Areas
 
-- `Levain/Features/Today/` - Today screen and action prioritization
-- `Levain/Features/Bakes/` - formulas, bake creation, step execution, timers, timeline shift
+- `Levain/Features/Shared/` - root shell, banners, shared UI helpers
+- `Levain/Features/Today/` - cross-domain operational dashboard
+- `Levain/Features/Preparations/` - root domain hubs and quick actions
+- `Levain/Features/Bakes/` - formulas, bake creation, execution, timers, timeline shifting
 - `Levain/Features/Starter/` - starter CRUD, refresh log flow, starter detail
-- `Levain/Features/Knowledge/` - article browsing
-- `Levain/Features/Shared/` - root tab shell and contextual tips
+- `Levain/Features/Kefir/` - batch-first kefir hub, detail, management, journal, archive, comparison, presentation helpers
+- `Levain/Features/Knowledge/` - bundled article browsing and detail
 
 ## Code Ownership Boundaries
 
 - Domain entities: `Levain/Models/`
-- Business logic: `Levain/Services/`
-- Local persistence setup: `Levain/Persistence/`
-- Shared UI primitives: `Levain/DesignSystem/`
-- Planning memory: `.planning/`
+- Business logic and content loading: `Levain/Services/`
+- Local persistence and schema: `Levain/Persistence/`
+- Shared UI primitives and visual language: `Levain/DesignSystem/`
+- Planning memory and execution history: `.planning/`
 
 ## Notes
 
 - The workspace root still uses the folder name `lievito-app`, but the app target, source tree, tests, and planning artifacts are unified under `Levain`
-- The old duplicate scaffold has been removed; there is now one project definition to generate: `Levain.xcodeproj`
+- `Levain.xcodeproj` is the only live Xcode project; there is no parallel legacy app target or duplicate shell

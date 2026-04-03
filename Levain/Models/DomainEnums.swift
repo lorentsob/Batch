@@ -26,8 +26,99 @@ enum StorageMode: String, CaseIterable, Codable, Identifiable {
 
     var title: String {
         switch self {
-        case .roomTemperature: "Temperatura ambiente"
+        case .roomTemperature: "Fuori frigo"
         case .fridge: "Frigo"
+        }
+    }
+}
+
+enum KefirStorageMode: String, CaseIterable, Codable, Identifiable {
+    case roomTemperature = "room_temperature"
+    case fridge
+    case freezer
+
+    var id: String { rawValue }
+
+    var title: String {
+        switch self {
+        case .roomTemperature: "Fuori frigo"
+        case .fridge: "Frigo"
+        case .freezer: "Freezer"
+        }
+    }
+
+    var defaultRoutineHours: Int {
+        switch self {
+        case .roomTemperature: 24
+        case .fridge: 7 * 24
+        case .freezer: 7 * 24
+        }
+    }
+
+    var defaultWarningLeadTime: TimeInterval? {
+        switch self {
+        case .roomTemperature: 4 * 60 * 60
+        case .fridge: 24 * 60 * 60
+        case .freezer: 24 * 60 * 60
+        }
+    }
+
+    var defaultDueNowLeadTime: TimeInterval {
+        switch self {
+        case .roomTemperature: 60 * 60
+        case .fridge: 6 * 60 * 60
+        case .freezer: 6 * 60 * 60
+        }
+    }
+}
+
+enum KefirBatchState: String, CaseIterable, Codable, Identifiable {
+    case active
+    case dueSoon = "due_soon"
+    case dueNow = "due_now"
+    case overdue
+    case pausedFridge = "paused_fridge"
+    case pausedFreezer = "paused_freezer"
+    case archived
+
+    var id: String { rawValue }
+
+    var title: String {
+        switch self {
+        case .active: "Attivo"
+        case .dueSoon: "Attenzione"
+        case .dueNow: "Da rinfrescare"
+        case .overdue: "In ritardo"
+        case .pausedFridge: "In frigo"
+        case .pausedFreezer: "In freezer"
+        case .archived: "Archiviato"
+        }
+    }
+
+    var isPaused: Bool {
+        switch self {
+        case .pausedFridge, .pausedFreezer:
+            true
+        default:
+            false
+        }
+    }
+}
+
+enum KefirPrimaryAction: String, CaseIterable, Codable, Identifiable {
+    case renew
+    case manage
+    case reactivate
+    case open
+
+    var id: String { rawValue }
+
+    var title: String {
+        switch self {
+        case .renew: "Rinnova"
+        case .manage: "Gestisci"
+        case .reactivate: "Riattiva"
+        case .open: "Apri"
         }
     }
 }

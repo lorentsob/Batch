@@ -3,6 +3,12 @@ import SwiftData
 
 @Model
 final class Bake {
+    struct OperationalSnapshot {
+        let orderedSteps: [BakeStep]
+        let derivedStatus: BakeStatus
+        let activeStep: BakeStep?
+    }
+
     @Attribute(.unique) var id: UUID
     var name: String
     var typeRaw: String
@@ -70,23 +76,15 @@ final class Bake {
     }
 
     var sortedSteps: [BakeStep] {
-        steps.sorted { $0.orderIndex < $1.orderIndex }
+        makeOperationalSnapshot().orderedSteps
     }
 
     var derivedStatus: BakeStatus {
-        if isCancelled { return .cancelled }
-        if sortedSteps.isEmpty == false && sortedSteps.allSatisfy({ [.done, .skipped].contains($0.status) }) {
-            return .completed
-        }
-        if sortedSteps.contains(where: { $0.status == .running || $0.actualStart != nil }) {
-            return .inProgress
-        }
-        return .planned
+        makeOperationalSnapshot().derivedStatus
     }
 
     var activeStep: BakeStep? {
-        sortedSteps.first(where: { $0.status == .running }) ??
-        sortedSteps.first(where: { $0.status == .pending })
+        makeOperationalSnapshot().activeStep
     }
 
     var nextActionableStep: BakeStep? {
@@ -109,5 +107,36 @@ final class Bake {
     func isOverdue(now: Date = .now) -> Bool {
         activeStep?.isOverdue(now: now) ?? false
     }
-}
 
+    func makeOperationalSnapshot() -> OperationalSnapshot {
+        let orderedSteps = steps.sorted { lhs, rhs in
+            if lhs.orderIndex != rhs.orderIndex {
+                return lhs.orderIndex < rhs.orderIndex
+            }
+            return lhs.plannedStart < rhs.plannedStart
+        }
+
+        let derivedStatus: BakeStatus
+        if isCancelled {
+            derivedStatus = .cancelled
+        } else if orderedSteps.isEmpty {
+            derivedStatus = .planned
+        } else if orderedSteps.allSatisfy({ [.done, .skipped].contains($0.status) }) {
+            derivedStatus = .completed
+        } else if orderedSteps.contains(where: { $0.status == .running || $0.actualStart != nil }) {
+            derivedStatus = .inProgress
+        } else {
+            derivedStatus = .planned
+        }
+
+        let activeStep =
+            orderedSteps.first(where: { $0.status == .running }) ??
+            orderedSteps.first(where: { $0.status == .pending })
+
+        return OperationalSnapshot(
+            orderedSteps: orderedSteps,
+            derivedStatus: derivedStatus,
+            activeStep: activeStep
+        )
+    }
+}

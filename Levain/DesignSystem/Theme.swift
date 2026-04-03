@@ -33,6 +33,11 @@ enum Theme {
         static let errorDark  = Color(hex: "#9B1C1C") // Error text on light backgrounds (WCAG AA)
         static let errorLight = Color(hex: "#FEE2E2") // Overdue/danger card bg
         static let errorBorder = Color(hex: "#FECACA") // Overdue card border
+
+        // Warning / amber scale — attention required, not yet a problem
+        static let amber100  = Color(hex: "#FEF3C7") // Warning badge background
+        static let amber800  = Color(hex: "#92400E") // Warning text on amber100 (WCAG AA)
+        static let amberBorder = Color(hex: "#FDE68A") // Warning badge border
     }
 
     // MARK: - Semantic Text Tokens
@@ -94,12 +99,13 @@ enum Theme {
     }
 
     // MARK: - Status Badge Tokens
-    // Semantic rule: GREEN = active now or planned · GRAY = past/archived · RED = problem
+    // Semantic rule: GREEN = active now or planned · GRAY = past/archived · AMBER = warning · RED = problem
     //
     // .running  → green filled    — happening now
     // .pending  → green tinted    — in the plan, coming up
     // .done     → neutral gray    — archived, no action needed
     // .skipped  → neutral gray    — archived, dimmed
+    // .warning  → amber tinted    — attenzione richiesta, non ancora un problema
     // .overdue  → red tinted      — problem, requires attention
     // .danger   → red filled/tinted — critical
 
@@ -129,6 +135,11 @@ enum Theme {
         // Danger — same red family as overdue
         static let dangerBackground   = Palette.errorLight
         static let dangerForeground   = Palette.errorDark
+
+        // Warning — amber, attenzione richiesta ma non ancora un problema
+        static let warningBackground  = Palette.amber100
+        static let warningForeground  = Palette.amber800
+        static let warningBorder      = Palette.amberBorder
 
         // Info — lightest green tint, informational only
         static let infoBackground     = Palette.green25

@@ -1,6 +1,7 @@
 import SwiftData
 import SwiftUI
 
+@MainActor
 struct BakeStepDetailView: View {
     @Environment(\.dismiss) private var dismiss
     @Environment(\.modelContext) private var modelContext
@@ -12,25 +13,47 @@ struct BakeStepDetailView: View {
     @State private var stepStartedTrigger = false
     @State private var stepCompletedTrigger = false
 
+    private var stepIngredients: [String] { step.stepIngredients }
+
     var body: some View {
         Form {
+            if !stepIngredients.isEmpty {
+                Section("Ingredienti") {
+                    VStack(alignment: .leading, spacing: 6) {
+                        ForEach(stepIngredients, id: \.self) { item in
+                            HStack(alignment: .top, spacing: 10) {
+                                RoundedRectangle(cornerRadius: 1)
+                                    .fill(Theme.Control.primaryFill.opacity(0.55))
+                                    .frame(width: 3, height: 16)
+                                    .padding(.top, 3)
+                                Text(item)
+                                    .font(.subheadline)
+                                    .foregroundStyle(Theme.ink)
+                                    .fixedSize(horizontal: false, vertical: true)
+                            }
+                        }
+                    }
+                    .padding(.vertical, 4)
+                }
+            }
+
             Section("Procedimento") {
                 Text(step.displayName)
                     .font(.headline)
-                
+
                 if !step.descriptionText.isEmpty {
                     VStack(alignment: .leading, spacing: 8) {
                         Text("Istruzioni")
                             .font(.caption.weight(.semibold))
                             .foregroundStyle(Theme.Control.primaryFill)
-                        
+
                         Text(step.descriptionText)
                             .foregroundStyle(Theme.ink)
                             .fixedSize(horizontal: false, vertical: true)
                     }
                     .padding(.vertical, 4)
                 }
-                
+
                 if step.startedOutOfOrder {
                     StateBadge(text: "Fuori ordine", tone: .info)
                 }
@@ -131,14 +154,33 @@ struct BakeStepDetailView: View {
     private func complete() {
         step.complete()
         stepCompletedTrigger.toggle()
-        persistAndSync()
+
+        // When this was the last step the bake transitions to .completed.
+        // Saving immediately would trigger a re-render of the parent
+        // BakeDetailView while its ActiveStepHeroCard / TimelineView is
+        // being torn down — causing a crash.  Defer the save so the sheet
+        // dismisses first.
+        if let bake = step.bake, bake.derivedStatus == .completed {
+            let bakeID = bake.id
+            Task { @MainActor in
+                try? await Task.sleep(for: .milliseconds(300))
+                try? modelContext.save()
+                await environment.notificationService.syncNotifications(forBake: bakeID, in: modelContext)
+                environment.showBanner("Bake completato!", duration: 4)
+            }
+        } else {
+            persistAndSync()
+        }
     }
 
     private func persistAndSync() {
+        let bakeID = step.bake?.id
         try? modelContext.save()
-        Task {
-            if let bake = step.bake {
-                await environment.notificationService.syncNotifications(for: bake)
+
+        if let bakeID {
+            let ctx = modelContext
+            Task { @MainActor in
+                await environment.notificationService.syncNotifications(forBake: bakeID, in: ctx)
             }
         }
     }

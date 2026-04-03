@@ -2,20 +2,21 @@ import Foundation
 import SwiftData
 
 enum RootTab: String, Hashable {
-    case today
-    case bakes
-    case starter
+    case oggi
+    case fermentations
     case knowledge
 }
 
-enum BakesRoute: Hashable {
+enum FermentationsRoute: Hashable {
+    case breadHub
+    case kefirHub
+    case bakesList
+    case formulaList
+    case starterList
     case bake(UUID)
     case formula(UUID)
-    case formulaList
-}
-
-enum StarterRoute: Hashable {
-    case detail(UUID)
+    case starter(UUID)
+    case kefirBatch(UUID)  // Phase 19 — wired to real batch detail when kefir models land
 }
 
 enum KnowledgeRoute: Hashable {
@@ -24,30 +25,38 @@ enum KnowledgeRoute: Hashable {
 
 @MainActor
 final class AppRouter: ObservableObject {
-    @Published var selectedTab: RootTab = .today
-    @Published var bakesPath: [BakesRoute] = []
-    @Published var starterPath: [StarterRoute] = []
+    @Published var selectedTab: RootTab = .oggi
+    @Published var fermentationsPath: [FermentationsRoute] = []
     @Published var knowledgePath: [KnowledgeRoute] = []
-    @Published var showingKnowledge: Bool = false
     var bannerPresenter: ((String, TimeInterval) -> Void)?
 
+    // MARK: - Navigation helpers (direct-object routing rule)
+    // Operational taps and deep links navigate directly to the object
+    // without forcing Fermentations → hub traversal.
+
     func openBake(_ id: UUID) {
-        selectedTab = .bakes
-        bakesPath = [.bake(id)]
+        selectedTab = .fermentations
+        fermentationsPath = [.bake(id)]
     }
 
     func openFormula(_ id: UUID) {
-        selectedTab = .bakes
-        bakesPath = [.formula(id)]
+        selectedTab = .fermentations
+        fermentationsPath = [.formula(id)]
     }
 
     func openStarter(_ id: UUID) {
-        selectedTab = .starter
-        starterPath = [.detail(id)]
+        selectedTab = .fermentations
+        fermentationsPath = [.starter(id)]
+    }
+
+    // Phase 19 hook — kefir batch detail route. Wires into KefirHubView when batch CRUD lands.
+    func openKefirBatch(_ id: UUID) {
+        selectedTab = .fermentations
+        fermentationsPath = [.kefirBatch(id)]
     }
 
     func openKnowledge(_ id: String?) {
-        showingKnowledge = true
+        selectedTab = .knowledge
         if let id = id {
             knowledgePath = [.article(id)]
         } else {
@@ -70,6 +79,11 @@ final class AppRouter: ObservableObject {
         case "starter":
             if let value = segments.first, let id = UUID(uuidString: value) {
                 openStarter(id)
+            }
+        case "kefir":
+            // Phase 19 — kefir batch deep link; no-ops safely until batch detail view exists
+            if let value = segments.first, let id = UUID(uuidString: value) {
+                openKefirBatch(id)
             }
         case "knowledge":
             if let value = segments.first {
@@ -95,6 +109,9 @@ final class AppRouter: ObservableObject {
         case "starter":
             guard let value = segments.first, let id = UUID(uuidString: value) else { return }
             navigateFromNotificationPayload(starterId: id, modelContext: modelContext)
+        case "kefir":
+            guard let value = segments.first, let id = UUID(uuidString: value) else { return }
+            navigateFromNotificationPayload(kefirBatchId: id, modelContext: modelContext)
         default:
             open(url: url)
         }
@@ -102,8 +119,8 @@ final class AppRouter: ObservableObject {
 
     func navigateFromNotificationPayload(bakeId: UUID, stepId: UUID?, modelContext: ModelContext) {
         guard let bake = fetchBake(id: bakeId, modelContext: modelContext) else {
-            selectedTab = .bakes
-            bakesPath = []
+            selectedTab = .fermentations
+            fermentationsPath = []
             presentBanner("Questo bake non è più disponibile", duration: 8)
             return
         }
@@ -131,8 +148,8 @@ final class AppRouter: ObservableObject {
 
     func navigateFromNotificationPayload(starterId: UUID, modelContext: ModelContext) {
         guard let starter = fetchStarter(id: starterId, modelContext: modelContext) else {
-            selectedTab = .starter
-            starterPath = []
+            selectedTab = .fermentations
+            fermentationsPath = []
             presentBanner("Starter non trovato", duration: 8)
             return
         }
@@ -140,8 +157,19 @@ final class AppRouter: ObservableObject {
         openStarter(starter.id)
     }
 
+    func navigateFromNotificationPayload(kefirBatchId: UUID, modelContext: ModelContext) {
+        guard let batch = fetchKefirBatch(id: kefirBatchId, modelContext: modelContext) else {
+            selectedTab = .fermentations
+            fermentationsPath = []
+            presentBanner("Batch non trovato", duration: 8)
+            return
+        }
+
+        openKefirBatch(batch.id)
+    }
+
     func showNotificationsDisabledBanner() {
-        selectedTab = .today
+        selectedTab = .oggi
         presentBanner("Attiva le notifiche per ricevere i promemoria", duration: 8)
     }
 
@@ -155,6 +183,11 @@ final class AppRouter: ObservableObject {
         return try? modelContext.fetch(descriptor).first
     }
 
+    private func fetchKefirBatch(id: UUID, modelContext: ModelContext) -> KefirBatch? {
+        let descriptor = FetchDescriptor<KefirBatch>(predicate: #Predicate { $0.id == id })
+        return try? modelContext.fetch(descriptor).first
+    }
+
     private func presentBanner(_ message: String, duration: TimeInterval = 3) {
         bannerPresenter?(message, duration)
     }
@@ -163,24 +196,29 @@ final class AppRouter: ObservableObject {
 extension AppRouter {
     enum DeepLink {
         static let scheme = "levain"
-        
+
         static func bake(id: UUID, stepID: UUID? = nil) -> String {
             guard let stepID else {
                 return "\(scheme)://bake/\(id.uuidString)"
             }
             return "\(scheme)://bake/\(id.uuidString)?step=\(stepID.uuidString)"
         }
-        
+
         static func formula(id: UUID) -> String {
             "\(scheme)://formula/\(id.uuidString)"
         }
-        
+
         static func starter(id: UUID) -> String {
             "\(scheme)://starter/\(id.uuidString)"
         }
-        
+
         static func knowledge(id: String) -> String {
             "\(scheme)://knowledge/\(id)"
+        }
+
+        // Phase 19 — kefir batch deep link
+        static func kefirBatch(id: UUID) -> String {
+            "\(scheme)://kefir/\(id.uuidString)"
         }
     }
 }
