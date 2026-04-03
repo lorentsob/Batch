@@ -6,6 +6,7 @@ struct StateBadge: View {
         case pending
         case done
         case skipped
+        case warning
         case overdue
         case danger
         case info
@@ -23,6 +24,8 @@ struct StateBadge: View {
                 Theme.Status.doneBackground             // neutral100 — archiviato
             case .skipped:
                 Theme.Status.skippedBackground          // neutral100 — saltato
+            case .warning:
+                Theme.Status.warningBackground          // amber100 — attenzione, non ancora un problema
             case .overdue:
                 Theme.Status.overdueBackground          // errorLight — problema attivo
             case .danger:
@@ -46,6 +49,8 @@ struct StateBadge: View {
                 Theme.Status.doneForeground             // neutral600 su neutral100
             case .skipped:
                 Theme.Status.skippedForeground          // neutral500 su neutral100
+            case .warning:
+                Theme.Status.warningForeground          // amber800 su amber100
             case .overdue:
                 Theme.Status.overdueForeground          // errorDark su errorLight
             case .danger:
@@ -100,7 +105,7 @@ struct StateBadge: View {
         self.text = dueState.title
         switch dueState {
         case .ok:
-            tone = .done
+            tone = .info          // light green — tutto ok, non urgente
         case .dueToday:
             tone = .pending             // verde tenue — scade oggi, richiede attenzione
         case .overdue:
@@ -130,6 +135,8 @@ struct StateBadge: View {
 private extension StateBadge.Tone {
     var stroke: Color {
         switch self {
+        case .warning:
+            Theme.Status.warningBorder
         case .overdue, .danger:
             Theme.Border.danger
         default:

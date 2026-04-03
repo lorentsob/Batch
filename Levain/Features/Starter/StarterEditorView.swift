@@ -109,12 +109,15 @@ struct StarterEditorView: View {
         }
         .navigationTitle(starter == nil ? "Nuovo starter" : "Modifica starter")
         .tint(Theme.Control.primaryFill)
+        .scrollContentBackground(.hidden)
+        .background(Theme.Surface.app)
+        .presentationBackground(Theme.Surface.app)
         .toolbar {
             ToolbarItem(placement: .cancellationAction) {
                 Button("Chiudi") { dismiss() }
             }
             ToolbarItem(placement: .confirmationAction) {
-                Button("Salva") { save() }
+                Button(starter == nil ? "Crea" : "Salva") { save() }
                     .disabled(name.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
             }
         }

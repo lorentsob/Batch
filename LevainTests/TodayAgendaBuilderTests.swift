@@ -389,4 +389,84 @@ struct TodayAgendaBuilderTests {
         let sectionCount = snapshot.sections.values.reduce(0) { $0 + $1.count }
         #expect(feedCount == sectionCount)
     }
+
+    @Test("Overdue room-temperature kefir batch enters the feed as an overdue kefir item")
+    func testOverdueRoomTemperatureKefirItem() {
+        let now = Date.fixedNow
+        let batch = DomainFixtures.makeKefirBatch(
+            name: "Batch cucina",
+            storageMode: .roomTemperature,
+            lastManagedAt: now.addingTimeInterval(-(24 * 60 * 60))
+        )
+
+        let snapshot = TodayAgendaBuilder.buildSnapshot(
+            bakes: [],
+            starters: [],
+            kefirBatches: [batch],
+            hasPersistedData: true,
+            now: now
+        )
+
+        let item = snapshot.feed.first
+        #expect(snapshot.emptyState == .actionable)
+        #expect(item?.domain == .kefir)
+        #expect(item?.urgency == .overdue)
+        #expect(item?.section == .urgent)
+        if let item, case let .kefir(batchID) = item.kind {
+            #expect(batchID == batch.id)
+        } else {
+            Issue.record("Expected kefir agenda item")
+        }
+    }
+
+    @Test("Overdue fridge kefir batch stays softer than room-temperature overdue work")
+    func testOverdueFridgeKefirUsesWarningTier() {
+        let now = Date.fixedNow
+        let batch = DomainFixtures.makeKefirBatch(
+            name: "Backup frigo",
+            storageMode: .fridge,
+            lastManagedAt: now.addingTimeInterval(-(7 * 24 * 60 * 60))
+        )
+
+        let snapshot = TodayAgendaBuilder.buildSnapshot(
+            bakes: [],
+            starters: [],
+            kefirBatches: [batch],
+            hasPersistedData: true,
+            now: now
+        )
+
+        let item = snapshot.feed.first
+        #expect(item?.domain == .kefir)
+        #expect(item?.urgency == .warning)
+        #expect(item?.section == .scheduled)
+        #expect(item?.state == KefirBatchState.overdue.title)
+    }
+
+    @Test("Future preview can surface the next kefir reactivation")
+    func testFuturePreviewIncludesKefirBatch() {
+        let now = Date.fixedNow
+        let batch = DomainFixtures.makeKefirBatch(
+            name: "Scorta freezer",
+            storageMode: .freezer,
+            lastManagedAt: now.addingTimeInterval(-(14 * 24 * 60 * 60)),
+            plannedReactivationAt: now.addingTimeInterval(3 * 24 * 60 * 60)
+        )
+
+        let snapshot = TodayAgendaBuilder.buildSnapshot(
+            bakes: [],
+            starters: [],
+            kefirBatches: [batch],
+            hasPersistedData: true,
+            now: now
+        )
+
+        #expect(snapshot.emptyState == .futureOnly)
+        #expect(snapshot.futurePreview?.title == "Scorta freezer")
+        if let preview = snapshot.futurePreview, case let .kefir(batchID) = preview.kind {
+            #expect(batchID == batch.id)
+        } else {
+            Issue.record("Expected kefir future preview")
+        }
+    }
 }

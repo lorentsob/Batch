@@ -13,7 +13,8 @@ struct AppRouterTests {
             RecipeFormula.self,
             Bake.self,
             BakeStep.self,
-            AppSettings.self
+            AppSettings.self,
+            KefirBatch.self
         ])
         let container = try ModelContainer(
             for: schema,
@@ -191,6 +192,44 @@ struct AppRouterTests {
         #expect(router.preparationsPath.isEmpty)
         #expect(banner == "Starter non trovato")
         #expect(duration == 8)
+    }
+
+    @Test("Notification navigation falls back to preparazioni tab when kefir batch is missing")
+    func testNotificationFallbackForMissingKefirBatch() throws {
+        let context = try makeInMemoryContext()
+        let router = AppRouter()
+        var banner: String?
+        var duration: TimeInterval?
+        router.bannerPresenter = { message, bannerDuration in
+            banner = message
+            duration = bannerDuration
+        }
+
+        router.navigateFromNotificationPayload(kefirBatchId: UUID(), modelContext: context)
+
+        #expect(router.selectedTab == .preparazioni)
+        #expect(router.preparationsPath.isEmpty)
+        #expect(banner == "Batch non trovato")
+        #expect(duration == 8)
+    }
+
+    @Test("Notification navigation opens kefir batch detail when batch exists")
+    func testNotificationRouteOpensKefirBatch() throws {
+        let context = try makeInMemoryContext()
+        let router = AppRouter()
+        let batch = DomainFixtures.makeKefirBatch(name: "Batch route test")
+        context.insert(batch)
+        try context.save()
+
+        router.navigateFromNotificationPayload(kefirBatchId: batch.id, modelContext: context)
+
+        #expect(router.selectedTab == .preparazioni)
+        #expect(router.preparationsPath.count == 1)
+        if case .kefirBatch(let parsedID) = router.preparationsPath.first {
+            #expect(parsedID == batch.id)
+        } else {
+            Issue.record("Expected kefir batch route after notification navigation")
+        }
     }
 
     @Test("Notification navigation opens cancelled bake with an informational banner")

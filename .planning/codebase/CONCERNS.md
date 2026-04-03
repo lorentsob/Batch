@@ -1,30 +1,32 @@
 # Concerns
 
-**Analysis Date:** 2026-03-10
+**Analysis Date:** 2026-04-03
 
 ## Current Risks
 
-- SwiftData schema churn can create avoidable migration pain if model fields keep changing during the MVP bootstrap.
-- Notification delivery is straightforward, but notification tap routing still needs real lifecycle verification on simulator or device.
-- Formula step templates are persisted through lightweight encoded data inside a primary model; this is intentionally simple, but it should stay stable once shipped.
+- Phase 22 adds more SwiftData scope after V4, so migration work must stay additive and conservative.
+- Notification routing is well covered in tests, but real delivery/tap lifecycle behavior still benefits from one device-level pass before release.
+- Phase 21 removed obvious repeated `Oggi` recomputation, but no dedicated Instruments artifact is stored for a before/after performance baseline.
+- Persistent bootstrap now fails explicitly instead of degrading silently; this is safer, but there is still no user-facing recovery/import path if a real store becomes unreadable.
 
 ## Product Risks
 
-- The app can become a bloated recipe manager if formula editing and notes expand without discipline.
-- Starter management should remain secondary; if it dominates the navigation, the product drifts away from the planner-first promise.
+- Culture/grain tracking can overtake the batch-first kefir model if it becomes mandatory or too prominent in the UI.
+- Knowledge can drift toward a generic recipe/reference library if Phase 22 adds filters/content without keeping the planner-first boundary.
+- Bread and starter flows should remain operationally stronger than editorial or journaling features; the app loses focus if browsing starts to dominate action surfaces.
 
 ## Technical Risks
 
-- Aggressive over-abstraction would work against the PRD and increase AI-assisted maintenance cost.
-- iOS 26-only targeting is fine for this project, but it means testing assumptions should be verified against the installed Xcode runtime early.
+- Shared kefir presentation helpers should stay presentation-scoped; turning them into a generic fermentation abstraction would recreate the complexity the PRD rejects.
+- The project still depends on Apple simulator tooling for meaningful verification, so local environment drift remains a testing constraint.
 
 ## Mitigations
 
-- Keep model names and relationships conservative during the first iteration.
-- Build around local notifications and persisted state, not fragile background timers.
-- Use sample seed data and tests to catch regressions in scheduling logic quickly.
+- Keep schema changes additive, model names concrete, and migration stages minimal.
+- Preserve direct-object routing through `AppRouter` rather than creating per-feature navigation ownership.
+- Use deterministic seed scenarios plus targeted unit/UI suites to validate cross-domain behavior quickly.
+- Keep new Phase 22 surfaces optional-first and anchored to operational flows, not secondary dashboards.
 
 ---
-*Concerns analysis: 2026-03-10*
+*Concerns analysis: 2026-04-03*
 *Update when risks are resolved or new ones appear*
-

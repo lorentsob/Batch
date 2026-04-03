@@ -151,7 +151,7 @@ struct BakeDetailView: View {
         }
 
         if bake.derivedStatus == .completed {
-            router.preparationsPath.removeAll()
+            router.fermentationsPath.removeAll()
 
             let bakeID = bake.id
             Task { @MainActor in
@@ -217,7 +217,7 @@ struct BakeDetailView: View {
             // deadlock caused by structural body changes while the view is live.
             // The bake moves to the archive section in BakesView.
             destructivePrompt = nil
-            router.preparationsPath.removeAll()
+            router.fermentationsPath.removeAll()
 
             let bakeRef = bake
             Task { @MainActor in
@@ -237,8 +237,8 @@ struct BakeDetailView: View {
     private func deleteBake() {
         modelContext.delete(bake)
         try? modelContext.save()
-        router.selectedTab = .preparazioni
-        router.preparationsPath.removeAll()
+        router.selectedTab = .fermentations
+        router.fermentationsPath.removeAll()
 
         Task { @MainActor in
             await environment.notificationService.resyncAll(using: modelContext)

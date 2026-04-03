@@ -2,63 +2,57 @@
 
 ## Summary
 
-Levain is a single-target native iPhone app built with SwiftUI and SwiftData. The architecture is feature-oriented at the UI layer, model-centric for persisted state, and service-based for scheduling, notifications, and bundled knowledge loading.
+Levain is a single-target iPhone app built with SwiftUI, SwiftData, UserNotifications, and bundled JSON content. The shipped v2 shell has exactly three top-level tabs: `Oggi`, `Preparazioni`, and `Conoscenza`. Bread/starter and milk kefir share shell and infrastructure, but keep separate domain models, reminder logic, and presentation helpers.
 
 ## Layers
 
-### App Layer
+### App composition
 
-- Location: `Levain/App/`
-- Contains: `LevainApp.swift`, `AppRouter.swift`, `AppEnvironment.swift`
-- Responsibility: app bootstrap, root navigation state, shared app services, model container wiring
+- `Levain/App/LevainApp.swift` boots the app and injects the SwiftData container
+- `Levain/App/AppEnvironment.swift` owns app-scoped services (`NotificationService`, `KnowledgeLibrary`) plus transient banner state
+- `Levain/App/AppRouter.swift` owns selected tab plus `preparationsPath` / `knowledgePath` and enforces direct-object deep linking
+- `Levain/Features/Shared/RootTabView.swift` renders the three-tab shell and owns the only `NavigationStack`s for `Preparazioni` and `Knowledge`
 
-### Domain Models
+### Persistence and models
 
-- Location: `Levain/Models/`
-- Contains: `Starter`, `StarterRefresh`, `RecipeFormula`, `Bake`, `BakeStep`, `AppSettings`, enums, `KnowledgeItem`
-- Responsibility: persisted baking and starter state plus lightweight non-persistent knowledge content
+- Persisted `@Model` types live in `Levain/Models/`: `Starter`, `StarterRefresh`, `RecipeFormula`, `Bake`, `BakeStep`, `AppSettings`, `KefirBatch`, and `KefirEvent`
+- Non-persistent editorial content remains `KnowledgeItem` plus related enums/value types
+- `Levain/Persistence/LevainSchema.swift` exposes live schema V4 with additive migration stages `V1 -> V3 -> V4`
+- `Levain/Persistence/ModelContainerFactory.swift` is the only container bootstrap entry and now surfaces explicit `FactoryError` cases for store/bootstrap failures
+- `Levain/Persistence/SeedDataLoader.swift` owns deterministic preview/test seeding and launch-harness scenarios
 
 ### Services
 
-- Location: `Levain/Services/`
-- Contains: `BakeScheduler`, `NotificationService`, `TodayAgendaBuilder`, `KnowledgeLoader`, `DateFormattingService`
-- Responsibility: business logic, schedule generation, derived today agenda items, local notifications, bundled JSON reading
-
-### Persistence
-
-- Location: `Levain/Persistence/`
-- Contains: `ModelContainerFactory.swift`, `SeedDataLoader.swift`
-- Responsibility: schema creation, preview container creation, sample seed data for internal testing
+- `BakeScheduler` and `TodayAgendaBuilder` derive bread timing plus cross-domain `Oggi` state
+- `NotificationService`, `BakeReminderPlanner`, `StarterReminderPlanner`, and `KefirReminderPlanner` own local reminder planning and deep-link payloads
+- `KnowledgeLoader` and `KnowledgeLibrary` load bundled `knowledge.json` into an observable in-memory store
+- `KefirEventRecorder` plus `Levain/Features/Kefir/KefirBatchPresentation.swift` support typed kefir history and shared lineage/presentation summaries
+- `DateFormattingService` centralizes Italian-facing date/time copy
 
 ### Features
 
-- Location: `Levain/Features/`
-- Shared: root tab shell, tip components
-- Today: operational action list
-- Bakes: formulas, bake generation, step execution
-- Starter: starter CRUD and refresh logging
-- Knowledge: bundled article browsing
+- `Levain/Features/Today/` is the operational dashboard; `TodayView` caches a revision-keyed `TodaySnapshot` built from `Bake.OperationalSnapshot`
+- `Levain/Features/Preparations/` hosts the root domain hubs and always-visible quick actions
+- `Levain/Features/Bakes/` and `Levain/Features/Starter/` preserve the existing bread/starter flows under the bread hub
+- `Levain/Features/Kefir/` contains the batch-first kefir vertical: hub, list/detail/editor/manage, journal, archive, comparison, and shared presentation helpers
+- `Levain/Features/Knowledge/` is bundled article browsing and article detail
 
-### Resources
+## Navigation and Data Flow
 
-- Location: `Levain/Resources/` and `Levain/Assets.xcassets`
-- Responsibility: bundled JSON content and asset catalog data
+- `Oggi` never owns object detail navigation; taps route through `AppRouter` directly to bake, starter, or kefir detail under `Preparazioni`
+- `KnowledgeView` does not create its own `NavigationStack`; `RootTabView` owns article navigation through `KnowledgeRoute`
+- Notification and deep-link routes use `levain://` URLs parsed by `AppRouter`
+- `TodayAgendaBuilder` accepts `TodayAgendaBakeInput` so derived bake state is computed once per model update rather than repeatedly inside the SwiftUI tree
+- Kefir lineage-heavy surfaces share `KefirLineageIndex` and `KefirBatchLineageSummary` from `KefirBatchPresentation.swift`
 
-## Navigation
+## Runtime Safety
 
-- Root tab state lives in `AppRouter`
-- Four root tabs: `Today`, `Bakes`, `Starter`, `Knowledge`
-- Each tab owns its own `NavigationStack`
-- Route enums keep cross-tab deep links simple and local
+- Persistent store setup is fail-fast: bootstrap errors surface explicitly and the app does not silently fall back to a degraded in-memory store
+- Fridge reminders require a real `StarterRefresh -> Starter` relationship; missing targets cancel pending reminders instead of inventing random IDs
+- Seed data remains opt-in via launch options, previews, or test harnesses; normal first launch does not auto-seed
 
-## Persistence and Data Flow
+## Residual Risks
 
-- SwiftData `@Model` types are the source of truth for operational data
-- `SeedDataLoader` inserts one starter, one formula, and one bake for first-launch validation
-- `BakeScheduler` generates steps backward from target bake time and can shift incomplete future steps
-- `NotificationService` derives all local reminders from persisted bakes and starters
-
-## Current Risks
-
-- Full build verification still depends on running Apple build tooling outside the Codex sandbox
-- SwiftData migrations should stay conservative until the core model stabilizes
+- Phase 22 adds more schema and knowledge scope, so additive migration discipline must continue
+- Notification delivery/tap behavior is well covered in simulator tests but still benefits from a final on-device pass
+- No dedicated Instruments artifact is stored for the Phase 21 `Oggi` hardening pass
