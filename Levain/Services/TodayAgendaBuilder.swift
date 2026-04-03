@@ -6,6 +6,7 @@ struct TodayFuturePreview: Hashable {
     enum Kind: Hashable {
         case bake(TodayAgendaItem.BakeSummary)
         case starter(starterID: UUID)
+        case kefir(batchID: UUID)
     }
 
     let kind: Kind
@@ -106,7 +107,7 @@ struct TodayAgendaItem: Identifiable {
     enum Kind: Hashable {
         case bake(BakeSummary)
         case starter(starterID: UUID)
-        case kefir  // Phase 19 — placeholder for batch detail route
+        case kefir(batchID: UUID)
     }
 
     // MARK: Section (backward compat)
@@ -146,12 +147,52 @@ struct TodayAgendaItem: Identifiable {
     }
 }
 
+struct TodayAgendaBakeInput {
+    let bake: Bake
+    let operational: Bake.OperationalSnapshot
+}
+
 // MARK: - Builder
 
 enum TodayAgendaBuilder {
     static func buildSnapshot(
         bakes: [Bake],
         starters: [Starter],
+        kefirBatches: [KefirBatch] = [],
+        hasPersistedData: Bool,
+        now: Date = .now
+    ) -> TodayAgendaSnapshot {
+        buildSnapshot(
+            inputs: bakes.map { bake in
+                TodayAgendaBakeInput(bake: bake, operational: bake.makeOperationalSnapshot())
+            },
+            starters: starters,
+            kefirBatches: kefirBatches,
+            hasPersistedData: hasPersistedData,
+            now: now
+        )
+    }
+
+    static func buildSnapshot(
+        inputs: [TodayAgendaBakeInput],
+        starters: [Starter],
+        kefirBatches: [KefirBatch] = [],
+        hasPersistedData: Bool,
+        now: Date = .now
+    ) -> TodayAgendaSnapshot {
+        buildSnapshotImpl(
+            bakes: inputs,
+            starters: starters,
+            kefirBatches: kefirBatches,
+            hasPersistedData: hasPersistedData,
+            now: now
+        )
+    }
+
+    private static func buildSnapshotImpl(
+        bakes: [TodayAgendaBakeInput],
+        starters: [Starter],
+        kefirBatches: [KefirBatch] = [],
         hasPersistedData: Bool,
         now: Date = .now
     ) -> TodayAgendaSnapshot {
@@ -162,10 +203,12 @@ enum TodayAgendaBuilder {
 
         // MARK: Bread bakes
 
-        for bake in bakes {
-            guard bake.derivedStatus != .cancelled,
-                  bake.derivedStatus != .completed,
-                  let step = bake.activeStep else {
+        for input in bakes {
+            let bake = input.bake
+
+            guard input.operational.derivedStatus != .cancelled,
+                  input.operational.derivedStatus != .completed,
+                  let step = input.operational.activeStep else {
                 continue
             }
 
@@ -280,6 +323,16 @@ enum TodayAgendaBuilder {
             )
         }
 
+        // MARK: Kefir batches
+
+        for batch in kefirBatches {
+            guard let item = makeKefirAgendaItem(for: batch, now: now) else {
+                continue
+            }
+
+            items.append(item)
+        }
+
         // MARK: Sort feed
 
         // Primary: urgency ascending (overdue → warning → active → preview)
@@ -305,7 +358,12 @@ enum TodayAgendaBuilder {
         // MARK: Empty state
 
         let hasActionableWork = items.contains { $0.urgency == .overdue || $0.urgency == .warning || $0.urgency == .active }
-        let futurePreview = makeFuturePreview(bakes: bakes, starters: starters, now: now)
+        let futurePreview = makeFuturePreview(
+            bakes: bakes,
+            starters: starters,
+            kefirBatches: kefirBatches,
+            now: now
+        )
 
         let emptyState: TodayAgendaSnapshot.EmptyStateMode
         if hasActionableWork {
@@ -325,20 +383,116 @@ enum TodayAgendaBuilder {
         )
     }
 
+    private static func makeKefirAgendaItem(for batch: KefirBatch, now: Date) -> TodayAgendaItem? {
+        guard batch.isArchived == false,
+              let dueAt = batch.nextManagementAt else {
+            return nil
+        }
+
+        let calendar = Calendar.current
+        let tomorrow = calendar.date(byAdding: .day, value: 1, to: now.startOfDay) ?? now.addingTimeInterval(24 * 60 * 60)
+        let state = batch.derivedState(at: now)
+
+        let urgency: TodayAgendaItem.Urgency
+        let section: TodayAgendaItem.Section
+
+        switch state {
+        case .overdue:
+            if batch.storageMode == .roomTemperature {
+                urgency = .overdue
+                section = .urgent
+            } else {
+                urgency = .warning
+                section = .scheduled
+            }
+        case .dueSoon, .dueNow:
+            urgency = .warning
+            section = .scheduled
+        case .active, .pausedFridge, .pausedFreezer:
+            if calendar.isDate(dueAt, inSameDayAs: now) {
+                urgency = .active
+                section = .scheduled
+            } else if calendar.isDate(dueAt, inSameDayAs: tomorrow) {
+                urgency = .preview
+                section = .tomorrow
+            } else {
+                return nil
+            }
+        case .archived:
+            return nil
+        }
+
+        return TodayAgendaItem(
+            id: "kefir-\(batch.id.uuidString)",
+            domain: .kefir,
+            urgency: urgency,
+            section: section,
+            kind: .kefir(batchID: batch.id),
+            title: batch.name,
+            subtitle: makeKefirSubtitle(for: batch, state: state, dueAt: dueAt),
+            state: state.title,
+            actionTitle: batch.primaryActionSuggestion(at: now).title,
+            sortDate: dueAt
+        )
+    }
+
+    private static func makeKefirSubtitle(for batch: KefirBatch, state: KefirBatchState, dueAt: Date) -> String {
+        let dueLabel = DateFormattingService.smartDayTime(dueAt)
+
+        switch batch.storageMode {
+        case .roomTemperature:
+            switch state {
+            case .overdue:
+                return "Routine fuori finestra · soglia \(dueLabel)"
+            case .dueSoon, .dueNow:
+                return "Da rinnovare entro \(dueLabel)"
+            case .active:
+                return "Prossimo rinnovo \(dueLabel)"
+            case .pausedFridge, .pausedFreezer, .archived:
+                return batch.operationalSummary
+            }
+        case .fridge:
+            switch state {
+            case .overdue:
+                return "Controllo frigo oltre soglia · riferimento \(dueLabel)"
+            case .dueSoon, .dueNow:
+                return "Controllo frigo entro \(dueLabel)"
+            case .active, .pausedFridge:
+                return "Batch in frigo · prossimo controllo \(dueLabel)"
+            case .pausedFreezer, .archived:
+                return batch.operationalSummary
+            }
+        case .freezer:
+            switch state {
+            case .overdue:
+                return "Riattivazione pianificata oltre soglia · riferimento \(dueLabel)"
+            case .dueSoon, .dueNow:
+                return "Riattivazione prevista \(dueLabel)"
+            case .active, .pausedFreezer:
+                return "Batch in freezer · riattivazione \(dueLabel)"
+            case .pausedFridge, .archived:
+                return batch.operationalSummary
+            }
+        }
+    }
+
     // MARK: Future Preview
 
     private static func makeFuturePreview(
-        bakes: [Bake],
+        bakes: [TodayAgendaBakeInput],
         starters: [Starter],
+        kefirBatches: [KefirBatch],
         now: Date
     ) -> TodayFuturePreview? {
         var candidates: [TodayFuturePreview] = []
         let endOfToday = now.startOfDay.addingTimeInterval((24 * 60 * 60) - 1)
 
-        for bake in bakes {
-            guard bake.derivedStatus != .cancelled,
-                  bake.derivedStatus != .completed,
-                  let step = bake.activeStep else {
+        for input in bakes {
+            let bake = input.bake
+
+            guard input.operational.derivedStatus != .cancelled,
+                  input.operational.derivedStatus != .completed,
+                  let step = input.operational.activeStep else {
                 continue
             }
 
@@ -391,6 +545,34 @@ enum TodayAgendaBuilder {
             )
         }
 
+        for batch in kefirBatches {
+            guard batch.isArchived == false,
+                  let referenceDate = batch.nextManagementAt,
+                  referenceDate > endOfToday else {
+                continue
+            }
+
+            candidates.append(
+                TodayFuturePreview(
+                    kind: .kefir(batchID: batch.id),
+                    title: batch.name,
+                    subtitle: futurePreviewSubtitle(for: batch, referenceDate: referenceDate),
+                    referenceDate: referenceDate
+                )
+            )
+        }
+
         return candidates.sorted { $0.referenceDate < $1.referenceDate }.first
+    }
+
+    private static func futurePreviewSubtitle(for batch: KefirBatch, referenceDate: Date) -> String {
+        switch batch.storageMode {
+        case .roomTemperature:
+            return "Prossimo rinnovo · \(DateFormattingService.dayTime(referenceDate))"
+        case .fridge:
+            return "Controllo frigo · \(DateFormattingService.dayTime(referenceDate))"
+        case .freezer:
+            return "Riattivazione · \(DateFormattingService.dayTime(referenceDate))"
+        }
     }
 }

@@ -10,6 +10,7 @@ Archived v1 planning remains in `.planning/milestones/v1-roadmap.md`, `.planning
 **Primary source:** `docs/levain-prd-v2-multi-fermentations.md`  
 **Supporting addendum:** `docs/levain-prd-v2-addendum.md`  
 **Delivery rule:** extend the existing app shell, views, models, and services; do not fork a second UI language or invent a generic fermentation abstraction.
+**Current state:** Phases 17 through 21 are complete in code and verification. `21-03` closed the runtime-hardening wave by surfacing explicit persistence failures, guarding starter reminder routes, and syncing the active/codebase docs. Phase 22 is the final open milestone wave and still needs its execution plans.
 
 ## Archived Milestones
 
@@ -19,11 +20,12 @@ Archived v1 planning remains in `.planning/milestones/v1-roadmap.md`, `.planning
 
 ## Phases
 
-- [ ] **Phase 17: V2 Shell & Preparation Hubs** - Replace the v1 top-level shell with Oggi / Preparazioni / Knowledge, keep direct operational routing intact, add always-visible quick actions, and prepare the additive v2 schema migration.
-- [ ] **Phase 18: Oggi Cross-Domain Agenda** - Rebuild Today as a daily operational dashboard for bread, starter, and kefir with card-level urgency, time-based ordering, and direct object routing.
-- [ ] **Phase 19: Milk Kefir Batch Core** - Introduce the batch-first milk kefir vertical with local persistence, no-culture-first batch creation, storage-aware state derivation, core screens, and local reminder defaults.
-- [ ] **Phase 20: Kefir Lineage & Journal** - Add derived batch genealogy, structured event history, and archive/journal surfaces that support the planner instead of replacing it.
-- [ ] **Phase 21: Culture Tracking & Knowledge Expansion** - Add lightweight culture/grain tracking, kefir knowledge filters/content, contextual tips, and final v2 UAT closure.
+- [x] **Phase 17: V2 Shell & Preparation Hubs** - Replace the v1 top-level shell with Oggi / Preparazioni / Knowledge, keep direct operational routing intact, add always-visible quick actions, and prepare the additive v2 schema migration.
+- [x] **Phase 18: Oggi Cross-Domain Agenda** - Rebuild Today as a daily operational dashboard foundation with card-level urgency, time-based ordering, and direct-object routing for the shipped domains while keeping the kefir contract ready for Phase 19.
+- [x] **Phase 19: Milk Kefir Batch Core** - Introduce the batch-first milk kefir vertical with local persistence, no-culture-first batch creation, storage-aware state derivation, core screens, and local reminder defaults.
+- [x] **Phase 20: Kefir Lineage & Journal** - Add derived batch genealogy, structured event history, and archive/journal surfaces that support the planner instead of replacing it.
+- [x] **Phase 21: Runtime Hardening & Planning Sync** - Harden `Oggi`, Knowledge, kefir lineage lookups, persistence/routing safety, and `.planning`/codebase memory before new product scope lands.
+- [ ] **Phase 22: Culture Tracking & Knowledge Expansion** - Add lightweight culture/grain tracking, kefir knowledge filters/content, contextual tips, and final v2 UAT closure.
 
 ## Phase Details
 
@@ -41,27 +43,27 @@ Archived v1 planning remains in `.planning/milestones/v1-roadmap.md`, `.planning
 
 Plans:
 
-- [ ] 17-01: Root shell, tabs, and direct-router migration
-- [ ] 17-02: Preparations root, always-visible quick actions, and bread hub composition
-- [ ] 17-03: Empty states, shell polish, and regression coverage
-- [ ] 17-04: Additive schema migration preparation
+- [x] 17-01: Root shell, tabs, and direct-router migration
+- [x] 17-02: Preparations root, always-visible quick actions, and bread hub composition
+- [x] 17-03: Empty states, shell polish, and regression coverage
+- [x] 17-04: Additive schema migration preparation
 
 ### Phase 18: Oggi Cross-Domain Agenda
 
-**Goal**: Make `Oggi` a daily operational dashboard that keeps all active bread, starter, and kefir objects visible with clear urgency and direct navigation.  
+**Goal**: Make `Oggi` a daily operational dashboard foundation that keeps active bread and starter objects visible with clear urgency and direct navigation, while preparing the kefir-ready agenda and routing contract for Phase 19.  
 **Depends on**: Phase 17  
 **Requirements**: [TODAY-01, TODAY-02, TODAY-03, ROUTE-01]  
 **Success Criteria**:
 
-1. Oggi shows all active bread, starter, and kefir objects when present, with urgency communicated on the card instead of rigid fixed sections.
+1. Oggi shows all active bread and starter objects through one shared feed and card grammar, with a kefir-ready agenda contract that Phase 19 can plug real batches into.
 2. Ordering is time-based across domains, including explicit tie-breaker rules, with no special priority for bread, starter, or kefir as categories.
-3. Taps from Oggi route directly to the underlying bake, starter, or kefir batch detail without traversing the Preparazioni hierarchy.
+3. Taps from Oggi route directly to the underlying bake or starter detail without traversing the Preparazioni hierarchy, and the router/deep-link surface is kefir-ready for Phase 19 batch detail.
 
 Plans:
 
-- [ ] 18-01: Dashboard feed model, urgency scoring, and time-based tie-breakers
-- [ ] 18-02: Oggi card UI for always-visible active objects
-- [ ] 18-03: Direct object routing from Oggi and cross-domain regression coverage
+- [x] 18-01: Dashboard feed model, urgency scoring, and time-based tie-breakers
+- [x] 18-02: Oggi card UI for always-visible active objects
+- [x] 18-03: Direct object routing from Oggi and cross-domain regression coverage
 
 ### Phase 19: Milk Kefir Batch Core
 
@@ -76,10 +78,10 @@ Plans:
 
 Plans:
 
-- [ ] 19-01: Kefir model, schema, and derived-state foundation
-- [ ] 19-02: Batch list, detail, and hub entry UI
-- [ ] 19-03: First-batch and manage-batch flows without culture prerequisite
-- [ ] 19-04: Storage-aware reminder defaults and automated coverage
+- [x] 19-01: Kefir model, schema, and derived-state foundation
+- [x] 19-02: Batch list, detail, and hub entry UI
+- [x] 19-03: First-batch and manage-batch flows without culture prerequisite
+- [x] 19-04: Storage-aware reminder defaults and automated coverage
 
 ### Phase 20: Kefir Lineage & Journal
 
@@ -94,14 +96,32 @@ Plans:
 
 Plans:
 
-- [ ] 20-01: Batch derivation and provenance UI
-- [ ] 20-02: Structured kefir events and journal surfaces
-- [ ] 20-03: Archive states, comparison notes, and workflow polish
+- [x] 20-01: Batch derivation and provenance UI
+- [x] 20-02: Structured kefir events and journal surfaces
+- [x] 20-03: Archive states, comparison notes, and workflow polish
+- [x] 20-04: Verification closeout, accessibility hardening, and planning sync
 
-### Phase 21: Culture Tracking & Knowledge Expansion
+### Phase 21: Runtime Hardening & Planning Sync
+
+**Goal**: Harden the shipped v2 shell before any new product scope by addressing runtime cost, state propagation, persistence-safety, and stale planning memory.  
+**Depends on**: Phase 20  
+**Requirements**: [TODAY-01, ROUTE-01, NOTIF-01]  
+**Success Criteria**:
+
+1. `Oggi` and bread operational helpers stop doing repeated render-time scans and sorts while preserving the shipped dashboard semantics.
+2. Knowledge navigation/state ownership and kefir lineage lookup surfaces are centralized and regression-covered.
+3. Persistence/bootstrap failures and reminder route anomalies become explicit, and active/codebase planning docs match the real three-tab shell and feature map.
+
+Plans:
+
+- [x] 21-01: `Oggi` and bread operational data-flow hardening
+- [x] 21-02: Knowledge and kefir state/navigation hardening
+- [x] 21-03: Persistence, routing, and planning sync
+
+### Phase 22: Culture Tracking & Knowledge Expansion
 
 **Goal**: Close the v2 milestone with optional culture/grain tracking, kefir knowledge integration, and final cross-domain verification.  
-**Depends on**: Phase 20  
+**Depends on**: Phase 21  
 **Requirements**: [CULTURE-01, KNOW-01, KNOW-02]  
 **Success Criteria**:
 
@@ -111,19 +131,20 @@ Plans:
 
 Plans:
 
-- [ ] 21-01: Culture and grain tracking surfaces
-- [ ] 21-02: Knowledge filters, kefir content wiring, and contextual tips
-- [ ] 21-03: Cross-domain UAT, release notes, and milestone closure
+- [ ] 22-01: Culture and grain tracking surfaces
+- [ ] 22-02: Knowledge filters, kefir content wiring, and contextual tips
+- [ ] 22-03: Cross-domain UAT, release notes, and milestone closure
 
-## Progress: [░░░░░░░░░░░░░░░░] 0% (0 of 17 v2 plans complete)
+## Progress: [█████████████████░░] 86% (18 of 21 v2 plans complete)
 
 **Execution Order:**  
-Phases execute in numeric order: 17 → 18 → 19 → 20 → 21
+Phases execute in numeric order: 17 → 18 → 19 → 20 → 21 → 22
 
 | Phase | Plans Complete | Status | Completed |
 | ----- | -------------- | ------ | --------- |
-| 17. V2 Shell & Preparation Hubs | 0/4 | Planned | - |
-| 18. Oggi Cross-Domain Agenda | 0/3 | Planned | - |
-| 19. Milk Kefir Batch Core | 0/4 | Planned | - |
-| 20. Kefir Lineage & Journal | 0/3 | Not started | - |
-| 21. Culture Tracking & Knowledge Expansion | 0/3 | Not started | - |
+| 17. V2 Shell & Preparation Hubs | 4/4 | Complete | 2026-03-29 |
+| 18. Oggi Cross-Domain Agenda | 3/3 | Complete | 2026-03-29 |
+| 19. Milk Kefir Batch Core | 4/4 | Complete | 2026-03-30 |
+| 20. Kefir Lineage & Journal | 4/4 | Complete | 2026-04-02 |
+| 21. Runtime Hardening & Planning Sync | 3/3 | Complete | 2026-04-03 |
+| 22. Culture Tracking & Knowledge Expansion | 0/3 | Not started | - |

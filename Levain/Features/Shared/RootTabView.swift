@@ -17,10 +17,6 @@ struct RootTabView: View {
             if let banner = environment.banner {
                 VStack(spacing: 0) {
                     ToastBannerView(message: banner.message)
-                    Color.clear
-                        .frame(width: 1, height: 1)
-                        .accessibilityIdentifier("ToastBannerProbe")
-                        .accessibilityLabel(banner.message)
                 }
                 .padding(.horizontal, 16)
                 .padding(.top, 12)
@@ -48,15 +44,20 @@ struct RootTabView: View {
 
     private var tabs: some View {
         TabView(selection: $router.selectedTab) {
-            TodayView()
-                .tabItem {
-                    Label("Oggi", systemImage: "house.fill")
-                }
-                .tag(RootTab.oggi)
+            NavigationStack {
+                TodayView()
+            }
+            .toolbarColorScheme(.light, for: .navigationBar)
+            .toolbarBackground(Theme.Surface.app, for: .navigationBar)
+            .toolbarBackground(.visible, for: .navigationBar)
+            .tabItem {
+                Label("Home", systemImage: "house.fill")
+            }
+            .tag(RootTab.oggi)
 
-            NavigationStack(path: $router.preparationsPath) {
-                PreparationsView()
-                    .navigationDestination(for: PreparationsRoute.self) { route in
+            NavigationStack(path: $router.fermentationsPath) {
+                FermentationsView()
+                    .navigationDestination(for: FermentationsRoute.self) { route in
                         switch route {
                         case .breadHub:
                             BreadHubView()
@@ -75,7 +76,7 @@ struct RootTabView: View {
                         case let .starter(id):
                             StarterLookupView(id: id)
                         case .kefirBatch:
-                            KefirHubView()  // Phase 19 — replace with KefirBatchDetailView
+                            KefirBatchLookupView(id: route.kefirBatchID)
                         }
                     }
             }
@@ -83,12 +84,12 @@ struct RootTabView: View {
             .toolbarBackground(Theme.Surface.app, for: .navigationBar)
             .toolbarBackground(.visible, for: .navigationBar)
             .tabItem {
-                Label("Preparazioni", systemImage: "square.grid.2x2.fill")
+                Label("Batch", systemImage: "square.grid.2x2.fill")
             }
-            .tag(RootTab.preparazioni)
+            .tag(RootTab.fermentations)
 
             NavigationStack(path: $router.knowledgePath) {
-                KnowledgeView()
+                KnowledgeView(library: environment.knowledgeLibrary)
                     .navigationDestination(for: KnowledgeRoute.self) { route in
                         switch route {
                         case let .article(id):
@@ -100,7 +101,7 @@ struct RootTabView: View {
             .toolbarBackground(Theme.Surface.app, for: .navigationBar)
             .toolbarBackground(.visible, for: .navigationBar)
             .tabItem {
-                Label("Conoscenza", systemImage: "book.fill")
+                Label("Guide", systemImage: "book.fill")
             }
             .tag(RootTab.knowledge)
         }
@@ -283,6 +284,41 @@ private struct KnowledgeLookupView: View {
         .task {
             environment.knowledgeLibrary.loadIfNeeded()
         }
+    }
+}
+
+private struct KefirBatchLookupView: View {
+    @Environment(\.modelContext) private var modelContext
+
+    let id: UUID
+
+    @State private var batch: KefirBatch?
+
+    var body: some View {
+        Group {
+            if let batch {
+                KefirBatchDetailView(batch: batch)
+            } else {
+                ContentUnavailableView("Batch non trovato", systemImage: "exclamationmark.triangle")
+            }
+        }
+        .task(id: id) {
+            batch = load()
+        }
+    }
+
+    private func load() -> KefirBatch? {
+        let descriptor = FetchDescriptor<KefirBatch>(predicate: #Predicate { $0.id == id })
+        return try? modelContext.fetch(descriptor).first
+    }
+}
+
+private extension FermentationsRoute {
+    var kefirBatchID: UUID {
+        guard case .kefirBatch(let id) = self else {
+            preconditionFailure("Expected kefir batch route")
+        }
+        return id
     }
 }
 

@@ -68,7 +68,7 @@ Rebuild `Oggi` as the v2 daily operational dashboard: replace the current fixed-
 
 - Persisted kefir batch model, batch detail, storage-aware reminder defaults, and SwiftData-backed kefir agenda items — Phase 19
 - Kefir lineage, structured event journal, and archive/journal UI — Phase 20
-- Culture/grain tracking and kefir-aware Knowledge filters/tips — Phase 21
+- Culture/grain tracking and kefir-aware Knowledge filters/tips — Phase 22
 
 </deferred>
 

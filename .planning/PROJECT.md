@@ -18,15 +18,21 @@ The app must make the next fermentation action obvious without adding setup, inf
 - ✓ Notification routing and urgency semantics were hardened around safe fallbacks and real operational flows — phases 11-13
 - ✓ The current light-only design system, empty-state approach, and bread detail interaction model are stable enough to reuse — phases 10, 14, 16
 - ✓ Local-first persistence, explicit schema versioning, bundled system formulas, and manual backup/restore foundations exist for future extensions — phase 15
+- ✓ The v2 shell shipped with `Oggi`, `Preparazioni`, and `Knowledge`, plus always-visible quick actions and a reusable bread hub under Preparazioni — phase 17
+- ✓ The v2 additive schema boundary landed before kefir persistence, so later milk-kefir models can extend SwiftData without improvising migration work — phase 17
+- ✓ Oggi now uses a single ranked operational feed with shared domain-cued cards, multi-domain empty/future copy, and direct bake/starter routing, while keeping the kefir contract ready for the next phase — phase 18
+- ✓ The kefir data-layer foundation now ships with persisted `KefirBatch`, dedicated storage enums, and additive V3 migration coverage — phase 19-01
+- ✓ The kefir vertical now ships a live `Preparazioni` card plus real hub/list/detail surfaces that expose storage-aware batch status before editing flows land — phase 19-02
+- ✓ The kefir vertical now supports first-batch creation, persisted manage flows, derive-from-batch, and archive from the operational detail path without any culture prerequisite — phase 19-03
+- ✓ The kefir core now ships storage-aware local reminders, real `Oggi` participation, and direct notification/tap routing into batch detail — phase 19-04
+- ✓ Phase 20-01 now ships additive `KefirEvent` persistence, automatic event capture from core kefir mutations, and readable source/derived lineage context on the kefir list/detail surfaces — phase 20-01
+- ✓ Phase 20-02 now ships a real kefir journal/archive reading surface, reusable event-row grammar, recent-history previews on detail, and deterministic seeded journal coverage — phase 20-02
+- ✓ Phase 20 is now fully closed: archive browsing, lineage comparison, seeded history scenarios, and stable UI anchors for journal/archive/comparison regression coverage all ship and verify green — phases 20-03 and 20-04
+- ✓ Phase 21 is now fully closed: `Today` uses revision-cached operational snapshots, Knowledge/navigation ownership is centralized under the root shell, kefir lineage presentation is shared, persistence bootstrap failures are explicit, fake starter reminder routes are blocked, and the planning/codebase docs match the shipped app — phases 21-01 through 21-03
 
 ### Active
 
-- [ ] Shared top-level shell with `Oggi`, `Preparazioni`, and `Knowledge`, plus always-visible quick actions in `Preparazioni`
-- [ ] Preparations hub with a bread sub-hub that preserves current `Impasti`, `Starter`, and `Formule` flows through reused views and components
-- [ ] Milk kefir vertical centered on batch management, storage-aware routine handling, and local reminders
-- [ ] Cross-domain `Oggi` aggregation for bread, starter, and kefir tasks with all active objects visible, urgency communicated on the card, and direct object navigation
-- [ ] Lightweight kefir lineage/journal that supports operational decisions instead of replacing them
-- [ ] Optional culture/grain tracking plus cross-domain knowledge filters and contextual kefir guidance
+- [ ] Optional culture/grain tracking plus cross-domain knowledge filters and contextual kefir guidance (Phase 22)
 
 ### Out of Scope
 
@@ -56,21 +62,23 @@ The app must make the next fermentation action obvious without adding setup, inf
 
 | Decision | Rationale | Outcome |
 |----------|-----------|---------|
-| The v2 shell uses `Oggi`, `Preparazioni`, and `Knowledge` as the only top-level tabs | Scales the product beyond bread without adding arbitrary new tabs | — Pending |
-| Pane e lievito madre stays internally split into `Impasti`, `Starter`, and `Formule` inside Preparazioni | Preserves the current UX strengths and enables direct reuse of existing flows | — Pending |
-| Milk kefir is modeled batch-first; culture is secondary and journal is supportive | Matches the real workflow and avoids a culture-centric product | — Pending |
-| Storage mode is a primary kefir variable affecting state, copy, and reminders | Fridge/freezer are normal usage modes, not edge cases | — Pending |
-| Oggi keeps a uniform operational card grammar with explicit domain cues | Home must stay action-first even after becoming cross-domain | — Pending |
-| New v2 UI reuses the current `Theme`, design-system components, router conventions, and service patterns | Keeps the product visually coherent and avoids parallel logic | — Pending |
-| Oggi is a daily operational dashboard of all active objects, not a fixed-section to-do board | Real use needs visibility of everything alive, with urgency shown on the card instead of rigid buckets | — Pending |
-| Oggi cards deep-link directly to the underlying bake, starter, or kefir batch | Operational taps must bypass exploratory hierarchy to avoid bread-first regressions | — Pending |
-| Preparazioni quick actions are always visible and hub cards never disappear when empty | The root must support immediate creation while keeping both domains present and legible | — Pending |
-| The v1 → v2 schema migration is additive and prepared before kefir models land | Shell changes and future model additions must not risk existing local data | — Pending |
-| Structured journal remains kefir-only; bread keeps using the current bake history | The product intentionally accepts domain asymmetry instead of forcing a fake unified journal model | — Pending |
+| The v2 shell uses `Oggi`, `Preparazioni`, and `Knowledge` as the only top-level tabs | Scales the product beyond bread without adding arbitrary new tabs | ✓ Good |
+| Pane e lievito madre stays internally split into `Impasti`, `Starter`, and `Formule` inside Preparazioni | Preserves the current UX strengths and enables direct reuse of existing flows | ✓ Good |
+| Milk kefir is modeled batch-first; culture is secondary and journal is supportive | Matches the real workflow and avoids a culture-centric product | ✓ Good |
+| Storage mode is a primary kefir variable affecting state, copy, and reminders | Fridge/freezer are normal usage modes, not edge cases | ✓ Good |
+| Oggi keeps a uniform operational card grammar with explicit domain cues | Home must stay action-first even after becoming cross-domain | ✓ Good |
+| New v2 UI reuses the current `Theme`, design-system components, router conventions, and service patterns | Keeps the product visually coherent and avoids parallel logic | ✓ Good |
+| Oggi is a daily operational dashboard of all active objects, not a fixed-section to-do board | Real use needs visibility of everything alive, with urgency shown on the card instead of rigid buckets | ✓ Good |
+| Oggi cards deep-link directly to the underlying bake, starter, or kefir batch | Operational taps must bypass exploratory hierarchy to avoid bread-first regressions | ✓ Good |
+| Preparazioni quick actions are always visible and hub cards never disappear when empty | The root must support immediate creation while keeping both domains present and legible | ✓ Good |
+| The v1 → v2 schema migration is additive and prepared before kefir models land | Shell changes and future model additions must not risk existing local data | ✓ Good |
+| Structured journal remains kefir-only; bread keeps using the current bake history | The product intentionally accepts domain asymmetry instead of forcing a fake unified journal model | ✓ Good |
+| Kefir lineage and journal should be automatic-first and typed, not manual diary-first | Keeps history supportive of the operational workflow and aligns with PRD section 16 | ✓ Good |
+| Runtime hardening and planning sync land before culture/grain expansion | Phase 20 closeout exposed performance, state-ownership, and stale-memory risks that should be fixed before adding new scope | ✓ Landed in Phase 21 |
 | Product and AI context naming must use `Levain` consistently | Prevents drift in planning, copy, and code review | ✓ Good |
 | Window-based bake steps use `flexibleWindowStart` / `flexibleWindowEnd` for urgency instead of `plannedEnd` | Window-based bread flows remain a stable operational baseline to preserve | ✓ Good |
 | Persistent bootstrap must never auto-delete the on-disk store as an error recovery path | Silent local data loss is worse than temporary in-memory fallback | ✓ Good |
 | System knowledge and system formulas stay bundled JSON, while demo seed remains launch-option-only | Bundled content must stay deterministic and separate from user data | ✓ Good |
 
 ---
-*Last updated: 2026-03-29 after archiving the v1 planning baseline and opening the v2 milestone*
+*Last updated: 2026-04-03 after closing Phase 21 and restoring active/codebase planning sync*

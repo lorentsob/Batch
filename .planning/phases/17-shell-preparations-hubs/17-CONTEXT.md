@@ -60,7 +60,7 @@ Introduce the v2 top-level shell with `Oggi`, `Preparazioni`, and `Knowledge`; m
 - Cross-domain Oggi dashboard structure, urgency ranking, and time-based tie-breakers — Phase 18
 - Milk kefir data model, batch flows, and reminder logic — Phase 19
 - Batch derivation, journal, and archive UX — Phase 20
-- Culture/grain tracking and kefir knowledge expansion — Phase 21
+- Culture/grain tracking and kefir knowledge expansion — Phase 22
 
 </deferred>
 

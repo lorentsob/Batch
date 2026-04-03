@@ -116,9 +116,6 @@ struct BakeCreationView: View {
         }
         .navigationTitle("Nuovo bake")
         .tint(Theme.Control.primaryFill)
-        .toolbarColorScheme(.light, for: .navigationBar)
-        .toolbarBackground(Theme.Surface.app, for: .navigationBar)
-        .toolbarBackground(.visible, for: .navigationBar)
         .toolbar {
             ToolbarItem(placement: .cancellationAction) {
                 Button("Chiudi") { dismiss() }

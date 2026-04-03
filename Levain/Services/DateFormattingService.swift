@@ -22,6 +22,13 @@ enum DateFormattingService {
         return formatter
     }()
 
+    private static let dayFormatter: DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.locale = Locale(identifier: "it_IT")
+        formatter.dateFormat = "EEEE d MMM"
+        return formatter
+    }()
+
     static func time(_ date: Date) -> String {
         timeFormatter.string(from: date)
     }
@@ -38,6 +45,10 @@ enum DateFormattingService {
         return shortDayTimeFormatter.string(from: date)
     }
 
+    static func day(_ date: Date) -> String {
+        dayFormatter.string(from: date).capitalized(with: Locale(identifier: "it_IT"))
+    }
+
     static func duration(minutes: Int) -> String {
         let hours = minutes / 60
         let mins = minutes % 60
@@ -46,4 +57,3 @@ enum DateFormattingService {
         return "\(mins) min"
     }
 }
-

@@ -2,80 +2,146 @@ import Foundation
 import SwiftData
 
 enum ModelContainerFactory {
+    enum FactoryError: LocalizedError {
+        case applicationSupportDirectoryUnavailable
+        case persistentStoreDirectoryCreationFailed(URL, Error)
+        case persistentContainerCreationFailed(URL, Error)
+        case inMemoryContainerCreationFailed(Error)
+        case previewContainerCreationFailed(Error)
+        case previewSeedDataFailed(Error)
+
+        var errorDescription: String? {
+            switch self {
+            case .applicationSupportDirectoryUnavailable:
+                return "Application Support directory unavailable for the persistent store."
+            case .persistentStoreDirectoryCreationFailed(let url, let error):
+                return "Unable to create persistent store directory at \(url.path): \(error.localizedDescription)"
+            case .persistentContainerCreationFailed(let url, let error):
+                return "Unable to open persistent store at \(url.path): \(error.localizedDescription)"
+            case .inMemoryContainerCreationFailed(let error):
+                return "Unable to create in-memory model container: \(error.localizedDescription)"
+            case .previewContainerCreationFailed(let error):
+                return "Unable to create preview model container: \(error.localizedDescription)"
+            case .previewSeedDataFailed(let error):
+                return "Unable to seed preview model container: \(error.localizedDescription)"
+            }
+        }
+    }
+
+    typealias ContainerBuilder = (ModelConfiguration) throws -> ModelContainer
+    typealias PreviewSeedLoader = (ModelContext) throws -> Void
+
     static func makeContainer() -> ModelContainer {
-        // Use an isolated in-memory store when running under XCTest *or* when
-        // a UI test has explicitly requested a clean store via launch options.
-        let isTesting = NSClassFromString("XCTestCase") != nil
-        let wantsReset = AppLaunchOptions.shouldResetStore
+        do {
+            return try makeContainer(
+                isTesting: NSClassFromString("XCTestCase") != nil,
+                wantsReset: AppLaunchOptions.shouldResetStore
+            )
+        } catch {
+            fatalError("Unable to bootstrap model container: \(error.localizedDescription)")
+        }
+    }
+
+    static func makeContainer(
+        isTesting: Bool,
+        wantsReset: Bool,
+        baseDirectoryURL: URL? = nil,
+        fileManager: FileManager = .default,
+        containerBuilder: ContainerBuilder = buildContainer
+    ) throws -> ModelContainer {
         if isTesting || wantsReset {
-            return makeInMemoryContainer()
+            return try makeInMemoryContainer(containerBuilder: containerBuilder)
         }
 
-        let storeURL = persistentStoreURL()
+        let storeURL = try persistentStoreURL(baseDirectoryURL: baseDirectoryURL, fileManager: fileManager)
         do {
-            return try makePersistentContainer(at: storeURL)
+            return try containerBuilder(ModelConfiguration(url: storeURL))
         } catch {
-            return fallbackContainer(after: error, inMemory: true)
+            throw FactoryError.persistentContainerCreationFailed(storeURL, error)
         }
     }
 
     @MainActor
     static func makePreviewContainer(seed: Bool = true) -> ModelContainer {
         do {
-            let container = try ModelContainer(
-                for: LevainSchema.current,
-                migrationPlan: LevainMigrationPlan.self,
-                configurations: ModelConfiguration(isStoredInMemoryOnly: true)
+            return try makePreviewContainer(
+                seed: seed,
+                containerBuilder: buildContainer,
+                seedLoader: { context in
+                    try SeedDataLoader.ensureSeedData(in: context)
+                }
             )
-            if seed {
-                try SeedDataLoader.ensureSeedData(in: container.mainContext)
-            }
-            return container
         } catch {
-            return fallbackContainer(after: error, inMemory: true)
+            fatalError("Unable to bootstrap preview model container: \(error.localizedDescription)")
         }
     }
 
-    private static func makeInMemoryContainer() -> ModelContainer {
+    @MainActor
+    static func makePreviewContainer(
+        seed: Bool,
+        containerBuilder: ContainerBuilder,
+        seedLoader: PreviewSeedLoader
+    ) throws -> ModelContainer {
+        let container: ModelContainer
         do {
-            return try ModelContainer(
-                for: LevainSchema.current,
-                migrationPlan: LevainMigrationPlan.self,
-                configurations: ModelConfiguration(isStoredInMemoryOnly: true)
-            )
+            container = try containerBuilder(ModelConfiguration(isStoredInMemoryOnly: true))
         } catch {
-            return fallbackContainer(after: error, inMemory: true)
+            throw FactoryError.previewContainerCreationFailed(error)
+        }
+
+        if seed {
+            do {
+                try seedLoader(container.mainContext)
+            } catch {
+                throw FactoryError.previewSeedDataFailed(error)
+            }
+        }
+
+        return container
+    }
+
+    private static func makeInMemoryContainer(
+        containerBuilder: ContainerBuilder = buildContainer
+    ) throws -> ModelContainer {
+        do {
+            return try containerBuilder(ModelConfiguration(isStoredInMemoryOnly: true))
+        } catch {
+            throw FactoryError.inMemoryContainerCreationFailed(error)
         }
     }
 
-    private static func makePersistentContainer(at url: URL) throws -> ModelContainer {
-        let configuration = ModelConfiguration(url: url)
+    private static func buildContainer(configuration: ModelConfiguration) throws -> ModelContainer {
+        // All schema changes to date are purely additive (new optional entities).
+        // SwiftData's automatic lightweight inference handles these without needing
+        // an explicit migration plan, and — critically — works on stores that were
+        // created before versioned-schema metadata was ever written to disk.
+        // Re-add migrationPlan: only when a breaking (destructive) migration is needed.
         return try ModelContainer(
             for: LevainSchema.current,
-            migrationPlan: LevainMigrationPlan.self,
             configurations: configuration
         )
     }
 
-    private static func persistentStoreURL() -> URL {
-        let baseURL = FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask).first
-        let rootURL = baseURL ?? FileManager.default.temporaryDirectory
-        let folderURL = rootURL.appendingPathComponent("Levain", isDirectory: true)
-        try? FileManager.default.createDirectory(at: folderURL, withIntermediateDirectories: true)
-        return folderURL.appendingPathComponent("Levain.store")
-    }
-
-    private static func fallbackContainer(after error: Error, inMemory: Bool = true) -> ModelContainer {
-        assertionFailure("Unable to create persistent model container without mutating the existing store: \(error)")
-        let configuration = ModelConfiguration(isStoredInMemoryOnly: inMemory)
-        do {
-            return try ModelContainer(
-                for: LevainSchema.current,
-                migrationPlan: LevainMigrationPlan.self,
-                configurations: configuration
-            )
-        } catch {
-            fatalError("Unable to create in-memory fallback model container: \(error)")
+    static func persistentStoreURL(
+        baseDirectoryURL: URL? = nil,
+        fileManager: FileManager = .default
+    ) throws -> URL {
+        let rootURL: URL
+        if let baseDirectoryURL {
+            rootURL = baseDirectoryURL
+        } else if let applicationSupportDirectory = fileManager.urls(for: .applicationSupportDirectory, in: .userDomainMask).first {
+            rootURL = applicationSupportDirectory
+        } else {
+            throw FactoryError.applicationSupportDirectoryUnavailable
         }
+
+        let folderURL = rootURL.appendingPathComponent("Levain", isDirectory: true)
+        do {
+            try fileManager.createDirectory(at: folderURL, withIntermediateDirectories: true)
+        } catch {
+            throw FactoryError.persistentStoreDirectoryCreationFailed(folderURL, error)
+        }
+
+        return folderURL.appendingPathComponent("Levain.store")
     }
 }

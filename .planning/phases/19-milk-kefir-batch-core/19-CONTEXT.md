@@ -46,7 +46,7 @@ Ship the first usable milk kefir vertical around persistent batch management: ad
 ### Phase-order guardrail
 - Phase 19 ships batch persistence, core list/detail/editor flows, and storage-aware reminder behavior.
 - Phase 20 owns structured event history, visible derivation/provenance surfaces, and archive/journal reading experiences.
-- Phase 21 owns culture/grain tracking surfaces and kefir-specific Knowledge expansion.
+- Phase 22 owns culture/grain tracking surfaces and kefir-specific Knowledge expansion.
 
 ### Claude's Discretion
 - Exact batch-card density and how much secondary context fits on the card versus detail.
@@ -68,8 +68,8 @@ Ship the first usable milk kefir vertical around persistent batch management: ad
 ## Deferred Ideas
 
 - Structured kefir event log, visible genealogy/provenance UI, and richer archive/journal comparison flows — Phase 20
-- Optional culture/grain tracking plus measurement history and growth surfaces — Phase 21
-- Kefir knowledge categories, filters, and contextual troubleshooting tips — Phase 21
+- Optional culture/grain tracking plus measurement history and growth surfaces — Phase 22
+- Kefir knowledge categories, filters, and contextual troubleshooting tips — Phase 22
 
 </deferred>
 

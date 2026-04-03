@@ -34,7 +34,7 @@ struct FormulaListView: View {
                     }
                 } else {
                     ForEach(formulas) { formula in
-                        NavigationLink(value: PreparationsRoute.formula(formula.id)) {
+                        NavigationLink(value: FermentationsRoute.formula(formula.id)) {
                             SectionCard {
                                 VStack(alignment: .leading, spacing: 12) {
                                     HStack(alignment: .top) {

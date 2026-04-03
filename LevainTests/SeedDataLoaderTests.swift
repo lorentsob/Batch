@@ -30,6 +30,9 @@ struct SeedDataLoaderTests {
 
         let bakes = try context.fetch(FetchDescriptor<Bake>())
         #expect(bakes.count > 0, "Expected at least one bake after first seed")
+
+        let kefirEvents = try context.fetch(KefirEvent.timelineDescriptor)
+        #expect(kefirEvents.count > 0, "Expected seeded kefir history after first seed")
     }
 
     @Test("ensureSeedData is idempotent — second call does not duplicate content")
@@ -89,5 +92,42 @@ struct SeedDataLoaderTests {
 
         let starters = try context.fetch(FetchDescriptor<Starter>())
         #expect(starters.count > 0, "resetAndSeed must insert content even when flag was true")
+    }
+
+    @Test("operational scenario seeds event-rich kefir history")
+    func testOperationalScenarioSeedsKefirHistory() throws {
+        let context = try ModelTestSupport.makeInMemoryContext()
+
+        try SeedDataLoader.ensureSeedData(in: context, scenario: .operational)
+
+        let batches = try context.fetch(FetchDescriptor<KefirBatch>())
+        #expect(batches.count == 5, "Operational scenario should seed five kefir batches")
+
+        let events = try context.fetch(KefirEvent.timelineDescriptor)
+        #expect(events.count >= 20, "Operational scenario should seed a readable journal history")
+        #expect(events.contains(where: { $0.kind == .derivedFromBatch }), "Expected lineage events for derived batches")
+        #expect(events.contains(where: { $0.kind == .spawnedDerivedBatch }), "Expected reciprocal lineage events on source batches")
+        #expect(events.contains(where: { $0.kind == .storageChanged }), "Expected storage changes for paused batches")
+        #expect(events.contains(where: { $0.kind == .archived }), "Expected at least one archive event")
+    }
+
+    @Test("operational scenario seeds archived and derived kefir context")
+    func testOperationalScenarioSeedsArchivedDerivedKefirContext() throws {
+        let context = try ModelTestSupport.makeInMemoryContext()
+
+        try SeedDataLoader.ensureSeedData(in: context, scenario: .operational)
+
+        let archivedBatch = try context.fetch(FetchDescriptor<KefirBatch>()).first {
+            $0.name == "Batch test derivato"
+        }
+        #expect(archivedBatch?.isArchived == true, "Archived seeded batch should remain available in archive")
+
+        guard let archivedBatch else {
+            return
+        }
+
+        let archiveEvents = try context.fetch(KefirEvent.descriptor(for: archivedBatch.id))
+        #expect(archiveEvents.contains(where: { $0.kind == .derivedFromBatch }))
+        #expect(archiveEvents.contains(where: { $0.kind == .archived }))
     }
 }

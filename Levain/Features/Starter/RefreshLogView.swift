@@ -43,7 +43,7 @@ struct RefreshLogView: View {
             Section("Dettagli") {
                 DatePicker("Quando", selection: $dateTime)
                 TextField("Rapporto", text: $ratioText)
-                NumericField(title: "Temperatura ambiente (°C)", value: $ambientTemp)
+                NumericField(title: "Fuori frigo (°C)", value: $ambientTemp)
             }
 
             Section("Mix Farine") {

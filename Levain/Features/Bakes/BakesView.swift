@@ -78,7 +78,7 @@ struct BakesView: View {
                 if activeBakes.isEmpty == false {
                     ForEach(activeBakes) { bake in
                         ZStack {
-                            NavigationLink(value: PreparationsRoute.bake(bake.id)) {
+                            NavigationLink(value: FermentationsRoute.bake(bake.id)) {
                                 EmptyView()
                             }
                             .opacity(0)
@@ -162,7 +162,7 @@ struct BakesView: View {
 
                     SectionCard {
                         ZStack {
-                            NavigationLink(value: PreparationsRoute.formulaList) {
+                            NavigationLink(value: FermentationsRoute.formulaList) {
                                 EmptyView()
                             }
                             .opacity(0)
