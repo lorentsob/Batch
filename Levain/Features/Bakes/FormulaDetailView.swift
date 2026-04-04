@@ -9,6 +9,8 @@ struct FormulaDetailView: View {
     @State private var showingBakeEditor = false
     @State private var showingFormulaEditor = false
     @State private var showingRestoreConfirm = false
+    /// Incrementato solo a fine modifica / ripristino — evita `.id` basato su hash (instabile con Double/Data → loop UI).
+    @State private var detailRefreshToken = 0
 
     private let metricColumns = [
         GridItem(.adaptive(minimum: 110), spacing: 8)
@@ -41,27 +43,6 @@ struct FormulaDetailView: View {
               let sections = try? JSONDecoder().decode([ProcedureSection].self, from: data)
         else { return [] }
         return sections.filter { !$0.content.isEmpty }
-    }
-
-    /// Forza il ridisegno del contenuto quando i campi persistiti cambiano (SwiftUI a volte non aggiorna
-    /// le righe `ForEach` su struct identificate solo da UUID se il body non viene invalidato).
-    private var formulaDetailRefreshToken: Int {
-        var h = Hasher()
-        h.combine(formula.name)
-        h.combine(formula.notes)
-        h.combine(formula.defaultStepsPayload)
-        h.combine(formula.ingredients ?? "")
-        h.combine(formula.procedure ?? "")
-        h.combine(formula.totalFlourWeight)
-        h.combine(formula.totalWaterWeight)
-        h.combine(formula.saltWeight)
-        h.combine(formula.inoculationPercent)
-        h.combine(formula.servings)
-        h.combine(formula.typeRaw)
-        h.combine(formula.yeastTypeRaw ?? "")
-        h.combine(formula.floursPayload ?? Data())
-        h.combine(formula.isModifiedFromDefault)
-        return h.finalize()
     }
 
     var body: some View {
@@ -239,7 +220,7 @@ struct FormulaDetailView: View {
             }
             .padding(.horizontal, 20)
             .padding(.vertical, 24)
-            .id(formulaDetailRefreshToken)
+            .id(detailRefreshToken)
         }
         .contentMargins(.bottom, 88, for: .scrollContent)
         .background(Theme.background.ignoresSafeArea())
@@ -274,10 +255,16 @@ struct FormulaDetailView: View {
         ) {
             Button("Ripristina", role: .destructive) {
                 restoreToDefault()
+                detailRefreshToken += 1
             }
             Button("Annulla", role: .cancel) {}
         } message: {
             Text("Tutte le modifiche alla ricetta verranno perse.")
+        }
+        .onChange(of: showingFormulaEditor) { wasShowing, isShowing in
+            if wasShowing && !isShowing {
+                detailRefreshToken += 1
+            }
         }
     }
 
