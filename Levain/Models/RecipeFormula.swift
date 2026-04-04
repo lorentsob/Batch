@@ -20,7 +20,8 @@ final class RecipeFormula {
     var ingredients: String?
     var procedure: String?
     var bakingInstructions: String?
-    private var defaultStepsPayload: Data
+    /// Internal (not `private`) so SwiftData change tracking propagates when steps are edited.
+    var defaultStepsPayload: Data
     var isSystemFormula: Bool = false
     var isModifiedFromDefault: Bool = false
     var isArchived: Bool = false
