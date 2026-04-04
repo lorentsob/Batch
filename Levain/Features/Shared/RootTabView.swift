@@ -223,28 +223,27 @@ private struct BakeLookupView: View {
 }
 
 private struct FormulaLookupView: View {
-    @Environment(\.modelContext) private var modelContext
+    private let formulaID: UUID
 
-    let id: UUID
+    /// Live query so edits from sheets invalidate the detail view reliably (avoids stale @State snapshot).
+    @Query private var matchingFormulas: [RecipeFormula]
 
-    @State private var formula: RecipeFormula?
+    init(id: UUID) {
+        formulaID = id
+        _matchingFormulas = Query(
+            filter: #Predicate<RecipeFormula> { $0.id == formulaID },
+            sort: \RecipeFormula.name
+        )
+    }
 
     var body: some View {
         Group {
-            if let formula {
+            if let formula = matchingFormulas.first {
                 FormulaDetailView(formula: formula)
             } else {
                 ContentUnavailableView("Ricetta non trovata", systemImage: "exclamationmark.triangle")
             }
         }
-        .task(id: id) {
-            formula = load()
-        }
-    }
-
-    private func load() -> RecipeFormula? {
-        let descriptor = FetchDescriptor<RecipeFormula>(predicate: #Predicate { $0.id == id })
-        return try? modelContext.fetch(descriptor).first
     }
 }
 
