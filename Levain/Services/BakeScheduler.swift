@@ -6,27 +6,42 @@ enum BakeScheduler {
         targetBakeDateTime: Date,
         formula: RecipeFormula,
         starter: Starter? = nil,
-        notes: String = ""
+        notes: String = "",
+        yeastConversion: YeastConversionResult? = nil
     ) -> Bake {
         formula.recalculateDerivedValues()
+
+        // Quando viene fornita una conversione lievito commerciale, usiamo i suoi valori
+        // per farina/acqua/peso totale al posto di quelli della formula originale.
+        let flourWeight    = yeastConversion?.newTotalFlourWeight ?? formula.totalFlourWeight
+        let waterWeight    = yeastConversion?.newTotalWaterWeight ?? formula.totalWaterWeight
+        let hydration      = yeastConversion?.hydrationPercent    ?? formula.hydrationPercent
+        let inoculationPct = yeastConversion.map { $0.yeastPercent } ?? formula.inoculationPercent
+        let totalDough     = yeastConversion?.totalDoughWeight     ?? formula.totalDoughWeight
+
         let bake = Bake(
             name: name.isEmpty ? formula.name : name,
             type: formula.type,
             targetBakeDateTime: targetBakeDateTime,
             formula: formula,
             starter: starter,
-            inoculationPercent: formula.inoculationPercent,
-            totalFlourWeight: formula.totalFlourWeight,
-            totalWaterWeight: formula.totalWaterWeight,
-            totalDoughWeight: formula.totalDoughWeight,
-            hydrationPercent: formula.hydrationPercent,
+            inoculationPercent: inoculationPct,
+            totalFlourWeight: flourWeight,
+            totalWaterWeight: waterWeight,
+            totalDoughWeight: totalDough,
+            hydrationPercent: hydration,
             servings: formula.servings,
             notes: notes,
             ingredients: formula.ingredients ?? "",
             procedure: formula.procedure ?? "",
             bakingInstructions: formula.bakingInstructions ?? ""
         )
-        let steps = generateSteps(for: bake, from: formula, targetBakeDateTime: targetBakeDateTime)
+        let steps = generateSteps(
+            for: bake,
+            from: formula,
+            targetBakeDateTime: targetBakeDateTime,
+            yeastConversion: yeastConversion
+        )
         bake.steps = steps
         steps.forEach { $0.bake = bake }
         return bake
@@ -35,7 +50,8 @@ enum BakeScheduler {
     static func generateSteps(
         for bake: Bake,
         from formula: RecipeFormula,
-        targetBakeDateTime: Date
+        targetBakeDateTime: Date,
+        yeastConversion: YeastConversionResult? = nil
     ) -> [BakeStep] {
         let templates = formula.defaultSteps
         var cursor = targetBakeDateTime
@@ -43,7 +59,22 @@ enum BakeScheduler {
 
         for index in templates.indices.reversed() {
             let template = templates[index]
-            let start = cursor.adding(minutes: -max(template.durationMinutes, 1))
+            // Se è una conversione lievito commerciale, sostituiamo le durate di bulk e proof
+            // con quelle calcolate dal profilo tempi scelto.
+            let effectiveDuration: Int
+            if let yeastConversion {
+                switch template.type {
+                case .bulk:
+                    effectiveDuration = yeastConversion.bulkDurationMinutes
+                case .proof:
+                    effectiveDuration = yeastConversion.proofDurationMinutes
+                default:
+                    effectiveDuration = template.durationMinutes
+                }
+            } else {
+                effectiveDuration = template.durationMinutes
+            }
+            let start = cursor.adding(minutes: -max(effectiveDuration, 1))
             let isWindowBased = [.proof, .coldRetard].contains(template.type)
             let flexibleWindowStart = isWindowBased ? cursor : start
             let flexibleWindowEnd = isWindowBased
@@ -55,7 +86,7 @@ enum BakeScheduler {
                 nameOverride: template.name,
                 descriptionText: template.details,
                 plannedStart: start,
-                plannedDurationMinutes: max(template.durationMinutes, 1),
+                plannedDurationMinutes: max(effectiveDuration, 1),
                 flexibleWindowStart: flexibleWindowStart,
                 flexibleWindowEnd: flexibleWindowEnd,
                 reminderOffsetMinutes: max(template.reminderOffsetMinutes, 0),

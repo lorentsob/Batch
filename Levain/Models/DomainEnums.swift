@@ -149,6 +149,7 @@ enum YeastType: String, CaseIterable, Codable, Identifiable {
     case sourdough
     case dryYeast
     case freshYeast
+    case instantYeast
     case none
 
     var id: String { rawValue }
@@ -158,7 +159,99 @@ enum YeastType: String, CaseIterable, Codable, Identifiable {
         case .sourdough: "Lievito madre"
         case .dryYeast: "Lievito di birra secco"
         case .freshYeast: "Lievito di birra fresco"
+        case .instantYeast: "Lievito instant (secco per pane)"
         case .none: "Nessun lievito"
+        }
+    }
+
+    var shortTitle: String {
+        switch self {
+        case .sourdough: "Madre"
+        case .dryYeast: "Birra secco"
+        case .freshYeast: "Birra fresco"
+        case .instantYeast: "Instant"
+        case .none: "Nessun lievito"
+        }
+    }
+
+    var isCommercial: Bool {
+        switch self {
+        case .dryYeast, .freshYeast, .instantYeast: true
+        default: false
+        }
+    }
+
+    /// Tipi selezionabili come lievito commerciale nella creazione cottura
+    static var commercialCases: [YeastType] { [.freshYeast, .dryYeast, .instantYeast] }
+}
+
+/// Profilo tempi di lievitazione — non persistito, usato solo in fase di creazione cottura
+enum YeastProfile: String, CaseIterable, Identifiable {
+    case slow
+    case medium
+    case fast
+
+    var id: String { rawValue }
+
+    var title: String {
+        switch self {
+        case .slow: "Lenta (16–20h)"
+        case .medium: "Media (8–12h)"
+        case .fast: "Rapida (2–4h)"
+        }
+    }
+
+    var shortTitle: String {
+        switch self {
+        case .slow: "Lenta"
+        case .medium: "Media"
+        case .fast: "Rapida"
+        }
+    }
+
+    /// Durata bulk fermentation in minuti (midpoint del range)
+    var bulkDurationMinutes: Int {
+        switch self {
+        case .slow: 1080   // 18h
+        case .medium: 360  // 6h
+        case .fast: 90     // 1.5h
+        }
+    }
+
+    /// Durata appretto in minuti (midpoint del range)
+    var proofDurationMinutes: Int {
+        switch self {
+        case .slow: 600    // 10h (tipicamente freddo)
+        case .medium: 90   // 1.5h
+        case .fast: 60     // 1h
+        }
+    }
+
+    /// Grammi di lievito instant per 500g farina (midpoint del range da documento)
+    var instantYeastGramsPer500: Double {
+        switch self {
+        case .slow: 1.5
+        case .medium: 3.0
+        case .fast: 6.0
+        }
+    }
+
+    /// Grammi di lievito fresco per 500g farina (midpoint del range da documento)
+    var freshYeastGramsPer500: Double {
+        switch self {
+        case .slow: 4.75
+        case .medium: 9.0
+        case .fast: 18.0
+        }
+    }
+
+    /// Grammi di lievito secco attivo per 500g farina
+    var dryYeastGramsPer500: Double {
+        // Secco attivo ≈ instant × 1.25 (fresco × 0.40 vs fresco × 0.33)
+        switch self {
+        case .slow: 1.9
+        case .medium: 3.75
+        case .fast: 7.5
         }
     }
 }
