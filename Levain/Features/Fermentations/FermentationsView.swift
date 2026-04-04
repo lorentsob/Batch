@@ -7,7 +7,7 @@ struct FermentationsView: View {
     @EnvironmentObject private var router: AppRouter
 
     @Query(sort: \Bake.targetBakeDateTime, order: .forward) private var bakes: [Bake]
-    @Query private var starters: [Starter]
+    @Query(filter: #Predicate<Starter> { $0.archivedAt == nil }) private var starters: [Starter]
     @Query(sort: \RecipeFormula.name) private var formulas: [RecipeFormula]
     @Query(sort: \KefirBatch.lastManagedAt, order: .reverse) private var kefirBatches: [KefirBatch]
     @Query private var appSettingsList: [AppSettings]
@@ -194,7 +194,7 @@ struct FermentationsView: View {
         guard !activeBakes.isEmpty else { return [] }
         return [
             .init(
-                icon: "loaf.fill",
+                icon: "fork.knife",
                 label: "\(activeBakes.count) in corso"
             )
         ]
@@ -226,7 +226,7 @@ struct FermentationsView: View {
         guard kefirBatches.isEmpty == false else { return [] }
         var rows: [FermentHubTile.Row] = []
         if kefirBatches.warningKefirCount > 0 {
-            rows.append(.init(icon: "exclamationmark.circle.fill", label: "\(kefirBatches.warningKefirCount) attenzione", tone: .warning))
+            rows.append(.init(icon: "exclamationmark.circle.fill", label: "\(kefirBatches.warningKefirCount) da rinnovare", tone: .warning))
         }
         if kefirBatches.activeKefirCount > 0 {
             rows.append(.init(icon: "checkmark.circle.fill", label: "\(kefirBatches.activeKefirCount) in corso", tone: .ok))

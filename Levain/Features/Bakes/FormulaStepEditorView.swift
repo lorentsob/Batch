@@ -50,7 +50,11 @@ struct FormulaStepEditorView: View {
                         .font(.body)
                         .foregroundStyle(Theme.ink)
                         .frame(minHeight: 120)
-                        .scrollContentBackground(.hidden)
+                        .padding(6)
+                        .background(
+                            RoundedRectangle(cornerRadius: 10, style: .continuous)
+                                .fill(Theme.Surface.card)
+                        )
                 }
                 .listRowInsets(EdgeInsets(top: 10, leading: 16, bottom: 10, trailing: 16))
             }
@@ -98,7 +102,11 @@ struct FormulaStepEditorView: View {
                         .font(.body)
                         .foregroundStyle(Theme.ink)
                         .frame(minHeight: 80)
-                        .scrollContentBackground(.hidden)
+                        .padding(6)
+                        .background(
+                            RoundedRectangle(cornerRadius: 10, style: .continuous)
+                                .fill(Theme.Surface.card)
+                        )
                 }
                 .listRowInsets(EdgeInsets(top: 10, leading: 16, bottom: 10, trailing: 16))
             }
