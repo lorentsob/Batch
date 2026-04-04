@@ -42,11 +42,17 @@ struct FormulaStepEditorView: View {
                     TextField("es. Autolisi", text: $name)
                         .multilineTextAlignment(.trailing)
                 }
-                LabeledContent("Dettagli") {
-                    TextField("Cosa fare in questa fase", text: $details, axis: .vertical)
-                        .lineLimit(2...4)
-                        .multilineTextAlignment(.trailing)
+                VStack(alignment: .leading, spacing: 6) {
+                    Text("Dettagli")
+                        .font(.subheadline)
+                        .foregroundStyle(Theme.muted)
+                    TextEditor(text: $details)
+                        .font(.body)
+                        .foregroundStyle(Theme.ink)
+                        .frame(minHeight: 120)
+                        .scrollContentBackground(.hidden)
                 }
+                .listRowInsets(EdgeInsets(top: 10, leading: 16, bottom: 10, trailing: 16))
             }
 
             Section("Timing") {
@@ -84,11 +90,17 @@ struct FormulaStepEditorView: View {
                     TextField("es. Raddoppio", text: $volumeTarget)
                         .multilineTextAlignment(.trailing)
                 }
-                LabeledContent("Note") {
-                    TextField("Osservazioni", text: $notes, axis: .vertical)
-                        .lineLimit(2...4)
-                        .multilineTextAlignment(.trailing)
+                VStack(alignment: .leading, spacing: 6) {
+                    Text("Note")
+                        .font(.subheadline)
+                        .foregroundStyle(Theme.muted)
+                    TextEditor(text: $notes)
+                        .font(.body)
+                        .foregroundStyle(Theme.ink)
+                        .frame(minHeight: 80)
+                        .scrollContentBackground(.hidden)
                 }
+                .listRowInsets(EdgeInsets(top: 10, leading: 16, bottom: 10, trailing: 16))
             }
         }
         .navigationTitle(name.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty ? "Fase" : name)
