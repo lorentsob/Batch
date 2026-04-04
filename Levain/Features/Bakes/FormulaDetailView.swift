@@ -2,7 +2,7 @@ import SwiftData
 import SwiftUI
 
 struct FormulaDetailView: View {
-    let formula: RecipeFormula
+    @Bindable var formula: RecipeFormula
 
     @Environment(\.modelContext) private var modelContext
 
