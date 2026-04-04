@@ -50,6 +50,9 @@ Progress: [█████████████████░░] 86% (18 of
 - Plan and execute `22-01` culture and grain tracking surfaces
 - Execute `22-02` kefir-aware knowledge filters, content wiring, and contextual tips
 - Execute `22-03` cross-domain UAT, release notes, and milestone closure
+- [ui] Formula edit button + lista unificata + ripristino default (2026-04-04-formula-edit-and-unified-list.md)
+- [ui] Supporto lievito di birra (2026-04-04-lievito-di-birra-support.md)
+- [ui] Auto-conversione quando si cambia tipo lievito (2026-04-04-yeast-switch-auto-conversion.md)
 
 ### Blockers/Concerns
 
