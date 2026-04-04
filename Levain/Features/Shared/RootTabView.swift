@@ -124,6 +124,12 @@ struct RootTabView: View {
             }
         }
 
+        do {
+            try SeedDataLoader.ensureSystemFormulas(in: modelContext)
+        } catch {
+            assertionFailure("System formula seeding failed: \(error)")
+        }
+
         environment.knowledgeLibrary.preloadIfNeeded()
 
         guard ProcessInfo.processInfo.environment["XCODE_RUNNING_FOR_PREVIEWS"] != "1" else {
