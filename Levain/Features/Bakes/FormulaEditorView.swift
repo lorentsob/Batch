@@ -71,7 +71,10 @@ struct FormulaEditorView: View {
                         Text(option.title).tag(option)
                     }
                 }
-                NumericField(title: "Inoculo/Lievito (%)", value: $inoculationPercent)
+                NumericField(
+                    title: yeastType == .sourdough ? "Inoculo starter (%)" : "Quantità lievito (%)",
+                    value: $inoculationPercent
+                )
             }
 
             Section("Mix Farine") {
@@ -222,6 +225,9 @@ struct FormulaEditorView: View {
             formula.notes = notes
             formula.defaultSteps = steps
             formula.recalculateDerivedValues()
+            if formula.isSystemFormula {
+                formula.isModifiedFromDefault = true
+            }
         } else {
             let newFormula = RecipeFormula(
                 name: name,

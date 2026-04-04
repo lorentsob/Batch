@@ -4,8 +4,11 @@ import SwiftUI
 struct FormulaDetailView: View {
     let formula: RecipeFormula
 
+    @Environment(\.modelContext) private var modelContext
+
     @State private var showingBakeEditor = false
     @State private var showingFormulaEditor = false
+    @State private var showingRestoreConfirm = false
 
     private let metricColumns = [
         GridItem(.adaptive(minimum: 110), spacing: 8)
@@ -56,10 +59,18 @@ struct FormulaDetailView: View {
                         Text(formula.name)
                             .font(.system(size: 30, weight: .bold))
                             .foregroundStyle(Theme.ink)
-                        HStack(spacing: 12) {
-                            StateBadge(text: formula.type.title, tone: .info)
-                            StateBadge(text: "\(safeHydrationPercent)% idratazione", tone: .count)
-                            StateBadge(text: "\(safeInoculationPercent)% inoculo", tone: .schedule)
+                        ScrollView(.horizontal, showsIndicators: false) {
+                            HStack(spacing: 8) {
+                                StateBadge(text: formula.type.title, tone: .info)
+                                StateBadge(text: formula.yeastType.title, tone: .info)
+                                StateBadge(text: "\(safeHydrationPercent)% idratazione", tone: .count)
+                                StateBadge(
+                                    text: formula.yeastType == .sourdough
+                                        ? "\(safeInoculationPercent)% inoculo"
+                                        : "\(String(format: "%.1f", formula.inoculationPercent))% lievito",
+                                    tone: .schedule
+                                )
+                            }
                         }
                     }
                 }
@@ -128,26 +139,23 @@ struct FormulaDetailView: View {
                     }
                 }
 
-                // Azione di modifica formula centrata sotto la preparazione
-                Button {
-                    showingFormulaEditor = true
-                } label: {
-                    Text("Modifica ricetta")
-                        .font(.callout.weight(.semibold))
-                        .foregroundStyle(Theme.Control.secondaryForeground)
-                        .padding(.horizontal, 16)
-                        .padding(.vertical, 10)
-                        .background(
-                            Capsule(style: .continuous)
-                                .fill(Theme.Surface.card)
-                        )
-                        .overlay(
-                            Capsule(style: .continuous)
-                                .stroke(Theme.Control.secondaryBorder, lineWidth: 1)
-                        )
+                if formula.isSystemFormula && formula.isModifiedFromDefault {
+                    Button(role: .destructive) {
+                        showingRestoreConfirm = true
+                    } label: {
+                        Label("Ripristina default", systemImage: "arrow.counterclockwise")
+                            .font(.callout.weight(.semibold))
+                            .foregroundStyle(.red)
+                            .padding(.horizontal, 16)
+                            .padding(.vertical, 10)
+                            .background(
+                                Capsule(style: .continuous)
+                                    .fill(Color.red.opacity(0.08))
+                            )
+                    }
+                    .buttonStyle(.plain)
+                    .frame(maxWidth: .infinity, alignment: .center)
                 }
-                .buttonStyle(.plain)
-                .frame(maxWidth: .infinity, alignment: .center)
             }
             .padding(.horizontal, 20)
             .padding(.vertical, 24)
@@ -158,6 +166,11 @@ struct FormulaDetailView: View {
         .tint(Theme.Control.primaryFill)
         .toolbar {
             ToolbarItemGroup(placement: .topBarTrailing) {
+                Button {
+                    showingFormulaEditor = true
+                } label: {
+                    Image(systemName: "pencil")
+                }
                 Button("Nuovo bake") {
                     showingBakeEditor = true
                 }
@@ -173,5 +186,39 @@ struct FormulaDetailView: View {
                 BakeCreationView(preselectedFormula: formula)
             }
         }
+        .confirmationDialog(
+            "Ripristina la ricetta ai valori originali?",
+            isPresented: $showingRestoreConfirm,
+            titleVisibility: .visible
+        ) {
+            Button("Ripristina", role: .destructive) {
+                restoreToDefault()
+            }
+            Button("Annulla", role: .cancel) {}
+        } message: {
+            Text("Tutte le modifiche alla ricetta verranno perse.")
+        }
+    }
+
+    private func restoreToDefault() {
+        guard let original = SystemFormulaLoader.formula(id: formula.id) else { return }
+        formula.name = original.name
+        formula.type = original.type
+        formula.totalFlourWeight = original.totalFlourWeight
+        formula.totalWaterWeight = original.totalWaterWeight
+        formula.saltWeight = original.saltWeight
+        formula.inoculationPercent = original.inoculationPercent
+        formula.servings = original.servings
+        formula.notes = original.notes
+        formula.flourMix = original.flourMix
+        formula.yeastType = original.yeastType
+        formula.selectedFlours = original.flours
+        formula.defaultSteps = original.defaultSteps
+        formula.ingredients = original.ingredients
+        formula.procedure = original.procedure
+        formula.bakingInstructions = original.bakingInstructions
+        formula.isModifiedFromDefault = false
+        formula.recalculateDerivedValues()
+        try? modelContext.save()
     }
 }
