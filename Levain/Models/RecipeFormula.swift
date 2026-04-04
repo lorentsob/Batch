@@ -23,6 +23,7 @@ final class RecipeFormula {
     private var defaultStepsPayload: Data
     var isSystemFormula: Bool = false
     var isModifiedFromDefault: Bool = false
+    var isArchived: Bool = false
 
     @Relationship(inverse: \Bake.formula)
     var bakes: [Bake]

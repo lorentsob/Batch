@@ -14,7 +14,7 @@ struct FormulaDetailView: View {
         GridItem(.adaptive(minimum: 110), spacing: 8)
     ]
 
-    // MARK: - Parsed data (same structure as BakeIngredientsView)
+    // MARK: - Parsed data
 
     private struct IngredientSection: Decodable {
         let title: String
@@ -24,6 +24,7 @@ struct FormulaDetailView: View {
     private struct ProcedureSection: Decodable {
         let title: String
         let content: String
+        // `level` dal JSON è ignorato automaticamente
     }
 
     private var ingredientSections: [IngredientSection] {
@@ -39,7 +40,7 @@ struct FormulaDetailView: View {
               let data = raw.data(using: .utf8),
               let sections = try? JSONDecoder().decode([ProcedureSection].self, from: data)
         else { return [] }
-        return sections
+        return sections.filter { !$0.content.isEmpty }
     }
 
     var body: some View {
@@ -108,6 +109,64 @@ struct FormulaDetailView: View {
                             Text(formula.notes)
                                 .font(.footnote)
                                 .foregroundStyle(Theme.muted)
+                        }
+                    }
+                }
+
+                if !ingredientSections.isEmpty {
+                    SectionCard {
+                        VStack(alignment: .leading, spacing: 16) {
+                            Text("Ingredienti")
+                                .font(.headline)
+                                .foregroundStyle(Theme.ink)
+
+                            ForEach(ingredientSections, id: \.title) { section in
+                                VStack(alignment: .leading, spacing: 8) {
+                                    if !section.title.isEmpty {
+                                        Text(section.title.uppercased())
+                                            .font(.caption.weight(.semibold))
+                                            .tracking(0.6)
+                                            .foregroundStyle(Theme.Control.primaryFill)
+                                    }
+                                    VStack(alignment: .leading, spacing: 6) {
+                                        ForEach(section.items, id: \.self) { item in
+                                            HStack(alignment: .top, spacing: 10) {
+                                                RoundedRectangle(cornerRadius: 1)
+                                                    .fill(Theme.Control.primaryFill.opacity(0.55))
+                                                    .frame(width: 3, height: 16)
+                                                    .padding(.top, 3)
+                                                Text(item)
+                                                    .font(.subheadline)
+                                                    .foregroundStyle(Theme.ink)
+                                                    .fixedSize(horizontal: false, vertical: true)
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+
+                if !procedureSections.isEmpty {
+                    SectionCard {
+                        VStack(alignment: .leading, spacing: 16) {
+                            Text("Dettagli")
+                                .font(.headline)
+                                .foregroundStyle(Theme.ink)
+
+                            ForEach(procedureSections, id: \.title) { section in
+                                VStack(alignment: .leading, spacing: 8) {
+                                    Text(section.title.uppercased())
+                                        .font(.caption.weight(.semibold))
+                                        .tracking(0.6)
+                                        .foregroundStyle(Theme.Control.primaryFill)
+                                    Text(section.content)
+                                        .font(.subheadline)
+                                        .foregroundStyle(Theme.ink)
+                                        .fixedSize(horizontal: false, vertical: true)
+                                }
+                            }
                         }
                     }
                 }
