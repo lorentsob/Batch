@@ -581,5 +581,108 @@
         "ingredients": []
       }
     ]
+  },
+  {
+    "id": "C3D4E5F6-A7B8-9012-CDEF-012345678902",
+    "name": "Pan Brioche (lievito di birra)",
+    "type": "dolci",
+    "yeastType": "freshYeast",
+    "totalFlourWeight": 500,
+    "totalWaterWeight": 280,
+    "saltWeight": 8.0,
+    "servings": 3,
+    "inoculationPercent": 1.2,
+    "flourMix": "100% farina forte W300 (circa 13 g proteine)",
+    "flours": [],
+    "notes": "Pan brioche soffice con lievito di birra fresco. Resa: 3 rotolini. Lievitazione in due tempi a temperatura ambiente.",
+    "ingredients": "[{\"title\": \"Impasto\", \"items\": [\"500 g farina W300 (circa 13 g proteine)\", \"280 ml latte\", \"6 g lievito di birra fresco\", \"1 uovo intero\", \"1 tuorlo\", \"8 g sale\", \"40 g zucchero\", \"70 g burro morbido\"]}, {\"title\": \"Spennellatura\", \"items\": [\"1 tuorlo\", \"q.b. latte\"]}]",
+    "procedure": "[{\"title\": \"Impasto\", \"level\": 2, \"content\": \"- Metti nella ciotola la farina, il lievito di birra fresco sbriciolato, lo zucchero e tutto il latte.\\n- Inizia a impastare fino a quando l'impasto prende consistenza.\\n- Aggiungi il sale e continua a lavorare fino a renderlo liscio e omogeneo.\\n- Inserisci l'uovo intero e, solo dopo che è stato assorbito, aggiungi il tuorlo.\\n- Per ultimo incorpora il burro morbido a pezzetti, aspettando che ogni aggiunta sia assorbita prima di aggiungerne altro.\\n- L'impasto finale deve essere elastico e lucido.\"}, {\"title\": \"Prima lievitazione\", \"level\": 2, \"content\": \"- Copri la ciotola.\\n- Lascia lievitare per 2 ore a temperatura ambiente (circa 19–20°C).\"}, {\"title\": \"Formatura\", \"level\": 2, \"content\": \"- Stendi l'impasto delicatamente.\\n- Forma 3 rotolini di dimensioni simili.\\n- Disponili in uno stampo da plumcake imburrato o su una teglia rivestita di carta forno.\"}, {\"title\": \"Seconda lievitazione\", \"level\": 2, \"content\": \"- Copri i rotolini.\\n- Lascia lievitare per circa 1 ora e 30 minuti a temperatura ambiente, finché raddoppiano di volume.\"}, {\"title\": \"Cottura\", \"level\": 2, \"content\": \"- Preriscalda il forno a 180°C in modalità ventilata.\\n- Spennella delicatamente la superficie con il tuorlo mescolato a un goccio di latte.\\n- Inforna per 20 minuti, finché la superficie è dorata.\\n- Fai raffreddare su una griglia prima di servire.\"}]",
+    "bakingInstructions": "[\"Preriscalda il forno a 180°C in modalità ventilata.\", \"Spennella la superficie con tuorlo e latte.\", \"Inforna per 20 minuti, finché la superficie è dorata.\", \"Fai raffreddare su una griglia prima di servire.\"]",
+    "defaultSteps": [
+      {
+        "id": "C3001001-0001-0001-0001-000000000001",
+        "name": "Impasto",
+        "typeRaw": "mix",
+        "durationMinutes": 25,
+        "details": "- Metti nella ciotola la farina, il lievito di birra fresco sbriciolato, lo zucchero e tutto il latte.\n- Inizia a impastare fino a quando l'impasto prende consistenza.\n- Aggiungi il sale e continua a lavorare fino a renderlo liscio e omogeneo.\n- Inserisci l'uovo intero e, solo dopo che è stato assorbito, aggiungi il tuorlo.\n- Per ultimo incorpora il burro morbido a pezzetti, aspettando che ogni aggiunta sia assorbita.\n- L'impasto finale deve essere elastico e lucido.",
+        "notes": "",
+        "reminderOffsetMinutes": 0,
+        "temperatureRange": "",
+        "volumeTarget": "",
+        "ingredients": [
+          "500 g farina W300 (circa 13 g proteine)",
+          "280 ml latte",
+          "6 g lievito di birra fresco",
+          "1 uovo intero",
+          "1 tuorlo",
+          "8 g sale",
+          "40 g zucchero",
+          "70 g burro morbido"
+        ]
+      },
+      {
+        "id": "C3001001-0001-0001-0001-000000000002",
+        "name": "Prima lievitazione",
+        "typeRaw": "bulk",
+        "durationMinutes": 120,
+        "details": "- Copri la ciotola.\n- Lascia lievitare per 2 ore a temperatura ambiente (circa 19–20°C).",
+        "notes": "",
+        "reminderOffsetMinutes": 0,
+        "temperatureRange": "19–20°C",
+        "volumeTarget": "",
+        "ingredients": []
+      },
+      {
+        "id": "C3001001-0001-0001-0001-000000000003",
+        "name": "Formatura",
+        "typeRaw": "shape",
+        "durationMinutes": 15,
+        "details": "- Stendi l'impasto delicatamente.\n- Forma 3 rotolini di dimensioni simili.\n- Disponili in uno stampo da plumcake imburrato o su una teglia rivestita di carta forno.",
+        "notes": "",
+        "reminderOffsetMinutes": 0,
+        "temperatureRange": "",
+        "volumeTarget": "",
+        "ingredients": []
+      },
+      {
+        "id": "C3001001-0001-0001-0001-000000000004",
+        "name": "Seconda lievitazione",
+        "typeRaw": "proof",
+        "durationMinutes": 90,
+        "details": "- Copri i rotolini.\n- Lascia lievitare per circa 1 ora e 30 minuti a temperatura ambiente, finché raddoppiano di volume.",
+        "notes": "",
+        "reminderOffsetMinutes": 0,
+        "temperatureRange": "19–20°C",
+        "volumeTarget": "Raddoppio",
+        "ingredients": []
+      },
+      {
+        "id": "C3001001-0001-0001-0001-000000000005",
+        "name": "Cottura",
+        "typeRaw": "bake",
+        "durationMinutes": 20,
+        "details": "- Preriscalda il forno a 180°C in modalità ventilata.\n- Spennella delicatamente la superficie con il tuorlo mescolato a un goccio di latte.\n- Inforna per 20 minuti, finché la superficie è dorata.",
+        "notes": "",
+        "reminderOffsetMinutes": 15,
+        "temperatureRange": "180°C ventilato",
+        "volumeTarget": "",
+        "ingredients": [
+          "1 tuorlo",
+          "q.b. latte"
+        ]
+      },
+      {
+        "id": "C3001001-0001-0001-0001-000000000006",
+        "name": "Raffreddamento",
+        "typeRaw": "cool",
+        "durationMinutes": 30,
+        "details": "- Sforna e lascia raffreddare su una griglia prima di servire.",
+        "notes": "",
+        "reminderOffsetMinutes": 0,
+        "temperatureRange": "",
+        "volumeTarget": "",
+        "ingredients": []
+      }
+    ]
   }
 ]

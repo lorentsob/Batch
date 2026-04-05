@@ -36,23 +36,23 @@ final class AppRouter: ObservableObject {
 
     func openBake(_ id: UUID) {
         selectedTab = .fermentations
-        fermentationsPath = [.bake(id)]
+        fermentationsPath = [.bakesList, .bake(id)]
     }
 
     func openFormula(_ id: UUID) {
         selectedTab = .fermentations
-        fermentationsPath = [.formula(id)]
+        fermentationsPath = [.formulaList, .formula(id)]
     }
 
     func openStarter(_ id: UUID) {
         selectedTab = .fermentations
-        fermentationsPath = [.starter(id)]
+        fermentationsPath = [.starterList, .starter(id)]
     }
 
     // Phase 19 hook — kefir batch detail route. Wires into KefirHubView when batch CRUD lands.
     func openKefirBatch(_ id: UUID) {
         selectedTab = .fermentations
-        fermentationsPath = [.kefirBatch(id)]
+        fermentationsPath = [.kefirHub, .kefirBatch(id)]
     }
 
     func openKnowledge(_ id: String?) {

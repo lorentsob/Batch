@@ -395,6 +395,24 @@ private extension BakeCreationView {
             }
         }
 
+        var totalFlourWeight: Double {
+            switch self {
+            case let .user(formula):
+                formula.totalFlourWeight
+            case let .system(formula):
+                formula.totalFlourWeight
+            }
+        }
+
+        var totalWaterWeight: Double {
+            switch self {
+            case let .user(formula):
+                formula.totalWaterWeight
+            case let .system(formula):
+                formula.totalWaterWeight
+            }
+        }
+
         var yeastType: YeastType {
             switch self {
             case let .user(formula):
@@ -591,11 +609,11 @@ private struct YeastConversionPreviewView: View {
         HStack {
             Label(label, systemImage: icon)
                 .font(.subheadline)
-                .foregroundStyle(highlight ? Theme.accent : Theme.primary)
+                .foregroundStyle(highlight ? Theme.accent : Theme.ink)
             Spacer()
             Text(value)
                 .font(.subheadline.weight(highlight ? .semibold : .regular))
-                .foregroundStyle(highlight ? Theme.accent : Theme.primary)
+                .foregroundStyle(highlight ? Theme.accent : Theme.ink)
         }
     }
 }

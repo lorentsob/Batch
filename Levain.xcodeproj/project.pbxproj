@@ -150,10 +150,10 @@
 		019C5DED2589ED39E611C1A1 /* KnowledgeLoaderTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KnowledgeLoaderTests.swift; sourceTree = "<group>"; };
 		03068B3858AD919A409B16D5 /* RecipeFormulaTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecipeFormulaTests.swift; sourceTree = "<group>"; };
 		031DE41E33A5A47BB92E1B84 /* LevainApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LevainApp.swift; sourceTree = "<group>"; };
-		03C325E845719C6FC294C6FE /* logo-01.svg */ = {isa = PBXFileReference; path = "logo-01.svg"; sourceTree = "<group>"; };
+		03C325E845719C6FC294C6FE /* logo-01.svg */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = "logo-01.svg"; sourceTree = "<group>"; };
 		0488D5D97917ED1EDCE7A49E /* KnowledgeRowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KnowledgeRowView.swift; sourceTree = "<group>"; };
 		05BB2A8E3BCF16B390C67996 /* FlourSelectionEditorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlourSelectionEditorView.swift; sourceTree = "<group>"; };
-		0829A06D388058C26EB78A33 /* starter.svg */ = {isa = PBXFileReference; path = starter.svg; sourceTree = "<group>"; };
+		0829A06D388058C26EB78A33 /* starter.svg */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = starter.svg; sourceTree = "<group>"; };
 		083F30497BFDB52B2F385962 /* KefirReminderPlannerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KefirReminderPlannerTests.swift; sourceTree = "<group>"; };
 		0EF66CC37AE507FB215CFF22 /* SectionCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SectionCard.swift; sourceTree = "<group>"; };
 		0F4E7C83EE3E491B01BC1D07 /* KefirBatchManageSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KefirBatchManageSheet.swift; sourceTree = "<group>"; };
@@ -212,19 +212,19 @@
 		762C7FC5CFEB6829E4E7BEC1 /* FermentationsFlowUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FermentationsFlowUITests.swift; sourceTree = "<group>"; };
 		7762E15F65697D717FBB038F /* StateBadgeToneTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StateBadgeToneTests.swift; sourceTree = "<group>"; };
 		79D4C487A002E34766EBC3F2 /* AppEnvironment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppEnvironment.swift; sourceTree = "<group>"; };
-		7A93F72E454DE1667B080E9C /* bake.svg */ = {isa = PBXFileReference; path = bake.svg; sourceTree = "<group>"; };
+		7A93F72E454DE1667B080E9C /* bake.svg */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = bake.svg; sourceTree = "<group>"; };
 		7BD7C03D5139BD3131B782AE /* AppRouterTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppRouterTests.swift; sourceTree = "<group>"; };
 		7D19BA59B3A928A04BD8843E /* FermentationsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FermentationsView.swift; sourceTree = "<group>"; };
 		82808E94CC2A7217CDAAFE45 /* SystemFormula.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SystemFormula.swift; sourceTree = "<group>"; };
 		88067D9DEA0402EE4E48496A /* SystemFormulaLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SystemFormulaLoader.swift; sourceTree = "<group>"; };
-		89BAF4761DDB1090512623FB /* logo.svg */ = {isa = PBXFileReference; path = logo.svg; sourceTree = "<group>"; };
+		89BAF4761DDB1090512623FB /* logo.svg */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = logo.svg; sourceTree = "<group>"; };
 		8B39BE3A6D9E872507ECAB51 /* BakeSchedulerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BakeSchedulerTests.swift; sourceTree = "<group>"; };
 		8CBB82511329EC43AD7BC640 /* StarterDetailHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StarterDetailHeaderView.swift; sourceTree = "<group>"; };
 		8E9AA4021F43AE9655D8F68C /* StateBadge.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StateBadge.swift; sourceTree = "<group>"; };
 		9069286C22B79776F290E460 /* KnowledgeLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KnowledgeLoader.swift; sourceTree = "<group>"; };
 		9527884010C3C4CC2BA7DF2D /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		9A9E648F721B49CD581E8B10 /* logo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = logo.png; sourceTree = "<group>"; };
-		9B4004713422E6E47C0B76CD /* Levain.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = Levain.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		9B4004713422E6E47C0B76CD /* Levain.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Levain.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		9FC08F220B40EB7C51A3AB1B /* KefirBatchListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KefirBatchListView.swift; sourceTree = "<group>"; };
 		A061F753EFB622786D154A83 /* KnowledgeItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KnowledgeItem.swift; sourceTree = "<group>"; };
 		A327533FEB9FDE64DDA58C58 /* AppLaunchOptions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppLaunchOptions.swift; sourceTree = "<group>"; };
@@ -656,7 +656,6 @@
 						TestTargetID = 8E84F0B210E0A11CDE4A5962;
 					};
 					8E84F0B210E0A11CDE4A5962 = {
-						DevelopmentTeam = "";
 						ProvisioningStyle = Automatic;
 					};
 				};
@@ -1080,6 +1079,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = C974BPN56D;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Levain/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = Batch;
