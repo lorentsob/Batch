@@ -43,7 +43,6 @@ struct ActiveStepHeroCard: View {
                     TimerStatusPill(phase: phase, appearance: appearance)
                 }
 
-                // 3 chip fissi in linea — HStack uguale in larghezza
                 HStack(spacing: 8) {
                     MetricChip(
                         label: "Inizio",
@@ -406,7 +405,7 @@ struct TimerStatusPill: View {
     private var label: String {
         switch phase {
         case .upcoming:
-            return "In partenza"
+            return "Porgrammata"
         case .running:
             return "In corso"
         case .overdue:
@@ -572,29 +571,39 @@ struct StepQuickShiftStrip: View {
         VStack(alignment: .leading, spacing: 10) {
             StateBadge(text: "Sposta rapidamente gli orari", tone: .schedule)
 
-            LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: 8) {
-                ForEach(presets, id: \.self) { minutes in
-                    Button(shiftLabel(for: minutes)) {
-                        onShift(minutes)
+            // Griglia fissa (no LazyVGrid): dentro TimelineView il lazy layout può assorbire i tap.
+            VStack(spacing: 8) {
+                HStack(spacing: 8) {
+                    shiftButton(minutes: presets[0])
+                    shiftButton(minutes: presets[1])
+                }
+                HStack(spacing: 8) {
+                    shiftButton(minutes: presets[2])
+                    Button("Personalizzato") {
+                        onCustom()
                     }
                     .buttonStyle(SecondaryActionButtonStyle(fill: Theme.Surface.card))
                 }
-
-                Button("Personalizzato") {
-                    onCustom()
+                HStack(spacing: 8) {
+                    shiftButton(minutes: -15)
+                    shiftButton(minutes: -30)
                 }
-                .buttonStyle(SecondaryActionButtonStyle(fill: Theme.Surface.card))
             }
         }
     }
 
-    private func shiftLabel(for minutes: Int) -> String {
-        switch minutes {
-        case 60:
-            return "+1 h"
-        default:
-            return "+\(minutes) min"
+    private func shiftButton(minutes: Int) -> some View {
+        Button(shiftLabel(for: minutes)) {
+            onShift(minutes)
         }
+        .buttonStyle(SecondaryActionButtonStyle(fill: Theme.Surface.card))
+    }
+
+    private func shiftLabel(for minutes: Int) -> String {
+        if minutes == 60 { return "+1 h" }
+        if minutes == -60 { return "-1 h" }
+        if minutes > 0 { return "+\(minutes) min" }
+        return "\(minutes) min"
     }
 }
 

@@ -15,6 +15,7 @@ final class Starter {
     var remindersEnabled: Bool
     var lastRefresh: Date
     var notes: String
+    var archivedAt: Date?
 
     @Relationship(deleteRule: .cascade, inverse: \StarterRefresh.starter)
     var refreshes: [StarterRefresh]
@@ -69,6 +70,16 @@ final class Starter {
 
     var nextDueDate: Date {
         Calendar.current.date(byAdding: .day, value: refreshIntervalDays, to: lastRefresh.startOfDay) ?? lastRefresh
+    }
+
+    var isArchived: Bool { archivedAt != nil }
+
+    func archive() {
+        archivedAt = .now
+    }
+
+    func unarchive() {
+        archivedAt = nil
     }
 
     func dueState(now: Date = .now) -> StarterDueState {

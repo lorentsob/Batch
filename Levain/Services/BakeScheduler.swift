@@ -138,14 +138,30 @@ enum BakeScheduler {
             step.flexibleWindowEnd = step.flexibleWindowEnd?.adding(minutes: effectiveShift)
         }
 
-        // When the anchor is running, extend its window so the overdue
-        // indicator reflects the shift.  Without this the hero card shows
-        // unchanged times (actualStart is frozen) and the user perceives
-        // "no effect."  The raw `minutes` value is used (not effectiveShift)
-        // because effectiveShift may differ due to gap re-anchoring logic.
+        // Extend the anchor step so the hero timer and "Fine" chips update.
+        //
+        // Window-based steps (proof, cold retard): `windowEnd` follows `flexibleWindowEnd`.
+        // Non-window steps: `plannedEnd` is `referenceStart + plannedDurationMinutes` only,
+        // so we must adjust `plannedDurationMinutes` — updating `flexibleWindowEnd` alone has no effect.
+        let now = Date()
         if anchorStep.status == .running {
-            anchorStep.flexibleWindowEnd = (anchorStep.flexibleWindowEnd ?? anchorStep.plannedEnd)
-                .adding(minutes: minutes)
+            if anchorStep.isWindowBased {
+                anchorStep.flexibleWindowEnd = (anchorStep.flexibleWindowEnd ?? anchorStep.plannedEnd)
+                    .adding(minutes: minutes)
+            } else {
+                let elapsed = anchorStep.elapsedMinutes(now: now)
+                let candidate = anchorStep.plannedDurationMinutes + minutes
+                // Keep at least the elapsed time so remaining time never goes negative; allow reversibility down to that floor.
+                anchorStep.plannedDurationMinutes = max(1, max(elapsed, candidate))
+            }
+        } else if anchorStep.status == .pending, anchorStep.isOverdue(now: now) {
+            if anchorStep.isWindowBased {
+                anchorStep.flexibleWindowEnd = (anchorStep.flexibleWindowEnd ?? anchorStep.plannedEnd)
+                    .adding(minutes: minutes)
+            } else {
+                let candidate = anchorStep.plannedDurationMinutes + minutes
+                anchorStep.plannedDurationMinutes = max(1, candidate)
+            }
         }
 
         bake.targetBakeDateTime = bake.sortedSteps.last?.plannedEnd ?? bake.targetBakeDateTime

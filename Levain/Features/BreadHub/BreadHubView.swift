@@ -8,7 +8,7 @@ struct BreadHubView: View {
     @EnvironmentObject private var router: AppRouter
 
     @Query(sort: \Bake.targetBakeDateTime, order: .forward) private var bakes: [Bake]
-    @Query(sort: \Starter.name) private var starters: [Starter]
+    @Query(filter: #Predicate<Starter> { $0.archivedAt == nil }, sort: \Starter.name) private var starters: [Starter]
     @Query(sort: \RecipeFormula.name) private var formulas: [RecipeFormula]
     @Query private var appSettingsList: [AppSettings]
 
