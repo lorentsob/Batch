@@ -3,6 +3,13 @@ import SwiftUI
 
 @MainActor
 struct BreadHubView: View {
+    private struct BakeRow: Identifiable {
+        let bake: Bake
+        let snapshot: Bake.OperationalSnapshot
+
+        var id: UUID { bake.id }
+    }
+
     @Environment(\.modelContext) private var modelContext
     @EnvironmentObject private var environment: AppEnvironment
     @EnvironmentObject private var router: AppRouter
@@ -23,16 +30,26 @@ struct BreadHubView: View {
     private var isBakeEnabled: Bool { appSettings?.isBakeEnabled ?? true }
     private var isStarterEnabled: Bool { appSettings?.isStarterEnabled ?? true }
 
-    private var activeBakes: [Bake] {
-        bakes.filter { $0.derivedStatus != .cancelled && $0.derivedStatus != .completed }
+    private var activeBakeRows: [BakeRow] {
+        bakes.compactMap { bake in
+            let row = BakeRow(bake: bake, snapshot: bake.makeOperationalSnapshot())
+            switch row.snapshot.derivedStatus {
+            case .cancelled, .completed:
+                return nil
+            default:
+                return row
+            }
+        }
     }
 
     var body: some View {
+        let activeBakes = activeBakeRows
+
         List {
-            headerCard
+            headerCard(activeBakes: activeBakes)
 
             if isBakeEnabled {
-                impastiSection
+                impastiSection(activeBakes: activeBakes)
             }
 
             if isStarterEnabled {
@@ -62,8 +79,10 @@ struct BreadHubView: View {
                             Label("Nuovo starter", image: "navbar-starter")
                         }
                     }
-                    Button("Nuova ricetta", systemImage: "doc.text") {
+                    Button {
                         showingFormulaEditor = true
+                    } label: {
+                        Label("Nuova ricetta", systemImage: "doc.text")
                     }
                 } label: {
                     Image(systemName: "plus")
@@ -83,15 +102,20 @@ struct BreadHubView: View {
         }
         .sheet(isPresented: $showingFormulaEditor) {
             NavigationStack {
-                FormulaEditorView(formula: nil)
+                FormulaEditorView(
+                    formula: nil,
+                    onSaved: {}
+                  )
             }
         }
         .accessibilityIdentifier("BreadHubView")
     }
 
+
+
     // MARK: - Header
 
-    private var headerCard: some View {
+    private func headerCard(activeBakes: [BakeRow]) -> some View {
         SectionCard(emphasis: .tinted) {
             Text("Pane e lievito madre")
                 .font(.system(size: 26, weight: .bold))
@@ -116,7 +140,7 @@ struct BreadHubView: View {
 
     // MARK: - Impasti section
 
-    private var impastiSection: some View {
+    private func impastiSection(activeBakes: [BakeRow]) -> some View {
         Group {
             Section {
                 VStack(alignment: .leading, spacing: 12) {
@@ -141,37 +165,37 @@ struct BreadHubView: View {
             .listRowBackground(Color.clear)
             .listRowSeparator(.hidden)
 
-            ForEach(activeBakes) { bake in
+            ForEach(activeBakes) { row in
                 Button {
-                    router.fermentationsPath.append(.bake(bake.id))
+                    router.fermentationsPath.append(.bake(row.bake.id))
                 } label: {
                     SectionCard {
                         VStack(alignment: .leading, spacing: 12) {
                             HStack(alignment: .top) {
                                 VStack(alignment: .leading, spacing: 8) {
-                                    Text(bake.name)
+                                    Text(row.bake.name)
                                         .font(.headline)
                                         .foregroundStyle(Theme.ink)
-                                    Text(bake.type.title)
+                                    Text(row.bake.type.title)
                                         .font(.subheadline)
                                         .foregroundStyle(Theme.muted)
                                 }
                                 Spacer()
-                                StateBadge(bakeStatus: bake.derivedStatus)
+                                StateBadge(bakeStatus: row.snapshot.derivedStatus)
                             }
 
                             LazyVGrid(columns: metricColumns, alignment: .leading, spacing: 8) {
                                 MetricChip(
                                     label: "Utilizzo",
-                                    value: DateFormattingService.dayTime(bake.targetBakeDateTime),
+                                    value: DateFormattingService.dayTime(row.bake.targetBakeDateTime),
                                     tone: .schedule
                                 )
-                                if let step = bake.activeStep {
+                                if let step = row.snapshot.activeStep {
                                     MetricChip(label: "Prossima fase", value: step.displayName, tone: .info)
                                 }
                             }
 
-                            if let step = bake.activeStep {
+                            if let step = row.snapshot.activeStep {
                                 Text(step.descriptionText.isEmpty ? "La fase attiva è pronta da seguire." : step.descriptionText)
                                     .font(.footnote)
                                     .foregroundStyle(Theme.muted)
@@ -181,7 +205,7 @@ struct BreadHubView: View {
                     }
                 }
                 .buttonStyle(.plain)
-                .accessibilityIdentifier("BreadHubBakeCard_\(bake.id)")
+                .accessibilityIdentifier("BreadHubBakeCard_\(row.bake.id)")
                 .listRowInsets(.init(top: 0, leading: 20, bottom: 12, trailing: 20))
                 .listRowBackground(Color.clear)
                 .listRowSeparator(.hidden)
@@ -280,9 +304,9 @@ struct BreadHubView: View {
     }
 
     private func deleteBakes(at offsets: IndexSet) {
+        let activeBakes = activeBakeRows
         for index in offsets {
-            let bake = activeBakes[index]
-            modelContext.delete(bake)
+            modelContext.delete(activeBakes[index].bake)
         }
     }
 

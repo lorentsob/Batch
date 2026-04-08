@@ -46,6 +46,8 @@ struct FlourSelectionEditorView: View {
                 .buttonStyle(.plain)
             }
         }
+        .scrollContentBackground(.hidden)
+        .background(Theme.Surface.app)
         .navigationTitle("Farina")
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
@@ -65,7 +67,6 @@ struct FlourSelectionEditorView: View {
             )
         }
         .presentationDetents([.medium, .large])
-        .presentationBackground(Theme.Surface.app)
     }
 
     private var percentageSelection: Binding<Int> {
@@ -115,6 +116,8 @@ struct StepValuePickerSheet: View {
                 .labelsHidden()
                 .frame(maxWidth: .infinity)
             }
+            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
+            .background(Theme.Surface.app.ignoresSafeArea())
             .navigationTitle(title)
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
@@ -127,6 +130,5 @@ struct StepValuePickerSheet: View {
             }
         }
         .presentationDetents([.fraction(0.38)])
-        .presentationBackground(Theme.Surface.app)
     }
 }

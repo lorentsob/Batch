@@ -104,6 +104,8 @@ struct FormulaStepEditorView: View {
             }
         }
         .navigationTitle(name.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty ? "Fase" : name)
+        .scrollContentBackground(.hidden)
+        .background(Theme.Surface.app)
         .toolbar {
             ToolbarItem(placement: .cancellationAction) {
                 Button("Chiudi") { dismiss() }
@@ -157,6 +159,8 @@ private struct DurationPickerSheet: View {
                 .labelsHidden()
                 .frame(maxWidth: .infinity)
             }
+            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
+            .background(Theme.Surface.app.ignoresSafeArea())
             .navigationTitle("Durata fase")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
@@ -169,7 +173,6 @@ private struct DurationPickerSheet: View {
             }
         }
         .presentationDetents([.fraction(0.38)])
-        .presentationBackground(Theme.Surface.app)
     }
 }
 
@@ -198,6 +201,8 @@ private struct ReminderOffsetPickerSheet: View {
                 .labelsHidden()
                 .frame(maxWidth: .infinity)
             }
+            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
+            .background(Theme.Surface.app.ignoresSafeArea())
             .navigationTitle("Promemoria")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
@@ -210,6 +215,5 @@ private struct ReminderOffsetPickerSheet: View {
             }
         }
         .presentationDetents([.fraction(0.38)])
-        .presentationBackground(Theme.Surface.app)
     }
 }

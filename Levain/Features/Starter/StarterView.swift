@@ -21,23 +21,29 @@ struct StarterView: View {
                     .foregroundStyle(Theme.ink)
                 Text("Rinfreschi e stato del tuo lievito madre.")
                     .foregroundStyle(Theme.muted)
-                if activeStarters.isEmpty == false {
+                
+                if !activeStarters.isEmpty {
                     StateBadge(text: "\(activeStarters.count) starter", tone: .count)
                 }
+
+                Button {
+                    editingStarter = nil
+                    showingEditor = true
+                } label: {
+                    Label("Aggiungi starter", systemImage: "plus")
+                }
+                .buttonStyle(PrimaryActionButtonStyle())
+                .padding(.top, 4)
             }
-            .listRowSeparator(.hidden)
-            .listRowBackground(Color.clear)
             .listRowInsets(EdgeInsets(top: 24, leading: 20, bottom: 20, trailing: 20))
+
+
 
             if activeStarters.isEmpty {
                 EmptyStateView(
                     title: "Nessuno starter ancora",
-                    message: "Aggiungi il tuo lievito madre per tracciare i rinfreschi, calcolare il prossimo e ricevere promemoria al momento giusto.",
-                    actionTitle: "Aggiungi il tuo starter"
-                ) {
-                    editingStarter = nil
-                    showingEditor = true
-                }
+                    message: "Aggiungi il tuo lievito madre per tracciare i rinfreschi, calcolare il prossimo e ricevere promemoria al momento giusto."
+                )
                 .listRowSeparator(.hidden)
                 .listRowBackground(Color.clear)
                 .listRowInsets(EdgeInsets(top: 0, leading: 20, bottom: 12, trailing: 20))
@@ -107,17 +113,7 @@ struct StarterView: View {
         .background(Theme.background.ignoresSafeArea())
         .tint(Theme.Control.primaryFill)
         .accessibilityIdentifier("StarterScrollView")
-        .toolbar {
-            ToolbarItem(placement: .topBarTrailing) {
-                Button {
-                    editingStarter = nil
-                    showingEditor = true
-                } label: {
-                    Text("Nuovo starter")
-                        .fontWeight(.semibold)
-                }
-            }
-        }
+        .accessibilityIdentifier("StarterScrollView")
         .sheet(isPresented: $showingEditor) {
             NavigationStack {
                 StarterEditorView(starter: editingStarter)

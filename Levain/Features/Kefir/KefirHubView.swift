@@ -18,11 +18,8 @@ struct KefirHubView: View {
             if batches.isEmpty {
                 EmptyStateView(
                     title: "Nessun batch attivo",
-                    message: "Quando avvii il primo batch lo trovi qui.",
-                    actionTitle: "Nuovo batch"
-                ) {
-                    editorMode = .create
-                }
+                    message: "Quando avvii il primo batch lo trovi qui."
+                )
                 .listRowInsets(.init(top: 16, leading: 20, bottom: 16, trailing: 20))
                 .listRowBackground(Color.clear)
                 .listRowSeparator(.hidden)
@@ -33,18 +30,13 @@ struct KefirHubView: View {
                     archiveBatch(batch)
                 }
             }
+
+            journalSection
         }
         .listStyle(.plain)
         .background(Theme.Surface.app)
         .navigationTitle("Kefir")
         .navigationBarTitleDisplayMode(.inline)
-        .toolbar {
-            ToolbarItem(placement: .primaryAction) {
-                Button("Nuovo batch") {
-                    editorMode = .create
-                }
-            }
-        }
         .accessibilityIdentifier("KefirHubView")
         .sheet(item: $editorMode) { mode in
             NavigationStack {
@@ -72,11 +64,13 @@ struct KefirHubView: View {
 
     private var headerCard: some View {
         SectionCard(emphasis: .tinted) {
-            Text("Kefir")
-                .font(.system(size: 26, weight: .bold))
-                .foregroundStyle(Theme.ink)
-            Text("I tuoi batch, dove sono e cosa fare.")
-                .foregroundStyle(Theme.muted)
+            VStack(alignment: .leading, spacing: 4) {
+                Text("Kefir")
+                    .font(.system(size: 26, weight: .bold))
+                    .foregroundStyle(Theme.ink)
+                Text("I tuoi batch, dove sono e cosa fare.")
+                    .foregroundStyle(Theme.muted)
+            }
 
             if batches.isEmpty == false {
                 HStack(spacing: 10) {
@@ -93,22 +87,43 @@ struct KefirHubView: View {
                         StateBadge(text: "\(batches.archivedKefirCount) archiviat\(batches.archivedKefirCount == 1 ? "o" : "i")", tone: .count)
                     }
                 }
-
-                HStack {
-                    Spacer()
-                    Button {
-                        showingJournal = true
-                    } label: {
-                        Label("Journal", systemImage: "clock.arrow.circlepath")
-                    }
-                    .buttonStyle(SecondaryActionButtonStyle(fill: Theme.Surface.card))
-                    .accessibilityIdentifier("KefirHubOpenJournalButton")
-                }
             }
+
+            Button {
+                editorMode = .create
+            } label: {
+                Label("Nuovo batch", systemImage: "plus")
+            }
+            .buttonStyle(PrimaryActionButtonStyle())
+            .padding(.top, 4)
         }
         .listRowInsets(.init(top: 0, leading: 20, bottom: 8, trailing: 20))
         .listRowBackground(Color.clear)
         .listRowSeparator(.hidden)
         .accessibilityIdentifier("KefirHubSummaryCard")
+    }
+
+    private var journalSection: some View {
+        SectionCard {
+            VStack(alignment: .leading, spacing: 4) {
+                Text("Log rinfreschi")
+                    .font(.headline)
+                    .foregroundStyle(Theme.ink)
+                Text("Consulta il registro completo dei rinfreschi, riattivazioni e archiviate dei tuoi grani.")
+                    .font(.subheadline)
+                    .foregroundStyle(Theme.muted)
+            }
+
+            Button {
+                showingJournal = true
+            } label: {
+                Label("Tutti i rinfreschi", systemImage: "clock.arrow.circlepath")
+            }
+            .buttonStyle(SecondaryActionButtonStyle())
+            .accessibilityIdentifier("KefirHubOpenJournalButton")
+        }
+        .listRowInsets(.init(top: 8, leading: 20, bottom: 24, trailing: 20))
+        .listRowBackground(Color.clear)
+        .listRowSeparator(.hidden)
     }
 }

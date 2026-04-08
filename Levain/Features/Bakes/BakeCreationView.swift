@@ -125,7 +125,6 @@ struct BakeCreationView: View {
         }
         .scrollContentBackground(.hidden)
         .background(Theme.Surface.app)
-        .presentationBackground(Theme.Surface.app)
         .sheet(isPresented: $showingBakeDatePicker) {
             BakeDatePickerSheet(selection: targetBakeDateBinding)
         }
@@ -496,6 +495,8 @@ private struct BakeDatePickerSheet: View {
                     .labelsHidden()
                     .padding()
             }
+            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
+            .background(Theme.Surface.app.ignoresSafeArea())
             .navigationTitle("Data sfornata")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
@@ -508,7 +509,6 @@ private struct BakeDatePickerSheet: View {
             }
         }
         .presentationDetents([.medium, .large])
-        .presentationBackground(Theme.Surface.app)
     }
 }
 
@@ -524,6 +524,8 @@ private struct BakeTimePickerSheet: View {
                     .labelsHidden()
                     .frame(maxWidth: .infinity)
             }
+            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
+            .background(Theme.Surface.app.ignoresSafeArea())
             .navigationTitle("Ora sfornata")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
@@ -536,7 +538,6 @@ private struct BakeTimePickerSheet: View {
             }
         }
         .presentationDetents([.fraction(0.38)])
-        .presentationBackground(Theme.Surface.app)
     }
 }
 

@@ -33,7 +33,6 @@ struct KefirBatchManageSheet: View {
             .tint(Theme.Control.primaryFill)
             .scrollContentBackground(.hidden)
             .background(Theme.Surface.app)
-            .presentationBackground(Theme.Surface.app)
             .accessibilityIdentifier("KefirBatchManageSheet")
             .onChange(of: storageMode) { _, newValue in
                 expectedRoutineHours = newValue.defaultRoutineHours

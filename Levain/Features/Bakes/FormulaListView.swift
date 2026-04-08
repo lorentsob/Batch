@@ -4,11 +4,13 @@ import SwiftUI
 struct FormulaListView: View {
     @Environment(\.modelContext) private var modelContext
 
+
     @Query(sort: \RecipeFormula.name) private var allFormulas: [RecipeFormula]
 
     @State private var showingFormulaEditor = false
     @State private var editingFormula: RecipeFormula?
     @State private var showingArchiveSheet = false
+     @State private var formulaListRefreshToken = 0
 
     private let metricColumns = [
         GridItem(.adaptive(minimum: 118), spacing: 8)
@@ -38,20 +40,24 @@ struct FormulaListView: View {
                             StateBadge(text: "\(userCount) personali", tone: .schedule)
                         }
                     }
+
+                    Button {
+                        editingFormula = nil
+                        showingFormulaEditor = true
+                    } label: {
+                        Label("Nuova ricetta", systemImage: "plus")
+                    }
+                    .buttonStyle(PrimaryActionButtonStyle())
+                    .padding(.top, 4)
                 }
-                .listRowSeparator(.hidden)
-                .listRowBackground(Color.clear)
                 .listRowInsets(EdgeInsets(top: 24, leading: 20, bottom: 20, trailing: 20))
+
 
                 if activeFormulas.isEmpty {
                     EmptyStateView(
                         title: "Nessuna ricetta",
-                        message: "Le ricette di sistema appariranno al prossimo avvio.",
-                        actionTitle: "Nuova ricetta"
-                    ) {
-                        editingFormula = nil
-                        showingFormulaEditor = true
-                    }
+                        message: "Le ricette di sistema appariranno al prossimo avvio."
+                    )
                     .listRowSeparator(.hidden)
                     .listRowBackground(Color.clear)
                     .listRowInsets(EdgeInsets(top: 0, leading: 20, bottom: 12, trailing: 20))
@@ -137,19 +143,17 @@ struct FormulaListView: View {
         }
         .listStyle(.plain)
         .background(Theme.background.ignoresSafeArea())
-        .navigationTitle("Ricette")
+        .navigationTitle("")
+        .navigationBarTitleDisplayMode(.inline)
         .tint(Theme.Control.primaryFill)
-        .toolbar {
-            ToolbarItem(placement: .topBarTrailing) {
-                Button("Nuova") {
-                    editingFormula = nil
-                    showingFormulaEditor = true
-                }
-            }
-        }
         .sheet(isPresented: $showingFormulaEditor) {
             NavigationStack {
-                FormulaEditorView(formula: editingFormula)
+                FormulaEditorView(
+                    formula: editingFormula,
+                    onSaved: {
+                         formulaListRefreshToken += 1
+                      }
+                  )
             }
         }
         .sheet(isPresented: $showingArchiveSheet) {

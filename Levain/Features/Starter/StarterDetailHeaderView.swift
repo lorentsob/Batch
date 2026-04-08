@@ -2,13 +2,14 @@ import SwiftUI
 
 struct StarterDetailHeaderView: View {
     let starter: Starter
+    let onRefresh: () -> Void
 
     private let metricColumns = [
         GridItem(.adaptive(minimum: 120), spacing: 8)
     ]
 
     var body: some View {
-        SectionCard {
+        SectionCard(emphasis: .tinted) {
             VStack(alignment: .leading, spacing: 16) {
                 HStack(alignment: .top) {
                     VStack(alignment: .leading, spacing: 8) {
@@ -54,6 +55,12 @@ struct StarterDetailHeaderView: View {
                             .foregroundStyle(Theme.muted)
                     }
                 }
+
+                Button(action: onRefresh) {
+                    Label("Rinfresca", systemImage: "plus")
+                }
+                .buttonStyle(PrimaryActionButtonStyle())
+                .padding(.top, 4)
             }
         }
     }

@@ -111,7 +111,6 @@ struct StarterEditorView: View {
         .tint(Theme.Control.primaryFill)
         .scrollContentBackground(.hidden)
         .background(Theme.Surface.app)
-        .presentationBackground(Theme.Surface.app)
         .toolbar {
             ToolbarItem(placement: .cancellationAction) {
                 Button("Chiudi") { dismiss() }

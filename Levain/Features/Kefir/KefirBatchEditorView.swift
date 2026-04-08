@@ -88,7 +88,6 @@ struct KefirBatchEditorView: View {
         .tint(Theme.Control.primaryFill)
         .scrollContentBackground(.hidden)
         .background(Theme.Surface.app)
-        .presentationBackground(Theme.Surface.app)
         .accessibilityIdentifier("KefirBatchEditorView")
         .onChange(of: storageMode) { _, newValue in
             expectedRoutineHours = newValue.defaultRoutineHours
