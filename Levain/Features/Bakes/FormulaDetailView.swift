@@ -6,6 +6,8 @@ struct FormulaDetailView: View {
     let formulaID: UUID
 
     @Environment(\.modelContext) private var modelContext
+    @EnvironmentObject private var environment: AppEnvironment
+    @EnvironmentObject private var router: AppRouter
     @Query private var results: [RecipeFormula]
 
     @State private var showingBakeEditor = false
@@ -60,6 +62,10 @@ struct FormulaDetailView: View {
         return Int(rounded)
     }
 
+    private var glossaryIndex: KnowledgeGlossaryIndex {
+        environment.knowledgeLibrary.glossaryIndex
+    }
+
     var body: some View {
         Group {
             if let formula {
@@ -70,6 +76,9 @@ struct FormulaDetailView: View {
         }
         .navigationTitle("Ricetta")
         .tint(Theme.Control.primaryFill)
+        .task {
+            environment.knowledgeLibrary.loadIfNeeded()
+        }
     }
 
     // MARK: - Main content (only called when formula is non-nil)
@@ -169,7 +178,7 @@ struct FormulaDetailView: View {
                 Button {
                     showingBakeEditor = true
                 } label: {
-                    Label("Nuovo bake", systemImage: "plus")
+                    Label("Nuovo impasto", systemImage: "plus")
                 }
                 .buttonStyle(PrimaryActionButtonStyle())
                 .padding(.top, 4)
@@ -271,13 +280,15 @@ struct FormulaDetailView: View {
                 ForEach(procedureSections, id: \.title) { section in
                     VStack(alignment: .leading, spacing: 8) {
                         if !section.title.isEmpty {
-                            Text(section.title.uppercased())
-                                .font(.caption.weight(.semibold))
-                                .tracking(0.6)
-                                .foregroundStyle(Theme.Control.primaryFill)
+                            glossarySectionTitle(section.title)
                         }
 
-                        Text(section.content)
+                        GlossaryLinkedText(
+                            text: section.content,
+                            glossaryIndex: glossaryIndex,
+                            maxLinks: 2,
+                            onOpenKnowledge: router.openKnowledge
+                        )
                             .font(.subheadline)
                             .foregroundStyle(Theme.ink)
                             .fixedSize(horizontal: false, vertical: true)
@@ -288,9 +299,14 @@ struct FormulaDetailView: View {
                 ForEach(formula.defaultSteps) { step in
                     VStack(alignment: .leading, spacing: 6) {
                         HStack {
-                            Text(step.name)
-                                .font(.subheadline.weight(.semibold))
-                                .foregroundStyle(Theme.ink)
+                            GlossaryLinkedText(
+                                text: step.name,
+                                glossaryIndex: glossaryIndex,
+                                maxLinks: 1,
+                                onOpenKnowledge: router.openKnowledge
+                            )
+                            .font(.subheadline.weight(.semibold))
+                            .foregroundStyle(Theme.ink)
                             Spacer()
                             StateBadge(
                                 text: DateFormattingService.duration(minutes: step.durationMinutes),
@@ -298,7 +314,12 @@ struct FormulaDetailView: View {
                             )
                         }
                         if !step.details.isEmpty {
-                            Text(step.details)
+                            GlossaryLinkedText(
+                                text: step.details,
+                                glossaryIndex: glossaryIndex,
+                                maxLinks: 2,
+                                onOpenKnowledge: router.openKnowledge
+                            )
                                 .font(.footnote)
                                 .foregroundStyle(Theme.muted)
                         }
@@ -327,6 +348,19 @@ struct FormulaDetailView: View {
         }
         .buttonStyle(.plain)
         .frame(maxWidth: .infinity, alignment: .center)
+    }
+
+    @ViewBuilder
+    private func glossarySectionTitle(_ title: String) -> some View {
+        GlossaryLinkedText(
+            text: title.uppercased(),
+            glossaryIndex: glossaryIndex,
+            maxLinks: 1,
+            onOpenKnowledge: router.openKnowledge
+        )
+        .font(.caption.weight(.semibold))
+        .tracking(0.6)
+        .foregroundStyle(Theme.Control.primaryFill)
     }
 
     // MARK: - Actions

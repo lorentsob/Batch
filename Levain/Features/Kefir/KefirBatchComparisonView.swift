@@ -10,17 +10,22 @@ struct KefirBatchComparisonView: View {
     @EnvironmentObject private var router: AppRouter
 
     var body: some View {
+        let lineageIndex = KefirLineageIndex(batches: allBatches)
+        let lineageSummary = lineageIndex.lineageSummary(for: primaryBatch)
+        let sourceBatch = lineageIndex.sourceBatch(for: primaryBatch)
+        let derivedBatches = lineageIndex.derivedBatches(for: primaryBatch)
+
         ScrollView {
             VStack(alignment: .leading, spacing: 20) {
-                headerCard
+                headerCard(lineageSummary: lineageSummary)
                 primaryCard
 
-                if let source = lineageIndex.sourceBatch(for: primaryBatch) {
+                if let source = sourceBatch {
                     sourceSection(source)
                 }
 
                 if derivedBatches.isEmpty == false {
-                    derivedSection
+                    derivedSection(derivedBatches)
                 }
             }
             .padding(.horizontal, 20)
@@ -33,19 +38,7 @@ struct KefirBatchComparisonView: View {
         .tint(Theme.Control.primaryFill)
     }
 
-    private var lineageSummary: KefirBatchLineageSummary {
-        lineageIndex.lineageSummary(for: primaryBatch)
-    }
-
-    private var derivedBatches: [KefirBatch] {
-        lineageIndex.derivedBatches(for: primaryBatch)
-    }
-
-    private var lineageIndex: KefirLineageIndex {
-        KefirLineageIndex(batches: allBatches)
-    }
-
-    private var headerCard: some View {
+    private func headerCard(lineageSummary: KefirBatchLineageSummary) -> some View {
         SectionCard(emphasis: .tinted) {
             VStack(alignment: .leading, spacing: 10) {
                 Text("Confronto batch")
@@ -94,7 +87,7 @@ struct KefirBatchComparisonView: View {
         .accessibilityIdentifier("KefirComparisonSourceSection")
     }
 
-    private var derivedSection: some View {
+    private func derivedSection(_ derivedBatches: [KefirBatch]) -> some View {
         VStack(alignment: .leading, spacing: 12) {
             HStack {
                 Text("Derivati")

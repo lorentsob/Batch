@@ -23,11 +23,18 @@ enum KnowledgeRoute: Hashable {
     case article(String)
 }
 
+struct ContextualKnowledgePresentation: Identifiable, Equatable {
+    let articleID: String
+
+    var id: String { articleID }
+}
+
 @MainActor
 final class AppRouter: ObservableObject {
     @Published var selectedTab: RootTab = .oggi
     @Published var fermentationsPath: [FermentationsRoute] = []
     @Published var knowledgePath: [KnowledgeRoute] = []
+    @Published var contextualKnowledgePresentation: ContextualKnowledgePresentation?
     var bannerPresenter: ((String, TimeInterval) -> Void)?
 
     // MARK: - Navigation helpers (direct-object routing rule)
@@ -56,12 +63,12 @@ final class AppRouter: ObservableObject {
     }
 
     func openKnowledge(_ id: String?) {
-        selectedTab = .knowledge
-        if let id = id {
-            knowledgePath = [.article(id)]
-        } else {
-            knowledgePath = []
+        guard let id else {
+            showKnowledgeTab(articleID: nil)
+            return
         }
+
+        presentContextualKnowledge(id)
     }
 
     func open(url: URL) {
@@ -87,9 +94,9 @@ final class AppRouter: ObservableObject {
             }
         case "knowledge":
             if let value = segments.first {
-                openKnowledge(value)
+                showKnowledgeTab(articleID: value)
             } else {
-                openKnowledge(nil)
+                showKnowledgeTab(articleID: nil)
             }
         default:
             break
@@ -121,19 +128,19 @@ final class AppRouter: ObservableObject {
         guard let bake = fetchBake(id: bakeId, modelContext: modelContext) else {
             selectedTab = .fermentations
             fermentationsPath = []
-            presentBanner("Questo bake non è più disponibile", duration: 8)
+            presentBanner("Questo impasto non è più disponibile", duration: 8)
             return
         }
 
         if bake.derivedStatus == .cancelled {
             openBake(bake.id)
-            presentBanner("Questo bake è stato annullato", duration: 5)
+            presentBanner("Questo impasto è stato annullato", duration: 5)
             return
         }
 
         if bake.derivedStatus == .completed {
             openBake(bake.id)
-            presentBanner("Questo bake è già completato", duration: 5)
+            presentBanner("Questo impasto è già completato", duration: 5)
             return
         }
 
@@ -190,6 +197,28 @@ final class AppRouter: ObservableObject {
 
     private func presentBanner(_ message: String, duration: TimeInterval = 3) {
         bannerPresenter?(message, duration)
+    }
+
+    func dismissContextualKnowledge() {
+        contextualKnowledgePresentation = nil
+    }
+
+    private func showKnowledgeTab(articleID: String?) {
+        dismissContextualKnowledge()
+        selectedTab = .knowledge
+        if let articleID {
+            knowledgePath = [.article(articleID)]
+        } else {
+            knowledgePath = []
+        }
+    }
+
+    private func presentContextualKnowledge(_ articleID: String) {
+        if contextualKnowledgePresentation?.articleID == articleID {
+            return
+        }
+
+        contextualKnowledgePresentation = ContextualKnowledgePresentation(articleID: articleID)
     }
 }
 

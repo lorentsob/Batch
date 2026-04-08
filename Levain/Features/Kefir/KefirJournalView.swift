@@ -2,6 +2,12 @@ import SwiftData
 import SwiftUI
 
 struct KefirJournalView: View {
+    private struct RenderState {
+        let archivedBatches: [KefirBatch]
+        let journalSections: [KefirJournalDaySection]
+        let lineageIndex: KefirLineageIndex
+    }
+
     @EnvironmentObject private var router: AppRouter
     @Query(sort: \KefirBatch.lastManagedAt, order: .reverse) private var allBatches: [KefirBatch]
     @Query private var events: [KefirEvent]
@@ -19,15 +25,23 @@ struct KefirJournalView: View {
     }
 
     var body: some View {
+        let renderState = makeRenderState()
+
         ScrollView {
             VStack(alignment: .leading, spacing: 20) {
-                headerCard
+                headerCard(renderState: renderState)
 
-                if showArchiveLibrary {
-                    archiveLibraryCard
+                if showArchiveLibrary(renderState: renderState) {
+                    archiveLibraryCard(
+                        archivedBatches: renderState.archivedBatches,
+                        lineageIndex: renderState.lineageIndex
+                    )
                 }
 
-                timelineSection
+                timelineSection(
+                    journalSections: renderState.journalSections,
+                    lineageIndex: renderState.lineageIndex
+                )
             }
             .padding(.horizontal, 20)
             .padding(.vertical, 24)
@@ -35,37 +49,34 @@ struct KefirJournalView: View {
         }
         .accessibilityIdentifier("KefirJournalScrollView")
         .background(Theme.background.ignoresSafeArea())
-        .navigationTitle(focusBatch == nil ? "Journal kefir" : "Storia batch")
+        .navigationTitle(focusBatch == nil ? "Cronologia kefir" : "Storia batch")
         .navigationBarTitleDisplayMode(.inline)
         .tint(Theme.Control.primaryFill)
     }
 
     @ViewBuilder
-    private var headerCard: some View {
-        if let focusBatch, focusBatch.derivedState == .overdue {
-            SectionCard(emphasis: .danger) {
-                headerBody
+    private func headerCard(renderState: RenderState) -> some View {
+        if let focusBatch {
+            SectionCard(emphasis: focusBatch.cardEmphasis) {
+                headerBody(renderState: renderState)
             }
-            .accessibilityIdentifier("KefirJournalHeaderCard")
-        } else if let focusBatch, focusBatch.sectionKind == .warning {
-            SectionCard(emphasis: .tinted) {
-                headerBody
-            }
-            .accessibilityIdentifier("KefirJournalHeaderCard")
-        } else if focusBatch == nil {
-            SectionCard(emphasis: .tinted) {
-                headerBody
-            }
+            .overlay(
+                RoundedRectangle(cornerRadius: Theme.Radius.card, style: .continuous)
+                    .stroke(Theme.Border.danger, lineWidth: focusBatch.derivedState == .overdue ? 1.5 : 0)
+            )
             .accessibilityIdentifier("KefirJournalHeaderCard")
         } else {
-            SectionCard {
-                headerBody
+            SectionCard(emphasis: .tinted) {
+                headerBody(renderState: renderState)
             }
             .accessibilityIdentifier("KefirJournalHeaderCard")
         }
     }
 
-    private var archiveLibraryCard: some View {
+    private func archiveLibraryCard(
+        archivedBatches: [KefirBatch],
+        lineageIndex: KefirLineageIndex
+    ) -> some View {
         SectionCard {
             VStack(alignment: .leading, spacing: 14) {
                 HStack {
@@ -82,7 +93,7 @@ struct KefirJournalView: View {
                     .foregroundStyle(Theme.muted)
 
                 ForEach(archivedBatches) { batch in
-                    archiveBatchRow(batch)
+                    archiveBatchRow(batch, lineageIndex: lineageIndex)
                 }
 
                 NavigationLink {
@@ -99,8 +110,11 @@ struct KefirJournalView: View {
     }
 
     @ViewBuilder
-    private var timelineSection: some View {
-        if events.isEmpty {
+    private func timelineSection(
+        journalSections: [KefirJournalDaySection],
+        lineageIndex: KefirLineageIndex
+    ) -> some View {
+        if journalSections.isEmpty {
             SectionCard {
                 VStack(alignment: .leading, spacing: 10) {
                     Text("Nessun evento ancora")
@@ -116,7 +130,7 @@ struct KefirJournalView: View {
                     .font(.headline)
                     .foregroundStyle(Theme.ink)
 
-                ForEach(events.journalSections) { section in
+                ForEach(journalSections) { section in
                     SectionCard {
                         VStack(alignment: .leading, spacing: 12) {
                             HStack {
@@ -132,9 +146,9 @@ struct KefirJournalView: View {
                             ForEach(section.events) { event in
                                 KefirEventRow(
                                     event: event,
-                                    batchName: batchNameMap[event.batchID],
+                                    batchName: lineageIndex.batchName(id: event.batchID),
                                     showsBatchContext: focusBatch == nil,
-                                    onOpenBatch: openBatchAction(for: event.batchID)
+                                    onOpenBatch: openBatchAction(for: event.batchID, lineageIndex: lineageIndex)
                                 )
                             }
                         }
@@ -144,7 +158,10 @@ struct KefirJournalView: View {
         }
     }
 
-    private func archiveBatchRow(_ batch: KefirBatch) -> some View {
+    private func archiveBatchRow(
+        _ batch: KefirBatch,
+        lineageIndex: KefirLineageIndex
+    ) -> some View {
         Button {
             router.fermentationsPath.append(.kefirBatch(batch.id))
         } label: {
@@ -189,8 +206,11 @@ struct KefirJournalView: View {
         .accessibilityIdentifier("KefirJournalArchivedBatch-\(batch.accessibilityStem)")
     }
 
-    private func openBatchAction(for batchID: UUID) -> (() -> Void)? {
-        guard focusBatch == nil, batchNameMap[batchID] != nil else {
+    private func openBatchAction(
+        for batchID: UUID,
+        lineageIndex: KefirLineageIndex
+    ) -> (() -> Void)? {
+        guard focusBatch == nil, lineageIndex.batch(id: batchID) != nil else {
             return nil
         }
 
@@ -203,19 +223,19 @@ struct KefirJournalView: View {
         if let focusBatch {
             return focusBatch.name
         }
-        return "Journal e archivio"
+        return "Cronologia e archivio"
     }
 
     private var headerMessage: String {
         if focusBatch != nil {
             return "La storia completa di questo batch."
         }
-        return "Tutti i movimenti dei tuoi batch, in ordine."
+        return "Tieni traccia dei rinfreschi dei tuoi batch"
     }
 
-    private var headerSummary: String? {
+    private func headerSummary(renderState: RenderState) -> String? {
         if let focusBatch {
-            let lineageSummary = lineageIndex.lineageSummary(for: focusBatch)
+            let lineageSummary = renderState.lineageIndex.lineageSummary(for: focusBatch)
             return [lineageSummary.cardSummary, focusBatch.contextSummary]
                 .compactMap { $0 }
                 .joined(separator: " · ")
@@ -226,28 +246,24 @@ struct KefirJournalView: View {
             return nil
         }
 
-        return "Ultimo passaggio: \(latestEvent.presentation(batchName: batchNameMap[latestEvent.batchID]).title)."
+        return "Ultimo rinfresco: \(latestEvent.presentation(batchName: renderState.lineageIndex.batchName(id: latestEvent.batchID)).title)."
     }
 
-    private var archivedBatches: [KefirBatch] {
-        allBatches.filter(\.isArchived)
+    private func makeRenderState() -> RenderState {
+        let lineageIndex = KefirLineageIndex(batches: allBatches)
+
+        return RenderState(
+            archivedBatches: focusBatch == nil ? allBatches.filter(\.isArchived) : [],
+            journalSections: events.journalSections,
+            lineageIndex: lineageIndex
+        )
     }
 
-    private var showArchiveLibrary: Bool {
-        focusBatch == nil && archivedBatches.isEmpty == false
+    private func showArchiveLibrary(renderState: RenderState) -> Bool {
+        focusBatch == nil && renderState.archivedBatches.isEmpty == false
     }
 
-    private var batchNameMap: [UUID: String] {
-        allBatches.reduce(into: [UUID: String]()) { result, batch in
-            result[batch.id] = batch.name
-        }
-    }
-
-    private var lineageIndex: KefirLineageIndex {
-        KefirLineageIndex(batches: allBatches)
-    }
-
-    private var headerBody: some View {
+    private func headerBody(renderState: RenderState) -> some View {
         VStack(alignment: .leading, spacing: 12) {
             Text(headerTitle)
                 .font(.system(size: 24, weight: .bold))
@@ -262,12 +278,12 @@ struct KefirJournalView: View {
                 if let focusBatch {
                     StateBadge(kefirState: focusBatch.derivedState)
                     StateBadge(text: focusBatch.storageMode.title, tone: .schedule)
-                } else if archivedBatches.isEmpty == false {
-                    StateBadge(text: "\(archivedBatches.count) in archivio", tone: .done)
+                } else if renderState.archivedBatches.isEmpty == false {
+                    StateBadge(text: "\(renderState.archivedBatches.count) in archivio", tone: .done)
                 }
             }
 
-            if let summary = headerSummary {
+            if let summary = headerSummary(renderState: renderState) {
                 Text(summary)
                     .font(.footnote.weight(.medium))
                     .foregroundStyle(Theme.muted)

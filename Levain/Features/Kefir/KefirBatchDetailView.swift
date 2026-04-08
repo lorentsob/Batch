@@ -24,12 +24,15 @@ struct KefirBatchDetailView: View {
     }
 
     var body: some View {
+        let lineageSummary = KefirLineageIndex(batches: allBatches).lineageSummary(for: batch)
+        let recentHistory = Array(recentEvents.prefix(3))
+
         ScrollView {
             VStack(alignment: .leading, spacing: 20) {
-                headerCard
+                headerCard(lineageSummary: lineageSummary)
                 actionsCard
-                recentHistoryCard
-                operationalContextCard
+                recentHistoryCard(recentHistory: recentHistory)
+                operationalContextCard(lineageSummary: lineageSummary)
             }
             .padding(.horizontal, 20)
             .padding(.vertical, 24)
@@ -61,11 +64,11 @@ struct KefirBatchDetailView: View {
         }
     }
 
-    private var headerCard: some View {
-        headerSectionCard
+    private func headerCard(lineageSummary: KefirBatchLineageSummary) -> some View {
+        headerSectionCard(lineageSummary: lineageSummary)
     }
 
-    private var operationalContextCard: some View {
+    private func operationalContextCard(lineageSummary: KefirBatchLineageSummary) -> some View {
         SectionCard {
             VStack(alignment: .leading, spacing: 12) {
                 Text("Note e dettagli")
@@ -110,7 +113,7 @@ struct KefirBatchDetailView: View {
         }
     }
 
-    private var recentHistoryCard: some View {
+    private func recentHistoryCard(recentHistory: [KefirEvent]) -> some View {
         SectionCard {
             VStack(alignment: .leading, spacing: 14) {
                 HStack {
@@ -132,7 +135,7 @@ struct KefirBatchDetailView: View {
                         .font(.footnote)
                         .foregroundStyle(Theme.muted)
                 } else {
-                    ForEach(Array(recentEvents.prefix(3))) { event in
+                    ForEach(recentHistory) { event in
                         KefirEventRow(
                             event: event,
                             batchName: nil,
@@ -144,7 +147,7 @@ struct KefirBatchDetailView: View {
                 NavigationLink {
                     KefirJournalView(focusBatch: batch)
                 } label: {
-                    Label("Apri journal batch", systemImage: "clock.arrow.circlepath")
+                    Label("Apri cronologia batch", systemImage: "clock.arrow.circlepath")
                         .frame(maxWidth: .infinity)
                         .accessibilityIdentifier("KefirDetailOpenJournalButton")
                 }
@@ -205,20 +208,14 @@ struct KefirBatchDetailView: View {
     }
 
     @ViewBuilder
-    private var headerSectionCard: some View {
-        if batch.derivedState == .overdue {
-            SectionCard(emphasis: .danger) {
-                headerContent
-            }
-        } else if batch.sectionKind == .warning {
-            SectionCard(emphasis: .tinted) {
-                headerContent
-            }
-        } else {
-            SectionCard {
-                headerContent
-            }
+    private func headerSectionCard(lineageSummary: KefirBatchLineageSummary) -> some View {
+        SectionCard(emphasis: batch.cardEmphasis) {
+            headerContent(lineageSummary: lineageSummary)
         }
+        .overlay(
+            RoundedRectangle(cornerRadius: Theme.Radius.card, style: .continuous)
+                .stroke(Theme.Border.danger, lineWidth: batch.derivedState == .overdue ? 1.5 : 0)
+        )
     }
 
     private func quickActionButton(
@@ -294,14 +291,14 @@ struct KefirBatchDetailView: View {
             KefirJournalView(focusBatch: batch)
         } label: {
             quickActionLabel(
-                label: "Journal",
+                label: "Cronologia",
                 systemImage: "clock.arrow.circlepath",
                 accessibilityIdentifier: "KefirDetailQuickJournalButton"
             )
         }
         .buttonStyle(SecondaryActionButtonStyle())
         .accessibilityElement(children: .combine)
-        .accessibilityLabel("Journal")
+        .accessibilityLabel("Cronologia")
         .accessibilityAddTraits(.isButton)
         .accessibilityIdentifier("KefirDetailQuickJournalButton")
     }
@@ -331,7 +328,7 @@ struct KefirBatchDetailView: View {
         .accessibilityIdentifier("KefirDetailQuickArchiveButton")
     }
 
-    private var headerContent: some View {
+    private func headerContent(lineageSummary: KefirBatchLineageSummary) -> some View {
         VStack(alignment: .leading, spacing: 16) {
             HStack(alignment: .top, spacing: 12) {
                 VStack(alignment: .leading, spacing: 8) {
@@ -350,7 +347,7 @@ struct KefirBatchDetailView: View {
             }
 
             HStack(spacing: 8) {
-                StateBadge(text: batch.storageMode.title, tone: .schedule)
+                StateBadge(text: batch.storageMode.title, tone: .info)
                 if batch.sourceBatchId != nil {
                     StateBadge(text: "Derivato", tone: .info)
                 }
@@ -367,7 +364,7 @@ struct KefirBatchDetailView: View {
 
             LazyVGrid(columns: metricColumns, alignment: .leading, spacing: 8) {
                 MetricChip(label: "Routine", value: batch.routineSummary, tone: .schedule)
-                MetricChip(label: "Ultima gestione", value: batch.lastManagedSummary, tone: .schedule)
+                MetricChip(label: "Ultimo rinfresco", value: batch.lastManagedSummary, tone: .done)
                 MetricChip(label: batch.nextManagementLabel, value: batch.nextManagementSummary, tone: batch.nextManagementTone)
                 MetricChip(label: "Conservazione", value: batch.storageMode.title, tone: .info)
             }
@@ -414,14 +411,6 @@ struct KefirBatchDetailView: View {
         KefirEventRecorder.recordArchive(of: batch, in: modelContext, at: now)
         try? modelContext.save()
         syncNotificationsAndShowBanner("Batch archiviato")
-    }
-
-    private var lineageSummary: KefirBatchLineageSummary {
-        lineageIndex.lineageSummary(for: batch)
-    }
-
-    private var lineageIndex: KefirLineageIndex {
-        KefirLineageIndex(batches: allBatches)
     }
 
     private func syncNotificationsAndShowBanner(_ message: String) {

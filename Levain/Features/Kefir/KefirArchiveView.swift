@@ -8,15 +8,22 @@ struct KefirArchiveView: View {
     @State private var editorMode: KefirBatchEditorView.Mode?
 
     var body: some View {
+        let archivedBatches = allBatches.filter(\.isArchived).sorted { lhs, rhs in
+            let lhsArchiveDate = lhs.archivedAt ?? lhs.lastManagedAt
+            let rhsArchiveDate = rhs.archivedAt ?? rhs.lastManagedAt
+            return lhsArchiveDate > rhsArchiveDate
+        }
+        let lineageIndex = KefirLineageIndex(batches: allBatches)
+
         ScrollView {
             VStack(alignment: .leading, spacing: 20) {
-                headerCard
+                headerCard(archivedCount: archivedBatches.count)
 
                 if archivedBatches.isEmpty {
                     emptyCard
                 } else {
                     ForEach(archivedBatches) { batch in
-                        archiveBatchCard(batch)
+                        archiveBatchCard(batch, lineageIndex: lineageIndex)
                     }
                 }
             }
@@ -38,15 +45,7 @@ struct KefirArchiveView: View {
         }
     }
 
-    private var archivedBatches: [KefirBatch] {
-        allBatches.filter(\.isArchived).sorted { lhs, rhs in
-            let l = lhs.archivedAt ?? lhs.lastManagedAt
-            let r = rhs.archivedAt ?? rhs.lastManagedAt
-            return l > r
-        }
-    }
-
-    private var headerCard: some View {
+    private func headerCard(archivedCount: Int) -> some View {
         SectionCard(emphasis: .tinted) {
             VStack(alignment: .leading, spacing: 10) {
                 Text("Archivio kefir")
@@ -56,7 +55,7 @@ struct KefirArchiveView: View {
                 Text("Puoi rileggere la storia di ogni batch e usarlo come base per uno nuovo.")
                     .foregroundStyle(Theme.muted)
 
-                StateBadge(text: "\(archivedBatches.count) archiviati", tone: .count)
+                StateBadge(text: "\(archivedCount) archiviati", tone: .count)
             }
         }
         .accessibilityIdentifier("KefirArchiveHeaderCard")
@@ -76,7 +75,10 @@ struct KefirArchiveView: View {
         .accessibilityIdentifier("KefirArchiveEmptyCard")
     }
 
-    private func archiveBatchCard(_ batch: KefirBatch) -> some View {
+    private func archiveBatchCard(
+        _ batch: KefirBatch,
+        lineageIndex: KefirLineageIndex
+    ) -> some View {
         SectionCard {
             VStack(alignment: .leading, spacing: 14) {
                 HStack(alignment: .top, spacing: 12) {
@@ -128,9 +130,5 @@ struct KefirArchiveView: View {
             }
         }
         .accessibilityIdentifier("KefirArchiveBatchCard-\(batch.accessibilityStem)")
-    }
-
-    private var lineageIndex: KefirLineageIndex {
-        KefirLineageIndex(batches: allBatches)
     }
 }

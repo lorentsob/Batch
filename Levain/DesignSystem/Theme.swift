@@ -136,10 +136,11 @@ enum Theme {
         static let dangerBackground   = Palette.errorLight
         static let dangerForeground   = Palette.errorDark
 
-        // Warning — amber, attenzione richiesta ma non ancora un problema
-        static let warningBackground  = Palette.amber100
-        static let warningForeground  = Palette.amber800
-        static let warningBorder      = Palette.amberBorder
+        // Legacy warning state — keep it in the green family to respect v2 semantic rules:
+        // green = action/plan, red = problem, gray = archived.
+        static let warningBackground  = Palette.green100
+        static let warningForeground  = Palette.green800
+        static let warningBorder      = Palette.green100
 
         // Info — lightest green tint, informational only
         static let infoBackground     = Palette.green25
@@ -225,6 +226,16 @@ enum Theme {
         static let xxxl:  CGFloat = 64
     }
 
+    // MARK: - Screen Layout
+
+    enum Layout {
+        static let screenHorizontalInset = Spacing.md
+        static let screenTopInset = Spacing.sm
+        static let screenBottomInset = Spacing.xxxl
+        static let sectionGap = Spacing.lg
+        static let rowGap = Spacing.sm
+    }
+
     // MARK: - Radius (all .continuous / squircle)
 
     enum Radius {
@@ -265,9 +276,48 @@ enum Theme {
     static let muted      = Text.secondary
 }
 
+struct ScreenTitleBlock: View {
+    let title: String
+    let subtitle: String
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: Theme.Spacing.xxs) {
+            Text(title)
+                .font(Theme.Typography.title1)
+                .foregroundStyle(Theme.Text.primary)
+            Text(subtitle)
+                .font(Theme.Typography.subheadline)
+                .foregroundStyle(Theme.Text.secondary)
+                .fixedSize(horizontal: false, vertical: true)
+        }
+    }
+}
+
+struct SectionTitleLabel: View {
+    let title: String
+
+    var body: some View {
+        Text(title)
+            .font(Theme.Typography.headline)
+            .foregroundStyle(Theme.Text.primary)
+    }
+}
+
 // MARK: - View Modifiers
 
 extension View {
+    func levainScrollScreenPadding() -> some View {
+        self
+            .padding(.horizontal, Theme.Layout.screenHorizontalInset)
+            .padding(.top, Theme.Layout.screenTopInset)
+            .padding(.bottom, Theme.Layout.screenBottomInset)
+    }
+
+    func levainListSurface() -> some View {
+        self
+            .scrollContentBackground(.hidden)
+            .background(Theme.Surface.app.ignoresSafeArea())
+    }
 
     /// Squircle clip with continuous corner style
     func squircle(radius: CGFloat = Theme.Radius.card) -> some View {
@@ -295,6 +345,20 @@ extension View {
     /// Danger card shadow (red tint)
     func dangerShadow() -> some View {
         self.shadow(color: Theme.Shadow.danger, radius: 18, x: 0, y: 8)
+    }
+}
+
+extension EdgeInsets {
+    static func levainListRow(
+        top: CGFloat = 0,
+        bottom: CGFloat = Theme.Spacing.sm
+    ) -> EdgeInsets {
+        EdgeInsets(
+            top: top,
+            leading: Theme.Layout.screenHorizontalInset,
+            bottom: bottom,
+            trailing: Theme.Layout.screenHorizontalInset
+        )
     }
 }
 

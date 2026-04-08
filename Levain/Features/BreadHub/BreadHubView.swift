@@ -59,8 +59,8 @@ struct BreadHubView: View {
             ricetteRow
         }
         .listStyle(.plain)
-        .background(Theme.Surface.app)
-        .navigationTitle("Pane e lievito madre")
+        .levainListSurface()
+        .navigationTitle("")
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
             ToolbarItem(placement: .primaryAction) {
@@ -117,11 +117,10 @@ struct BreadHubView: View {
 
     private func headerCard(activeBakes: [BakeRow]) -> some View {
         SectionCard(emphasis: .tinted) {
-            Text("Pane e lievito madre")
-                .font(.system(size: 26, weight: .bold))
-                .foregroundStyle(Theme.ink)
-            Text("Impasti attivi e i tuoi starter.")
-                .foregroundStyle(Theme.muted)
+            ScreenTitleBlock(
+                title: "Pane e lievito madre",
+                subtitle: "Impasti attivi e i tuoi starter."
+            )
             if activeBakes.isEmpty == false || starters.isEmpty == false {
                 HStack(spacing: 8) {
                     if activeBakes.isEmpty == false {
@@ -133,7 +132,7 @@ struct BreadHubView: View {
                 }
             }
         }
-        .listRowInsets(.init(top: 0, leading: 20, bottom: 8, trailing: 20))
+        .listRowInsets(.levainListRow(top: Theme.Spacing.sm, bottom: Theme.Spacing.xs))
         .listRowBackground(Color.clear)
         .listRowSeparator(.hidden)
     }
@@ -144,16 +143,14 @@ struct BreadHubView: View {
         Group {
             Section {
                 VStack(alignment: .leading, spacing: 12) {
-                    Text("Impasti attivi")
-                        .font(.headline)
-                        .foregroundStyle(Theme.ink)
+                    SectionTitleLabel(title: "Impasti attivi")
                 }
                 .padding(.bottom, 4)
 
                 if activeBakes.isEmpty {
                     EmptyStateView(
                         title: "Nessun impasto attivo",
-                        message: "Scegli una ricetta, imposta l'orario di sfornatura e Levain costruisce la timeline.",
+                        message: "Scegli una ricetta e crea il tuo primo impasto",
                         actionTitle: "Nuovo impasto"
                     ) {
                         showingBakeEditor = true
@@ -161,7 +158,7 @@ struct BreadHubView: View {
                     .accessibilityIdentifier("BreadHubBakesEmptyState")
                 }
             }
-            .listRowInsets(.init(top: 0, leading: 20, bottom: 8, trailing: 20))
+            .listRowInsets(.levainListRow(bottom: Theme.Spacing.xs))
             .listRowBackground(Color.clear)
             .listRowSeparator(.hidden)
 
@@ -206,7 +203,7 @@ struct BreadHubView: View {
                 }
                 .buttonStyle(.plain)
                 .accessibilityIdentifier("BreadHubBakeCard_\(row.bake.id)")
-                .listRowInsets(.init(top: 0, leading: 20, bottom: 12, trailing: 20))
+                .listRowInsets(.levainListRow(bottom: Theme.Spacing.xs))
                 .listRowBackground(Color.clear)
                 .listRowSeparator(.hidden)
             }
@@ -220,9 +217,7 @@ struct BreadHubView: View {
         Group {
             Section {
                 VStack(alignment: .leading, spacing: 12) {
-                    Text("Starter")
-                        .font(.headline)
-                        .foregroundStyle(Theme.ink)
+                    SectionTitleLabel(title: "Starter")
                 }
                 .padding(.bottom, 4)
 
@@ -238,7 +233,7 @@ struct BreadHubView: View {
                     .accessibilityIdentifier("BreadHubStartersEmptyState")
                 }
             }
-            .listRowInsets(.init(top: 0, leading: 20, bottom: 8, trailing: 20))
+            .listRowInsets(.levainListRow(bottom: Theme.Spacing.xs))
             .listRowBackground(Color.clear)
             .listRowSeparator(.hidden)
 
@@ -256,7 +251,7 @@ struct BreadHubView: View {
                     }
                 }
                 .accessibilityIdentifier("BreadHubStarterCard_\(starter.id)")
-                .listRowInsets(.init(top: 0, leading: 20, bottom: 12, trailing: 20))
+                .listRowInsets(.levainListRow(bottom: Theme.Spacing.xs))
                 .listRowBackground(Color.clear)
                 .listRowSeparator(.hidden)
             }
@@ -274,31 +269,31 @@ struct BreadHubView: View {
                 SectionCard {
                     HStack(spacing: 14) {
                         Image(systemName: "doc.text.fill")
-                            .font(.system(size: 22, weight: .semibold))
-                            .foregroundStyle(Theme.accent)
+                            .font(Theme.Typography.title2)
+                            .foregroundStyle(Theme.Control.primaryFill)
                             .frame(width: 32)
 
                         VStack(alignment: .leading, spacing: 4) {
                             Text("Ricette")
-                                .font(.headline)
-                                .foregroundStyle(Theme.ink)
+                                .font(Theme.Typography.headline)
+                                .foregroundStyle(Theme.Text.primary)
                             Text(formulas.isEmpty ? "Nessuna ricetta salvata." : "\(formulas.count) formula\(formulas.count == 1 ? "" : "e")")
-                                .font(.subheadline)
-                                .foregroundStyle(Theme.muted)
+                                .font(Theme.Typography.subheadline)
+                                .foregroundStyle(Theme.Text.secondary)
                         }
 
                         Spacer(minLength: 0)
 
                         Image(systemName: "chevron.right")
-                            .font(.system(size: 13, weight: .semibold))
-                            .foregroundStyle(Theme.muted)
+                            .font(Theme.Typography.footnoteSemibold)
+                            .foregroundStyle(Theme.Text.secondary)
                     }
                 }
             }
             .buttonStyle(.plain)
             .accessibilityIdentifier("BreadHubFormuleRow")
         }
-        .listRowInsets(.init(top: 0, leading: 20, bottom: 24, trailing: 20))
+        .listRowInsets(.levainListRow(bottom: Theme.Spacing.md))
         .listRowBackground(Color.clear)
         .listRowSeparator(.hidden)
     }

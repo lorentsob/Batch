@@ -28,20 +28,20 @@ struct FermentationsView: View {
     }
 
     private let columns = [
-        GridItem(.flexible(), spacing: 14),
-        GridItem(.flexible(), spacing: 14)
+        GridItem(.flexible(), spacing: Theme.Spacing.sm),
+        GridItem(.flexible(), spacing: Theme.Spacing.sm)
     ]
 
     var body: some View {
         ScrollView {
-            VStack(alignment: .leading, spacing: 24) {
+            VStack(alignment: .leading, spacing: Theme.Layout.sectionGap) {
                 if allFeaturesDisabled {
                     allDisabledEmptyState
-                        .padding(.top, 40)
+                        .padding(.top, Theme.Spacing.lg)
                 } else {
                     dashboardHeader
 
-                    LazyVGrid(columns: columns, spacing: 14) {
+                    LazyVGrid(columns: columns, spacing: Theme.Spacing.sm) {
                         if isBakeEnabled {
                             impastiTile
                         }
@@ -55,13 +55,11 @@ struct FermentationsView: View {
                     }
                 }
             }
-            .padding(.horizontal, 20)
-            .padding(.top, 16)
-            .padding(.bottom, 32)
+            .levainScrollScreenPadding()
         }
-        .background(Theme.Surface.app)
-        .navigationTitle("I tuoi Batch")
-        .navigationBarTitleDisplayMode(.large)
+        .background(Theme.Surface.app.ignoresSafeArea())
+        .navigationTitle("")
+        .navigationBarTitleDisplayMode(.inline)
         .accessibilityIdentifier("FermentationsView")
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {
@@ -104,15 +102,11 @@ struct FermentationsView: View {
 
     private var dashboardHeader: some View {
         SectionCard(emphasis: .tinted) {
-            VStack(alignment: .leading, spacing: 4) {
-                Text("Fermenti attivi")
-                    .font(Theme.Typography.headline)
-                    .foregroundStyle(Theme.Text.primary)
-                Text("Tieni traccia delle tue fermentazioni in corso")
-                    .font(Theme.Typography.subheadline)
-                    .foregroundStyle(Theme.Text.secondary)
-            }
-            .padding(.bottom, 8)
+            ScreenTitleBlock(
+                title: "Batch",
+                subtitle: "I tuoi batch attivi."
+            )
+            .padding(.bottom, Theme.Spacing.xs)
 
             Menu {
                 if isBakeEnabled {
@@ -146,7 +140,7 @@ struct FermentationsView: View {
             badge: bakesBadge,
             rows: bakesRows,
             isEmpty: activeBakes.isEmpty,
-            emptyMessage: "Nessun attivo",
+            emptyMessage: "Crea un impasto",
             onTap: { router.fermentationsPath.append(.bakesList) },
             onEmptyCTA: { showingBakeEditor = true }
         )
@@ -160,7 +154,7 @@ struct FermentationsView: View {
             badge: startersBadge,
             rows: starterRows,
             isEmpty: starters.isEmpty,
-            emptyMessage: "Crea il primo",
+            emptyMessage: "Aggiungi starter",
             onTap: { router.fermentationsPath.append(.starterList) },
             onEmptyCTA: { showingStarterEditor = true }
         )
@@ -174,7 +168,7 @@ struct FermentationsView: View {
             badge: kefirBadge,
             rows: kefirRows,
             isEmpty: kefirBatches.isEmpty,
-            emptyMessage: "Attiva batch",
+            emptyMessage: "Crea batch",
             onTap: { router.fermentationsPath.append(.kefirHub) },
             onEmptyCTA: { kefirEditorMode = .create }
         )
@@ -188,7 +182,7 @@ struct FermentationsView: View {
             badge: formulas.isEmpty ? nil : "\(formulas.count)",
             rows: formulasRows,
             isEmpty: formulas.isEmpty,
-            emptyMessage: "Crea ricetta",
+            emptyMessage: "Aggiungi ricetta",
             onTap: { router.fermentationsPath.append(.formulaList) },
             onEmptyCTA: { /* Could trigger formula creation */ }
         )
@@ -304,7 +298,7 @@ private struct FermentHubTile: View {
 
     var body: some View {
         SectionCard(emphasis: .tinted) {
-            VStack(alignment: .leading, spacing: 14) {
+            VStack(alignment: .leading, spacing: Theme.Spacing.md) {
                 HStack(alignment: .top) {
                     tileIcon
                     Spacer()
@@ -313,7 +307,7 @@ private struct FermentHubTile: View {
                     }
                 }
 
-                VStack(alignment: .leading, spacing: 4) {
+                VStack(alignment: .leading, spacing: Theme.Spacing.xxs) {
                     Text(title)
                         .font(Theme.Typography.headline)
                         .foregroundStyle(Theme.Text.primary)
@@ -324,11 +318,11 @@ private struct FermentHubTile: View {
                             .font(Theme.Typography.caption1)
                             .foregroundStyle(Theme.Text.secondary)
                     } else {
-                        VStack(alignment: .leading, spacing: 4) {
+                        VStack(alignment: .leading, spacing: Theme.Spacing.xxs) {
                             ForEach(rows.prefix(2), id: \.label) { row in
-                                HStack(spacing: 4) {
+                                HStack(spacing: Theme.Spacing.xxs) {
                                     Image(systemName: row.icon)
-                                        .font(.system(size: 10, weight: .bold))
+                                        .font(Theme.Typography.caption2.weight(.semibold))
                                         .foregroundStyle(rowColor(row.tone))
                                     Text(row.label)
                                         .font(Theme.Typography.caption2)
@@ -340,7 +334,7 @@ private struct FermentHubTile: View {
                     }
                 }
             }
-            .padding(.vertical, 4)
+            .padding(.vertical, Theme.Spacing.xxs)
             .frame(maxWidth: .infinity, alignment: .leading)
         }
         .contentShape(Rectangle())
@@ -350,7 +344,7 @@ private struct FermentHubTile: View {
     private func rowColor(_ tone: Row.Tone) -> Color {
         switch tone {
         case .default: return Theme.Text.secondary
-        case .warning: return Theme.Palette.amber800
+        case .warning: return Theme.Control.secondaryForeground
         case .ok: return Theme.Palette.green600
         }
     }

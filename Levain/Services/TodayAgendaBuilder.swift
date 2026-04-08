@@ -515,7 +515,7 @@ enum TodayAgendaBuilder {
                 stepStatus: step.status,
                 timerPhase: step.timerPhase(now: now),
                 isOverdue: step.isOverdue(now: now),
-                primaryActionTitle: "Apri bake",
+                primaryActionTitle: "Apri impasto",
                 presentationStyle: .tomorrowPreview,
                 windowStart: step.isWindowBased ? step.windowStart : nil,
                 windowEnd: step.isWindowBased ? step.windowEnd : nil

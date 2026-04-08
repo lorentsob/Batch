@@ -1,20 +1,20 @@
 import SwiftUI
 
-struct SectionCard<Content: View>: View {
-    enum Emphasis {
-        case surface
-        case subtle
-        case tinted
-        case danger
-    }
+enum SectionCardEmphasis {
+    case surface
+    case subtle
+    case tinted
+    case danger
+}
 
-    let emphasis: Emphasis
+struct SectionCard<Content: View>: View {
+    let emphasis: SectionCardEmphasis
     let padding: CGFloat
     let content: Content
 
     init(
-        emphasis: Emphasis = .surface,
-        padding: CGFloat = 18,
+        emphasis: SectionCardEmphasis = .surface,
+        padding: CGFloat = Theme.Spacing.lg,
         @ViewBuilder content: () -> Content
     ) {
         self.emphasis = emphasis
@@ -23,7 +23,7 @@ struct SectionCard<Content: View>: View {
     }
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 12) {
+        VStack(alignment: .leading, spacing: Theme.Spacing.sm) {
             content
         }
         .padding(padding)

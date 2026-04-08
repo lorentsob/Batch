@@ -103,7 +103,12 @@ enum BakeScheduler {
         return result.sorted { $0.orderIndex < $1.orderIndex }
     }
 
-    static func shiftFutureSteps(in bake: Bake, after anchorStep: BakeStep, by minutes: Int) {
+    static func shiftFutureSteps(
+        in bake: Bake,
+        after anchorStep: BakeStep,
+        by minutes: Int,
+        now: Date = .now
+    ) {
         guard minutes != 0 else { return }
 
         // When the anchor is running, its plannedEnd = actualStart + duration (frozen — not
@@ -143,7 +148,6 @@ enum BakeScheduler {
         // Window-based steps (proof, cold retard): `windowEnd` follows `flexibleWindowEnd`.
         // Non-window steps: `plannedEnd` is `referenceStart + plannedDurationMinutes` only,
         // so we must adjust `plannedDurationMinutes` — updating `flexibleWindowEnd` alone has no effect.
-        let now = Date()
         if anchorStep.status == .running {
             if anchorStep.isWindowBased {
                 anchorStep.flexibleWindowEnd = (anchorStep.flexibleWindowEnd ?? anchorStep.plannedEnd)

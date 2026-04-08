@@ -137,7 +137,7 @@ enum SeedDataLoader {
             waterWeight: 80,
             starterWeightUsed: 20,
             ratioText: "1:4:4",
-            notes: "Rinfresco pre-bake.",
+            notes: "Rinfresco pre-impasto.",
             starter: starter
         )
         context.insert(refresh1)

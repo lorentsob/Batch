@@ -10,7 +10,7 @@ Archived v1 planning remains in `.planning/milestones/v1-roadmap.md`, `.planning
 **Primary source:** `docs/levain-prd-v2-multi-fermentations.md`  
 **Supporting addendum:** `docs/levain-prd-v2-addendum.md`  
 **Delivery rule:** extend the existing app shell, views, models, and services; do not fork a second UI language or invent a generic fermentation abstraction.
-**Current state:** Phases 17 through 21 are complete in code and verification. `21-03` closed the runtime-hardening wave by surfacing explicit persistence failures, guarding starter reminder routes, and syncing the active/codebase docs. Phase 22 is the final open milestone wave and still needs its execution plans.
+**Current state:** Phases 17 through 21 are complete in code and verification. `21-03` closed the runtime-hardening wave by surfacing explicit persistence failures, guarding starter reminder routes, and syncing the active/codebase docs. Phase 23 is now also complete, closing recipe-to-guide glossary linking, canonical terminology, editorial coverage, and alias-aware Knowledge search. The only open v2 wave is Phase 22 for optional culture/grain plus kefir-specific knowledge surfacing.
 
 ## Archived Milestones
 
@@ -25,7 +25,8 @@ Archived v1 planning remains in `.planning/milestones/v1-roadmap.md`, `.planning
 - [x] **Phase 19: Milk Kefir Batch Core** - Introduce the batch-first milk kefir vertical with local persistence, no-culture-first batch creation, storage-aware state derivation, core screens, and local reminder defaults.
 - [x] **Phase 20: Kefir Lineage & Journal** - Add derived batch genealogy, structured event history, and archive/journal surfaces that support the planner instead of replacing it.
 - [x] **Phase 21: Runtime Hardening & Planning Sync** - Harden `Oggi`, Knowledge, kefir lineage lookups, persistence/routing safety, and `.planning`/codebase memory before new product scope lands.
-- [ ] **Phase 22: Culture Tracking & Knowledge Expansion** - Add lightweight culture/grain tracking, kefir knowledge filters/content, contextual tips, and final v2 UAT closure.
+- [ ] **Phase 22: Culture Tracking & Knowledge Expansion** - Add lightweight culture/grain tracking plus kefir-aware knowledge filters, content, and contextual tips without disturbing the action-first shell.
+- [x] **Phase 23: Guides, Glossary & Term Linking** - Make technical recipe terminology directly navigable into Knowledge through canonical glossary entries, aliases, non-invasive inline links, and missing-guide coverage.
 
 ## Phase Details
 
@@ -120,25 +121,42 @@ Plans:
 
 ### Phase 22: Culture Tracking & Knowledge Expansion
 
-**Goal**: Close the v2 milestone with optional culture/grain tracking, kefir knowledge integration, and final cross-domain verification.  
+**Goal**: Extend the shipped knowledge system for the kefir wave with optional culture/grain tracking and richer kefir-aware guidance.  
 **Depends on**: Phase 21  
 **Requirements**: [CULTURE-01, KNOW-01, KNOW-02]  
 **Success Criteria**:
 
 1. Culture/grain tracking exists but stays ignorable for users who only manage batches.
 2. Knowledge supports kefir-aware filters and contextual tips without splitting into a separate editorial system.
-3. Final UAT verifies that bread, starter, and kefir coexist cleanly under the v2 shell.
+3. The new kefir knowledge and culture surfaces reuse the current shell, router, and local-content model without creating a parallel editorial stack.
 
 Plans:
 
 - [ ] 22-01: Culture and grain tracking surfaces
 - [ ] 22-02: Knowledge filters, kefir content wiring, and contextual tips
-- [ ] 22-03: Cross-domain UAT, release notes, and milestone closure
+- [ ] 22-03: Verification closeout and planning sync for optional culture/grain + kefir knowledge work
 
-## Progress: [█████████████████░░] 86% (18 of 21 v2 plans complete)
+### Phase 23: Guides, Glossary & Term Linking
+
+**Goal**: Turn Knowledge into a consultable guide/glossary system that can be reached directly from recipe terminology, while keeping vocabulary consistent and the UI non-invasive.  
+**Depends on**: Phase 21  
+**Requirements**: [KNOW-03, GLOSSARY-01, GLOSSARY-02]  
+**Success Criteria**:
+
+1. Technical terms used in recipe and bake detail surfaces resolve through one canonical glossary/article entry per concept, with aliases handling Italian/English wording drift.
+2. Inline glossary links are subtle, readable, and limited to terms that genuinely benefit from explanation instead of turning recipes into a dense hyperlink surface.
+3. Knowledge search/indexing and bundled content cover the high-value terminology already present in shipped formulas, with a clear backlog for any still-deferred entries.
+
+Plans:
+
+- [x] 23-01: Canonical terminology map, alias-aware knowledge index, and linked-text primitive
+- [x] 23-02: Recipe and guide surface integration for non-invasive term linking
+- [x] 23-03: Missing-guide editorial pass, indexing polish, and cross-surface verification
+
+## Progress: [██████████████████░░] 88% (21 of 24 v2 plans complete)
 
 **Execution Order:**  
-Phases execute in numeric order: 17 → 18 → 19 → 20 → 21 → 22
+Phases 17 → 21 and 23 are now complete. Phase 22 remains the only open post-Phase-21 wave and should stay scoped to optional culture/grain plus kefir-specific knowledge expansion rather than reopening the closed bread glossary work.
 
 | Phase | Plans Complete | Status | Completed |
 | ----- | -------------- | ------ | --------- |
@@ -148,3 +166,4 @@ Phases execute in numeric order: 17 → 18 → 19 → 20 → 21 → 22
 | 20. Kefir Lineage & Journal | 4/4 | Complete | 2026-04-02 |
 | 21. Runtime Hardening & Planning Sync | 3/3 | Complete | 2026-04-03 |
 | 22. Culture Tracking & Knowledge Expansion | 0/3 | Not started | - |
+| 23. Guides, Glossary & Term Linking | 3/3 | Complete | 2026-04-08 |

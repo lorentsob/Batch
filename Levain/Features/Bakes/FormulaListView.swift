@@ -28,11 +28,10 @@ struct FormulaListView: View {
         List {
             Group {
                 SectionCard(emphasis: .tinted) {
-                    Text("Ricette")
-                        .font(.system(size: 30, weight: .bold))
-                        .foregroundStyle(Theme.ink)
-                    Text("Tutte le ricette disponibili")
-                        .foregroundStyle(Theme.muted)
+                    ScreenTitleBlock(
+                        title: "Ricette",
+                        subtitle: "Consulta le ricette e creane di nuove"
+                    )
                     HStack(spacing: 8) {
                         StateBadge(text: "\(activeFormulas.count) ricette", tone: .count)
                         let userCount = activeFormulas.filter { !$0.isSystemFormula }.count
@@ -48,9 +47,9 @@ struct FormulaListView: View {
                         Label("Nuova ricetta", systemImage: "plus")
                     }
                     .buttonStyle(PrimaryActionButtonStyle())
-                    .padding(.top, 4)
+                    .padding(.top, Theme.Spacing.xxs)
                 }
-                .listRowInsets(EdgeInsets(top: 24, leading: 20, bottom: 20, trailing: 20))
+                .listRowInsets(.levainListRow(top: Theme.Spacing.sm, bottom: Theme.Spacing.md))
 
 
                 if activeFormulas.isEmpty {
@@ -60,7 +59,7 @@ struct FormulaListView: View {
                     )
                     .listRowSeparator(.hidden)
                     .listRowBackground(Color.clear)
-                    .listRowInsets(EdgeInsets(top: 0, leading: 20, bottom: 12, trailing: 20))
+                    .listRowInsets(.levainListRow(bottom: Theme.Spacing.xs))
                 } else {
                     ForEach(activeFormulas) { formula in
                         ZStack {
@@ -112,7 +111,7 @@ struct FormulaListView: View {
                         }
                         .listRowSeparator(.hidden)
                         .listRowBackground(Color.clear)
-                        .listRowInsets(EdgeInsets(top: 0, leading: 20, bottom: 12, trailing: 20))
+                        .listRowInsets(.levainListRow(bottom: Theme.Spacing.xs))
                     }
                 }
 
@@ -133,7 +132,7 @@ struct FormulaListView: View {
                     .buttonStyle(.plain)
                     .listRowSeparator(.hidden)
                     .listRowBackground(Color.clear)
-                    .listRowInsets(EdgeInsets(top: 8, leading: 20, bottom: 12, trailing: 20))
+                    .listRowInsets(.levainListRow(top: Theme.Spacing.xs, bottom: Theme.Spacing.xs))
                 }
 
                 Color.clear.frame(height: 80)
@@ -142,10 +141,11 @@ struct FormulaListView: View {
             }
         }
         .listStyle(.plain)
-        .background(Theme.background.ignoresSafeArea())
+        .levainListSurface()
         .navigationTitle("")
         .navigationBarTitleDisplayMode(.inline)
         .tint(Theme.Control.primaryFill)
+        .accessibilityIdentifier("FormulaListView")
         .sheet(isPresented: $showingFormulaEditor) {
             NavigationStack {
                 FormulaEditorView(
@@ -265,7 +265,7 @@ private struct FormulaArchiveView: View {
             }
         }
         .listStyle(.plain)
-        .background(Theme.background.ignoresSafeArea())
+        .levainListSurface()
         .navigationTitle("Archivio ricette")
         .navigationBarTitleDisplayMode(.inline)
         .tint(Theme.Control.primaryFill)
