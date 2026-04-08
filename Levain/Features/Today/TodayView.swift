@@ -10,7 +10,6 @@ struct TodayView: View {
     @Query(sort: \Bake.targetBakeDateTime, order: .forward) private var bakes: [Bake]
     @Query(filter: #Predicate<Starter> { $0.archivedAt == nil }, sort: \Starter.lastRefresh, order: .reverse) private var starters: [Starter]
     @Query(sort: \KefirBatch.lastManagedAt, order: .reverse) private var kefirBatches: [KefirBatch]
-    @Query(sort: \RecipeFormula.name) private var formulas: [RecipeFormula]
     @Query private var appSettingsList: [AppSettings]
 
     @State private var refreshStarter: Starter?
@@ -20,6 +19,9 @@ struct TodayView: View {
     @State private var stepCompletedTrigger = false
     @State private var cachedSnapshot: TodaySnapshot?
     @State private var showingSettings = false
+    @State private var showingBakeCreation = false
+    @State private var showingStarterCreation = false
+    @State private var showingKefirCreation: KefirBatchEditorView.Mode?
 
     private var appSettings: AppSettings? { appSettingsList.first }
 
@@ -57,6 +59,28 @@ struct TodayView: View {
                                 }
                             }
                         }
+
+                        Menu {
+                            if appSettings?.isBakeEnabled ?? true {
+                                Button { showingBakeCreation = true } label: {
+                                    Label("Nuovo impasto", image: "navbar-bake")
+                                }
+                            }
+                            if appSettings?.isStarterEnabled ?? true {
+                                Button { showingStarterCreation = true } label: {
+                                    Label("Nuovo starter", image: "navbar-starter")
+                                }
+                            }
+                            if appSettings?.isKefirEnabled ?? true {
+                                Button { showingKefirCreation = .create } label: {
+                                    Label("Nuovo batch kefir", systemImage: "drop.fill")
+                                }
+                            }
+                        } label: {
+                            Label("Nuova preparazione", systemImage: "plus")
+                        }
+                        .buttonStyle(PrimaryActionButtonStyle())
+                        .padding(.top, 4)
                     }
 
                     if allFeaturesDisabled {
@@ -104,8 +128,9 @@ struct TodayView: View {
                             healthyStarters: snapshot.healthyStarters
                         )
                         ForEach(sections) { section in
-                            ForEach(Array(section.items.enumerated()), id: \.offset) { idx, sectionItem in
-                                TodayOperationalCardView(domain: section.domain, showHeader: idx == 0) {
+                            let firstItemID = section.items.first?.id
+                            ForEach(section.items) { sectionItem in
+                                TodayOperationalCardView(domain: section.domain, showHeader: sectionItem.id == firstItemID) {
                                     switch sectionItem {
                                     case let .feedItem(item):
                                         switch item.kind {
@@ -176,20 +201,24 @@ struct TodayView: View {
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
         .navigationTitle("")
         .navigationBarTitleDisplayMode(.inline)
-        .toolbar {
-            ToolbarItem(placement: .topBarTrailing) {
-                Button {
-                    showingSettings = true
-                } label: {
-                    Image(systemName: "gearshape")
-                }
-                .accessibilityLabel("Impostazioni")
-                .accessibilityIdentifier("TodaySettingsButton")
-            }
-        }
         .sheet(isPresented: $showingSettings) {
             NavigationStack {
                 SettingsView()
+            }
+        }
+        .sheet(isPresented: $showingBakeCreation) {
+            NavigationStack {
+                BakeCreationView(preselectedFormula: nil)
+            }
+        }
+        .sheet(isPresented: $showingStarterCreation) {
+            NavigationStack {
+                StarterEditorView(starter: nil)
+            }
+        }
+        .sheet(item: $showingKefirCreation) { mode in
+            NavigationStack {
+                KefirBatchEditorView(mode: mode) { _ in }
             }
         }
         .sheet(item: $refreshStarter) { starter in
@@ -213,6 +242,8 @@ struct TodayView: View {
             cachedSnapshot = buildSnapshot(revision: revision)
         }
     }
+
+
 
     private func handlePrimary(_ selection: TodayBakeSelection) {
         let step = selection.step
@@ -279,14 +310,12 @@ struct TodayView: View {
             hasher.combine(bake.id)
             hasher.combine(bake.name)
             hasher.combine(bake.isCancelled)
-            hasher.combine(bake.targetBakeDateTime)
 
             for step in bake.steps {
                 hasher.combine(step.id)
                 hasher.combine(step.orderIndex)
                 hasher.combine(step.typeRaw)
                 hasher.combine(step.nameOverride)
-                hasher.combine(step.descriptionText)
                 hasher.combine(step.plannedStart)
                 hasher.combine(step.plannedDurationMinutes)
                 hasher.combine(step.flexibleWindowStart)
@@ -315,7 +344,6 @@ struct TodayView: View {
             hasher.combine(batch.archivedAt)
         }
 
-        hasher.combine(formulas.count)
         hasher.combine(appSettings?.isBakeEnabled ?? true)
         hasher.combine(appSettings?.isStarterEnabled ?? true)
         hasher.combine(appSettings?.isKefirEnabled ?? true)
@@ -334,12 +362,13 @@ struct TodayView: View {
         let filteredBakes = settings?.isBakeEnabled == false ? [] : Array(bakes)
         let filteredStarters = settings?.isStarterEnabled == false ? [] : Array(starters)
         let filteredKefirBatches = settings?.isKefirEnabled == false ? [] : Array(kefirBatches)
+        let hasPersistedData = bakes.isEmpty == false || starters.isEmpty == false || kefirBatches.isEmpty == false
         return TodaySnapshot.make(
             revision: revision,
             bakes: filteredBakes,
             starters: filteredStarters,
             kefirBatches: filteredKefirBatches,
-            formulas: Array(formulas)
+            hasPersistedData: hasPersistedData
         )
     }
 }
@@ -354,9 +383,18 @@ private struct TodayBakeSelection: Identifiable {
 // MARK: - Domain section grouping
 
 private struct TodayRenderSection: Identifiable {
-    enum Item {
+    enum Item: Identifiable {
         case feedItem(TodayAgendaItem)
         case healthyStarter(Starter)
+
+        var id: String {
+            switch self {
+            case let .feedItem(item):
+                return "feed-\(item.id)"
+            case let .healthyStarter(starter):
+                return "healthy-starter-\(starter.id.uuidString)"
+            }
+        }
     }
     let domain: TodayAgendaItem.Domain
     let items: [Item]
@@ -406,7 +444,7 @@ private struct TodaySnapshot {
         bakes: [Bake],
         starters: [Starter],
         kefirBatches: [KefirBatch],
-        formulas: [RecipeFormula]
+        hasPersistedData: Bool
     ) -> TodaySnapshot {
         let bakeInputs = bakes.map { bake in
             TodayAgendaBakeInput(bake: bake, operational: bake.makeOperationalSnapshot())
@@ -416,7 +454,7 @@ private struct TodaySnapshot {
             inputs: bakeInputs,
             starters: starters,
             kefirBatches: kefirBatches,
-            hasPersistedData: bakes.isEmpty == false || starters.isEmpty == false || kefirBatches.isEmpty == false || formulas.isEmpty == false
+            hasPersistedData: hasPersistedData
         )
 
         let todayCount = agenda.feed.filter { $0.urgency != .preview }.count

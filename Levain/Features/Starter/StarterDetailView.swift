@@ -19,46 +19,44 @@ struct StarterDetailView: View {
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 20) {
-                StarterDetailHeaderView(starter: starter)
+                StarterDetailHeaderView(starter: starter) {
+                    showingRefreshSheet = true
+                }
 
                 SectionCard {
-                    HStack {
-                        Text("Ultimi rinfreschi")
+                    VStack(alignment: .leading, spacing: 4) {
+                        Text("Log rinfreschi")
                             .font(.headline)
                             .foregroundStyle(Theme.ink)
-                        Spacer()
-                        StateBadge(text: "\(sortedRefreshes.count)", tone: .count)
+                        Text("Registro dei rinfreschi passati con dosi, tempi e note.")
+                            .font(.subheadline)
+                            .foregroundStyle(Theme.muted)
                     }
+                    .padding(.bottom, 8)
 
                     if sortedRefreshes.isEmpty {
-                        Text("Ancora nessun log.")
+                        Text("Ancora nessun rinfresco registrato.")
                             .foregroundStyle(Theme.muted)
                     } else {
-                        ForEach(sortedRefreshes.prefix(3)) { refresh in
-                            Button {
-                                selectedRefresh = refresh
-                            } label: {
-                                RefreshHistoryRow(refresh: refresh)
+                        VStack(spacing: 0) {
+                            ForEach(sortedRefreshes.prefix(3)) { refresh in
+                                Button {
+                                    selectedRefresh = refresh
+                                } label: {
+                                    RefreshHistoryRow(refresh: refresh)
+                                }
+                                .buttonStyle(.plain)
+                                Divider().padding(.vertical, 8)
                             }
-                            .buttonStyle(.plain)
                         }
 
-                        if sortedRefreshes.count > 3 {
-                            Button {
-                                showingAllRefreshes = true
-                            } label: {
-                                HStack {
-                                    Text("Vedi tutti i rinfreschi")
-                                        .font(.subheadline.weight(.semibold))
-                                    Spacer()
-                                    StateBadge(text: "\(sortedRefreshes.count)", tone: .count)
-                                    Image(systemName: "chevron.right")
-                                        .font(.footnote.weight(.semibold))
-                                        .foregroundStyle(Theme.muted)
-                                }
-                            }
-                            .buttonStyle(.plain)
+                        Button {
+                            showingAllRefreshes = true
+                        } label: {
+                            Label("Tutti i rinfreschi", systemImage: "clock.arrow.circlepath")
                         }
+                        .buttonStyle(SecondaryActionButtonStyle())
+                        .accessibilityIdentifier("StarterOpenAllLogsButton")
                     }
                 }
 
@@ -109,12 +107,11 @@ struct StarterDetailView: View {
         .navigationTitle(starter.name)
         .tint(Theme.Control.primaryFill)
         .toolbar {
-            ToolbarItemGroup(placement: .topBarTrailing) {
-                Button("Modifica") {
+            ToolbarItem(placement: .topBarTrailing) {
+                Button {
                     showingEditor = true
-                }
-                Button("Rinfresca") {
-                    showingRefreshSheet = true
+                } label: {
+                    Image(systemName: "pencil")
                 }
             }
         }

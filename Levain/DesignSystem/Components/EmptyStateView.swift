@@ -3,8 +3,22 @@ import SwiftUI
 struct EmptyStateView: View {
     let title: String
     let message: String
-    let actionTitle: String
-    let action: () -> Void
+    var actionTitle: String? = nil
+    var action: (() -> Void)? = nil
+
+    init(title: String, message: String) {
+        self.title = title
+        self.message = message
+        self.actionTitle = nil
+        self.action = nil
+    }
+
+    init(title: String, message: String, actionTitle: String, action: @escaping () -> Void) {
+        self.title = title
+        self.message = message
+        self.actionTitle = actionTitle
+        self.action = action
+    }
 
     var body: some View {
         SectionCard(emphasis: .tinted) {
@@ -14,8 +28,10 @@ struct EmptyStateView: View {
                     .foregroundStyle(Theme.ink)
                 Text(message)
                     .foregroundStyle(Theme.muted)
-                Button(actionTitle, action: action)
-                    .buttonStyle(PrimaryActionButtonStyle())
+                if let actionTitle, let action {
+                    Button(actionTitle, action: action)
+                        .buttonStyle(PrimaryActionButtonStyle())
+                }
             }
         }
     }

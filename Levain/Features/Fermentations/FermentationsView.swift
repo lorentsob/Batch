@@ -15,6 +15,7 @@ struct FermentationsView: View {
     @State private var showingBakeEditor = false
     @State private var showingStarterEditor = false
     @State private var kefirEditorMode: KefirBatchEditorView.Mode?
+    @State private var showingSettings = false
 
     private var appSettings: AppSettings? { appSettingsList.first }
     private var isBakeEnabled: Bool { appSettings?.isBakeEnabled ?? true }
@@ -61,43 +62,23 @@ struct FermentationsView: View {
         .background(Theme.Surface.app)
         .navigationTitle("I tuoi Batch")
         .navigationBarTitleDisplayMode(.large)
+        .accessibilityIdentifier("FermentationsView")
         .toolbar {
-            ToolbarItem(placement: .primaryAction) {
-                Menu {
-                    if isBakeEnabled {
-                        Button {
-                            showingBakeEditor = true
-                        } label: {
-                            Label("Nuovo impasto", image: "navbar-bake")
-                        }
-                    }
-                    if isStarterEnabled {
-                        Button {
-                            showingStarterEditor = true
-                        } label: {
-                            Label("Nuovo starter", image: "navbar-starter")
-                        }
-                    }
-                    if isKefirEnabled {
-                        Button {
-                            kefirEditorMode = .create
-                        } label: {
-                            Label("Nuovo batch kefir", systemImage: "drop.fill")
-                        }
-                    }
+            ToolbarItem(placement: .topBarTrailing) {
+                Button {
+                    showingSettings = true
                 } label: {
-                    Image(systemName: "plus")
-                        .font(.system(size: 16, weight: .bold))
-                        .foregroundStyle(Theme.Control.primaryFill)
-                        .padding(8)
-                        .background(Theme.Surface.card)
-                        .clipShape(Circle())
-                        .shadow(color: Theme.Shadow.card, radius: 4, y: 2)
-                        .squircleBorder(Theme.Border.defaultColor)
+                    Image(systemName: "ellipsis")
+                        .rotationEffect(.degrees(90))
+                        .accessibilityLabel("Impostazioni")
                 }
             }
         }
-        .accessibilityIdentifier("FermentationsView")
+        .sheet(isPresented: $showingSettings) {
+            NavigationStack {
+                SettingsView()
+            }
+        }
         .sheet(isPresented: $showingBakeEditor) {
             NavigationStack {
                 BakeCreationView(preselectedFormula: nil)
@@ -117,16 +98,42 @@ struct FermentationsView: View {
         }
     }
 
+
+
     // MARK: - Dashboard Header
 
     private var dashboardHeader: some View {
-        VStack(alignment: .leading, spacing: 4) {
-            Text("Fermenti attivi")
-                .font(Theme.Typography.headline)
-                .foregroundStyle(Theme.Text.primary)
-            Text("Tieni traccia delle tue fermentazioni in corso")
-                .font(Theme.Typography.subheadline)
-                .foregroundStyle(Theme.Text.secondary)
+        SectionCard(emphasis: .tinted) {
+            VStack(alignment: .leading, spacing: 4) {
+                Text("Fermenti attivi")
+                    .font(Theme.Typography.headline)
+                    .foregroundStyle(Theme.Text.primary)
+                Text("Tieni traccia delle tue fermentazioni in corso")
+                    .font(Theme.Typography.subheadline)
+                    .foregroundStyle(Theme.Text.secondary)
+            }
+            .padding(.bottom, 8)
+
+            Menu {
+                if isBakeEnabled {
+                    Button { showingBakeEditor = true } label: {
+                        Label("Nuovo impasto", image: "navbar-bake")
+                    }
+                }
+                if isStarterEnabled {
+                    Button { showingStarterEditor = true } label: {
+                        Label("Nuovo starter", image: "navbar-starter")
+                    }
+                }
+                if isKefirEnabled {
+                    Button { kefirEditorMode = .create } label: {
+                        Label("Nuovo batch kefir", systemImage: "drop.fill")
+                    }
+                }
+            } label: {
+                Label("Nuova preparazione", systemImage: "plus")
+            }
+            .buttonStyle(PrimaryActionButtonStyle())
         }
     }
 
@@ -254,8 +261,6 @@ struct FermentationsView: View {
 
     // MARK: - Empty States
 
-    @State private var showingSettings = false
-
     private var allDisabledEmptyState: some View {
         EmptyStateView(
             title: "Nessuna sezione attiva",
@@ -263,11 +268,6 @@ struct FermentationsView: View {
             actionTitle: "Apri impostazioni"
         ) {
             showingSettings = true
-        }
-        .sheet(isPresented: $showingSettings) {
-            NavigationStack {
-                SettingsView()
-            }
         }
     }
 }

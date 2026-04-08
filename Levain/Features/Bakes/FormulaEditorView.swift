@@ -4,8 +4,9 @@ import SwiftUI
 struct FormulaEditorView: View {
     @Environment(\.dismiss) private var dismiss
     @Environment(\.modelContext) private var modelContext
-
+    
     let formula: RecipeFormula?
+    let onSaved: () -> Void
 
     @State private var name: String
     @State private var type: RecipeCategory
@@ -20,8 +21,9 @@ struct FormulaEditorView: View {
     @State private var steps: [FormulaStepTemplate]
     @State private var editingStep: FormulaStepTemplate?
 
-    init(formula: RecipeFormula?) {
+    init(formula: RecipeFormula?, onSaved: @escaping () -> Void) {
         self.formula = formula
+        self.onSaved = onSaved
         _name = State(initialValue: formula?.name ?? "")
         _type = State(initialValue: formula?.type ?? .pane)
         _totalFlourWeight = State(initialValue: formula?.totalFlourWeight ?? 1000)
@@ -244,9 +246,11 @@ struct FormulaEditorView: View {
                 defaultSteps: steps
             )
             modelContext.insert(newFormula)
-        }
+         }
 
         try? modelContext.save()
+
+        onSaved()
         dismiss()
-    }
+     }
 }

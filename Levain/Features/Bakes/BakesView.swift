@@ -3,6 +3,18 @@ import SwiftUI
 
 @MainActor
 struct BakesView: View {
+    private struct BakeRow: Identifiable {
+        let bake: Bake
+        let snapshot: Bake.OperationalSnapshot
+
+        var id: UUID { bake.id }
+    }
+
+    private struct ClassifiedBakes {
+        var active: [BakeRow] = []
+        var archived: [BakeRow] = []
+    }
+
     @Environment(\.modelContext) private var modelContext
     @Environment(\.dismiss) private var dismiss
     @EnvironmentObject private var environment: AppEnvironment
@@ -18,20 +30,30 @@ struct BakesView: View {
     @State private var shouldPreselectFirstAvailable = false
     @State private var isArchiveExpanded = false // legacy flag, kept for now
     @State private var showingArchiveSheet = false
+@State private var formulaListRefreshToken = 0
 
     private let metricColumns = [
         GridItem(.adaptive(minimum: 118), spacing: 8)
     ]
 
-    private var activeBakes: [Bake] {
-        bakes.filter { $0.derivedStatus != .cancelled && $0.derivedStatus != .completed }
-    }
+    private var classifiedBakes: ClassifiedBakes {
+        bakes.reduce(into: ClassifiedBakes()) { result, bake in
+            let row = BakeRow(bake: bake, snapshot: bake.makeOperationalSnapshot())
 
-    private var archivedBakes: [Bake] {
-        bakes.filter { $0.derivedStatus == .cancelled || $0.derivedStatus == .completed }
+            switch row.snapshot.derivedStatus {
+            case .cancelled, .completed:
+                result.archived.append(row)
+            default:
+                result.active.append(row)
+            }
+        }
     }
 
     var body: some View {
+        let classified = classifiedBakes
+        let activeBakes = classified.active
+        let archivedBakes = classified.archived
+
         List {
             Group {
                 SectionCard(emphasis: .tinted) {
@@ -48,10 +70,20 @@ struct BakesView: View {
                             StateBadge(text: "\(formulas.count) ricette", tone: .count)
                         }
                     }
+
+                    Button {
+                        preselectedFormula = formulas.first
+                        shouldPreselectFirstAvailable = formulas.isEmpty
+                        showingBakeEditor = true
+                    } label: {
+                        Label("Nuovo bake", systemImage: "plus")
+                    }
+                    .buttonStyle(PrimaryActionButtonStyle())
+                    .padding(.top, 4)
                 }
-                .listRowSeparator(.hidden)
-                .listRowBackground(Color.clear)
                 .listRowInsets(EdgeInsets(top: 24, leading: 20, bottom: 20, trailing: 20))
+
+
 
                 VStack(alignment: .leading, spacing: 12) {
                     Text("Bake attivi")
@@ -61,13 +93,8 @@ struct BakesView: View {
                     if activeBakes.isEmpty {
                         EmptyStateView(
                             title: "Nessun bake ancora",
-                            message: "Scegli una ricetta, imposta l'orario di sfornatura e Levain costruisce la timeline per te.",
-                            actionTitle: emptyStateActionTitle
-                        ) {
-                            preselectedFormula = formulas.first
-                            shouldPreselectFirstAvailable = formulas.isEmpty
-                            showingBakeEditor = true
-                        }
+                            message: "Scegli una ricetta, imposta l'orario di sfornatura e Levain costruisce la timeline per te."
+                        )
                         .accessibilityIdentifier("BakesEmptyState")
                     }
                 }
@@ -76,9 +103,9 @@ struct BakesView: View {
                 .listRowInsets(EdgeInsets(top: 0, leading: 20, bottom: 12, trailing: 20))
 
                 if activeBakes.isEmpty == false {
-                    ForEach(activeBakes) { bake in
+                    ForEach(activeBakes) { row in
                         ZStack {
-                            NavigationLink(value: FermentationsRoute.bake(bake.id)) {
+                            NavigationLink(value: FermentationsRoute.bake(row.bake.id)) {
                                 EmptyView()
                             }
                             .opacity(0)
@@ -87,29 +114,29 @@ struct BakesView: View {
                                 VStack(alignment: .leading, spacing: 12) {
                                     HStack(alignment: .top) {
                                         VStack(alignment: .leading, spacing: 8) {
-                                            Text(bake.name)
+                                            Text(row.bake.name)
                                                 .font(.headline)
                                                 .foregroundStyle(Theme.ink)
-                                            Text(bake.type.title)
+                                            Text(row.bake.type.title)
                                                 .font(.subheadline)
                                                 .foregroundStyle(Theme.muted)
                                         }
                                         Spacer()
-                                        StateBadge(bakeStatus: bake.derivedStatus)
+                                        StateBadge(bakeStatus: row.snapshot.derivedStatus)
                                     }
 
                                     LazyVGrid(columns: metricColumns, alignment: .leading, spacing: 8) {
                                         MetricChip(
                                             label: "Utilizzo",
-                                            value: DateFormattingService.dayTime(bake.targetBakeDateTime),
+                                            value: DateFormattingService.dayTime(row.bake.targetBakeDateTime),
                                             tone: .schedule
                                         )
-                                        if let step = bake.activeStep {
+                                        if let step = row.snapshot.activeStep {
                                             MetricChip(label: "Prossima fase", value: step.displayName, tone: .info)
                                         }
                                     }
 
-                                    if let step = bake.activeStep {
+                                    if let step = row.snapshot.activeStep {
                                         Text(step.descriptionText.isEmpty ? "La fase attiva è pronta da seguire." : step.descriptionText)
                                             .font(.footnote)
                                             .foregroundStyle(Theme.muted)
@@ -121,7 +148,7 @@ struct BakesView: View {
                         .swipeActions(edge: .trailing, allowsFullSwipe: true) {
                             Button(role: .destructive) {
                                 withAnimation {
-                                    archive(bake)
+                                    archive(row.bake)
                                 }
                             } label: {
                                 Label("Archivia", systemImage: "archivebox")
@@ -198,22 +225,14 @@ struct BakesView: View {
         .background(Theme.background.ignoresSafeArea())
         .tint(Theme.Control.primaryFill)
         .accessibilityIdentifier("BakesScrollView")
-        .toolbar {
-            ToolbarItem(placement: .topBarTrailing) {
-                Button {
-                    preselectedFormula = formulas.first
-                    shouldPreselectFirstAvailable = formulas.isEmpty
-                    showingBakeEditor = true
-                } label: {
-                    Text("Nuovo bake")
-                        .fontWeight(.semibold)
-                }
-                .accessibilityIdentifier("BakesPrimaryNewBakeButton")
-            }
-        }
         .sheet(isPresented: $showingFormulaEditor) {
             NavigationStack {
-                FormulaEditorView(formula: editingFormula)
+                FormulaEditorView(
+                    formula: editingFormula,
+                    onSaved: {
+                         formulaListRefreshToken += 1
+                      }
+                   )
             }
         }
         .sheet(isPresented: $showingBakeEditor) {
