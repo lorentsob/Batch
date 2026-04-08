@@ -3,12 +3,14 @@ import SwiftData
 
 struct StarterView: View {
     @Environment(\.modelContext) private var modelContext
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @EnvironmentObject private var router: AppRouter
     @Query(sort: \Starter.name) private var starters: [Starter]
 
     @State private var showingEditor = false
     @State private var editingStarter: Starter?
     @State private var isArchiveExpanded = false
+    @State private var rowsVisible = false
 
     private var activeStarters: [Starter] { starters.filter { !$0.isArchived } }
     private var archivedStarters: [Starter] { starters.filter { $0.isArchived } }
@@ -16,11 +18,10 @@ struct StarterView: View {
     var body: some View {
         List {
             SectionCard(emphasis: .tinted) {
-                Text("Starter")
-                    .font(.system(size: 30, weight: .bold))
-                    .foregroundStyle(Theme.ink)
-                Text("Rinfreschi e stato del tuo lievito madre.")
-                    .foregroundStyle(Theme.muted)
+                ScreenTitleBlock(
+                    title: "Starter",
+                    subtitle: "Controlla i tuoi starter"
+                )
                 
                 if !activeStarters.isEmpty {
                     StateBadge(text: "\(activeStarters.count) starter", tone: .count)
@@ -33,9 +34,9 @@ struct StarterView: View {
                     Label("Aggiungi starter", systemImage: "plus")
                 }
                 .buttonStyle(PrimaryActionButtonStyle())
-                .padding(.top, 4)
+                .padding(.top, Theme.Spacing.xxs)
             }
-            .listRowInsets(EdgeInsets(top: 24, leading: 20, bottom: 20, trailing: 20))
+            .listRowInsets(.levainListRow(top: Theme.Spacing.sm, bottom: Theme.Spacing.md))
 
 
 
@@ -44,12 +45,20 @@ struct StarterView: View {
                     title: "Nessuno starter ancora",
                     message: "Aggiungi il tuo lievito madre per tracciare i rinfreschi, calcolare il prossimo e ricevere promemoria al momento giusto."
                 )
+                .transition(.opacity.combined(with: .scale(scale: 0.97, anchor: .top)))
                 .listRowSeparator(.hidden)
                 .listRowBackground(Color.clear)
-                .listRowInsets(EdgeInsets(top: 0, leading: 20, bottom: 12, trailing: 20))
+                .listRowInsets(.levainListRow(bottom: Theme.Spacing.xs))
+                .animation(Theme.Animation.standard, value: activeStarters.isEmpty)
             } else {
-                ForEach(activeStarters) { starter in
+                ForEach(Array(activeStarters.enumerated()), id: \.element.id) { index, starter in
                     starterRow(starter)
+                        .opacity(rowsVisible ? 1 : 0)
+                        .offset(y: rowsVisible ? 0 : 8)
+                        .animation(
+                            Theme.Animation.standard.delay(Double(min(index, 5)) * 0.05),
+                            value: rowsVisible
+                        )
                         .swipeActions(edge: .trailing, allowsFullSwipe: true) {
                             Button(role: .destructive) {
                                 withAnimation { starter.archive() }
@@ -67,6 +76,15 @@ struct StarterView: View {
                             }
                         }
                 }
+                .onAppear {
+                    if reduceMotion {
+                        rowsVisible = true
+                    } else {
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.05) {
+                            rowsVisible = true
+                        }
+                    }
+                }
             }
 
             if archivedStarters.isEmpty == false {
@@ -75,8 +93,8 @@ struct StarterView: View {
                 } label: {
                     HStack {
                         Text("Archiviati")
-                            .font(.headline)
-                            .foregroundStyle(Theme.ink)
+                            .font(Theme.Typography.headline)
+                            .foregroundStyle(Theme.Text.primary)
                         Spacer()
                         StateBadge(text: "\(archivedStarters.count)", tone: .count)
                         Image(systemName: isArchiveExpanded ? "chevron.up" : "chevron.down")
@@ -87,7 +105,7 @@ struct StarterView: View {
                 .buttonStyle(.plain)
                 .listRowSeparator(.hidden)
                 .listRowBackground(Color.clear)
-                .listRowInsets(EdgeInsets(top: 16, leading: 20, bottom: 8, trailing: 20))
+                .listRowInsets(.levainListRow(top: Theme.Spacing.md, bottom: Theme.Spacing.xs))
 
                 if isArchiveExpanded {
                     ForEach(archivedStarters) { starter in
@@ -110,7 +128,7 @@ struct StarterView: View {
             }
         }
         .listStyle(.plain)
-        .background(Theme.background.ignoresSafeArea())
+        .levainListSurface()
         .tint(Theme.Control.primaryFill)
         .accessibilityIdentifier("StarterScrollView")
         .accessibilityIdentifier("StarterScrollView")
@@ -133,7 +151,7 @@ struct StarterView: View {
         }
         .listRowSeparator(.hidden)
         .listRowBackground(Color.clear)
-        .listRowInsets(EdgeInsets(top: 0, leading: 20, bottom: 12, trailing: 20))
+        .listRowInsets(.levainListRow(bottom: Theme.Spacing.xs))
     }
 }
 

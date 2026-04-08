@@ -73,8 +73,7 @@ final class BakeSchedulerTests: XCTestCase {
         let steps = bake.sortedSteps
         let first = steps[0]
         let second = steps[1]
-        let third = steps[2]
-        
+
         // Prima del shift, completiamo il SECONDO step (che è dopo l'ancora "first")
         second.complete(at: second.plannedEnd)
         
@@ -108,7 +107,7 @@ final class BakeSchedulerTests: XCTestCase {
         let originalEnd = bulk.plannedEnd
         let originalDuration = bulk.plannedDurationMinutes
 
-        BakeScheduler.shiftFutureSteps(in: bake, after: bulk, by: 15)
+        BakeScheduler.shiftFutureSteps(in: bake, after: bulk, by: 15, now: .fixedNow)
 
         XCTAssertEqual(bulk.plannedDurationMinutes, originalDuration + 15)
         XCTAssertEqual(bulk.plannedEnd, originalEnd.adding(minutes: 15))
@@ -127,7 +126,7 @@ final class BakeSchedulerTests: XCTestCase {
         let bulk = bake.sortedSteps[0]
         bulk.start(at: Date.fixedNow.adding(minutes: -40))
 
-        BakeScheduler.shiftFutureSteps(in: bake, after: bulk, by: -30)
+        BakeScheduler.shiftFutureSteps(in: bake, after: bulk, by: -30, now: .fixedNow)
 
         XCTAssertEqual(bulk.plannedDurationMinutes, 40, "La durata non scende sotto il tempo già trascorso")
     }

@@ -17,6 +17,9 @@ struct StarterDetailView: View {
     }
 
     var body: some View {
+        let orderedRefreshes = sortedRefreshes
+        let linkedBakes = starter.bakes.sorted { $0.targetBakeDateTime > $1.targetBakeDateTime }
+
         ScrollView {
             VStack(alignment: .leading, spacing: 20) {
                 StarterDetailHeaderView(starter: starter) {
@@ -34,12 +37,12 @@ struct StarterDetailView: View {
                     }
                     .padding(.bottom, 8)
 
-                    if sortedRefreshes.isEmpty {
+                    if orderedRefreshes.isEmpty {
                         Text("Ancora nessun rinfresco registrato.")
                             .foregroundStyle(Theme.muted)
                     } else {
                         VStack(spacing: 0) {
-                            ForEach(sortedRefreshes.prefix(3)) { refresh in
+                            ForEach(orderedRefreshes.prefix(3)) { refresh in
                                 Button {
                                     selectedRefresh = refresh
                                 } label: {
@@ -60,17 +63,17 @@ struct StarterDetailView: View {
                     }
                 }
 
-                if starter.bakes.isEmpty == false {
+                if linkedBakes.isEmpty == false {
                     SectionCard {
                         HStack {
-                            Text("Bake collegati")
+                            Text("Impasti collegati")
                                 .font(.headline)
                                 .foregroundStyle(Theme.ink)
                             Spacer()
-                            StateBadge(text: "\(starter.bakes.count)", tone: .count)
+                            StateBadge(text: "\(linkedBakes.count)", tone: .count)
                         }
 
-                        ForEach(starter.bakes.sorted { $0.targetBakeDateTime > $1.targetBakeDateTime }.prefix(4)) { bake in
+                        ForEach(linkedBakes.prefix(4)) { bake in
                             Button {
                                 router.openBake(bake.id)
                             } label: {
@@ -153,9 +156,11 @@ struct AllRefreshesView: View {
     }
 
     var body: some View {
+        let orderedRefreshes = sortedRefreshes
+
         ScrollView {
             VStack(spacing: 8) {
-                ForEach(sortedRefreshes) { refresh in
+                ForEach(orderedRefreshes) { refresh in
                     Button {
                         onSelect(refresh)
                     } label: {

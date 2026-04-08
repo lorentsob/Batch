@@ -29,6 +29,7 @@ The app must make the next fermentation action obvious without adding setup, inf
 - ✓ Phase 20-02 now ships a real kefir journal/archive reading surface, reusable event-row grammar, recent-history previews on detail, and deterministic seeded journal coverage — phase 20-02
 - ✓ Phase 20 is now fully closed: archive browsing, lineage comparison, seeded history scenarios, and stable UI anchors for journal/archive/comparison regression coverage all ship and verify green — phases 20-03 and 20-04
 - ✓ Phase 21 is now fully closed: `Today` uses revision-cached operational snapshots, Knowledge/navigation ownership is centralized under the root shell, kefir lineage presentation is shared, persistence bootstrap failures are explicit, fake starter reminder routes are blocked, and the planning/codebase docs match the shipped app — phases 21-01 through 21-03
+- ✓ Phase 23 is now fully closed: canonical glossary routing, read-only surface linking, missing-guide editorial coverage, alias-aware search, and cross-surface verification all ship together as one coherent Knowledge system — phases 23-01 through 23-03
 
 ### Active
 
@@ -49,6 +50,7 @@ The app must make the next fermentation action obvious without adding setup, inf
 - The current codebase already has reusable bread/starter flows and stable foundations in `Levain/Features/Bakes`, `Levain/Features/Starter`, `Levain/Features/Today`, `Levain/App`, and `Levain/DesignSystem`
 - The v2 work must extend `RootTabView`, `AppRouter`, `TodayAgendaBuilder`, `NotificationService`, `KnowledgeLoader`, and related feature areas instead of creating parallel shell logic
 - User-facing copy remains Italian-first while code identifiers stay English
+- Knowledge remains local bundled content, but glossary terms may keep English as the canonical user-facing label when the Italian alternative would be less natural or less consistent with the product
 
 ## Constraints
 
@@ -75,10 +77,13 @@ The app must make the next fermentation action obvious without adding setup, inf
 | Structured journal remains kefir-only; bread keeps using the current bake history | The product intentionally accepts domain asymmetry instead of forcing a fake unified journal model | ✓ Good |
 | Kefir lineage and journal should be automatic-first and typed, not manual diary-first | Keeps history supportive of the operational workflow and aligns with PRD section 16 | ✓ Good |
 | Runtime hardening and planning sync land before culture/grain expansion | Phase 20 closeout exposed performance, state-ownership, and stale-memory risks that should be fixed before adding new scope | ✓ Landed in Phase 21 |
+| One glossary concept must map to one canonical guide entry with aliases handling Italian/English wording drift | Prevents recipe terminology from bouncing between languages or spawning duplicate guide articles for the same concept | ✓ Approved for Phase 23 planning |
+| Read-only recipe and guide text should use one shared glossary-link renderer with capped density and self-link suppression | Keeps inline learning helpful without turning formulas/articles into noisy hyperlink fields | ✓ Landed in Phase 23-02 |
+| Knowledge search should reuse the canonical glossary vocabulary and rank exact alias hits ahead of loose content matches | Prevents manual guide lookup from drifting away from the article destinations opened by inline glossary links | ✓ Landed in Phase 23-03 |
 | Product and AI context naming must use `Levain` consistently | Prevents drift in planning, copy, and code review | ✓ Good |
 | Window-based bake steps use `flexibleWindowStart` / `flexibleWindowEnd` for urgency instead of `plannedEnd` | Window-based bread flows remain a stable operational baseline to preserve | ✓ Good |
 | Persistent bootstrap must never auto-delete the on-disk store as an error recovery path | Silent local data loss is worse than temporary in-memory fallback | ✓ Good |
 | System knowledge and system formulas stay bundled JSON, while demo seed remains launch-option-only | Bundled content must stay deterministic and separate from user data | ✓ Good |
 
 ---
-*Last updated: 2026-04-03 after closing Phase 21 and restoring active/codebase planning sync*
+*Last updated: 2026-04-08 after completing Phase 23-03 editorial coverage, alias-aware Knowledge search, and final glossary verification*

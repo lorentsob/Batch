@@ -77,7 +77,7 @@ struct BakeCreationView: View {
             }
 
             Section("Pianificazione") {
-                TextField("Nome del bake (opzionale)", text: $name)
+                TextField("Nome impasto (opzionale)", text: $name)
                     .accessibilityIdentifier("BakeNameField")
 
                 VStack(alignment: .leading, spacing: 12) {
@@ -112,7 +112,7 @@ struct BakeCreationView: View {
                     .lineLimit(3...5)
             }
         }
-        .navigationTitle("Nuovo bake")
+        .navigationTitle("Nuovo impasto")
         .tint(Theme.Control.primaryFill)
         .toolbar {
             ToolbarItem(placement: .cancellationAction) {
@@ -158,7 +158,7 @@ struct BakeCreationView: View {
             if !(formulaIsCommercial) {
                 Picker("Lievito", selection: $useCommercialYeast) {
                     Text("Lievito madre").tag(false)
-                    Text("Commerciale").tag(true)
+                    Text("Commerciali").tag(true)
                 }
                 .pickerStyle(.segmented)
                 .onChange(of: useCommercialYeast) { _, _ in
@@ -189,7 +189,7 @@ struct BakeCreationView: View {
                 }
             }
         } header: {
-            Text((!useCommercialYeast && !formulaIsCommercial) ? "Starter" : "Lievito")
+            Text((!useCommercialYeast && !formulaIsCommercial) ? "Starter" : "Lievito di birra")
         }
 
         // Preview ricalcolo (solo quando si usa lievito commerciale)
@@ -248,7 +248,7 @@ struct BakeCreationView: View {
             }
 
             if systemFormulas.isEmpty == false {
-                Section("Template di sistema") {
+                Section("Tutte le ricette") {
                     ForEach(systemFormulas) { formula in
                         Text(formula.name).tag(Optional(formula.id))
                     }
@@ -569,7 +569,7 @@ private struct YeastConversionPreviewView: View {
             )
             conversionRow(
                 icon: "clock",
-                label: "Bulk fermentation",
+                label: "Puntata",
                 value: durationLabel(conversion.bulkDurationMinutes)
             )
             conversionRow(

@@ -7,19 +7,20 @@ struct RootTabView: View {
     @EnvironmentObject private var router: AppRouter
 
     @State private var didBootstrap = false
+    @State private var knowledgeSearchQuery = ""
 
     var body: some View {
         ZStack(alignment: .top) {
             tabContent
-                .tint(Theme.accent)
+                .tint(Theme.Control.tabActiveTint)
                 .accessibilityIdentifier("RootTabView")
 
             if let banner = environment.banner {
                 VStack(spacing: 0) {
                     ToastBannerView(message: banner.message)
                 }
-                .padding(.horizontal, 16)
-                .padding(.top, 12)
+                .padding(.horizontal, Theme.Layout.screenHorizontalInset)
+                .padding(.top, Theme.Spacing.sm)
                 .transition(.move(edge: .top).combined(with: .opacity))
             }
         }
@@ -37,6 +38,15 @@ struct RootTabView: View {
                 notificationService.pendingURL = nil
             }
         }
+        .sheet(item: contextualKnowledgePresentationBinding) { presentation in
+            ContextualKnowledgeSheetView(articleID: presentation.articleID)
+                .environmentObject(environment)
+                .environmentObject(router)
+                .presentationDetents([.large])
+                .presentationDragIndicator(.visible)
+                .presentationBackground(Theme.Surface.app)
+                .presentationCornerRadius(Theme.Radius.card)
+        }
         .onOpenURL { url in
             router.open(url: url, modelContext: modelContext)
         }
@@ -50,7 +60,7 @@ struct RootTabView: View {
                 TodayView()
             }
             .tabItem {
-                Label("Home", systemImage: "house.fill")
+                Label("Oggi", systemImage: "house.fill")
             }
             .tag(RootTab.oggi)
 
@@ -76,7 +86,10 @@ struct RootTabView: View {
             .tag(RootTab.fermentations)
 
             NavigationStack(path: $router.knowledgePath) {
-                KnowledgeView(library: environment.knowledgeLibrary)
+                KnowledgeView(
+                    library: environment.knowledgeLibrary,
+                    query: $knowledgeSearchQuery
+                )
                     .navigationDestination(for: KnowledgeRoute.self) { route in
                         switch route {
                         case let .article(id): KnowledgeLookupView(id: id)
@@ -88,6 +101,13 @@ struct RootTabView: View {
             }
             .tag(RootTab.knowledge)
         }
+    }
+
+    private var contextualKnowledgePresentationBinding: Binding<ContextualKnowledgePresentation?> {
+        Binding(
+            get: { router.contextualKnowledgePresentation },
+            set: { router.contextualKnowledgePresentation = $0 }
+        )
     }
 
     // MARK: - Bootstrap
@@ -184,7 +204,7 @@ private struct BakeLookupView: View {
         if let bake {
             BakeDetailView(bake: bake)
         } else {
-            ContentUnavailableView("Bake non trovato", systemImage: "exclamationmark.triangle")
+            ContentUnavailableView("Impasto non trovato", systemImage: "exclamationmark.triangle")
         }
     }
 }
@@ -228,6 +248,17 @@ private struct KnowledgeLookupView: View {
             else { ContentUnavailableView("Guida non trovata", systemImage: "book.closed") }
         }
         .task { environment.knowledgeLibrary.loadIfNeeded() }
+    }
+}
+
+private struct ContextualKnowledgeSheetView: View {
+    let articleID: String
+
+    var body: some View {
+        KnowledgeLookupView(id: articleID)
+            .id(articleID)
+            .tint(Theme.Control.primaryFill)
+            .environment(\.knowledgePresentationContext, .contextualSheet)
     }
 }
 

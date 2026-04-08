@@ -10,11 +10,14 @@ struct BakeDetailView: View {
 
     let bake: Bake
 
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+
     @State private var detailStep: BakeStep?
     @State private var shiftingStep: BakeStep?
     @State private var destructivePrompt: DestructiveBakePrompt?
     @State private var stepStartedTrigger = false
     @State private var stepCompletedTrigger = false
+    @State private var completionScale: CGFloat = 1.0
 
     var body: some View {
         let isCancelled = bake.derivedStatus == .cancelled
@@ -24,7 +27,7 @@ struct BakeDetailView: View {
             : bake.sortedSteps.filter { $0.id != activeStep?.id }
 
         ZStack {
-            ScrollView {
+            ScrollView(.vertical) {
                 VStack(spacing: 24) {
                     BakeHeaderCard(bake: bake)
 
@@ -46,11 +49,22 @@ struct BakeDetailView: View {
                                 shift(activeStep, by: minutes)
                             } : nil
                         )
+                        .scaleEffect(completionScale)
+                        .onChange(of: stepCompletedTrigger) { _, _ in
+                            guard !reduceMotion else { return }
+                            withAnimation(.spring(response: 0.25, dampingFraction: 0.5)) {
+                                completionScale = 1.06
+                            }
+                            Task { @MainActor in
+                                try? await Task.sleep(for: .milliseconds(200))
+                                withAnimation(Theme.Animation.standard) { completionScale = 1.0 }
+                            }
+                        }
                     }
 
                     VStack(alignment: .leading, spacing: 12) {
                         HStack {
-                            Text(isCancelled ? "Timeline archiviata" : (activeStep == nil ? "Timeline" : "Timeline restante"))
+                            Text(isCancelled ? "Timeline archiviata" : (activeStep == nil ? "Timeline" : "Ricetta step by step"))
                                 .font(.headline)
                                 .foregroundStyle(Theme.ink)
                             Spacer()
@@ -109,6 +123,8 @@ struct BakeDetailView: View {
                 .padding(.horizontal, 20)
                 .padding(.vertical, 24)
             }
+            .scrollBounceBehavior(.basedOnSize, axes: .vertical)
+            .scrollClipDisabled(false)
             .allowsHitTesting(destructivePrompt == nil)
 
             Group {
@@ -158,7 +174,7 @@ struct BakeDetailView: View {
                 try? await Task.sleep(for: .milliseconds(300))
                 try? modelContext.save()
                 await environment.notificationService.syncNotifications(forBake: bakeID, in: modelContext)
-                environment.showBanner("Bake completato!", duration: 4)
+                environment.showBanner("Impasto completato!", duration: 4)
             }
         } else {
             persistAndSync()
@@ -197,6 +213,7 @@ struct BakeDetailView: View {
         ZStack(alignment: .bottom) {
             Color.black.opacity(0.16)
                 .ignoresSafeArea()
+                .transition(.opacity)
                 .onTapGesture(perform: dismissPrompt)
 
             DestructiveBakeSheet(prompt: prompt) {
@@ -225,7 +242,7 @@ struct BakeDetailView: View {
                 bakeRef.isCancelled = true
                 try? modelContext.save()
                 await environment.notificationService.resyncAll(using: modelContext)
-                environment.showBanner("Bake annullato e spostato in archivio.", duration: 4)
+                environment.showBanner("Impasto annullato e spostato in archivio.", duration: 4)
             }
 
         case .delete:
@@ -279,51 +296,42 @@ struct BakeHeaderCard: View {
                 }
 
                 VStack(alignment: .leading, spacing: 8) {
-                    if bake.formula != nil || bake.starter != nil {
-                        HStack(spacing: 12) {
-                            if let formula = bake.formula {
-                                Button {
-                                    router.openFormula(formula.id)
-                                } label: {
-                                    Label(formula.name, systemImage: "book.closed")
-                                }
-                                .buttonStyle(
-                                    SecondaryActionButtonStyle(
-                                        fill: Theme.Surface.card,
-                                        tint: secondaryTint,
-                                        border: secondaryBorder
-                                    )
-                                )
+                    VStack(spacing: 10) {
+                        if let starter = bake.starter {
+                            Button {
+                                router.openStarter(starter.id)
+                            } label: {
+                                Label(starter.name, systemImage: "drop.fill")
+                                    .lineLimit(1)
+                                    .minimumScaleFactor(0.85)
                             }
-                            if let starter = bake.starter {
-                                Button {
-                                    router.openStarter(starter.id)
-                                } label: {
-                                    Label(starter.name, systemImage: "drop.fill")
-                                }
-                                .buttonStyle(
-                                    SecondaryActionButtonStyle(
-                                        fill: Theme.Surface.card,
-                                        tint: secondaryTint,
-                                        border: secondaryBorder
-                                    )
+                            .buttonStyle(
+                                SecondaryActionButtonStyle(
+                                    fill: Theme.Surface.card,
+                                    tint: secondaryTint,
+                                    border: secondaryBorder
                                 )
-                            }
+                            )
                         }
-                    }
 
-                    Button {
-                        showingIngredients = true
-                    } label: {
-                        Label("Ricetta", systemImage: "list.bullet.clipboard")
-                    }
-                    .buttonStyle(
-                        SecondaryActionButtonStyle(
-                            fill: Theme.Surface.card,
-                            tint: secondaryTint,
-                            border: secondaryBorder
+                        Button {
+                            if let formula = bake.formula {
+                                router.openFormula(formula.id)
+                            } else {
+                                showingIngredients = true
+                            }
+                        } label: {
+                            Label("Ricetta", systemImage: "list.bullet.clipboard")
+                                .lineLimit(1)
+                        }
+                        .buttonStyle(
+                            SecondaryActionButtonStyle(
+                                fill: Theme.Surface.card,
+                                tint: secondaryTint,
+                                border: secondaryBorder
+                            )
                         )
-                    )
+                    }
                 }
             }
         }
@@ -368,7 +376,7 @@ private enum DestructiveBakePrompt: String, Identifiable {
     var title: String {
         switch self {
         case .cancel:
-            "Annullare questo bake?"
+            "Annullare questo impasto?"
         case .delete:
             "Eliminare definitivamente?"
         }
@@ -379,7 +387,7 @@ private enum DestructiveBakePrompt: String, Identifiable {
         case .cancel:
             "La timeline passerà in archivio, il bottone finale diventerà \"Elimina impasto\" e i promemoria verranno rimossi."
         case .delete:
-            "Il bake, le sue fasi e i promemoria associati verranno rimossi in modo permanente."
+            "L'impasto, le sue fasi e i promemoria associati verranno rimossi in modo permanente."
         }
     }
 

@@ -72,6 +72,7 @@
 		8F7B429D77A05781C4E826F9 /* LevainUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61243C17854EB5B5F0148C16 /* LevainUITests.swift */; };
 		9D9CDC426195372EFA36C5EA /* KnowledgeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC91495A586F622B67D068BE /* KnowledgeView.swift */; };
 		9FB01CF2CC0DC39227F42844 /* KnowledgeDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 624AD82924BEAD344125588C /* KnowledgeDetailView.swift */; };
+		A1B93B917A50C24F88AA096D /* KnowledgeGlossaryIndex.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31ACA645E0963732229E95E8 /* KnowledgeGlossaryIndex.swift */; };
 		A27CFCEF5C9066A462AF7CCD /* KnowledgeRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0488D5D97917ED1EDCE7A49E /* KnowledgeRowView.swift */; };
 		A44ED48046434A743314F4CB /* FormulaEditorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB921C835C1B081B6409CF92 /* FormulaEditorView.swift */; };
 		A6B6C10E319F7201014A093A /* SeedDataLoaderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6983B1F948DFA6BE209403E8 /* SeedDataLoaderTests.swift */; };
@@ -91,6 +92,7 @@
 		BFE0C3D56CAC5551D58E4F4D /* NotificationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31CB45B80CFC5B3AB74316A6 /* NotificationService.swift */; };
 		C04546EB78A1C4246F029AA8 /* KnowledgeLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9069286C22B79776F290E460 /* KnowledgeLoader.swift */; };
 		C2649F9ACF555DAF1A53C1C4 /* TodayStarterReminderRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0F73F2107220BBBBD20F36DA /* TodayStarterReminderRow.swift */; };
+		C3A487025BAD12A9E2A17380 /* GlossaryLinkedText.swift in Sources */ = {isa = PBXBuildFile; fileRef = B49D49B210E0390E254AC909 /* GlossaryLinkedText.swift */; };
 		C4F8B17586A6584A2537F356 /* BakeScheduler.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3719CAB830F30160F021B55 /* BakeScheduler.swift */; };
 		C58B2C22E351E141C831AD4B /* KefirBatchCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 25425933BA83B4B7162BE06A /* KefirBatchCardView.swift */; };
 		C5F7D28B986CFB8C2F4C70E2 /* TodayAgendaBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 306A250346AF197F29E21C03 /* TodayAgendaBuilder.swift */; };
@@ -175,6 +177,7 @@
 		2F8DFC3E0B70BF05BE48DA6B /* BakeReminderPlanner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BakeReminderPlanner.swift; sourceTree = "<group>"; };
 		2F987C31F0C39CE7F5933AE5 /* KefirEventTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KefirEventTests.swift; sourceTree = "<group>"; };
 		306A250346AF197F29E21C03 /* TodayAgendaBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodayAgendaBuilder.swift; sourceTree = "<group>"; };
+		31ACA645E0963732229E95E8 /* KnowledgeGlossaryIndex.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KnowledgeGlossaryIndex.swift; sourceTree = "<group>"; };
 		31ACC0C6A03A5AD48C0AD04A /* TodayStepCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodayStepCardView.swift; sourceTree = "<group>"; };
 		31CB45B80CFC5B3AB74316A6 /* NotificationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationService.swift; sourceTree = "<group>"; };
 		33ED4DE51ECCE105E6EDF74F /* StarterDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StarterDetailView.swift; sourceTree = "<group>"; };
@@ -239,6 +242,7 @@
 		B103892E03A334196B1D10CE /* DomainFixtures.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DomainFixtures.swift; sourceTree = "<group>"; };
 		B18A695300F304A000928E5A /* RecipeFormula.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecipeFormula.swift; sourceTree = "<group>"; };
 		B33E88B5470551EAF7317F2C /* KefirReminderPlanner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KefirReminderPlanner.swift; sourceTree = "<group>"; };
+		B49D49B210E0390E254AC909 /* GlossaryLinkedText.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GlossaryLinkedText.swift; sourceTree = "<group>"; };
 		B4A8FBB9610077DD981D867C /* LevainSchema.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LevainSchema.swift; sourceTree = "<group>"; };
 		B78544D1490C8484385BAFBD /* TodayOperationalCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodayOperationalCardView.swift; sourceTree = "<group>"; };
 		BC0451D6E4DCF1F8EF2C78E7 /* BakeIngredientsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BakeIngredientsView.swift; sourceTree = "<group>"; };
@@ -364,6 +368,7 @@
 				3723F2A4189A29D9018AD0A5 /* DateFormattingService.swift */,
 				D7C76E6286DA83E2BCAB2DA6 /* KefirEventRecorder.swift */,
 				B33E88B5470551EAF7317F2C /* KefirReminderPlanner.swift */,
+				31ACA645E0963732229E95E8 /* KnowledgeGlossaryIndex.swift */,
 				9069286C22B79776F290E460 /* KnowledgeLoader.swift */,
 				31CB45B80CFC5B3AB74316A6 /* NotificationService.swift */,
 				224FD5268CD696ECAA07AD82 /* StarterReminderPlanner.swift */,
@@ -488,6 +493,7 @@
 			children = (
 				12ACF366375F43B564C1D0C8 /* ActivityView.swift */,
 				05BB2A8E3BCF16B390C67996 /* FlourSelectionEditorView.swift */,
+				B49D49B210E0390E254AC909 /* GlossaryLinkedText.swift */,
 				F5A5E14312B26145E7F011F7 /* RootTabView.swift */,
 				DF01B80A376C5C973BD17F65 /* TipGroupView.swift */,
 				C25872A58F8373FE1A2CF530 /* ToastBannerView.swift */,
@@ -774,6 +780,7 @@
 				FFA273A8F2496E91BA328B92 /* FormulaListView.swift in Sources */,
 				4E537EEE2ECC83C497858DA4 /* FormulaStepEditorView.swift in Sources */,
 				E60D19B33CA5F87D9D711D49 /* FormulaStepTemplate.swift in Sources */,
+				C3A487025BAD12A9E2A17380 /* GlossaryLinkedText.swift in Sources */,
 				D879D44A64807ACB0655F45E /* KefirArchiveView.swift in Sources */,
 				D7636D2B3E417A4664BA0540 /* KefirBatch.swift in Sources */,
 				C58B2C22E351E141C831AD4B /* KefirBatchCardView.swift in Sources */,
@@ -791,6 +798,7 @@
 				2A180CF48FAECF21D35A7ABA /* KefirReminderPlanner.swift in Sources */,
 				4AA374A3237C2CCB24C3625A /* KnowledgeCategoryPillView.swift in Sources */,
 				9FB01CF2CC0DC39227F42844 /* KnowledgeDetailView.swift in Sources */,
+				A1B93B917A50C24F88AA096D /* KnowledgeGlossaryIndex.swift in Sources */,
 				3F9F42BA78F745EE0A1DE5EA /* KnowledgeItem.swift in Sources */,
 				C04546EB78A1C4246F029AA8 /* KnowledgeLoader.swift in Sources */,
 				A27CFCEF5C9066A462AF7CCD /* KnowledgeRowView.swift in Sources */,

@@ -36,13 +36,13 @@ struct TodayOperationalCardView<Content: View>: View {
     }
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 6) {
+        VStack(alignment: .leading, spacing: Theme.Spacing.xs) {
             if showHeader {
-                HStack(spacing: 5) {
+                HStack(spacing: Theme.Spacing.xxs + 1) {
                     domainIcon
                     Text(domain.displayName)
-                        .font(.caption.weight(.semibold))
-                        .foregroundStyle(Theme.accent)
+                        .font(Theme.Typography.overline)
+                        .foregroundStyle(Theme.Text.tertiary)
                 }
                 .padding(.leading, 2)
                 .accessibilityLabel("Dominio: \(domain.displayName)")
@@ -60,7 +60,7 @@ struct TodayOperationalCardView<Content: View>: View {
                 .renderingMode(.template)
                 .resizable()
                 .scaledToFit()
-                .foregroundStyle(Theme.accent)
+                .foregroundStyle(Theme.Text.tertiary)
                 .frame(width: 12, height: 12)
         case .pane:
             // Bread loaf shape — the bake.svg asset
@@ -68,12 +68,12 @@ struct TodayOperationalCardView<Content: View>: View {
                 .renderingMode(.template)
                 .resizable()
                 .scaledToFit()
-                .foregroundStyle(Theme.accent)
+                .foregroundStyle(Theme.Text.tertiary)
                 .frame(width: 12, height: 12)
         case .kefir:
             Image(systemName: "drop.fill")
-                .font(.caption2.weight(.semibold))
-                .foregroundStyle(Theme.accent)
+                .font(Theme.Typography.caption2.weight(.semibold))
+                .foregroundStyle(Theme.Text.tertiary)
         }
     }
 }

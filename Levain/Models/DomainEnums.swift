@@ -157,9 +157,9 @@ enum YeastType: String, CaseIterable, Codable, Identifiable {
     var title: String {
         switch self {
         case .sourdough: "Lievito madre"
-        case .dryYeast: "Lievito di birra secco"
+        case .dryYeast: "Lievito di birra secco attivo"
         case .freshYeast: "Lievito di birra fresco"
-        case .instantYeast: "Lievito instant (secco per pane)"
+        case .instantYeast: "Lievito secco istantaneo"
         case .none: "Nessun lievito"
         }
     }
@@ -167,9 +167,9 @@ enum YeastType: String, CaseIterable, Codable, Identifiable {
     var shortTitle: String {
         switch self {
         case .sourdough: "Madre"
-        case .dryYeast: "Birra secco"
-        case .freshYeast: "Birra fresco"
-        case .instantYeast: "Instant"
+        case .dryYeast: "Secco attivo"
+        case .freshYeast: "Fresco"
+        case .instantYeast: "Secco ist."
         case .none: "Nessun lievito"
         }
     }
@@ -346,13 +346,13 @@ enum BakeStepType: String, CaseIterable, Codable, Identifiable {
         case .starterRefresh: "Rinfresco starter"
         case .autolysis: "Autolisi"
         case .mix: "Impasto"
-        case .bulk: "Bulk fermentation"
+        case .bulk: "Puntata"
         case .fold: "Pieghe"
         case .preshape: "Preforma"
-        case .benchRest: "Bench rest"
+        case .benchRest: "Riposo al banco"
         case .shape: "Formatura"
         case .proof: "Appretto"
-        case .coldRetard: "Cold retard"
+        case .coldRetard: "Riposo in frigo"
         case .bake: "Cottura"
         case .cool: "Raffreddamento"
         case .custom: "Fase personalizzata"

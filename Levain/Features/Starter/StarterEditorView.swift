@@ -58,7 +58,7 @@ struct StarterEditorView: View {
                     }
                 }
                 Stepper("Intervallo rinfresco: \(refreshIntervalDays) giorni", value: $refreshIntervalDays, in: 1...14)
-                Toggle("Reminder attivi", isOn: $remindersEnabled)
+                Toggle("Promemoria attivi", isOn: $remindersEnabled)
             }
 
             Section("Mix Farine") {
@@ -103,7 +103,7 @@ struct StarterEditorView: View {
             }
 
             Section("Note") {
-                TextField("Consigli di rinfresco", text: $notes, axis: .vertical)
+                TextField("Note sullo starter", text: $notes, axis: .vertical)
                     .lineLimit(3...6)
             }
         }
