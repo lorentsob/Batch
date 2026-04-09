@@ -107,7 +107,7 @@ struct BakeCreationView: View {
                 yeastSourceSection
             }
 
-            Section("Avanzate") {
+            Section("Note") {
                 TextField("Note aggiuntive", text: $notes, axis: .vertical)
                     .lineLimit(3...5)
             }
@@ -182,14 +182,9 @@ struct BakeCreationView: View {
                     }
                 }
 
-                Picker("Profilo fermentazione", selection: $yeastProfile) {
-                    ForEach(YeastProfile.allCases) { profile in
-                        Text(profile.title).tag(profile)
-                    }
-                }
             }
         } header: {
-            Text((!useCommercialYeast && !formulaIsCommercial) ? "Starter" : "Lievito di birra")
+            Text("Agente lievitante")
         }
 
         // Preview ricalcolo (solo quando si usa lievito commerciale)
@@ -555,51 +550,77 @@ private struct YeastConversionPreviewView: View {
     let profile: YeastProfile
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 10) {
-            conversionRow(
-                icon: "chart.bar.fill",
+        VStack(alignment: .leading, spacing: 0) {
+            // Ingredienti — righe secondarie, label/valore
+            dataRow(
                 label: "Farina totale",
                 value: String(format: "%.0f g", conversion.newTotalFlourWeight)
             )
-            conversionRow(
-                icon: "drop.fill",
+            dataRow(
                 label: "Acqua totale",
                 value: String(format: "%.0f g", conversion.newTotalWaterWeight)
             )
-            Divider()
-            conversionRow(
-                icon: "circle.dotted",
-                label: "\(yeastType.shortTitle) da aggiungere",
-                value: String(format: "%.1f g", conversion.yeastGrams),
-                highlight: true
-            )
-            conversionRow(
-                icon: "clock",
-                label: "Puntata",
-                value: durationLabel(conversion.bulkDurationMinutes)
-            )
-            conversionRow(
-                icon: "moon.zzz",
-                label: "Appretto",
-                value: durationLabel(conversion.proofDurationMinutes)
-            )
-            if isRichDough {
-                HStack(alignment: .top, spacing: 6) {
-                    Image(systemName: "exclamationmark.triangle")
-                        .font(.caption)
-                        .foregroundStyle(Theme.accent)
-                    Text("Impasto ricco: zuccheri e grassi possono allungare i tempi.")
-                        .font(.caption)
-                        .foregroundStyle(Theme.muted)
+
+            thinDivider.padding(.vertical, 12)
+
+            // Lievito — dato primario: label piccola, valore grande in verde
+            HStack(alignment: .center) {
+                VStack(alignment: .leading, spacing: 2) {
+                    Text(yeastType.shortTitle)
+                        .font(Theme.Typography.caption1Semibold)
+                        .foregroundStyle(Theme.Palette.green500)
+                        .textCase(.uppercase)
+                    Text("da aggiungere")
+                        .font(Theme.Typography.caption1)
+                        .foregroundStyle(Theme.Text.secondary)
                 }
-                .padding(.top, 2)
+                Spacer()
+                Text(String(format: "%.1f g", conversion.yeastGrams))
+                    .font(.system(size: 22, weight: .semibold, design: .default))
+                    .foregroundStyle(Theme.Palette.green600)
             }
+            .padding(.bottom, 12)
+
+            thinDivider.padding(.bottom, 12)
+
+            // Tempi — righe secondarie con icona
+            dataRow(label: "Puntata", value: durationLabel(conversion.bulkDurationMinutes), icon: "timer")
+            dataRow(label: "Appretto", value: durationLabel(conversion.proofDurationMinutes), icon: "moon.zzz.fill")
+
         }
-        .padding(.vertical, 4)
+        .padding(.vertical, 6)
     }
 
+    // MARK: - Sub-views
+
+    private var thinDivider: some View {
+        Rectangle()
+            .fill(Theme.Border.defaultColor)
+            .frame(height: 0.5)
+    }
+
+    private func dataRow(label: String, value: String, icon: String? = nil) -> some View {
+        HStack {
+            if let icon {
+                Label(label, systemImage: icon)
+                    .font(Theme.Typography.subheadline)
+                    .foregroundStyle(Theme.Text.secondary)
+            } else {
+                Text(label)
+                    .font(Theme.Typography.subheadline)
+                    .foregroundStyle(Theme.Text.secondary)
+            }
+            Spacer()
+            Text(value)
+                .font(Theme.Typography.subheadlineSemibold)
+                .foregroundStyle(Theme.Text.primary)
+        }
+        .padding(.vertical, 5)
+    }
+
+    // MARK: - Helpers
+
     private var isRichDough: Bool {
-        // La ricetta pan brioche e simili possono avere più farina → approssimazione UI
         conversion.newTotalFlourWeight > 600
     }
 
@@ -610,17 +631,5 @@ private struct YeastConversionPreviewView: View {
             return m == 0 ? "\(h)h" : "\(h)h \(m)min"
         }
         return "\(minutes) min"
-    }
-
-    private func conversionRow(icon: String, label: String, value: String, highlight: Bool = false) -> some View {
-        HStack {
-            Label(label, systemImage: icon)
-                .font(.subheadline)
-                .foregroundStyle(highlight ? Theme.accent : Theme.ink)
-            Spacer()
-            Text(value)
-                .font(.subheadline.weight(highlight ? .semibold : .regular))
-                .foregroundStyle(highlight ? Theme.accent : Theme.ink)
-        }
     }
 }

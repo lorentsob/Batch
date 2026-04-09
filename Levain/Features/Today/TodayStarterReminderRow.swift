@@ -19,8 +19,8 @@ struct TodayStarterReminderRow: View {
                             .layoutPriority(1)
 
                         Text(item.subtitle)
-                            .font(Theme.Typography.footnote)
-                            .foregroundStyle(Theme.Text.secondary)
+                            .font(Theme.Typography.caption1Semibold)
+                            .foregroundStyle(isUrgent ? Theme.Text.onDanger : Theme.Control.secondaryForeground)
                             .fixedSize(horizontal: false, vertical: true)
                     }
 
@@ -28,10 +28,6 @@ struct TodayStarterReminderRow: View {
 
                     StateBadge(text: item.state, tone: badgeTone)
                 }
-
-                Text("Prossima azione: \(item.actionTitle)")
-                    .font(Theme.Typography.caption1Semibold)
-                    .foregroundStyle(isUrgent ? Theme.Text.onDanger : Theme.Control.secondaryForeground)
 
                 actionButton
             }
