@@ -443,7 +443,7 @@ enum TodayAgendaBuilder {
         case .roomTemperature:
             switch state {
             case .overdue:
-                return "Routine fuori finestra · soglia \(dueLabel)"
+                return "Rinfresca questo batch il prima possibile"
             case .dueSoon, .dueNow:
                 return "Da rinnovare entro \(dueLabel)"
             case .active:

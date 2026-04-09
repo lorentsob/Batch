@@ -167,9 +167,9 @@ enum YeastType: String, CaseIterable, Codable, Identifiable {
     var shortTitle: String {
         switch self {
         case .sourdough: "Madre"
-        case .dryYeast: "Secco attivo"
-        case .freshYeast: "Fresco"
-        case .instantYeast: "Secco ist."
+        case .dryYeast: "Lievito"
+        case .freshYeast: "Lievito"
+        case .instantYeast: "Lievito"
         case .none: "Nessun lievito"
         }
     }

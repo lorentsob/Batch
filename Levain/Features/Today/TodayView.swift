@@ -595,10 +595,6 @@ private struct TodayKefirBatchRow: View {
                     }
 
                     Text(item.subtitle)
-                        .font(Theme.Typography.footnote)
-                        .foregroundStyle(Theme.Text.secondary)
-
-                    Text("Prossima azione: \(item.actionTitle)")
                         .font(Theme.Typography.caption1Semibold)
                         .foregroundStyle(Theme.Control.secondaryForeground)
                 }

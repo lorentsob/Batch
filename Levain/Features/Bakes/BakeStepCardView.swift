@@ -141,15 +141,17 @@ struct StepTimelineRow: View {
     var body: some View {
         Button(action: action) {
             HStack(alignment: .top, spacing: 14) {
-                VStack(alignment: .leading, spacing: 4) {
+                VStack(alignment: .leading, spacing: 3) {
                     Text(DateFormattingService.time(step.plannedStart))
-                        .font(.caption.weight(.semibold))
+                        .font(.title3.weight(.bold))
                         .foregroundStyle(timeColor)
+                        .monospacedDigit()
                     Text(DateFormattingService.duration(minutes: step.plannedDurationMinutes))
-                        .font(.caption2)
+                        .font(.caption.weight(.medium))
                         .foregroundStyle(metaColor)
                 }
-                .frame(width: 72, alignment: .leading)
+                .frame(width: 72)
+                .frame(maxHeight: .infinity, alignment: .center)
 
                 VStack(spacing: 0) {
                     Spacer(minLength: 0)
@@ -164,20 +166,25 @@ struct StepTimelineRow: View {
                         .frame(width: 2)
                 }
 
-                VStack(alignment: .leading, spacing: 6) {
-                    HStack(alignment: .firstTextBaseline, spacing: 8) {
-                        Text(step.displayName)
-                            .font(.subheadline.weight(.semibold))
-                            .foregroundStyle(titleColor)
+                VStack(alignment: .leading, spacing: 4) {
+                    Text(step.displayName)
+                        .font(.subheadline.weight(.semibold))
+                        .foregroundStyle(titleColor)
+                        .lineLimit(2)
+                        .minimumScaleFactor(0.9)
+                        .fixedSize(horizontal: false, vertical: true)
 
-                        Spacer(minLength: 8)
+                    HStack(spacing: 6) {
                         statusBadge
+
+                        if step.status == .running {
+                            Text(statusLine)
+                                .font(.footnote)
+                                .foregroundStyle(metaColor)
+                                .lineLimit(1)
+                        }
                     }
 
-                    Text(statusLine)
-                        .font(.footnote)
-                        .foregroundStyle(metaColor)
-                    
                     Button {
                         action()
                     } label: {
@@ -188,10 +195,7 @@ struct StepTimelineRow: View {
                         .font(.caption.weight(.semibold))
                         .foregroundStyle(procedureTint)
                         .lineLimit(1)
-                        .minimumScaleFactor(0.9)
                     }
-                    .padding(.top, 2)
-
                     .padding(.top, 2)
                 }
 
