@@ -236,6 +236,12 @@ It is **not** currently positioned as a broad open contribution project.
 
 The product direction, core UX, architecture, and roadmap are already defined in detail. The repository documents a native iPhone app with a three-area structure around Oggi, Batch, and Guide, and a roadmap that covers app shell, execution flows, starter management, kefir tracking, knowledge, and hardening for internal release confidence.
 
+## Contributing
+
+The default branch is **`main`** (release-oriented snapshot). **Open pull requests against `develop`** for changes you want reviewed and integrated. Pull requests targeting `main` from accounts other than the repository maintainer are closed automatically with instructions to retarget `develop`.
+
+See [CONTRIBUTING.md](CONTRIBUTING.md) for the full branch policy.
+
 ## Local Development
 
 ### Prerequisites
