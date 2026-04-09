@@ -1,4 +1,4 @@
-# Levain CI/CD Documentation
+# Batch CI/CD Documentation
 
 **Last updated:** 2026-03-10 — Phase 09-02 / 09-03
 
@@ -6,7 +6,7 @@
 
 ## Overview
 
-Levain uses GitHub Actions for build and test validation (CI) and a separate manual-triggered workflow for release-candidate creation (CD). Both workflows reuse the same XcodeGen and `xcodebuild` baseline used locally.
+Batch uses GitHub Actions for build validation and a separate manual-triggered workflow for release-candidate preparation. Public-facing docs intentionally reflect the current reality: the app display name is `Batch`, while the Xcode scheme and project still use `Levain`.
 
 ```
 Local machine  ──────────────────────────────────────────────
@@ -16,7 +16,7 @@ Local machine  ─────────────────────�
   bash scripts/ci_release.sh --dry-run                     │
                                                             │
 GitHub Actions ──────────────────────────────────────────────
-  ios-ci.yml      → triggered on push / PR
+  ios-ci.yml      → triggered on push to main/develop, PRs from same repo only
   ios-release.yml → triggered by manual workflow_dispatch
 ```
 
@@ -28,8 +28,8 @@ GitHub Actions ─────────────────────�
 
 | Event | Branches |
 |-------|----------|
-| `push` | `main`, `release/**` |
-| `pull_request` | `main`, `release/**` |
+| `push` | `main`, `develop` |
+| `pull_request` | `main`, `develop` (same-repo branches only) |
 
 ### What It Does
 
@@ -37,9 +37,9 @@ GitHub Actions ─────────────────────�
 2. **Select Xcode** — targets the standard `Xcode.app` (providing the current iOS SDK)
 3. **Install XcodeGen** via Homebrew
 4. **Bootstrap** — runs `scripts/ci_bootstrap.sh` to regenerate `Levain.xcodeproj` from `project.yml`
-5. **Build** — `xcodebuild … CODE_SIGNING_ALLOWED=NO clean build`
-6. **Test** — `xcodebuild … test` (unit + UI tests on iPhone 17 Pro simulator)
-7. **Upload artifacts** — xcresult bundle retained 14 days; build log retained 7 days on failure
+5. **Build** — `xcodebuild … CODE_SIGNING_ALLOWED=NO build`
+6. **Diagnostics** — lists available iPhone simulators on the runner
+7. **Upload artifacts** — build log retained 7 days on failure
 
 ### Branch Protection
 
@@ -55,10 +55,10 @@ To enforce the CI gate:
 # 1. Generate project from project.yml
 bash scripts/ci_bootstrap.sh
 
-# 2. Build and test (default simulator: iPhone 17 Pro)
+# 2. Build and test locally
 bash scripts/ci_test.sh
 
-# Override simulator:
+# Override simulator if needed:
 bash scripts/ci_test.sh "iPhone 16 Pro"
 ```
 
@@ -68,6 +68,7 @@ bash scripts/ci_test.sh "iPhone 16 Pro"
 2. Download the `levain-xcresult-<run>` artifact.
 3. Open in Xcode: `open Levain.xcresult` — navigate to Failures.
 4. If the build step failed, download `levain-build-log-<run>` and search for the first error.
+5. If the workflow did not start or stayed queued, verify that the self-hosted runner was online.
 
 ---
 
@@ -127,9 +128,23 @@ xcodegen generate --spec project.yml
 
 ---
 
+## Hosted Runner Expectations
+
+The current CI job runs on a self-hosted macOS runner. That is acceptable for a personal product repo, but outside forks should not assume they can run CI unchanged without equivalent infrastructure. The workflow should only execute PR validation for branches coming from the same repository, not from untrusted forks.
+
+## Fork Policy
+
+For a public repo using a self-hosted runner, the safest default is:
+
+- accept outside issues and discussion
+- treat outside pull requests as reviewable contributions, but not as automatically runnable CI jobs
+- run CI automatically only for pushes and same-repo pull requests
+
+This keeps the public repo readable and reviewable without exposing the self-hosted runner to untrusted fork code.
+
 ## Secrets Boundary
 
-CI does **not** require any secrets. It builds with `CODE_SIGNING_ALLOWED=NO` so clean macOS runners work without provisioning profiles or certificates.
+CI does **not** require repository secrets. It builds with `CODE_SIGNING_ALLOWED=NO`.
 
 CD requires signing secrets; see `docs/release-secrets.md`.
 

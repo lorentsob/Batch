@@ -1,4 +1,4 @@
-# Levain MVP Review — March 2026
+# Batch MVP Review — March 2026
 
 Analysis of the current app state (codebase + screenshots) against the UX spec and PRD.
 

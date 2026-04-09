@@ -1,8 +1,8 @@
-# Levain iOS Development Workflow
+# Batch iOS Development Workflow
 
 ## Scopo del workflow
 
-Questo documento definisce il workflow di sviluppo da adottare per **Levain**, progetto **iOS app**.  
+Questo documento definisce il workflow di sviluppo da adottare per **Batch**, progetto **iOS app**.  
 Serve a mantenere il codice stabile, evitare modifiche caotiche su `main`, ridurre il rischio di regressioni e aiutare sia il developer sia l'AI agent a capire **quando un task è ben isolato** e **quando invece sta degenerando in un branch troppo largo**.
 
 Questo workflow non è pensato per enterprise theater.  
@@ -53,7 +53,7 @@ Meglio tre branch puliti e rapidi che uno enorme pieno di modifiche miste, diffi
 - `main` → branch stabile e protetto
 
 Per ora non serve introdurre altri branch permanenti tipo `develop` o `staging` a meno che il progetto non cresca molto.  
-Per Levain, nella fase attuale, `main + feature branches + PR + CI` è il setup più pulito.
+Per Batch, nella fase attuale, `main + feature branches + PR + CI` è il setup più pulito.
 
 ### Naming convention dei branch
 

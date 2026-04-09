@@ -1,4 +1,4 @@
-# Levain v1 Release Risks
+# Batch v1 Release Risks
 
 **Prepared:** 2026-03-10 — Phase 09-01
 **Version:** 0.1.0 (build 1)

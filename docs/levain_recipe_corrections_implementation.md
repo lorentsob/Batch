@@ -1,4 +1,4 @@
-# Implementazione correzioni ricette Levain
+# Implementazione correzioni ricette Batch
 
 ## Obiettivo
 
@@ -471,4 +471,3 @@ Il lavoro da fare non è riscrivere da zero le ricette, ma:
 - integrare correttamente i procedimenti nel mapping
 - correggere gli errori numerici e di classificazione
 - rigenerare il file finale in un formato davvero affidabile per l'app
-

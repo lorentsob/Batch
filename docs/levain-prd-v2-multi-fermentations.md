@@ -1,4 +1,4 @@
-# Levain v2
+# Batch v2
 ## Product Definition, UX Direction e contesto definitivo per l’estensione a milk kefir
 
 **Versione:** 2.0 working draft  
@@ -65,7 +65,7 @@ La v2 deve permettere di:
 
 # 3. Nuovo posizionamento del prodotto
 
-## 3.1 Cosa diventa Levain
+## 3.1 Cosa diventa Batch
 
 Levain diventa un’app nativa iPhone per:
 
@@ -1273,4 +1273,3 @@ La struttura corretta per questa evoluzione è:
 - **Knowledge** come libreria filtrabile e contestuale
 
 Questa è la direzione definitiva da usare come base per la progettazione e implementazione della v2.
-

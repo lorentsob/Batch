@@ -1,4 +1,4 @@
-# Levain Design System Documentation
+# Batch Design System Documentation
 
 **Version:** 2.0
 **Platform:** iOS Native

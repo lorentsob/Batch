@@ -1,4 +1,4 @@
-# Levain UI Flow & Navigation Documentation
+# Batch UI Flow & Navigation Documentation
 
 **Version:** 1.0
 **Platform:** iOS Native (iPhone only)
