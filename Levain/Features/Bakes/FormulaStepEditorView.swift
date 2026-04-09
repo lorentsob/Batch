@@ -42,17 +42,11 @@ struct FormulaStepEditorView: View {
                     TextField("es. Autolisi", text: $name)
                         .multilineTextAlignment(.trailing)
                 }
-                VStack(alignment: .leading, spacing: 6) {
-                    Text("Dettagli")
-                        .font(.subheadline)
-                        .foregroundStyle(Theme.muted)
-                    TextEditor(text: $details)
-                        .font(.body)
-                        .foregroundStyle(Theme.ink)
-                        .frame(minHeight: 120)
-                        .scrollContentBackground(.hidden)
+                LabeledContent("Dettagli") {
+                    TextField("Cosa fare in questa fase", text: $details, axis: .vertical)
+                        .lineLimit(2...4)
+                        .multilineTextAlignment(.trailing)
                 }
-                .listRowInsets(EdgeInsets(top: 10, leading: 16, bottom: 10, trailing: 16))
             }
 
             Section("Timing") {
@@ -90,22 +84,14 @@ struct FormulaStepEditorView: View {
                     TextField("es. Raddoppio", text: $volumeTarget)
                         .multilineTextAlignment(.trailing)
                 }
-                VStack(alignment: .leading, spacing: 6) {
-                    Text("Note")
-                        .font(.subheadline)
-                        .foregroundStyle(Theme.muted)
-                    TextEditor(text: $notes)
-                        .font(.body)
-                        .foregroundStyle(Theme.ink)
-                        .frame(minHeight: 80)
-                        .scrollContentBackground(.hidden)
+                LabeledContent("Note") {
+                    TextField("Osservazioni", text: $notes, axis: .vertical)
+                        .lineLimit(2...4)
+                        .multilineTextAlignment(.trailing)
                 }
-                .listRowInsets(EdgeInsets(top: 10, leading: 16, bottom: 10, trailing: 16))
             }
         }
         .navigationTitle(name.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty ? "Fase" : name)
-        .scrollContentBackground(.hidden)
-        .background(Theme.Surface.app)
         .toolbar {
             ToolbarItem(placement: .cancellationAction) {
                 Button("Chiudi") { dismiss() }
@@ -159,8 +145,6 @@ private struct DurationPickerSheet: View {
                 .labelsHidden()
                 .frame(maxWidth: .infinity)
             }
-            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
-            .background(Theme.Surface.app.ignoresSafeArea())
             .navigationTitle("Durata fase")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
@@ -173,6 +157,7 @@ private struct DurationPickerSheet: View {
             }
         }
         .presentationDetents([.fraction(0.38)])
+        .presentationBackground(Theme.Surface.app)
     }
 }
 
@@ -201,8 +186,6 @@ private struct ReminderOffsetPickerSheet: View {
                 .labelsHidden()
                 .frame(maxWidth: .infinity)
             }
-            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
-            .background(Theme.Surface.app.ignoresSafeArea())
             .navigationTitle("Promemoria")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
@@ -215,5 +198,6 @@ private struct ReminderOffsetPickerSheet: View {
             }
         }
         .presentationDetents([.fraction(0.38)])
+        .presentationBackground(Theme.Surface.app)
     }
 }

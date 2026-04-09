@@ -2,7 +2,6 @@
 description: 
 alwaysApply: true
 ---
-
 # CLAUDE.md — Batch
 
 This file is the stable AI contributor context for Batch. It is derived from `docs/levain-prd-complete-v2.md`, the `.planning/` folder, and the current state of the codebase.

@@ -306,10 +306,10 @@ extension KefirBatch {
         }
     }
 
-    var cardEmphasis: SectionCardEmphasis {
+    var cardEmphasis: SectionCard<EmptyView>.Emphasis {
         switch derivedState {
         case .overdue:
-            .surface
+            .danger
         case .dueSoon, .dueNow:
             .tinted
         default:
@@ -402,7 +402,7 @@ extension KefirBatch {
         case .dueNow:
             .overdue
         case .overdue:
-            .overdue
+            .danger
         case .pausedFridge, .pausedFreezer:
             .done
         case .archived:
@@ -604,7 +604,7 @@ extension StateBadge {
         case .dueNow:
             tone = .overdue
         case .overdue:
-            tone = .overdue
+            tone = .danger
         case .pausedFridge, .pausedFreezer:
             tone = .done
         case .archived:

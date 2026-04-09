@@ -8,11 +8,10 @@ struct TodayView: View {
     @EnvironmentObject private var router: AppRouter
 
     @Query(sort: \Bake.targetBakeDateTime, order: .forward) private var bakes: [Bake]
-    @Query(filter: #Predicate<Starter> { $0.archivedAt == nil }, sort: \Starter.lastRefresh, order: .reverse) private var starters: [Starter]
+    @Query(sort: \Starter.lastRefresh, order: .reverse) private var starters: [Starter]
     @Query(sort: \KefirBatch.lastManagedAt, order: .reverse) private var kefirBatches: [KefirBatch]
+    @Query(sort: \RecipeFormula.name) private var formulas: [RecipeFormula]
     @Query private var appSettingsList: [AppSettings]
-
-    @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
     @State private var refreshStarter: Starter?
     @State private var detailSelection: TodayBakeSelection?
@@ -21,11 +20,6 @@ struct TodayView: View {
     @State private var stepCompletedTrigger = false
     @State private var cachedSnapshot: TodaySnapshot?
     @State private var showingSettings = false
-    @State private var showingBakeCreation = false
-    @State private var showingStarterCreation = false
-    @State private var showingKefirCreation: KefirBatchEditorView.Mode?
-    @State private var sectionsVisible = false
-    @State private var hasRevealedOnce = false
 
     private var appSettings: AppSettings? { appSettingsList.first }
 
@@ -39,49 +33,30 @@ struct TodayView: View {
         let snapshot = resolvedSnapshot(for: revision)
 
         ZStack(alignment: .topLeading) {
-            Theme.Surface.app
+            Theme.background
                 .ignoresSafeArea()
 
-            ScrollView(.vertical) {
-                VStack(alignment: .leading, spacing: Theme.Layout.sectionGap) {
+            ScrollView {
+                VStack(alignment: .leading, spacing: 20) {
                     SectionCard(emphasis: .tinted) {
-                        ScreenTitleBlock(
-                            title: "Cosa fare oggi",
-                            subtitle: allFeaturesDisabled
-                                ? "Tutte le sezioni sono disattivate."
-                                : snapshot.heroSubtitle
-                        )
+                        Text("Cosa fare oggi")
+                            .font(.system(size: 30, weight: .bold))
+                            .foregroundStyle(Theme.ink)
+
+                        Text(allFeaturesDisabled
+                            ? "Tutte le sezioni sono disattivate."
+                            : snapshot.heroSubtitle)
+                            .font(.subheadline)
+                            .foregroundStyle(Theme.muted)
 
                         if !allFeaturesDisabled && snapshot.agenda.emptyState == .actionable {
-                            HStack(spacing: Theme.Spacing.sm + 4) {
+                            HStack(spacing: 12) {
                                 StateBadge(text: "\(snapshot.todayCount) in agenda", tone: .count)
                                 if snapshot.inProgressCount > 0 {
-                                    StateBadge(text: "\(snapshot.inProgressCount) impasti attivi", tone: .info)
+                                    StateBadge(text: "\(snapshot.inProgressCount) bake attivi", tone: .info)
                                 }
                             }
                         }
-
-                        Menu {
-                            if appSettings?.isBakeEnabled ?? true {
-                                Button { showingBakeCreation = true } label: {
-                                    Label("Nuovo impasto", image: "navbar-bake")
-                                }
-                            }
-                            if appSettings?.isStarterEnabled ?? true {
-                                Button { showingStarterCreation = true } label: {
-                                    Label("Nuovo starter", image: "navbar-starter")
-                                }
-                            }
-                            if appSettings?.isKefirEnabled ?? true {
-                                Button { showingKefirCreation = .create } label: {
-                                    Label("Nuovo batch kefir", systemImage: "drop.fill")
-                                }
-                            }
-                        } label: {
-                            Label("Nuova preparazione", systemImage: "plus")
-                        }
-                        .buttonStyle(PrimaryActionButtonStyle())
-                        .padding(.top, Theme.Spacing.xxs)
                     }
 
                     if allFeaturesDisabled {
@@ -92,7 +67,6 @@ struct TodayView: View {
                         ) {
                             showingSettings = true
                         }
-                        .transition(.opacity.combined(with: .scale(scale: 0.97, anchor: .top)))
                     } else {
 
                     switch snapshot.agenda.emptyState {
@@ -130,9 +104,8 @@ struct TodayView: View {
                             healthyStarters: snapshot.healthyStarters
                         )
                         ForEach(sections) { section in
-                            let firstItemID = section.items.first?.id
-                            ForEach(section.items) { sectionItem in
-                                TodayOperationalCardView(domain: section.domain, showHeader: sectionItem.id == firstItemID) {
+                            ForEach(Array(section.items.enumerated()), id: \.offset) { idx, sectionItem in
+                                TodayOperationalCardView(domain: section.domain, showHeader: idx == 0) {
                                     switch sectionItem {
                                     case let .feedItem(item):
                                         switch item.kind {
@@ -193,28 +166,9 @@ struct TodayView: View {
                     } // end else (features not all disabled)
 
                 }
-                .levainScrollScreenPadding()
-                .opacity(sectionsVisible ? 1 : 0)
-                .offset(y: sectionsVisible ? 0 : 20)
-                .onAppear {
-                    guard !sectionsVisible else { return }
-                    if reduceMotion || hasRevealedOnce || environment.isLaunchTransitionComplete {
-                        // Subsequent appearances or reduced-motion: instant reveal
-                        sectionsVisible = true
-                        hasRevealedOnce = true
-                    }
-                    // else: wait for isLaunchTransitionComplete to trigger the animation
-                }
-                .onChange(of: environment.isLaunchTransitionComplete) { _, complete in
-                    guard complete, !hasRevealedOnce else { return }
-                    hasRevealedOnce = true
-                    withAnimation(.spring(response: 0.55, dampingFraction: 0.82)) {
-                        sectionsVisible = true
-                    }
-                }
+                .padding(.horizontal, 20)
+                .padding(.vertical, 24)
             }
-            .scrollBounceBehavior(.basedOnSize, axes: .vertical)
-            .scrollClipDisabled(false)
             .contentMargins(.bottom, 88, for: .scrollContent)
             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
             .accessibilityIdentifier("TodayScrollView")
@@ -222,24 +176,20 @@ struct TodayView: View {
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
         .navigationTitle("")
         .navigationBarTitleDisplayMode(.inline)
+        .toolbar {
+            ToolbarItem(placement: .topBarTrailing) {
+                Button {
+                    showingSettings = true
+                } label: {
+                    Image(systemName: "gearshape")
+                }
+                .accessibilityLabel("Impostazioni")
+                .accessibilityIdentifier("TodaySettingsButton")
+            }
+        }
         .sheet(isPresented: $showingSettings) {
             NavigationStack {
                 SettingsView()
-            }
-        }
-        .sheet(isPresented: $showingBakeCreation) {
-            NavigationStack {
-                BakeCreationView(preselectedFormula: nil)
-            }
-        }
-        .sheet(isPresented: $showingStarterCreation) {
-            NavigationStack {
-                StarterEditorView(starter: nil)
-            }
-        }
-        .sheet(item: $showingKefirCreation) { mode in
-            NavigationStack {
-                KefirBatchEditorView(mode: mode) { _ in }
             }
         }
         .sheet(item: $refreshStarter) { starter in
@@ -260,12 +210,9 @@ struct TodayView: View {
         .sensoryFeedback(.impact(flexibility: .soft), trigger: stepStartedTrigger)
         .sensoryFeedback(.success, trigger: stepCompletedTrigger)
         .task(id: revision) {
-            guard cachedSnapshot?.revision != revision else { return }
             cachedSnapshot = buildSnapshot(revision: revision)
         }
     }
-
-
 
     private func handlePrimary(_ selection: TodayBakeSelection) {
         let step = selection.step
@@ -288,7 +235,7 @@ struct TodayView: View {
                 try? await Task.sleep(for: .milliseconds(300))
                 try? modelContext.save()
                 await environment.notificationService.syncNotifications(forBake: bakeID, in: modelContext)
-                environment.showBanner("Impasto completato!", duration: 4)
+                environment.showBanner("Bake completato!", duration: 4)
             }
         } else {
             persistAndSync(for: bake)
@@ -329,23 +276,24 @@ struct TodayView: View {
         var hasher = Hasher()
 
         for bake in bakes {
-            let operationalSnapshot = bake.makeOperationalSnapshot()
             hasher.combine(bake.id)
             hasher.combine(bake.name)
-            hasher.combine(operationalSnapshot.derivedStatus.rawValue)
-            hasher.combine(operationalSnapshot.orderedSteps.count)
+            hasher.combine(bake.isCancelled)
+            hasher.combine(bake.targetBakeDateTime)
 
-            if let activeStep = operationalSnapshot.activeStep {
-                hasher.combine(activeStep.id)
-                hasher.combine(activeStep.typeRaw)
-                hasher.combine(activeStep.nameOverride)
-                hasher.combine(activeStep.descriptionText)
-                hasher.combine(activeStep.plannedStart)
-                hasher.combine(activeStep.plannedDurationMinutes)
-                hasher.combine(activeStep.flexibleWindowStart)
-                hasher.combine(activeStep.flexibleWindowEnd)
-                hasher.combine(activeStep.actualStart)
-                hasher.combine(activeStep.statusRaw)
+            for step in bake.steps {
+                hasher.combine(step.id)
+                hasher.combine(step.orderIndex)
+                hasher.combine(step.typeRaw)
+                hasher.combine(step.nameOverride)
+                hasher.combine(step.descriptionText)
+                hasher.combine(step.plannedStart)
+                hasher.combine(step.plannedDurationMinutes)
+                hasher.combine(step.flexibleWindowStart)
+                hasher.combine(step.flexibleWindowEnd)
+                hasher.combine(step.actualStart)
+                hasher.combine(step.actualEnd)
+                hasher.combine(step.statusRaw)
             }
         }
 
@@ -367,6 +315,7 @@ struct TodayView: View {
             hasher.combine(batch.archivedAt)
         }
 
+        hasher.combine(formulas.count)
         hasher.combine(appSettings?.isBakeEnabled ?? true)
         hasher.combine(appSettings?.isStarterEnabled ?? true)
         hasher.combine(appSettings?.isKefirEnabled ?? true)
@@ -385,13 +334,12 @@ struct TodayView: View {
         let filteredBakes = settings?.isBakeEnabled == false ? [] : Array(bakes)
         let filteredStarters = settings?.isStarterEnabled == false ? [] : Array(starters)
         let filteredKefirBatches = settings?.isKefirEnabled == false ? [] : Array(kefirBatches)
-        let hasPersistedData = bakes.isEmpty == false || starters.isEmpty == false || kefirBatches.isEmpty == false
         return TodaySnapshot.make(
             revision: revision,
             bakes: filteredBakes,
             starters: filteredStarters,
             kefirBatches: filteredKefirBatches,
-            hasPersistedData: hasPersistedData
+            formulas: Array(formulas)
         )
     }
 }
@@ -406,18 +354,9 @@ private struct TodayBakeSelection: Identifiable {
 // MARK: - Domain section grouping
 
 private struct TodayRenderSection: Identifiable {
-    enum Item: Identifiable {
+    enum Item {
         case feedItem(TodayAgendaItem)
         case healthyStarter(Starter)
-
-        var id: String {
-            switch self {
-            case let .feedItem(item):
-                return "feed-\(item.id)"
-            case let .healthyStarter(starter):
-                return "healthy-starter-\(starter.id.uuidString)"
-            }
-        }
     }
     let domain: TodayAgendaItem.Domain
     let items: [Item]
@@ -467,7 +406,7 @@ private struct TodaySnapshot {
         bakes: [Bake],
         starters: [Starter],
         kefirBatches: [KefirBatch],
-        hasPersistedData: Bool
+        formulas: [RecipeFormula]
     ) -> TodaySnapshot {
         let bakeInputs = bakes.map { bake in
             TodayAgendaBakeInput(bake: bake, operational: bake.makeOperationalSnapshot())
@@ -477,7 +416,7 @@ private struct TodaySnapshot {
             inputs: bakeInputs,
             starters: starters,
             kefirBatches: kefirBatches,
-            hasPersistedData: hasPersistedData
+            hasPersistedData: bakes.isEmpty == false || starters.isEmpty == false || kefirBatches.isEmpty == false || formulas.isEmpty == false
         )
 
         let todayCount = agenda.feed.filter { $0.urgency != .preview }.count
@@ -497,7 +436,7 @@ private struct TodaySnapshot {
         let heroSubtitle: String
         switch agenda.emptyState {
         case .firstLaunch:
-            heroSubtitle = "Crea il tuo primo impasto o aggiungi uno starter per cominciare."
+            heroSubtitle = "Crea il tuo primo bake o aggiungi uno starter per cominciare."
         case .allClear:
             heroSubtitle = "Tutto in pari — nessuna azione urgente per oggi."
         case .futureOnly:
@@ -552,16 +491,15 @@ private struct TodayFuturePreviewCard: View {
                 StateBadge(text: "In programma", tone: .count)
 
                 Text("Prossima attività")
-                    .font(Theme.Typography.caption1)
-                    .foregroundStyle(Theme.Text.secondary)
+                    .foregroundStyle(Theme.muted)
 
                 VStack(alignment: .leading, spacing: 4) {
                     Text(preview.title)
-                        .font(Theme.Typography.headline)
-                        .foregroundStyle(Theme.Text.primary)
+                        .font(.headline)
+                        .foregroundStyle(Theme.ink)
                     Text(preview.subtitle)
-                        .font(Theme.Typography.subheadline)
-                        .foregroundStyle(Theme.Text.secondary)
+                        .font(.subheadline)
+                        .foregroundStyle(Theme.muted)
                 }
 
                 Button(buttonTitle, action: action)
@@ -572,8 +510,8 @@ private struct TodayFuturePreviewCard: View {
 
     private var buttonTitle: String {
         switch preview.kind {
-        case .bake:    return "Apri impasto"
-        case .starter: return "Apri starter"
+        case .bake:    return "Vai ai Fermenti"
+        case .starter: return "Vai ai Fermenti"
         case .kefir:   return "Apri batch"
         }
     }
@@ -589,18 +527,18 @@ private struct TodayKefirBatchRow: View {
                 VStack(alignment: .leading, spacing: 8) {
                     HStack(spacing: 8) {
                         Text(item.title)
-                            .font(Theme.Typography.subheadlineSemibold)
-                            .foregroundStyle(Theme.Text.primary)
+                            .font(.subheadline.weight(.semibold))
+                            .foregroundStyle(Theme.ink)
                         StateBadge(text: item.state, tone: stateTone)
                     }
 
                     Text(item.subtitle)
-                        .font(Theme.Typography.footnote)
-                        .foregroundStyle(Theme.Text.secondary)
+                        .font(.footnote)
+                        .foregroundStyle(Theme.muted)
 
                     Text("Prossima azione: \(item.actionTitle)")
-                        .font(Theme.Typography.caption1Semibold)
-                        .foregroundStyle(Theme.Control.secondaryForeground)
+                        .font(.caption.weight(.medium))
+                        .foregroundStyle(Theme.accent)
                 }
 
                 Spacer(minLength: 12)
@@ -609,7 +547,7 @@ private struct TodayKefirBatchRow: View {
                     .font(.caption.weight(.semibold))
                     .foregroundStyle(Theme.Text.tertiary)
             }
-            .padding(Theme.Spacing.md)
+            .padding(16)
             .frame(maxWidth: .infinity, alignment: .leading)
             .background(
                 RoundedRectangle(cornerRadius: Theme.Radius.nestedCard, style: .continuous)
@@ -629,7 +567,7 @@ private struct TodayKefirBatchRow: View {
         case .overdue:
             return .overdue
         case .warning:
-            return .pending
+            return .warning
         case .active, .preview:
             return .schedule
         }
@@ -653,14 +591,14 @@ private struct TodayWindowedBakeRow: View {
                 VStack(alignment: .leading, spacing: 8) {
                     HStack(spacing: 8) {
                         Text(item.title)
-                            .font(Theme.Typography.subheadlineSemibold)
-                            .foregroundStyle(Theme.Text.primary)
+                            .font(.subheadline.weight(.semibold))
+                            .foregroundStyle(Theme.ink)
                         StateBadge(text: item.state, tone: .schedule)
                     }
 
                     Text(item.subtitle)
-                        .font(Theme.Typography.footnote)
-                        .foregroundStyle(Theme.Text.secondary)
+                        .font(.footnote)
+                        .foregroundStyle(Theme.muted)
                 }
 
                 Spacer(minLength: 12)
@@ -669,7 +607,7 @@ private struct TodayWindowedBakeRow: View {
                     .font(.caption.weight(.semibold))
                     .foregroundStyle(Theme.Text.tertiary)
             }
-            .padding(Theme.Spacing.md)
+            .padding(16)
             .frame(maxWidth: .infinity, alignment: .leading)
             .background(
                 RoundedRectangle(cornerRadius: Theme.Radius.nestedCard, style: .continuous)
@@ -695,18 +633,18 @@ private struct TodayTomorrowPreviewRow: View {
                 VStack(alignment: .leading, spacing: 8) {
                     HStack(spacing: 8) {
                         Text(bake.name)
-                            .font(Theme.Typography.subheadlineSemibold)
-                            .foregroundStyle(Theme.Text.primary)
+                            .font(.subheadline.weight(.semibold))
+                            .foregroundStyle(Theme.ink)
                         StateBadge(text: "Domani", tone: .schedule)
                     }
 
                     Text(step.displayName)
-                        .font(Theme.Typography.headline)
-                        .foregroundStyle(Theme.Text.primary)
+                        .font(.headline)
+                        .foregroundStyle(Theme.ink)
 
                     Text(DateFormattingService.dayTime(step.isWindowBased ? step.windowStart : step.plannedStart))
-                        .font(Theme.Typography.footnote)
-                        .foregroundStyle(Theme.Text.secondary)
+                        .font(.footnote)
+                        .foregroundStyle(Theme.muted)
                 }
 
                 Spacer(minLength: 12)
@@ -715,7 +653,7 @@ private struct TodayTomorrowPreviewRow: View {
                     .font(.caption.weight(.semibold))
                     .foregroundStyle(Theme.Text.tertiary)
             }
-            .padding(Theme.Spacing.md)
+            .padding(16)
             .frame(maxWidth: .infinity, alignment: .leading)
             .background(
                 RoundedRectangle(cornerRadius: Theme.Radius.nestedCard, style: .continuous)
@@ -737,18 +675,18 @@ private struct TodayStarterStatusCard: View {
     let onRefresh: (Starter) -> Void
 
     var body: some View {
-        VStack(alignment: .leading, spacing: Theme.Spacing.xs) {
+        VStack(alignment: .leading, spacing: 6) {
             // Domain label — same pattern as TodayOperationalCardView
-            HStack(spacing: Theme.Spacing.xxs + 1) {
+            HStack(spacing: 5) {
                 Image("navbar-starter")
                     .renderingMode(.template)
                     .resizable()
                     .scaledToFit()
-                    .foregroundStyle(Theme.Text.tertiary)
+                    .foregroundStyle(Theme.accent)
                     .frame(width: 12, height: 12)
                 Text("Starter")
-                    .font(Theme.Typography.overline)
-                    .foregroundStyle(Theme.Text.tertiary)
+                    .font(.caption.weight(.semibold))
+                    .foregroundStyle(Theme.accent)
             }
             .padding(.leading, 2)
 
@@ -776,11 +714,11 @@ private struct TodayStarterStatusRow: View {
         HStack(spacing: 12) {
             VStack(alignment: .leading, spacing: 3) {
                 Text(starter.name)
-                    .font(Theme.Typography.subheadlineSemibold)
-                    .foregroundStyle(Theme.Text.primary)
+                    .font(.subheadline.weight(.semibold))
+                    .foregroundStyle(Theme.ink)
                 Text(nextRefreshLabel)
-                    .font(Theme.Typography.caption1)
-                    .foregroundStyle(Theme.Text.secondary)
+                    .font(.caption)
+                    .foregroundStyle(Theme.muted)
             }
 
             Spacer()
@@ -807,7 +745,7 @@ private struct TodayHealthyStarterCard: View {
 
     var body: some View {
         TodayStarterStatusRow(starter: starter, onRefresh: onRefresh)
-            .padding(Theme.Spacing.md)
+            .padding(16)
             .frame(maxWidth: .infinity, alignment: .leading)
             .background(
                 RoundedRectangle(cornerRadius: Theme.Radius.nestedCard, style: .continuous)
@@ -834,22 +772,22 @@ private struct TodayAllClearView: View {
                             .fill(Theme.Status.doneBackground)
                             .frame(width: 48, height: 48)
                         Image(systemName: "checkmark")
-                            .font(Theme.Typography.title3)
+                            .font(.system(size: 20, weight: .semibold))
                             .foregroundStyle(Theme.Status.doneForeground)
                     }
 
                     VStack(alignment: .leading, spacing: 4) {
                         Text("Tutto in pari")
-                            .font(Theme.Typography.headline)
-                            .foregroundStyle(Theme.Text.primary)
-                        Text("Non c'è nulla di urgente da fare. Oggi non hai impasti, starter o batch kefir che richiedono attenzione.")
-                            .font(Theme.Typography.subheadline)
-                            .foregroundStyle(Theme.Text.secondary)
+                            .font(.headline)
+                            .foregroundStyle(Theme.ink)
+                        Text("Non c'è nulla di urgente da fare. Il tuo starter è ok e non hai step da seguire oggi.")
+                            .font(.subheadline)
+                            .foregroundStyle(Theme.muted)
                             .fixedSize(horizontal: false, vertical: true)
                     }
                 }
 
-                Button("Pianifica un nuovo impasto", action: onNewBake)
+                Button("Pianifica un nuovo bake", action: onNewBake)
                     .buttonStyle(SecondaryActionButtonStyle())
             }
         }
@@ -868,15 +806,15 @@ private struct TodayOnboardingView: View {
             SectionCard(emphasis: .tinted) {
                 VStack(alignment: .leading, spacing: 14) {
                     VStack(alignment: .leading, spacing: 6) {
-                        Text("Inizia con il primo impasto")
-                            .font(Theme.Typography.title3)
-                            .foregroundStyle(Theme.Text.primary)
-                        Text("Scegli una ricetta e crea il tuo primo impasto")
-                            .font(Theme.Typography.subheadline)
-                            .foregroundStyle(Theme.Text.secondary)
+                        Text("Inizia il tuo primo bake")
+                            .font(.title3.weight(.bold))
+                            .foregroundStyle(Theme.ink)
+                        Text("Scegli una ricetta, imposta l'orario di sfornatura e Levain costruisce la timeline automaticamente.")
+                            .font(.subheadline)
+                            .foregroundStyle(Theme.muted)
                             .fixedSize(horizontal: false, vertical: true)
                     }
-                    Button("Nuovo impasto", action: onNewBake)
+                    Button("Nuovo bake", action: onNewBake)
                         .buttonStyle(PrimaryActionButtonStyle())
                 }
             }
@@ -893,7 +831,7 @@ private struct TodayOnboardingView: View {
                 FeaturePillCard(
                     systemImage: "book.pages.fill",
                     title: "Sfoglia le guide",
-                    subtitle: "Troverai consigli e suggerimenti utili",
+                    subtitle: "Scopri i segreti della lievitazione naturale.",
                     accessibilityIdentifier: "TodayBrowseGuidesButton",
                     action: { router.openKnowledge(nil) }
                 )
@@ -913,23 +851,23 @@ private struct FeaturePillCard: View {
         Button(action: action) {
             VStack(alignment: .leading, spacing: 10) {
                 Image(systemName: systemImage)
-                    .font(Theme.Typography.title2)
-                    .foregroundStyle(Theme.Control.primaryFill)
+                    .font(.system(size: 22, weight: .semibold))
+                    .foregroundStyle(Theme.accent)
 
                 VStack(alignment: .leading, spacing: 4) {
                     Text(title)
-                        .font(Theme.Typography.subheadlineSemibold)
-                        .foregroundStyle(Theme.Text.primary)
+                        .font(.subheadline.weight(.semibold))
+                        .foregroundStyle(Theme.ink)
                     Text(subtitle)
-                        .font(Theme.Typography.caption1)
-                        .foregroundStyle(Theme.Text.secondary)
+                        .font(.caption)
+                        .foregroundStyle(Theme.muted)
                         .fixedSize(horizontal: false, vertical: true)
                         .lineLimit(3)
                 }
 
                 Spacer(minLength: 0)
             }
-            .padding(Theme.Spacing.md)
+            .padding(16)
             .frame(maxWidth: .infinity, minHeight: 120, alignment: .topLeading)
             .background(
                 RoundedRectangle(cornerRadius: Theme.Radius.nestedCard, style: .continuous)
@@ -956,16 +894,16 @@ private struct TodayKnowledgeCard: View {
         Button(action: action) {
             HStack(spacing: 14) {
                 Image(systemName: "book.pages.fill")
-                    .font(Theme.Typography.title3)
-                    .foregroundStyle(Theme.Control.primaryFill)
+                    .font(.system(size: 20, weight: .semibold))
+                    .foregroundStyle(Theme.accent)
 
                 VStack(alignment: .leading, spacing: 2) {
                     Text("Guide e consigli")
-                        .font(Theme.Typography.subheadlineSemibold)
-                        .foregroundStyle(Theme.Text.primary)
-                    Text("Troverai consigli e suggerimenti utili")
-                        .font(Theme.Typography.caption1)
-                        .foregroundStyle(Theme.Text.secondary)
+                        .font(.subheadline.weight(.semibold))
+                        .foregroundStyle(Theme.ink)
+                    Text("Scopri i segreti della lievitazione naturale.")
+                        .font(.caption)
+                        .foregroundStyle(Theme.muted)
                 }
 
                 Spacer()
@@ -974,7 +912,7 @@ private struct TodayKnowledgeCard: View {
                     .font(.footnote.weight(.semibold))
                     .foregroundStyle(Theme.muted)
             }
-            .padding(Theme.Spacing.md)
+            .padding(16)
             .frame(maxWidth: .infinity, alignment: .leading)
             .background(
                 RoundedRectangle(cornerRadius: Theme.Radius.nestedCard, style: .continuous)
