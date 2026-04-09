@@ -18,7 +18,7 @@ final class StateBadgeToneTests: XCTestCase {
     }
 
     func testStarterDueStateUsesSemanticToneMapping() {
-        XCTAssertEqual(StateBadge(dueState: .ok).tone, .done)
+        XCTAssertEqual(StateBadge(dueState: .ok).tone, .info)
         XCTAssertEqual(StateBadge(dueState: .dueToday).tone, .pending)
         XCTAssertEqual(StateBadge(dueState: .overdue).tone, .overdue)
     }

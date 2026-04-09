@@ -1,4 +1,4 @@
-# Levain v1 Smoke Checklist
+# Batch v1 Smoke Checklist
 
 **Purpose:** One focused manual pass that covers every MVP-critical flow automation does not fully guarantee.
 **Target device:** iPhone running iOS 26 (on-device preferred; iPhone 17 Pro simulator is acceptable for non-notification checks).

@@ -19,12 +19,13 @@ private enum NotificationScheduler {
     @MainActor
     static func apply(_ plans: [NotificationSyncPlan]) async {
         let center = UNUserNotificationCenter.current()
+        let identifiersToRemove = plans.flatMap(\.identifiersToRemove)
+
+        if identifiersToRemove.isEmpty == false {
+            center.removePendingNotificationRequests(withIdentifiers: identifiersToRemove)
+        }
 
         for plan in plans {
-            if plan.identifiersToRemove.isEmpty == false {
-                center.removePendingNotificationRequests(withIdentifiers: plan.identifiersToRemove)
-            }
-
             for request in plan.requests {
                 let content = UNMutableNotificationContent()
                 content.title = request.title

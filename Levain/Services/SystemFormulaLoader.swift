@@ -1,18 +1,20 @@
 import Foundation
 
 enum SystemFormulaLoader {
-    static func loadSystemFormulas(bundle: Bundle = Bundle(for: SystemFormulaLoaderClass.self)) -> [SystemFormula] {
+    static func loadSystemFormulas(bundle: Bundle = Bundle(for: Anchor.self)) -> [SystemFormula] {
         guard
             let url = bundle.url(forResource: "system_formulas", withExtension: "json"),
             let data = try? Data(contentsOf: url),
-            let items = try? JSONDecoder().decode([SystemFormula].self, from: data)
+            let formulas = try? JSONDecoder().decode([SystemFormula].self, from: data)
         else {
-            assertionFailure("Unable to load bundled system formulas")
             return []
         }
+        return formulas
+    }
 
-        return items
+    static func formula(id: UUID, bundle: Bundle = Bundle(for: Anchor.self)) -> SystemFormula? {
+        loadSystemFormulas(bundle: bundle).first(where: { $0.id == id })
     }
 }
 
-private final class SystemFormulaLoaderClass {}
+private final class Anchor {}

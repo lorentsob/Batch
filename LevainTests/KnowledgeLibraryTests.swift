@@ -81,4 +81,86 @@ final class KnowledgeLibraryTests: XCTestCase {
         let item = library.item(id: "non-existent-id")
         XCTAssertNil(item)
     }
+
+    @MainActor
+    func testGlossaryLookupByAliasReturnsCanonicalItem() {
+        let library = makeLoadedLibrary()
+
+        let item = library.item(matchingGlossaryTerm: "first rise")
+
+        XCTAssertEqual(item?.id, "bulk-fermentation-basics")
+        XCTAssertEqual(item?.title, "Bulk fermentation")
+    }
+
+    @MainActor
+    func testGlossaryLookupSupportsItalianAlias() {
+        let library = makeLoadedLibrary()
+
+        let item = library.item(matchingGlossaryTerm: "preforma")
+
+        XCTAssertEqual(item?.id, "shaping-guide")
+    }
+
+    @MainActor
+    func testGlossaryIndexMatchesOnlyWholeTermsInsideText() {
+        let library = makeLoadedLibrary()
+
+        let matches = library.glossaryIndex.matches(
+            in: "La prima lievitazione porta l'impasto verso una bulk fermentation più stabile.",
+            maxMatches: 3
+        )
+
+        XCTAssertEqual(matches.map(\.articleID), ["bulk-fermentation-basics", "bulk-fermentation-basics"])
+        XCTAssertEqual(matches.map(\.matchedTerm), ["prima lievitazione", "bulk fermentation"])
+    }
+
+    @MainActor
+    func testSearchResultsPreferCanonicalAliasMatch() {
+        let library = makeLoadedLibrary()
+
+        let results = library.searchResults(matching: "second rise")
+
+        XCTAssertEqual(results.first?.id, "appretto-guide")
+        XCTAssertEqual(results.first?.title, "Appretto")
+    }
+
+    @MainActor
+    func testSearchResultsSupportEnglishAliasForNewGuides() {
+        let library = makeLoadedLibrary()
+
+        let results = library.searchResults(matching: "stretch & fold")
+
+        XCTAssertEqual(results.first?.id, "pieghe-guide")
+    }
+
+    @MainActor
+    func testSearchResultsRespectCategoryFilter() {
+        let library = makeLoadedLibrary()
+
+        let results = library.searchResults(matching: "starter prep", in: .starter)
+
+        XCTAssertEqual(results.first?.id, "levain-guide")
+        XCTAssertTrue(results.allSatisfy { $0.category == .starter })
+    }
+
+    @MainActor
+    func testRelatedItemsPrioritizeExplicitGlossaryMentions() throws {
+        let library = makeLoadedLibrary()
+        let item = try XCTUnwrap(library.item(id: "pieghe-guide"))
+
+        let results = library.relatedItems(for: item)
+
+        XCTAssertEqual(results.first?.id, "bulk-fermentation-basics")
+    }
+
+    @MainActor
+    func testRelatedItemsExcludeCurrentArticleAndStayNonEmptyForKnownGuide() throws {
+        let library = makeLoadedLibrary()
+        let item = try XCTUnwrap(library.item(id: "appretto-guide"))
+
+        let results = library.relatedItems(for: item)
+
+        XCTAssertFalse(results.isEmpty)
+        XCTAssertFalse(results.contains(where: { $0.id == item.id }))
+    }
 }

@@ -7,7 +7,7 @@ struct FermentationsView: View {
     @EnvironmentObject private var router: AppRouter
 
     @Query(sort: \Bake.targetBakeDateTime, order: .forward) private var bakes: [Bake]
-    @Query private var starters: [Starter]
+    @Query(filter: #Predicate<Starter> { $0.archivedAt == nil }) private var starters: [Starter]
     @Query(sort: \RecipeFormula.name) private var formulas: [RecipeFormula]
     @Query(sort: \KefirBatch.lastManagedAt, order: .reverse) private var kefirBatches: [KefirBatch]
     @Query private var appSettingsList: [AppSettings]
@@ -15,6 +15,7 @@ struct FermentationsView: View {
     @State private var showingBakeEditor = false
     @State private var showingStarterEditor = false
     @State private var kefirEditorMode: KefirBatchEditorView.Mode?
+    @State private var showingSettings = false
 
     private var appSettings: AppSettings? { appSettingsList.first }
     private var isBakeEnabled: Bool { appSettings?.isBakeEnabled ?? true }
@@ -27,20 +28,20 @@ struct FermentationsView: View {
     }
 
     private let columns = [
-        GridItem(.flexible(), spacing: 14),
-        GridItem(.flexible(), spacing: 14)
+        GridItem(.flexible(), spacing: Theme.Spacing.sm),
+        GridItem(.flexible(), spacing: Theme.Spacing.sm)
     ]
 
     var body: some View {
         ScrollView {
-            VStack(alignment: .leading, spacing: 24) {
+            VStack(alignment: .leading, spacing: Theme.Layout.sectionGap) {
                 if allFeaturesDisabled {
                     allDisabledEmptyState
-                        .padding(.top, 40)
+                        .padding(.top, Theme.Spacing.lg)
                 } else {
                     dashboardHeader
 
-                    LazyVGrid(columns: columns, spacing: 14) {
+                    LazyVGrid(columns: columns, spacing: Theme.Spacing.sm) {
                         if isBakeEnabled {
                             impastiTile
                         }
@@ -54,50 +55,28 @@ struct FermentationsView: View {
                     }
                 }
             }
-            .padding(.horizontal, 20)
-            .padding(.top, 16)
-            .padding(.bottom, 32)
+            .levainScrollScreenPadding()
         }
-        .background(Theme.Surface.app)
-        .navigationTitle("I tuoi Batch")
-        .navigationBarTitleDisplayMode(.large)
+        .background(Theme.Surface.app.ignoresSafeArea())
+        .navigationTitle("")
+        .navigationBarTitleDisplayMode(.inline)
+        .accessibilityIdentifier("FermentationsView")
         .toolbar {
-            ToolbarItem(placement: .primaryAction) {
-                Menu {
-                    if isBakeEnabled {
-                        Button {
-                            showingBakeEditor = true
-                        } label: {
-                            Label("Nuovo impasto", image: "navbar-bake")
-                        }
-                    }
-                    if isStarterEnabled {
-                        Button {
-                            showingStarterEditor = true
-                        } label: {
-                            Label("Nuovo starter", image: "navbar-starter")
-                        }
-                    }
-                    if isKefirEnabled {
-                        Button {
-                            kefirEditorMode = .create
-                        } label: {
-                            Label("Nuovo batch kefir", systemImage: "drop.fill")
-                        }
-                    }
+            ToolbarItem(placement: .topBarTrailing) {
+                Button {
+                    showingSettings = true
                 } label: {
-                    Image(systemName: "plus")
-                        .font(.system(size: 16, weight: .bold))
-                        .foregroundStyle(Theme.Control.primaryFill)
-                        .padding(8)
-                        .background(Theme.Surface.card)
-                        .clipShape(Circle())
-                        .shadow(color: Theme.Shadow.card, radius: 4, y: 2)
-                        .squircleBorder(Theme.Border.defaultColor)
+                    Image(systemName: "ellipsis")
+                        .rotationEffect(.degrees(90))
+                        .accessibilityLabel("Impostazioni")
                 }
             }
         }
-        .accessibilityIdentifier("FermentationsView")
+        .sheet(isPresented: $showingSettings) {
+            NavigationStack {
+                SettingsView()
+            }
+        }
         .sheet(isPresented: $showingBakeEditor) {
             NavigationStack {
                 BakeCreationView(preselectedFormula: nil)
@@ -117,16 +96,38 @@ struct FermentationsView: View {
         }
     }
 
+
+
     // MARK: - Dashboard Header
 
     private var dashboardHeader: some View {
-        VStack(alignment: .leading, spacing: 4) {
-            Text("Fermenti attivi")
-                .font(Theme.Typography.headline)
-                .foregroundStyle(Theme.Text.primary)
-            Text("Tieni traccia delle tue fermentazioni in corso")
-                .font(Theme.Typography.subheadline)
-                .foregroundStyle(Theme.Text.secondary)
+        SectionCard(emphasis: .tinted) {
+            ScreenTitleBlock(
+                title: "Batch",
+                subtitle: "I tuoi batch attivi."
+            )
+            .padding(.bottom, Theme.Spacing.xs)
+
+            Menu {
+                if isBakeEnabled {
+                    Button { showingBakeEditor = true } label: {
+                        Label("Nuovo impasto", image: "navbar-bake")
+                    }
+                }
+                if isStarterEnabled {
+                    Button { showingStarterEditor = true } label: {
+                        Label("Nuovo starter", image: "navbar-starter")
+                    }
+                }
+                if isKefirEnabled {
+                    Button { kefirEditorMode = .create } label: {
+                        Label("Nuovo batch kefir", systemImage: "drop.fill")
+                    }
+                }
+            } label: {
+                Label("Nuova preparazione", systemImage: "plus")
+            }
+            .buttonStyle(PrimaryActionButtonStyle())
         }
     }
 
@@ -139,7 +140,7 @@ struct FermentationsView: View {
             badge: bakesBadge,
             rows: bakesRows,
             isEmpty: activeBakes.isEmpty,
-            emptyMessage: "Nessun attivo",
+            emptyMessage: "Crea un impasto",
             onTap: { router.fermentationsPath.append(.bakesList) },
             onEmptyCTA: { showingBakeEditor = true }
         )
@@ -153,7 +154,7 @@ struct FermentationsView: View {
             badge: startersBadge,
             rows: starterRows,
             isEmpty: starters.isEmpty,
-            emptyMessage: "Crea il primo",
+            emptyMessage: "Aggiungi starter",
             onTap: { router.fermentationsPath.append(.starterList) },
             onEmptyCTA: { showingStarterEditor = true }
         )
@@ -167,7 +168,7 @@ struct FermentationsView: View {
             badge: kefirBadge,
             rows: kefirRows,
             isEmpty: kefirBatches.isEmpty,
-            emptyMessage: "Attiva batch",
+            emptyMessage: "Crea batch",
             onTap: { router.fermentationsPath.append(.kefirHub) },
             onEmptyCTA: { kefirEditorMode = .create }
         )
@@ -181,7 +182,7 @@ struct FermentationsView: View {
             badge: formulas.isEmpty ? nil : "\(formulas.count)",
             rows: formulasRows,
             isEmpty: formulas.isEmpty,
-            emptyMessage: "Crea ricetta",
+            emptyMessage: "Aggiungi ricetta",
             onTap: { router.fermentationsPath.append(.formulaList) },
             onEmptyCTA: { /* Could trigger formula creation */ }
         )
@@ -194,7 +195,7 @@ struct FermentationsView: View {
         guard !activeBakes.isEmpty else { return [] }
         return [
             .init(
-                icon: "loaf.fill",
+                icon: "fork.knife",
                 label: "\(activeBakes.count) in corso"
             )
         ]
@@ -226,7 +227,7 @@ struct FermentationsView: View {
         guard kefirBatches.isEmpty == false else { return [] }
         var rows: [FermentHubTile.Row] = []
         if kefirBatches.warningKefirCount > 0 {
-            rows.append(.init(icon: "exclamationmark.circle.fill", label: "\(kefirBatches.warningKefirCount) attenzione", tone: .warning))
+            rows.append(.init(icon: "exclamationmark.circle.fill", label: "\(kefirBatches.warningKefirCount) da rinnovare", tone: .warning))
         }
         if kefirBatches.activeKefirCount > 0 {
             rows.append(.init(icon: "checkmark.circle.fill", label: "\(kefirBatches.activeKefirCount) in corso", tone: .ok))
@@ -254,8 +255,6 @@ struct FermentationsView: View {
 
     // MARK: - Empty States
 
-    @State private var showingSettings = false
-
     private var allDisabledEmptyState: some View {
         EmptyStateView(
             title: "Nessuna sezione attiva",
@@ -263,11 +262,6 @@ struct FermentationsView: View {
             actionTitle: "Apri impostazioni"
         ) {
             showingSettings = true
-        }
-        .sheet(isPresented: $showingSettings) {
-            NavigationStack {
-                SettingsView()
-            }
         }
     }
 }
@@ -304,7 +298,7 @@ private struct FermentHubTile: View {
 
     var body: some View {
         SectionCard(emphasis: .tinted) {
-            VStack(alignment: .leading, spacing: 14) {
+            VStack(alignment: .leading, spacing: Theme.Spacing.md) {
                 HStack(alignment: .top) {
                     tileIcon
                     Spacer()
@@ -313,7 +307,7 @@ private struct FermentHubTile: View {
                     }
                 }
 
-                VStack(alignment: .leading, spacing: 4) {
+                VStack(alignment: .leading, spacing: Theme.Spacing.xxs) {
                     Text(title)
                         .font(Theme.Typography.headline)
                         .foregroundStyle(Theme.Text.primary)
@@ -324,11 +318,11 @@ private struct FermentHubTile: View {
                             .font(Theme.Typography.caption1)
                             .foregroundStyle(Theme.Text.secondary)
                     } else {
-                        VStack(alignment: .leading, spacing: 4) {
+                        VStack(alignment: .leading, spacing: Theme.Spacing.xxs) {
                             ForEach(rows.prefix(2), id: \.label) { row in
-                                HStack(spacing: 4) {
+                                HStack(spacing: Theme.Spacing.xxs) {
                                     Image(systemName: row.icon)
-                                        .font(.system(size: 10, weight: .bold))
+                                        .font(Theme.Typography.caption2.weight(.semibold))
                                         .foregroundStyle(rowColor(row.tone))
                                     Text(row.label)
                                         .font(Theme.Typography.caption2)
@@ -340,7 +334,7 @@ private struct FermentHubTile: View {
                     }
                 }
             }
-            .padding(.vertical, 4)
+            .padding(.vertical, Theme.Spacing.xxs)
             .frame(maxWidth: .infinity, alignment: .leading)
         }
         .contentShape(Rectangle())
@@ -350,7 +344,7 @@ private struct FermentHubTile: View {
     private func rowColor(_ tone: Row.Tone) -> Color {
         switch tone {
         case .default: return Theme.Text.secondary
-        case .warning: return Theme.Palette.amber800
+        case .warning: return Theme.Control.secondaryForeground
         case .ok: return Theme.Palette.green600
         }
     }

@@ -2,16 +2,15 @@
 description: 
 alwaysApply: true
 ---
+# CLAUDE.md — Batch
 
-# CLAUDE.md — Levain
-
-This file is the single source of context for AI-assisted development of Levain. It is derived from `docs/levain-prd-complete-v2.md`, the `.planning/` folder, and the current state of the codebase.
+This file is the stable AI contributor context for Batch. It is derived from `docs/levain-prd-complete-v2.md`, the `.planning/` folder, and the current state of the codebase.
 
 ---
 
 ## What This App Is
 
-A **native iPhone-only planner** for sourdough starter management and real-world baking execution. The central question the app must answer at all times is: **"What do I need to do now?"**
+A native iPhone-only planner for real-world fermentation execution. The public product name is **Batch**; internal targets, modules, and identifiers may still use `Levain` until a dedicated technical rename wave.
 
 This is **not** a recipe manager, not a social app, not an AI assistant. It is a focused operational tool for one person.
 
@@ -34,7 +33,8 @@ This is **not** a recipe manager, not a social app, not an AI assistant. It is a
 | Cloud sync | None |
 
 Bundle ID: `com.lorentso.levain`
-Product name: `Levain`
+Display name: `Batch`
+Internal target/module name: `Levain`
 Version: `0.1.0`
 
 ---

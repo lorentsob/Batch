@@ -17,7 +17,13 @@ final class KnowledgeLoaderTests: XCTestCase {
         let starterBasics = items.first { $0.id == "starter-basics" }
         XCTAssertNotNil(starterBasics)
         XCTAssertEqual(starterBasics?.category, .starter)
+        XCTAssertTrue(starterBasics?.aliases.contains("lievito madre") ?? false)
         XCTAssertTrue(starterBasics?.relatedStepTypes.contains(BakeStepType.starterRefresh.rawValue) ?? false)
+
+        let apprettoGuide = items.first { $0.id == "appretto-guide" }
+        XCTAssertNotNil(apprettoGuide)
+        XCTAssertEqual(apprettoGuide?.category, .fermentation)
+        XCTAssertTrue(apprettoGuide?.aliases.contains("final proof") ?? false)
     }
     
     @MainActor
@@ -27,6 +33,9 @@ final class KnowledgeLoaderTests: XCTestCase {
         
         library.loadIfNeeded()
         XCTAssertFalse(library.items.isEmpty)
+        XCTAssertEqual(library.item(matchingGlossaryTerm: "prima lievitazione")?.id, "bulk-fermentation-basics")
+        XCTAssertEqual(library.item(matchingGlossaryTerm: "second rise")?.id, "appretto-guide")
+        XCTAssertEqual(library.item(matchingGlossaryTerm: "stretch & fold")?.id, "pieghe-guide")
         
         // Second load shouldn't duplicate
         let count = library.items.count

@@ -102,7 +102,8 @@ final class BakeStep {
     }
 
     var displayName: String {
-        nameOverride.isEmpty ? type.title : nameOverride
+        if nameOverride == "Starter pronto" { return "Rinfresca starter" }
+        return nameOverride.isEmpty ? type.title : nameOverride
     }
 
     var isTerminal: Bool {

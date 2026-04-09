@@ -443,7 +443,7 @@ enum TodayAgendaBuilder {
         case .roomTemperature:
             switch state {
             case .overdue:
-                return "Routine fuori finestra · soglia \(dueLabel)"
+                return "Rinfresca questo batch il prima possibile"
             case .dueSoon, .dueNow:
                 return "Da rinnovare entro \(dueLabel)"
             case .active:
@@ -515,7 +515,7 @@ enum TodayAgendaBuilder {
                 stepStatus: step.status,
                 timerPhase: step.timerPhase(now: now),
                 isOverdue: step.isOverdue(now: now),
-                primaryActionTitle: "Apri bake",
+                primaryActionTitle: "Apri impasto",
                 presentationStyle: .tomorrowPreview,
                 windowStart: step.isWindowBased ? step.windowStart : nil,
                 windowEnd: step.isWindowBased ? step.windowEnd : nil

@@ -1,4 +1,4 @@
-# Guida completa al workflow contenuti di Levain
+# Guida completa al workflow contenuti di Batch
 
 ## Obiettivo
 
@@ -906,4 +906,3 @@ Se devi aggiungere contenuti nuovi, la procedura corretta è sempre questa:
 6. fai caricare all’app solo quei JSON
 
 Questo è il workflow da considerare standard per il progetto Levain.
-

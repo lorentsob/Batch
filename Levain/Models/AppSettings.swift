@@ -5,6 +5,7 @@ import SwiftData
 final class AppSettings {
     @Attribute(.unique) var id: UUID
     var didSeedSampleData: Bool = false
+    var didSeedSystemFormulas: Bool = false
     var lastNotificationSync: Date?
     var hasRequestedNotificationPermission: Bool = false
     var isBakeEnabled: Bool = true
@@ -14,6 +15,7 @@ final class AppSettings {
     init(
         id: UUID = UUID(),
         didSeedSampleData: Bool = false,
+        didSeedSystemFormulas: Bool = false,
         lastNotificationSync: Date? = nil,
         hasRequestedNotificationPermission: Bool = false,
         isBakeEnabled: Bool = true,
@@ -22,6 +24,7 @@ final class AppSettings {
     ) {
         self.id = id
         self.didSeedSampleData = didSeedSampleData
+        self.didSeedSystemFormulas = didSeedSystemFormulas
         self.lastNotificationSync = lastNotificationSync
         self.hasRequestedNotificationPermission = hasRequestedNotificationPermission
         self.isBakeEnabled = isBakeEnabled

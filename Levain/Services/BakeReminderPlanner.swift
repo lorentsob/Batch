@@ -29,7 +29,7 @@ enum BakeReminderPlanner {
                 BakeReminder(
                     identifier: identifier(for: bake, step: step, phase: .start),
                     title: "\(step.displayName) · \(bake.name)",
-                    body: step.status == .running ? "Lo step è in corso." : "È il momento di controllare questo passaggio.",
+                    body: step.status == .running ? "Questo passaggio è in corso. Apri l'impasto per aggiornarlo." : "È il momento di intervenire su questo passaggio. Apri l'impasto per continuare.",
                     route: AppRouter.DeepLink.bake(id: bake.id, stepID: step.id),
                     fireDate: fireDate
                 )
@@ -53,7 +53,7 @@ enum BakeReminderPlanner {
                 BakeReminder(
                     identifier: identifier(for: bake, step: step, phase: .start),
                     title: "\(step.displayName) · \(bake.name)",
-                    body: "Il tuo impasto è pronto per la prossima azione.",
+                    body: "Il tuo impasto è pronto per il prossimo passaggio. Aprilo per continuare.",
                     route: AppRouter.DeepLink.bake(id: bake.id, stepID: step.id),
                     fireDate: step.windowStart
                 )
@@ -65,7 +65,7 @@ enum BakeReminderPlanner {
                 BakeReminder(
                     identifier: identifier(for: bake, step: step, phase: .windowClose),
                     title: "\(step.displayName) · \(bake.name)",
-                    body: "La finestra si sta chiudendo.",
+                    body: "La finestra utile sta per chiudersi. Apri l'impasto se devi intervenire ora.",
                     route: AppRouter.DeepLink.bake(id: bake.id, stepID: step.id),
                     fireDate: step.windowEnd
                 )

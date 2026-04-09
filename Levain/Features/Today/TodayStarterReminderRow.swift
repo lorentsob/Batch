@@ -5,54 +5,57 @@ struct TodayStarterReminderRow: View {
     let urgency: TodayAgendaItem.Urgency
     let action: () -> Void
 
-    private var isUrgent: Bool { urgency == .overdue || urgency == .warning }
+    private var isUrgent: Bool { urgency == .overdue }
 
     var body: some View {
-        Group {
-            if isUrgent {
-                SectionCard {
-                    content(titleFont: .headline, subtitleFont: .subheadline, badgeTone: .danger)
-                    Button(item.actionTitle) {
-                        action()
+        SectionCard {
+            VStack(alignment: .leading, spacing: Theme.Spacing.md) {
+                HStack(alignment: .top, spacing: Theme.Spacing.sm) {
+                    VStack(alignment: .leading, spacing: Theme.Spacing.xxs) {
+                        Text(item.title)
+                            .font(Theme.Typography.headline)
+                            .foregroundStyle(Theme.Text.primary)
+                            .fixedSize(horizontal: false, vertical: true)
+                            .layoutPriority(1)
+
+                        Text(item.subtitle)
+                            .font(Theme.Typography.caption1Semibold)
+                            .foregroundStyle(isUrgent ? Theme.Text.onDanger : Theme.Control.secondaryForeground)
+                            .fixedSize(horizontal: false, vertical: true)
                     }
-                    .buttonStyle(PrimaryActionButtonStyle())
+
+                    Spacer(minLength: Theme.Spacing.xs)
+
+                    StateBadge(text: item.state, tone: badgeTone)
                 }
-            } else {
-                HStack(alignment: .center, spacing: 14) {
-                    content(titleFont: .subheadline.weight(.semibold), subtitleFont: .footnote, badgeTone: .schedule)
-                    Button(item.actionTitle) {
-                        action()
-                    }
-                    .buttonStyle(SecondaryActionButtonStyle())
-                }
-                .padding(16)
-                .frame(maxWidth: .infinity, alignment: .leading)
-                .background(
-                    RoundedRectangle(cornerRadius: Theme.Radius.nestedCard, style: .continuous)
-                        .fill(Theme.Surface.card)
-                )
-                .overlay(
-                    RoundedRectangle(cornerRadius: Theme.Radius.nestedCard, style: .continuous)
-                        .stroke(Theme.Border.defaultColor, lineWidth: 1)
-                )
+
+                actionButton
             }
         }
+        .overlay(overdueOutline)
+    }
+
+    private var badgeTone: StateBadge.Tone {
+        isUrgent ? .overdue : .pending
+    }
+
+    private var overdueOutline: some View {
+        RoundedRectangle(cornerRadius: Theme.Radius.card, style: .continuous)
+            .stroke(Theme.Border.danger, lineWidth: isUrgent ? 1.5 : 0)
     }
 
     @ViewBuilder
-    private func content(titleFont: Font, subtitleFont: Font, badgeTone: StateBadge.Tone) -> some View {
-        HStack(alignment: .top, spacing: 12) {
-            VStack(alignment: .leading, spacing: 6) {
-                Text(item.title)
-                    .font(titleFont)
-                    .foregroundStyle(Theme.ink)
-                Text(item.subtitle)
-                    .font(subtitleFont)
-                    .foregroundStyle(Theme.muted)
+    private var actionButton: some View {
+        if isUrgent {
+            Button(item.actionTitle) {
+                action()
             }
-
-            Spacer()
-            StateBadge(text: item.state, tone: badgeTone)
+            .buttonStyle(DangerActionButtonStyle())
+        } else {
+            Button(item.actionTitle) {
+                action()
+            }
+            .buttonStyle(SecondaryActionButtonStyle())
         }
     }
 }

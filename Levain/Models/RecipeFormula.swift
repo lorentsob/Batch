@@ -20,7 +20,11 @@ final class RecipeFormula {
     var ingredients: String?
     var procedure: String?
     var bakingInstructions: String?
-    private var defaultStepsPayload: Data
+    /// Internal (not `private`) so SwiftData change tracking propagates when steps are edited.
+    var defaultStepsPayload: Data
+    var isSystemFormula: Bool = false
+    var isModifiedFromDefault: Bool = false
+    var isArchived: Bool = false
 
     @Relationship(inverse: \Bake.formula)
     var bakes: [Bake]
@@ -41,7 +45,9 @@ final class RecipeFormula {
         defaultSteps: [FormulaStepTemplate] = FormulaStepTemplate.defaultBreadSteps,
         ingredients: String = "",
         procedure: String = "",
-        bakingInstructions: String = ""
+        bakingInstructions: String = "",
+        isSystemFormula: Bool = false,
+        isModifiedFromDefault: Bool = false
     ) {
         self.id = id
         self.name = name
@@ -61,6 +67,8 @@ final class RecipeFormula {
         self.ingredients = ingredients
         self.procedure = procedure
         self.bakingInstructions = bakingInstructions
+        self.isSystemFormula = isSystemFormula
+        self.isModifiedFromDefault = isModifiedFromDefault
         self.bakes = []
     }
 
@@ -104,7 +112,9 @@ final class RecipeFormula {
             defaultSteps: defaultSteps.map { FormulaStepTemplate(id: UUID(), type: $0.type, name: $0.name, details: $0.details, durationMinutes: $0.durationMinutes, reminderOffsetMinutes: $0.reminderOffsetMinutes, temperatureRange: $0.temperatureRange, volumeTarget: $0.volumeTarget, notes: $0.notes, ingredients: $0.ingredients) },
             ingredients: ingredients ?? "",
             procedure: procedure ?? "",
-            bakingInstructions: bakingInstructions ?? ""
+            bakingInstructions: bakingInstructions ?? "",
+            isSystemFormula: false,
+            isModifiedFromDefault: false
         )
     }
 

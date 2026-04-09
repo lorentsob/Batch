@@ -7,10 +7,11 @@ struct SystemFormulaLoaderTests {
     func testBundledSystemFormulasLoad() {
         let formulas = SystemFormulaLoader.loadSystemFormulas()
 
-        #expect(formulas.count == 5)
+        #expect(formulas.count == 6)
         #expect(formulas.contains(where: { $0.name == "Bagel" }))
         #expect(formulas.contains(where: { $0.name == "Focaccia Tiktok" }))
         #expect(formulas.contains(where: { $0.name == "Pan Brioche" }))
+        #expect(formulas.contains(where: { $0.name == "Pan Brioche (lievito di birra)" }))
         #expect(formulas.contains(where: { $0.name == "Pizza in giornata" }))
         #expect(formulas.contains(where: { $0.name == "Potato Buns" }))
         #expect(formulas.allSatisfy { $0.defaultSteps.isEmpty == false })

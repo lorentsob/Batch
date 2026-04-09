@@ -10,7 +10,7 @@ final class LifecycleUITests: XCTestCase {
         let app = XCUIApplication()
         app.launchEmpty()
 
-        XCTAssertTrue(app.tabBars.buttons["Home"].waitForExistence(timeout: 8))
+        XCTAssertTrue(app.tabBars.buttons["Oggi"].waitForExistence(timeout: 8))
         XCTAssertTrue(app.scrollViews["TodayScrollView"].waitForExistence(timeout: 8))
     }
 
@@ -18,15 +18,15 @@ final class LifecycleUITests: XCTestCase {
         let app = XCUIApplication()
         app.launchPersistentSuppressingNotifications()
 
-        XCTAssertTrue(app.tabBars.buttons["Home"].waitForExistence(timeout: 8))
+        XCTAssertTrue(app.tabBars.buttons["Oggi"].waitForExistence(timeout: 8))
         XCTAssertTrue(app.scrollViews["TodayScrollView"].waitForExistence(timeout: 8))
     }
 
-    func testColdLaunchWithDeniedNotificationsStillShowsHome() throws {
+    func testColdLaunchWithDeniedNotificationsStillShowsOggi() throws {
         let app = XCUIApplication()
         app.launchPersistent(forceNotificationsDenied: true)
 
-        XCTAssertTrue(app.tabBars.buttons["Home"].waitForExistence(timeout: 8))
+        XCTAssertTrue(app.tabBars.buttons["Oggi"].waitForExistence(timeout: 8))
         XCTAssertTrue(app.scrollViews["TodayScrollView"].waitForExistence(timeout: 8))
     }
 
@@ -34,14 +34,14 @@ final class LifecycleUITests: XCTestCase {
         let app = XCUIApplication()
         app.launchEmpty()
 
-        XCTAssertTrue(app.tabBars.buttons["Impasti"].waitForExistence(timeout: 5))
-        app.tabBars.buttons["Impasti"].tap()
-        XCTAssertTrue(app.descendants(matching: .any).matching(identifier: "BakesScrollView").firstMatch.waitForExistence(timeout: 8))
+        XCTAssertTrue(app.tabBars.buttons["Batch"].waitForExistence(timeout: 5))
+        app.tabBars.buttons["Batch"].tap()
+        XCTAssertTrue(app.descendants(matching: .any).matching(identifier: "FermentationsView").firstMatch.waitForExistence(timeout: 8))
 
         app.terminate()
         app.launchEmpty()
 
-        XCTAssertTrue(app.tabBars.buttons["Home"].waitForExistence(timeout: 8))
+        XCTAssertTrue(app.tabBars.buttons["Oggi"].waitForExistence(timeout: 8))
         XCTAssertTrue(app.scrollViews["TodayScrollView"].waitForExistence(timeout: 8))
     }
 
@@ -50,7 +50,7 @@ final class LifecycleUITests: XCTestCase {
         let route = "levain://starter/\(UUID().uuidString)"
         app.launchSeededWithPendingNotificationRoute(route)
 
-        XCTAssertTrue(app.tabBars.buttons["Starter"].waitForExistence(timeout: 8))
+        XCTAssertTrue(app.tabBars.buttons["Batch"].waitForExistence(timeout: 8))
         XCTAssertTrue(app.scrollViews["StarterScrollView"].waitForExistence(timeout: 8))
     }
 }

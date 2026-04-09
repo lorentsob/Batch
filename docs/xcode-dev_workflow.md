@@ -15,7 +15,7 @@ The agent must:
 7. Do NOT change target structure unless required
 8. Do NOT change Release configuration
 
-Project: Levain iOS app
+Project: Batch iOS app
 IDE: Xcode
 Language: Swift / SwiftUI
 

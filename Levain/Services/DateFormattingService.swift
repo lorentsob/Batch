@@ -1,6 +1,8 @@
 import Foundation
 
 enum DateFormattingService {
+    private static let calendar = Calendar.current
+
     private static let timeFormatter: DateFormatter = {
         let formatter = DateFormatter()
         formatter.locale = Locale(identifier: "it_IT")
@@ -39,7 +41,7 @@ enum DateFormattingService {
 
     /// Mostra solo HH:mm se la data è oggi, altrimenti "d MMM · HH:mm" (senza abbreviazione giorno)
     static func smartDayTime(_ date: Date) -> String {
-        if Calendar.current.isDateInToday(date) {
+        if calendar.isDateInToday(date) {
             return timeFormatter.string(from: date)
         }
         return shortDayTimeFormatter.string(from: date)
