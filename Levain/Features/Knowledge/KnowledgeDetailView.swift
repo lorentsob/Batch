@@ -53,9 +53,9 @@ struct KnowledgeDetailView: View {
                     }
                 }
             }
-            .padding(.horizontal, Theme.Layout.screenHorizontalInset)
+            .padding(.horizontal, Theme.Spacing.md)
             .padding(.top, Theme.Spacing.xl)
-            .padding(.bottom, Theme.Layout.screenBottomInset)
+            .padding(.bottom, Theme.Spacing.xl)
         } else {
             VStack(alignment: .leading, spacing: 24) {
                 headerBlock
