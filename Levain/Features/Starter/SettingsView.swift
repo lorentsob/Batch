@@ -23,7 +23,7 @@ struct SettingsView: View {
         Form {
             if let settings = appSettings {
                 Section("Sezioni attive") {
-                    Text("Attiva o disattiva le sezioni. Le sezioni disattivate non compaiono in Home o in Fermenti.")
+                    Text("Attiva o disattiva le sezioni. Le sezioni disattivate non compaiono in Oggi o in Batch.")
                         .font(.footnote)
                         .foregroundStyle(Theme.muted)
 
@@ -87,7 +87,7 @@ struct SettingsView: View {
             }
 
             Section("Contenuto incluso") {
-                Text("Starter, rinfreschi, ricette salvate, bake e step.")
+                Text("Starter, rinfreschi, ricette salvate, impasti e fasi.")
                 Text("Non include knowledge, template di sistema o flag tecnici interni.")
                     .foregroundStyle(Theme.muted)
             }
@@ -127,7 +127,7 @@ struct SettingsView: View {
                 restoreBackup(from: url)
             }
         } message: { _ in
-            Text("L'import sostituirà starter, ricette, bake e step attuali con il contenuto del backup selezionato.")
+            Text("L'import sostituirà starter, ricette, impasti e fasi attuali con il contenuto del backup selezionato.")
         }
         .alert("Operazione non riuscita", isPresented: Binding(
             get: { errorMessage != nil },
