@@ -83,7 +83,7 @@ struct BreadHubView: View {
         }
         .sheet(isPresented: $showingFormulaEditor) {
             NavigationStack {
-                FormulaEditorView(formula: nil)
+                FormulaEditorView(formula: nil, onSaved: {})
             }
         }
         .accessibilityIdentifier("BreadHubView")

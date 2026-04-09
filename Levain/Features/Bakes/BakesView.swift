@@ -213,7 +213,7 @@ struct BakesView: View {
         }
         .sheet(isPresented: $showingFormulaEditor) {
             NavigationStack {
-                FormulaEditorView(formula: editingFormula)
+                FormulaEditorView(formula: editingFormula, onSaved: {})
             }
         }
         .sheet(isPresented: $showingBakeEditor) {

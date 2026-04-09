@@ -325,13 +325,19 @@ struct BakeCreationView: View {
 
         let formula = selectedFormulaChoice.makeTransientFormula()
 
+        // Apply yeast conversion weights to the transient formula when converting sourdough → commercial
+        if let conversion = computedYeastConversion, selectedFormulaChoice.yeastType == .sourdough {
+            formula.totalFlourWeight = conversion.newTotalFlourWeight
+            formula.totalWaterWeight = conversion.newTotalWaterWeight
+            formula.recalculateDerivedValues()
+        }
+
         let bake = BakeScheduler.generateBake(
             name: resolvedName,
             targetBakeDateTime: targetBakeDateTime,
             formula: formula,
             starter: useCommercialYeast ? nil : selectedStarter,
-            notes: notes,
-            yeastConversion: computedYeastConversion
+            notes: notes
         )
 
         if selectedFormulaChoice.isSystem {

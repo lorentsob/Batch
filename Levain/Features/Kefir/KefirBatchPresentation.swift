@@ -306,7 +306,7 @@ extension KefirBatch {
         }
     }
 
-    var cardEmphasis: SectionCard<EmptyView>.Emphasis {
+    var cardEmphasis: SectionCardEmphasis {
         switch derivedState {
         case .overdue:
             .danger

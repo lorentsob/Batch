@@ -165,7 +165,7 @@ struct FormulaDetailView: View {
         }
         .sheet(isPresented: $showingFormulaEditor) {
             NavigationStack {
-                FormulaEditorView(formula: formula)
+                FormulaEditorView(formula: formula, onSaved: {})
             }
         }
         .sheet(isPresented: $showingBakeEditor) {
