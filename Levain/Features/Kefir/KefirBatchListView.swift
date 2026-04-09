@@ -11,7 +11,7 @@ struct KefirBatchListView: View {
         ForEach(batches.kefirSections) { section in
             if section.kind == .archived {
                 archiveSectionHeader(section)
-                    .listRowInsets(.init(top: 8, leading: 20, bottom: 4, trailing: 20))
+                    .listRowInsets(.levainListRow(top: Theme.Spacing.xs, bottom: Theme.Spacing.xxs))
                     .listRowBackground(Color.clear)
                     .listRowSeparator(.hidden)
 
@@ -20,7 +20,7 @@ struct KefirBatchListView: View {
                 }
             } else {
                 sectionHeader(section)
-                    .listRowInsets(.init(top: 8, leading: 20, bottom: 4, trailing: 20))
+                    .listRowInsets(.levainListRow(top: Theme.Spacing.xs, bottom: Theme.Spacing.xxs))
                     .listRowBackground(Color.clear)
                     .listRowSeparator(.hidden)
 
@@ -48,7 +48,7 @@ struct KefirBatchListView: View {
                     .accessibilityIdentifier("KefirBatchSwipeArchive-\(batch.id)")
                 }
             }
-            .listRowInsets(.init(top: 0, leading: 20, bottom: 12, trailing: 20))
+            .listRowInsets(.levainListRow(bottom: Theme.Spacing.xs))
             .listRowBackground(Color.clear)
             .listRowSeparator(.hidden)
         }
@@ -57,8 +57,8 @@ struct KefirBatchListView: View {
     private func sectionHeader(_ section: KefirBatchSectionModel) -> some View {
         HStack {
             Text(section.kind.title)
-                .font(.headline)
-                .foregroundStyle(Theme.ink)
+                .font(Theme.Typography.headline)
+                .foregroundStyle(Theme.Text.primary)
             Spacer()
             StateBadge(text: "\(section.batches.count)", tone: .count)
         }
@@ -73,13 +73,13 @@ struct KefirBatchListView: View {
         } label: {
             HStack {
                 Text(section.kind.title)
-                    .font(.headline)
-                    .foregroundStyle(Theme.ink)
+                    .font(Theme.Typography.headline)
+                    .foregroundStyle(Theme.Text.primary)
                 Spacer()
                 StateBadge(text: "\(section.batches.count)", tone: .count)
                 Image(systemName: isArchiveExpanded ? "chevron.up" : "chevron.down")
                     .font(.footnote.weight(.semibold))
-                    .foregroundStyle(Theme.muted)
+                    .foregroundStyle(Theme.Text.secondary)
             }
         }
         .buttonStyle(.plain)

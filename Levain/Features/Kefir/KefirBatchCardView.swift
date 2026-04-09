@@ -39,39 +39,33 @@ struct KefirBatchCardView: View {
 
     @ViewBuilder
     private var sectionCard: some View {
-        if batch.derivedState == .overdue {
-            SectionCard(emphasis: .danger) {
-                cardContent
-            }
-        } else if batch.sectionKind == .warning {
-            SectionCard(emphasis: .tinted) {
-                cardContent
-            }
-        } else {
-            SectionCard {
-                cardContent
-            }
+        SectionCard(emphasis: cardEmphasis) {
+            cardContent
         }
+        .overlay(overdueOutline)
     }
 
     private var cardContent: some View {
-        VStack(alignment: .leading, spacing: 14) {
+        VStack(alignment: .leading, spacing: Theme.Spacing.md) {
             HStack(alignment: .top, spacing: 12) {
                 VStack(alignment: .leading, spacing: 8) {
                     Text(batch.name)
-                        .font(.headline)
-                        .foregroundStyle(Theme.ink)
+                        .font(Theme.Typography.headline)
+                        .foregroundStyle(Theme.Text.primary)
+                        .layoutPriority(1)
 
                     if let contextSummary = batch.contextSummary {
                         Text(contextSummary)
-                            .font(.subheadline)
-                            .foregroundStyle(Theme.muted)
+                            .font(Theme.Typography.subheadline)
+                            .foregroundStyle(Theme.Text.secondary)
+                            .fixedSize(horizontal: false, vertical: true)
                     }
 
                     if let lineageCardSummary = lineageSummary.cardSummary {
                         Text(lineageCardSummary)
-                            .font(.footnote.weight(.medium))
-                            .foregroundStyle(Theme.muted)
+                            .font(Theme.Typography.footnoteSemibold)
+                            .foregroundStyle(Theme.Text.tertiary)
+                            .fixedSize(horizontal: false, vertical: true)
                     }
                 }
 
@@ -88,7 +82,7 @@ struct KefirBatchCardView: View {
 
             HStack(spacing: 8) {
                 StateBadge(kefirState: batch.derivedState)
-                StateBadge(text: batch.storageMode.title, tone: .schedule)
+                StateBadge(text: batch.storageMode.title, tone: .info)
                 if batch.sourceBatchId != nil {
                     StateBadge(text: "Derivato", tone: .info)
                 }
@@ -98,16 +92,32 @@ struct KefirBatchCardView: View {
             }
 
             LazyVGrid(columns: metricColumns, alignment: .leading, spacing: 8) {
-                MetricChip(label: "Ultima gestione", value: batch.lastManagedSummary, tone: .schedule)
+                MetricChip(label: "Ultimo rinfresco", value: batch.lastManagedSummary, tone: .done)
                 MetricChip(label: batch.nextManagementLabel, value: batch.nextManagementSummary, tone: batch.nextManagementTone)
             }
 
             Text(batch.operationalSummary)
-                .font(.footnote)
-                .foregroundStyle(Theme.muted)
+                .font(Theme.Typography.footnote)
+                .foregroundStyle(batch.derivedState == .overdue ? Theme.Text.onDanger : Theme.Text.secondary)
                 .fixedSize(horizontal: false, vertical: true)
 
             primaryCTA
         }
+    }
+
+    private var cardEmphasis: SectionCardEmphasis {
+        switch batch.derivedState {
+        case .overdue:
+            return .surface
+        case .dueSoon, .dueNow:
+            return .tinted
+        case .active, .pausedFridge, .pausedFreezer, .archived:
+            return .surface
+        }
+    }
+
+    private var overdueOutline: some View {
+        RoundedRectangle(cornerRadius: Theme.Radius.card, style: .continuous)
+            .stroke(Theme.Border.danger, lineWidth: batch.derivedState == .overdue ? 1.5 : 0)
     }
 }

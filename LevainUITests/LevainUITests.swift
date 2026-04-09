@@ -83,8 +83,8 @@ final class LevainUITests: XCTestCase {
         app.launchEmpty()
 
         XCTAssertTrue(app.tabBars.buttons["Oggi"].waitForExistence(timeout: 5))
-        XCTAssertTrue(app.tabBars.buttons["Preparazioni"].exists)
-        XCTAssertTrue(app.tabBars.buttons["Conoscenza"].exists)
+        XCTAssertTrue(app.tabBars.buttons["Batch"].exists)
+        XCTAssertTrue(app.tabBars.buttons["Guide"].exists)
         XCTAssertFalse(app.tabBars.buttons["Impasti"].exists)
         XCTAssertFalse(app.tabBars.buttons["Starter"].exists)
     }
@@ -96,10 +96,10 @@ final class LevainUITests: XCTestCase {
         XCTAssertTrue(app.tabBars.buttons["Oggi"].waitForExistence(timeout: 5))
         XCTAssertTrue(app.scrollViews["TodayScrollView"].waitForExistence(timeout: 5))
 
-        app.tabBars.buttons["Preparazioni"].tap()
-        XCTAssertTrue(app.descendants(matching: .any).matching(identifier: "PreparationsView").firstMatch.waitForExistence(timeout: 5))
+        app.tabBars.buttons["Batch"].tap()
+        XCTAssertTrue(app.descendants(matching: .any).matching(identifier: "FermentationsView").firstMatch.waitForExistence(timeout: 5))
 
-        app.tabBars.buttons["Conoscenza"].tap()
+        app.tabBars.buttons["Guide"].tap()
         XCTAssertTrue(app.descendants(matching: .any).matching(identifier: "KnowledgeScrollView").firstMatch.waitForExistence(timeout: 5))
 
         app.tabBars.buttons["Oggi"].tap()
@@ -112,24 +112,23 @@ final class LevainUITests: XCTestCase {
 
         app.tabBars.buttons["Oggi"].tap()
         XCTAssertTrue(app.scrollViews["TodayScrollView"].waitForExistence(timeout: 5))
-        XCTAssertTrue(app.staticTexts["Inizia il tuo primo bake"].waitForExistence(timeout: 5))
+        XCTAssertTrue(app.staticTexts["Inizia con il primo impasto"].waitForExistence(timeout: 5))
     }
 
     func testSeededLaunchHasAtLeastOneResult() throws {
         let app = XCUIApplication()
         app.launchSeeded()
 
-        let preparazioniTab = app.tabBars.buttons["Preparazioni"]
-        XCTAssertTrue(preparazioniTab.waitForExistence(timeout: 5))
-        preparazioniTab.tap()
+        let batchTab = app.tabBars.buttons["Batch"]
+        XCTAssertTrue(batchTab.waitForExistence(timeout: 5))
+        batchTab.tap()
 
-        XCTAssertTrue(app.descendants(matching: .any).matching(identifier: "BreadHubCard").firstMatch.waitForExistence(timeout: 8))
-
-        app.descendants(matching: .any).matching(identifier: "BreadHubCard").firstMatch.tap()
-        app.descendants(matching: .any).matching(identifier: "BreadHubImpastiRow").firstMatch.tap()
+        let impastiCard = app.descendants(matching: .any).matching(identifier: "ImpastiCard").firstMatch
+        XCTAssertTrue(impastiCard.waitForExistence(timeout: 8))
+        impastiCard.tap()
 
         XCTAssertTrue(app.descendants(matching: .any).matching(identifier: "BakesScrollView").firstMatch.waitForExistence(timeout: 8))
         XCTAssertTrue(app.staticTexts["Infornata del weekend"].waitForExistence(timeout: 8))
-        XCTAssertFalse(app.staticTexts["Nessun bake ancora"].exists)
+        XCTAssertFalse(app.staticTexts["Nessun impasto ancora"].exists)
     }
 }
