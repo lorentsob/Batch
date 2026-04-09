@@ -1,20 +1,20 @@
-# Contribuire a Batch
+# Contributing
 
-Grazie per l’interesse nel repository. Per mantenere il flusso chiaro su un repo pubblico:
+Thanks for checking out the repository.
 
-## Branch base per le pull request
+## Branching
 
-- **`develop`** — apri qui le pull request per funzionalità, fix e revisioni. È il branch dove avviene lo sviluppo attivo.
-- **`main`** — branch di default sul clone e stato “release”; **non aprire PR verso `main`** se non sei il maintainer del repository. Le PR di altri utenti verso `main` vengono chiuse automaticamente con un messaggio che spiega come procedere.
+- Open pull requests against **`develop`** for features, fixes, and reviews. That is where active development happens.
+- **`main`** is the default branch on clone and the release snapshot; **do not open pull requests against `main`** unless you are the repository maintainer. Pull requests to `main` from other accounts are closed automatically with instructions to retarget **`develop`**.
 
-Il maintainer (@lorentsob) integra su `develop` e, quando appropriato, allinea o mergia verso `main`.
+The maintainer (@lorentsob) integrates on `develop` and merges or aligns to `main` when appropriate.
 
-## Prima di aprire una PR
+## Before opening a PR
 
-1. Parti da `develop` aggiornato (`git fetch origin && git checkout develop && git pull`).
-2. Crea un branch feature (`feature/…` o `fix/…`).
-3. Apri la PR con **base `develop`**.
+1. Start from an up-to-date `develop` (`git fetch origin && git checkout develop && git pull`).
+2. Create a feature or fix branch (`feature/…` or `fix/…`).
+3. Open the PR with **base `develop`**.
 
-## Build e CI
+## CI
 
-La CI usa un runner self-hosted; le fork esterne potrebbero non avere build verdi senza ambiente equivalente. Vedi [docs/ci-cd.md](docs/ci-cd.md).
+CI uses a self-hosted runner; external forks may not get a green build without an equivalent environment. See [docs/ci-cd.md](docs/ci-cd.md).
