@@ -79,7 +79,7 @@ struct FormulaListView: View {
         }
         .sheet(isPresented: $showingFormulaEditor) {
             NavigationStack {
-                FormulaEditorView(formula: editingFormula)
+                FormulaEditorView(formula: editingFormula, onSaved: {})
             }
         }
     }
