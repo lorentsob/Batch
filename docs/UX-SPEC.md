@@ -1,4 +1,4 @@
-# UX-SPEC.md — Levain
+# UX-SPEC.md — Batch
 **Version:** 1.0 — 2026-03-10
 **Riferimento visivo:** Planta (card grandi, gerarchia Apple, azioni prominenti, whitespace generoso)
 **Modalità:** Light only · iPhone only · SF Pro · Squircles continui

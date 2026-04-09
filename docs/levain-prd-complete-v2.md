@@ -1,4 +1,4 @@
-# Levain
+# Batch
 ## Product Definition, UX, PRD Direction, and Technical Stack
 
 ## 1. Project Overview

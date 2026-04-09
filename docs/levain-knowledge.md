@@ -1,4 +1,4 @@
-# Levain Knowledge Base
+# Batch Knowledge Base
 
 Questa knowledge base è pensata per essere integrata nell’app come sorgente di suggerimenti statici (non generati da AI) su gestione starter, tempi, roadmap di lievitazione, baker’s math e troubleshooting. I contenuti sono sintetizzati e rielaborati a partire da guide autorevoli su sourdough e panificazione artigianale.[web:20][web:23][web:28][web:36][web:39][web:41][web:44][web:45]
 

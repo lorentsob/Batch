@@ -1,4 +1,4 @@
-# Levain Content — Editorial Source
+# Batch Content — Editorial Source
 
 Questa cartella contiene i **contenuti editoriali sorgente** per l'app Levain.
 

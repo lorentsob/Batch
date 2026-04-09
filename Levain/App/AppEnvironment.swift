@@ -9,6 +9,9 @@ struct AppBanner: Identifiable, Equatable {
 final class AppEnvironment: ObservableObject {
     @Published private(set) var preparedNotificationService: NotificationService?
     @Published private(set) var banner: AppBanner?
+    /// True once the launch splash has fully faded out. Views use this to
+    /// coordinate their entrance animation so it plays at the right moment.
+    @Published private(set) var isLaunchTransitionComplete = false
     let knowledgeLibrary: KnowledgeLibrary
     private var bannerDismissTask: Task<Void, Never>?
 
@@ -32,6 +35,10 @@ final class AppEnvironment: ObservableObject {
 
     func prepareNotificationServiceIfNeeded() -> NotificationService {
         notificationService
+    }
+
+    func markLaunchTransitionComplete() {
+        isLaunchTransitionComplete = true
     }
 
     func showBanner(_ message: String, duration: TimeInterval = 3) {

@@ -43,7 +43,7 @@ Failed to send CA Event for app launch measurements for ca_event_type: 1 event_n
 
 ### Stack Trace Reference
 ```
-#0    0x00000001016df2c0 in closure #1 in closure #1 in RootTabView.body.getter at /Users/lorentso/lievito-app/Levain/Features/Shared/RootTabView.swift:23
+#0    0x00000001016df2c0 in closure #1 in closure #1 in RootTabView.body.getter at Levain/Features/Shared/RootTabView.swift:23
 ```
 
 This points to the banner display logic in `RootTabView`:

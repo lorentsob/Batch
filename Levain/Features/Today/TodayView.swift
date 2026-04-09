@@ -25,6 +25,7 @@ struct TodayView: View {
     @State private var showingStarterCreation = false
     @State private var showingKefirCreation: KefirBatchEditorView.Mode?
     @State private var sectionsVisible = false
+    @State private var hasRevealedOnce = false
 
     private var appSettings: AppSettings? { appSettingsList.first }
 
@@ -194,15 +195,21 @@ struct TodayView: View {
                 }
                 .levainScrollScreenPadding()
                 .opacity(sectionsVisible ? 1 : 0)
-                .offset(y: sectionsVisible ? 0 : 10)
-                .animation(Theme.Animation.standard, value: sectionsVisible)
+                .offset(y: sectionsVisible ? 0 : 20)
                 .onAppear {
-                    if reduceMotion {
+                    guard !sectionsVisible else { return }
+                    if reduceMotion || hasRevealedOnce || environment.isLaunchTransitionComplete {
+                        // Subsequent appearances or reduced-motion: instant reveal
                         sectionsVisible = true
-                    } else {
-                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.05) {
-                            sectionsVisible = true
-                        }
+                        hasRevealedOnce = true
+                    }
+                    // else: wait for isLaunchTransitionComplete to trigger the animation
+                }
+                .onChange(of: environment.isLaunchTransitionComplete) { _, complete in
+                    guard complete, !hasRevealedOnce else { return }
+                    hasRevealedOnce = true
+                    withAnimation(.spring(response: 0.55, dampingFraction: 0.82)) {
+                        sectionsVisible = true
                     }
                 }
             }

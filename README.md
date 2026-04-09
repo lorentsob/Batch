@@ -1,86 +1,56 @@
-# Levain
+# Batch
 
-[![iOS CI](https://github.com/lorentso/lievito-app/actions/workflows/ios-ci.yml/badge.svg)](https://github.com/lorentso/lievito-app/actions/workflows/ios-ci.yml)
-[![iOS Release](https://github.com/lorentso/lievito-app/actions/workflows/ios-release.yml/badge.svg)](https://github.com/lorentso/lievito-app/actions/workflows/ios-release.yml)
+Batch is a native iPhone app for operational fermentation planning. It keeps the next action obvious across bread, sourdough starter, and milk kefir workflows without turning into a generic recipe manager or requiring any backend infrastructure.
 
-**Levain** è un'applicazione nativa per iPhone progettata per la gestione del lievito madre e la pianificazione operativa delle panificazioni domestiche. 
+This repository is maintained as a portfolio-ready product repo. The app name shown to users is `Batch`; some internal technical identifiers still use `Levain` while the public rename is being completed.
 
-A differenza dei comuni ricettari, Levain è uno strumento **planner-first**: il suo obiettivo primario non è archiviare ricette, ma rispondere istantaneamente alla domanda: *"Cosa devo fare ora?"*.
+## What It Does
 
-## 🍞 Valore Core
+- Keeps `Oggi` focused on the next actionable step instead of a generic dashboard
+- Supports bread workflows with formulas, generated timelines, timeline shifts, and execution tracking
+- Supports starter logging, reminder planning, and operational health checks
+- Supports milk kefir batch tracking, lineage, archive history, and storage-aware reminders
+- Keeps reference knowledge bundled locally for fast offline access
 
-L'app rende ovvia la prossima azione da compiere nel processo di panificazione, eliminando attriti di setup o complessità infrastrutturali. È uno strumento minimalista, offline-first e focalizzato sull'esecuzione reale in cucina.
+## Product Scope
 
-## ✨ Funzionalità Principali
+- Platform: iPhone only
+- Stack: SwiftUI, SwiftData, UserNotifications, bundled JSON content
+- Architecture: local-first, single-user, offline-first
+- Status: active personal product / presentation repo
 
-### 🗓️ Home (Oggi)
-Il centro operativo dell'app. Mostra in ordine di priorità tutto ciò che richiede attenzione nelle prossime ore:
-- Step di impasti in corso (imminenti o in ritardo).
-- Rinfreschi del lievito madre dovuti per la giornata.
-- Prossime azioni pianificate per il futuro immediato.
+## Local Development
 
-### 🥖 Impasti (Bakes)
-Gestione completa del ciclo di vita di ogni panificazione:
-- Generazione automatica di timeline basata su "Target Usage Time" (backward scheduling).
-- Monitoraggio in tempo reale degli step con timer integrati.
-- **Adaptive Timeline**: possibilità di slittare l'intera programmazione futura in caso di ritardi nella lievitazione reale.
-- Distinzione tra tempi pianificati ed esecuzione effettiva.
+### Prerequisites
 
-### 🧪 Starter (lievito madre)
-Un registro semplificato per la salute del tuo lievito:
-- Log rapido dei rinfreschi con calcolo automatico della prossima scadenza.
-- Gestione di parametri specifici (idratazione, mix di farine, peso del contenitore).
-- Promemoria locali per non dimenticare mai un rinfresco.
+- macOS with Xcode 16.3+
+- iOS 26 SDK
+- [XcodeGen](https://github.com/yonaskolb/XcodeGen)
 
-### 📖 Ricette (Ricette)
-Archivio di formule riutilizzabili e calcolabili:
-- Definizione di parametri base (idratazione, sale, inoculo).
-- Template di step predefiniti che permettono di generare un nuovo impasto in pochi secondi.
-- Gestione strutturata delle farine e del tipo di lievito.
-
-### 💡 Conoscenza (Knowledge)
-Una base di conoscenza integrata e offline:
-- Tips contestuali che appaiono proprio quando servono (es. durante la bulk fermentation).
-- Guida alla risoluzione dei problemi comuni (troppo denso, sovralievitato, ecc.).
-
-## 🛠️ Stack Tecnologico
-
-L'applicazione è costruita seguendo rigorosamente i principi nativi di Apple per garantire performance e semplicità:
-
-- **Linguaggio**: Swift 6 (Strict Concurrency).
-- **UI**: SwiftUI.
-- **Persistenza**: SwiftData (Modelli nativi e performanti senza database esterni).
-- **Notifiche**: UserNotifications (Locali, per la massima privacy e affidabilità offline).
-- **Gestione Progetto**: [XcodeGen](https://github.com/yonaskolb/XcodeGen) per una gestione trasparente del file `.xcodeproj`.
-
-## 🚀 Sviluppo e Build
-
-### Prerequisiti
-- macOS con Xcode 16.3+ (Target iOS 26.0).
-- [XcodeGen](https://github.com/yonaskolb/XcodeGen) installato (`brew install xcodegen`).
-
-### Setup Locale
-Per generare il progetto Xcode ed eseguire l'app:
+### Setup
 
 ```bash
-# Genera il file .xcodeproj
-xcodegen generate
-
-# Apri il progetto
+bash scripts/ci_bootstrap.sh
 open Levain.xcodeproj
 ```
 
-### CI/CD
-Il progetto utilizza GitHub Actions per:
-- **CI**: Validazione build e test unitari ad ogni push.
-- **Release**: Generazione automatica di Release Candidate (manual trigger).
+Use the `Levain` scheme when running locally. The on-device display name is `Batch`.
 
-## 📈 Stato del Progetto
+## CI Reality
 
-Attualmente l'app è in stato di **MVP v1 completato**. È stata sottoposta a un audit di UAT (User Acceptance Testing) che ha portato alla rifinitura della UX operativa (Fase 10).
+The repository documentation is intentionally honest about the current workflow:
 
-- **Piattaforma**: Solo iPhone (ottimizzata per uso mobile in cucina).
-- **Backend**: Nessuno (Single-user, Offline-first).
+- The public default branch is `main`
+- GitHub Actions CI currently runs on a `self-hosted` runner
+- CI currently performs build validation only
+- External forks should not expect self-hosted CI validation automatically
 
----
-*Progettato per chi ama il pane, programmato per chi ama la semplicità.*
+See [docs/ci-cd.md](docs/ci-cd.md) for the exact current workflow.
+
+## Repository Intent
+
+This repo is optimized first for product presentation and code review, not for broad outside contribution. Internal planning and agent-only working files stay outside the shared repo surface so the public project remains focused and readable.
+
+## License
+
+This repository is source-visible for review and portfolio purposes. Reuse is not permitted without written permission. See [LICENSE](LICENSE).
