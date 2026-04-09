@@ -25,7 +25,7 @@ struct StateBadge: View {
             case .skipped:
                 Theme.Status.skippedBackground          // neutral100 — saltato
             case .warning:
-                Theme.Status.warningBackground          // green100 — attenzione attiva, ancora nel piano
+                Theme.Status.warningBackground          // amber100 — attenzione, non ancora un problema
             case .overdue:
                 Theme.Status.overdueBackground          // errorLight — problema attivo
             case .danger:
@@ -50,7 +50,7 @@ struct StateBadge: View {
             case .skipped:
                 Theme.Status.skippedForeground          // neutral500 su neutral100
             case .warning:
-                Theme.Status.warningForeground          // green800 su green100
+                Theme.Status.warningForeground          // amber800 su amber100
             case .overdue:
                 Theme.Status.overdueForeground          // errorDark su errorLight
             case .danger:
@@ -121,16 +121,13 @@ struct StateBadge: View {
             .fixedSize()
             .padding(.horizontal, 10)
             .padding(.vertical, 6)
-            .animation(Theme.Animation.micro, value: tone)
             .background(
                 Capsule(style: .continuous)
                     .fill(tone.background)
-                    .animation(Theme.Animation.micro, value: tone)
             )
             .overlay(
                 Capsule(style: .continuous)
                     .stroke(tone.stroke, lineWidth: tone.stroke == .clear ? 0 : 1)
-                    .animation(Theme.Animation.micro, value: tone)
             )
     }
 }

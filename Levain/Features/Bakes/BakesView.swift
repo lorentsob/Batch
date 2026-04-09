@@ -3,18 +3,6 @@ import SwiftUI
 
 @MainActor
 struct BakesView: View {
-    private struct BakeRow: Identifiable {
-        let bake: Bake
-        let snapshot: Bake.OperationalSnapshot
-
-        var id: UUID { bake.id }
-    }
-
-    private struct ClassifiedBakes {
-        var active: [BakeRow] = []
-        var archived: [BakeRow] = []
-    }
-
     @Environment(\.modelContext) private var modelContext
     @Environment(\.dismiss) private var dismiss
     @EnvironmentObject private var environment: AppEnvironment
@@ -23,8 +11,6 @@ struct BakesView: View {
     @Query(sort: \Bake.targetBakeDateTime, order: .forward) private var bakes: [Bake]
     @Query(sort: \RecipeFormula.name) private var formulas: [RecipeFormula]
 
-    @Environment(\.accessibilityReduceMotion) private var reduceMotion
-
     @State private var showingFormulaEditor = false
     @State private var editingFormula: RecipeFormula?
     @State private var showingBakeEditor = false
@@ -32,39 +18,29 @@ struct BakesView: View {
     @State private var shouldPreselectFirstAvailable = false
     @State private var isArchiveExpanded = false // legacy flag, kept for now
     @State private var showingArchiveSheet = false
-    @State private var formulaListRefreshToken = 0
-    @State private var rowsVisible = false
 
     private let metricColumns = [
         GridItem(.adaptive(minimum: 118), spacing: 8)
     ]
 
-    private var classifiedBakes: ClassifiedBakes {
-        bakes.reduce(into: ClassifiedBakes()) { result, bake in
-            let row = BakeRow(bake: bake, snapshot: bake.makeOperationalSnapshot())
+    private var activeBakes: [Bake] {
+        bakes.filter { $0.derivedStatus != .cancelled && $0.derivedStatus != .completed }
+    }
 
-            switch row.snapshot.derivedStatus {
-            case .cancelled, .completed:
-                result.archived.append(row)
-            default:
-                result.active.append(row)
-            }
-        }
+    private var archivedBakes: [Bake] {
+        bakes.filter { $0.derivedStatus == .cancelled || $0.derivedStatus == .completed }
     }
 
     var body: some View {
-        let classified = classifiedBakes
-        let activeBakes = classified.active
-        let archivedBakes = classified.archived
-
         List {
             Group {
                 SectionCard(emphasis: .tinted) {
-                    ScreenTitleBlock(
-                        title: "Impasti",
-                        subtitle: "I tuoi impasti attivi o in programma"
-                    )
-                    HStack(spacing: Theme.Spacing.sm + 4) {
+                    Text("Impasti")
+                        .font(.system(size: 30, weight: .bold))
+                        .foregroundStyle(Theme.ink)
+                    Text("I tuoi bake in corso e in programma.")
+                        .foregroundStyle(Theme.muted)
+                    HStack(spacing: 12) {
                         if activeBakes.isEmpty == false {
                             StateBadge(text: "\(activeBakes.count) attivi", tone: .count)
                         }
@@ -72,73 +48,68 @@ struct BakesView: View {
                             StateBadge(text: "\(formulas.count) ricette", tone: .count)
                         }
                     }
-
-                    Button {
-                        preselectedFormula = formulas.first
-                        shouldPreselectFirstAvailable = formulas.isEmpty
-                        showingBakeEditor = true
-                    } label: {
-                        Label("Nuovo impasto", systemImage: "plus")
-                    }
-                    .buttonStyle(PrimaryActionButtonStyle())
-                    .padding(.top, Theme.Spacing.xxs)
                 }
-                .listRowInsets(.levainListRow(top: Theme.Spacing.sm, bottom: Theme.Spacing.md))
-
-
+                .listRowSeparator(.hidden)
+                .listRowBackground(Color.clear)
+                .listRowInsets(EdgeInsets(top: 24, leading: 20, bottom: 20, trailing: 20))
 
                 VStack(alignment: .leading, spacing: 12) {
-                    SectionTitleLabel(title: "Impasti attivi")
+                    Text("Bake attivi")
+                        .font(.headline)
+                        .foregroundStyle(Theme.ink)
 
                     if activeBakes.isEmpty {
                         EmptyStateView(
-                            title: "Nessun impasto ancora",
-                            message: "Scegli una ricetta e crea il tuo primo impasto"
-                        )
+                            title: "Nessun bake ancora",
+                            message: "Scegli una ricetta, imposta l'orario di sfornatura e Levain costruisce la timeline per te.",
+                            actionTitle: emptyStateActionTitle
+                        ) {
+                            preselectedFormula = formulas.first
+                            shouldPreselectFirstAvailable = formulas.isEmpty
+                            showingBakeEditor = true
+                        }
                         .accessibilityIdentifier("BakesEmptyState")
-                        .transition(.opacity.combined(with: .scale(scale: 0.97, anchor: .top)))
                     }
                 }
-                .animation(Theme.Animation.standard, value: activeBakes.isEmpty)
                 .listRowSeparator(.hidden)
                 .listRowBackground(Color.clear)
-                .listRowInsets(.levainListRow(bottom: Theme.Spacing.xs))
+                .listRowInsets(EdgeInsets(top: 0, leading: 20, bottom: 12, trailing: 20))
 
                 if activeBakes.isEmpty == false {
-                    ForEach(Array(activeBakes.enumerated()), id: \.element.id) { index, row in
+                    ForEach(activeBakes) { bake in
                         ZStack {
-                            NavigationLink(value: FermentationsRoute.bake(row.bake.id)) {
+                            NavigationLink(value: FermentationsRoute.bake(bake.id)) {
                                 EmptyView()
                             }
                             .opacity(0)
-
+                            
                             SectionCard {
                                 VStack(alignment: .leading, spacing: 12) {
                                     HStack(alignment: .top) {
                                         VStack(alignment: .leading, spacing: 8) {
-                                            Text(row.bake.name)
+                                            Text(bake.name)
                                                 .font(.headline)
                                                 .foregroundStyle(Theme.ink)
-                                            Text(row.bake.type.title)
+                                            Text(bake.type.title)
                                                 .font(.subheadline)
                                                 .foregroundStyle(Theme.muted)
                                         }
                                         Spacer()
-                                        StateBadge(bakeStatus: row.snapshot.derivedStatus)
+                                        StateBadge(bakeStatus: bake.derivedStatus)
                                     }
 
                                     LazyVGrid(columns: metricColumns, alignment: .leading, spacing: 8) {
                                         MetricChip(
                                             label: "Utilizzo",
-                                            value: DateFormattingService.dayTime(row.bake.targetBakeDateTime),
+                                            value: DateFormattingService.dayTime(bake.targetBakeDateTime),
                                             tone: .schedule
                                         )
-                                        if let step = row.snapshot.activeStep {
+                                        if let step = bake.activeStep {
                                             MetricChip(label: "Prossima fase", value: step.displayName, tone: .info)
                                         }
                                     }
 
-                                    if let step = row.snapshot.activeStep {
+                                    if let step = bake.activeStep {
                                         Text(step.descriptionText.isEmpty ? "La fase attiva è pronta da seguire." : step.descriptionText)
                                             .font(.footnote)
                                             .foregroundStyle(Theme.muted)
@@ -147,16 +118,10 @@ struct BakesView: View {
                                 }
                             }
                         }
-                        .opacity(rowsVisible ? 1 : 0)
-                        .offset(y: rowsVisible ? 0 : 8)
-                        .animation(
-                            Theme.Animation.standard.delay(Double(min(index, 5)) * 0.05),
-                            value: rowsVisible
-                        )
                         .swipeActions(edge: .trailing, allowsFullSwipe: true) {
                             Button(role: .destructive) {
                                 withAnimation {
-                                    archive(row.bake)
+                                    archive(bake)
                                 }
                             } label: {
                                 Label("Archivia", systemImage: "archivebox")
@@ -164,16 +129,7 @@ struct BakesView: View {
                         }
                         .listRowSeparator(.hidden)
                         .listRowBackground(Color.clear)
-                        .listRowInsets(.levainListRow(bottom: Theme.Spacing.xs))
-                    }
-                    .onAppear {
-                        if reduceMotion {
-                            rowsVisible = true
-                        } else {
-                            DispatchQueue.main.asyncAfter(deadline: .now() + 0.05) {
-                                rowsVisible = true
-                            }
-                        }
+                        .listRowInsets(EdgeInsets(top: 0, leading: 20, bottom: 12, trailing: 20))
                     }
                 }
 
@@ -184,8 +140,8 @@ struct BakesView: View {
                         } label: {
                             HStack {
                                 Text("Archivio")
-                                    .font(Theme.Typography.headline)
-                                    .foregroundStyle(Theme.Text.primary)
+                                    .font(.headline)
+                                    .foregroundStyle(Theme.ink)
                                 StateBadge(text: "\(archivedBakes.count)", tone: .count)
                                 Spacer()
                                 Image(systemName: "chevron.right")
@@ -196,11 +152,13 @@ struct BakesView: View {
                     }
                     .listRowSeparator(.hidden)
                     .listRowBackground(Color.clear)
-                    .listRowInsets(.levainListRow(top: Theme.Spacing.xs, bottom: Theme.Spacing.xs))
+                    .listRowInsets(EdgeInsets(top: 8, leading: 20, bottom: 12, trailing: 20))
                 }
 
                 VStack(alignment: .leading, spacing: 12) {
-                    SectionTitleLabel(title: "Ricette")
+                    Text("Ricette")
+                        .font(.headline)
+                        .foregroundStyle(Theme.ink)
 
                     SectionCard {
                         ZStack {
@@ -214,7 +172,7 @@ struct BakesView: View {
                                     Text("Le tue ricette")
                                         .font(.headline)
                                         .foregroundStyle(Theme.ink)
-                                    Text("Consulta le ricette e creane di nuove")
+                                    Text("Raccogli ricette, template e tempi di lavoro.")
                                         .font(.subheadline)
                                         .foregroundStyle(Theme.muted)
                                     StateBadge(text: "\(formulas.count) salvate", tone: .count)
@@ -228,7 +186,7 @@ struct BakesView: View {
                 }
                 .listRowSeparator(.hidden)
                 .listRowBackground(Color.clear)
-                .listRowInsets(.levainListRow(top: Theme.Spacing.xs, bottom: Theme.Spacing.xs))
+                .listRowInsets(EdgeInsets(top: 8, leading: 20, bottom: 12, trailing: 20))
                 
                 // Bottom spacing for FAB
                 Color.clear.frame(height: 80)
@@ -237,17 +195,25 @@ struct BakesView: View {
             }
         }
         .listStyle(.plain)
-        .levainListSurface()
+        .background(Theme.background.ignoresSafeArea())
         .tint(Theme.Control.primaryFill)
         .accessibilityIdentifier("BakesScrollView")
+        .toolbar {
+            ToolbarItem(placement: .topBarTrailing) {
+                Button {
+                    preselectedFormula = formulas.first
+                    shouldPreselectFirstAvailable = formulas.isEmpty
+                    showingBakeEditor = true
+                } label: {
+                    Text("Nuovo bake")
+                        .fontWeight(.semibold)
+                }
+                .accessibilityIdentifier("BakesPrimaryNewBakeButton")
+            }
+        }
         .sheet(isPresented: $showingFormulaEditor) {
             NavigationStack {
-                FormulaEditorView(
-                    formula: editingFormula,
-                    onSaved: {
-                         formulaListRefreshToken += 1
-                      }
-                   )
+                FormulaEditorView(formula: editingFormula)
             }
         }
         .sheet(isPresented: $showingBakeEditor) {
@@ -284,7 +250,7 @@ struct BakesView: View {
         // Check if there have ever been any bakes (including completed/cancelled)
         let allBakesQuery = FetchDescriptor<Bake>()
         let allBakesCount = (try? modelContext.fetch(allBakesQuery).count) ?? 0
-        return allBakesCount == 0 ? "Crea il tuo primo impasto" : "Nuovo impasto"
+        return allBakesCount == 0 ? "Crea il tuo primo bake" : "Nuovo Bake"
     }
 }
 
@@ -335,8 +301,8 @@ private struct BakesArchiveView: View {
             if hasAnyArchived == false {
                 Section {
                     EmptyStateView(
-                        title: "Nessun impasto in archivio",
-                        message: "Qui trovi gli impasti completati o annullati. Archivia un impasto dalla lista principale per vederlo qui.",
+                        title: "Nessun bake in archivio",
+                        message: "Qui trovi gli impasti completati o annullati. Archivia un bake dalla lista principale per vederlo qui.",
                         actionTitle: "Chiudi",
                         action: onClose
                     )
@@ -353,9 +319,9 @@ private struct BakesArchiveView: View {
 
                 if archivedBakes.isEmpty {
                     Section {
-                        Text("Nessun impasto per questo filtro.")
+                        Text("Nessun bake per questo filtro.")
                             .font(.subheadline)
-                            .foregroundStyle(Theme.Text.secondary)
+                            .foregroundStyle(Theme.muted)
                     }
                 } else {
                     Section {
@@ -377,7 +343,9 @@ private struct BakesArchiveView: View {
                                 VStack(alignment: .trailing, spacing: 6) {
                                     let isCompleted = bake.derivedStatus == .completed
                                     let badgeText = isCompleted ? "Completato" : "Annullato"
-                                    let badgeTone: StateBadge.Tone = isCompleted ? .done : .danger
+                                    // In archivio vogliamo un verde evidente per i completati,
+                                    // quindi usiamo il tono .running al posto di .done (che è neutro).
+                                    let badgeTone: StateBadge.Tone = isCompleted ? .running : .danger
 
                                     StateBadge(text: badgeText, tone: badgeTone)
 
@@ -411,7 +379,6 @@ private struct BakesArchiveView: View {
                 }
             }
         }
-        .levainListSurface()
         .navigationTitle("Archivio impasti")
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
@@ -464,10 +431,10 @@ struct FormulaStatRow: View {
     var body: some View {
         HStack(alignment: .firstTextBaseline) {
             Text(label)
-                .foregroundStyle(Theme.Text.secondary)
+                .foregroundStyle(Theme.muted)
             Spacer()
             Text(value)
-                .foregroundStyle(Theme.Text.primary)
+                .foregroundStyle(Theme.ink)
                 .multilineTextAlignment(.trailing)
         }
     }

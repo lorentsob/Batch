@@ -3,19 +3,12 @@ import SwiftUI
 
 @MainActor
 struct BreadHubView: View {
-    private struct BakeRow: Identifiable {
-        let bake: Bake
-        let snapshot: Bake.OperationalSnapshot
-
-        var id: UUID { bake.id }
-    }
-
     @Environment(\.modelContext) private var modelContext
     @EnvironmentObject private var environment: AppEnvironment
     @EnvironmentObject private var router: AppRouter
 
     @Query(sort: \Bake.targetBakeDateTime, order: .forward) private var bakes: [Bake]
-    @Query(filter: #Predicate<Starter> { $0.archivedAt == nil }, sort: \Starter.name) private var starters: [Starter]
+    @Query(sort: \Starter.name) private var starters: [Starter]
     @Query(sort: \RecipeFormula.name) private var formulas: [RecipeFormula]
     @Query private var appSettingsList: [AppSettings]
 
@@ -30,26 +23,16 @@ struct BreadHubView: View {
     private var isBakeEnabled: Bool { appSettings?.isBakeEnabled ?? true }
     private var isStarterEnabled: Bool { appSettings?.isStarterEnabled ?? true }
 
-    private var activeBakeRows: [BakeRow] {
-        bakes.compactMap { bake in
-            let row = BakeRow(bake: bake, snapshot: bake.makeOperationalSnapshot())
-            switch row.snapshot.derivedStatus {
-            case .cancelled, .completed:
-                return nil
-            default:
-                return row
-            }
-        }
+    private var activeBakes: [Bake] {
+        bakes.filter { $0.derivedStatus != .cancelled && $0.derivedStatus != .completed }
     }
 
     var body: some View {
-        let activeBakes = activeBakeRows
-
         List {
-            headerCard(activeBakes: activeBakes)
+            headerCard
 
             if isBakeEnabled {
-                impastiSection(activeBakes: activeBakes)
+                impastiSection
             }
 
             if isStarterEnabled {
@@ -59,8 +42,8 @@ struct BreadHubView: View {
             ricetteRow
         }
         .listStyle(.plain)
-        .levainListSurface()
-        .navigationTitle("")
+        .background(Theme.Surface.app)
+        .navigationTitle("Pane e lievito madre")
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
             ToolbarItem(placement: .primaryAction) {
@@ -79,10 +62,8 @@ struct BreadHubView: View {
                             Label("Nuovo starter", image: "navbar-starter")
                         }
                     }
-                    Button {
+                    Button("Nuova ricetta", systemImage: "doc.text") {
                         showingFormulaEditor = true
-                    } label: {
-                        Label("Nuova ricetta", systemImage: "doc.text")
                     }
                 } label: {
                     Image(systemName: "plus")
@@ -102,25 +83,21 @@ struct BreadHubView: View {
         }
         .sheet(isPresented: $showingFormulaEditor) {
             NavigationStack {
-                FormulaEditorView(
-                    formula: nil,
-                    onSaved: {}
-                  )
+                FormulaEditorView(formula: nil)
             }
         }
         .accessibilityIdentifier("BreadHubView")
     }
 
-
-
     // MARK: - Header
 
-    private func headerCard(activeBakes: [BakeRow]) -> some View {
+    private var headerCard: some View {
         SectionCard(emphasis: .tinted) {
-            ScreenTitleBlock(
-                title: "Pane e lievito madre",
-                subtitle: "Impasti attivi e i tuoi starter."
-            )
+            Text("Pane e lievito madre")
+                .font(.system(size: 26, weight: .bold))
+                .foregroundStyle(Theme.ink)
+            Text("Impasti attivi e i tuoi starter.")
+                .foregroundStyle(Theme.muted)
             if activeBakes.isEmpty == false || starters.isEmpty == false {
                 HStack(spacing: 8) {
                     if activeBakes.isEmpty == false {
@@ -132,25 +109,27 @@ struct BreadHubView: View {
                 }
             }
         }
-        .listRowInsets(.levainListRow(top: Theme.Spacing.sm, bottom: Theme.Spacing.xs))
+        .listRowInsets(.init(top: 0, leading: 20, bottom: 8, trailing: 20))
         .listRowBackground(Color.clear)
         .listRowSeparator(.hidden)
     }
 
     // MARK: - Impasti section
 
-    private func impastiSection(activeBakes: [BakeRow]) -> some View {
+    private var impastiSection: some View {
         Group {
             Section {
                 VStack(alignment: .leading, spacing: 12) {
-                    SectionTitleLabel(title: "Impasti attivi")
+                    Text("Impasti attivi")
+                        .font(.headline)
+                        .foregroundStyle(Theme.ink)
                 }
                 .padding(.bottom, 4)
 
                 if activeBakes.isEmpty {
                     EmptyStateView(
                         title: "Nessun impasto attivo",
-                        message: "Scegli una ricetta e crea il tuo primo impasto",
+                        message: "Scegli una ricetta, imposta l'orario di sfornatura e Levain costruisce la timeline.",
                         actionTitle: "Nuovo impasto"
                     ) {
                         showingBakeEditor = true
@@ -158,41 +137,41 @@ struct BreadHubView: View {
                     .accessibilityIdentifier("BreadHubBakesEmptyState")
                 }
             }
-            .listRowInsets(.levainListRow(bottom: Theme.Spacing.xs))
+            .listRowInsets(.init(top: 0, leading: 20, bottom: 8, trailing: 20))
             .listRowBackground(Color.clear)
             .listRowSeparator(.hidden)
 
-            ForEach(activeBakes) { row in
+            ForEach(activeBakes) { bake in
                 Button {
-                    router.fermentationsPath.append(.bake(row.bake.id))
+                    router.fermentationsPath.append(.bake(bake.id))
                 } label: {
                     SectionCard {
                         VStack(alignment: .leading, spacing: 12) {
                             HStack(alignment: .top) {
                                 VStack(alignment: .leading, spacing: 8) {
-                                    Text(row.bake.name)
+                                    Text(bake.name)
                                         .font(.headline)
                                         .foregroundStyle(Theme.ink)
-                                    Text(row.bake.type.title)
+                                    Text(bake.type.title)
                                         .font(.subheadline)
                                         .foregroundStyle(Theme.muted)
                                 }
                                 Spacer()
-                                StateBadge(bakeStatus: row.snapshot.derivedStatus)
+                                StateBadge(bakeStatus: bake.derivedStatus)
                             }
 
                             LazyVGrid(columns: metricColumns, alignment: .leading, spacing: 8) {
                                 MetricChip(
                                     label: "Utilizzo",
-                                    value: DateFormattingService.dayTime(row.bake.targetBakeDateTime),
+                                    value: DateFormattingService.dayTime(bake.targetBakeDateTime),
                                     tone: .schedule
                                 )
-                                if let step = row.snapshot.activeStep {
+                                if let step = bake.activeStep {
                                     MetricChip(label: "Prossima fase", value: step.displayName, tone: .info)
                                 }
                             }
 
-                            if let step = row.snapshot.activeStep {
+                            if let step = bake.activeStep {
                                 Text(step.descriptionText.isEmpty ? "La fase attiva è pronta da seguire." : step.descriptionText)
                                     .font(.footnote)
                                     .foregroundStyle(Theme.muted)
@@ -202,8 +181,8 @@ struct BreadHubView: View {
                     }
                 }
                 .buttonStyle(.plain)
-                .accessibilityIdentifier("BreadHubBakeCard_\(row.bake.id)")
-                .listRowInsets(.levainListRow(bottom: Theme.Spacing.xs))
+                .accessibilityIdentifier("BreadHubBakeCard_\(bake.id)")
+                .listRowInsets(.init(top: 0, leading: 20, bottom: 12, trailing: 20))
                 .listRowBackground(Color.clear)
                 .listRowSeparator(.hidden)
             }
@@ -217,7 +196,9 @@ struct BreadHubView: View {
         Group {
             Section {
                 VStack(alignment: .leading, spacing: 12) {
-                    SectionTitleLabel(title: "Starter")
+                    Text("Starter")
+                        .font(.headline)
+                        .foregroundStyle(Theme.ink)
                 }
                 .padding(.bottom, 4)
 
@@ -233,7 +214,7 @@ struct BreadHubView: View {
                     .accessibilityIdentifier("BreadHubStartersEmptyState")
                 }
             }
-            .listRowInsets(.levainListRow(bottom: Theme.Spacing.xs))
+            .listRowInsets(.init(top: 0, leading: 20, bottom: 8, trailing: 20))
             .listRowBackground(Color.clear)
             .listRowSeparator(.hidden)
 
@@ -251,7 +232,7 @@ struct BreadHubView: View {
                     }
                 }
                 .accessibilityIdentifier("BreadHubStarterCard_\(starter.id)")
-                .listRowInsets(.levainListRow(bottom: Theme.Spacing.xs))
+                .listRowInsets(.init(top: 0, leading: 20, bottom: 12, trailing: 20))
                 .listRowBackground(Color.clear)
                 .listRowSeparator(.hidden)
             }
@@ -269,39 +250,39 @@ struct BreadHubView: View {
                 SectionCard {
                     HStack(spacing: 14) {
                         Image(systemName: "doc.text.fill")
-                            .font(Theme.Typography.title2)
-                            .foregroundStyle(Theme.Control.primaryFill)
+                            .font(.system(size: 22, weight: .semibold))
+                            .foregroundStyle(Theme.accent)
                             .frame(width: 32)
 
                         VStack(alignment: .leading, spacing: 4) {
                             Text("Ricette")
-                                .font(Theme.Typography.headline)
-                                .foregroundStyle(Theme.Text.primary)
+                                .font(.headline)
+                                .foregroundStyle(Theme.ink)
                             Text(formulas.isEmpty ? "Nessuna ricetta salvata." : "\(formulas.count) formula\(formulas.count == 1 ? "" : "e")")
-                                .font(Theme.Typography.subheadline)
-                                .foregroundStyle(Theme.Text.secondary)
+                                .font(.subheadline)
+                                .foregroundStyle(Theme.muted)
                         }
 
                         Spacer(minLength: 0)
 
                         Image(systemName: "chevron.right")
-                            .font(Theme.Typography.footnoteSemibold)
-                            .foregroundStyle(Theme.Text.secondary)
+                            .font(.system(size: 13, weight: .semibold))
+                            .foregroundStyle(Theme.muted)
                     }
                 }
             }
             .buttonStyle(.plain)
             .accessibilityIdentifier("BreadHubFormuleRow")
         }
-        .listRowInsets(.levainListRow(bottom: Theme.Spacing.md))
+        .listRowInsets(.init(top: 0, leading: 20, bottom: 24, trailing: 20))
         .listRowBackground(Color.clear)
         .listRowSeparator(.hidden)
     }
 
     private func deleteBakes(at offsets: IndexSet) {
-        let activeBakes = activeBakeRows
         for index in offsets {
-            modelContext.delete(activeBakes[index].bake)
+            let bake = activeBakes[index]
+            modelContext.delete(bake)
         }
     }
 

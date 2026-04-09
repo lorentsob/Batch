@@ -7,20 +7,19 @@ struct RootTabView: View {
     @EnvironmentObject private var router: AppRouter
 
     @State private var didBootstrap = false
-    @State private var knowledgeSearchQuery = ""
 
     var body: some View {
         ZStack(alignment: .top) {
-            tabContent
-                .tint(Theme.Control.tabActiveTint)
+            tabs
+                .tint(Theme.accent)
                 .accessibilityIdentifier("RootTabView")
 
             if let banner = environment.banner {
                 VStack(spacing: 0) {
                     ToastBannerView(message: banner.message)
                 }
-                .padding(.horizontal, Theme.Layout.screenHorizontalInset)
-                .padding(.top, Theme.Spacing.sm)
+                .padding(.horizontal, 16)
+                .padding(.top, 12)
                 .transition(.move(edge: .top).combined(with: .opacity))
             }
         }
@@ -38,29 +37,21 @@ struct RootTabView: View {
                 notificationService.pendingURL = nil
             }
         }
-        .sheet(item: contextualKnowledgePresentationBinding) { presentation in
-            ContextualKnowledgeSheetView(articleID: presentation.articleID)
-                .environmentObject(environment)
-                .environmentObject(router)
-                .presentationDetents([.large])
-                .presentationDragIndicator(.visible)
-                .presentationBackground(Theme.Surface.app)
-                .presentationCornerRadius(Theme.Radius.card)
-        }
         .onOpenURL { url in
             router.open(url: url, modelContext: modelContext)
         }
     }
 
-    // MARK: - Tab content + aligned bottom bar
-
-    private var tabContent: some View {
+    private var tabs: some View {
         TabView(selection: $router.selectedTab) {
             NavigationStack {
                 TodayView()
             }
+            .toolbarColorScheme(.light, for: .navigationBar)
+            .toolbarBackground(Theme.Surface.app, for: .navigationBar)
+            .toolbarBackground(.visible, for: .navigationBar)
             .tabItem {
-                Label("Oggi", systemImage: "house.fill")
+                Label("Home", systemImage: "house.fill")
             }
             .tag(RootTab.oggi)
 
@@ -68,49 +59,57 @@ struct RootTabView: View {
                 FermentationsView()
                     .navigationDestination(for: FermentationsRoute.self) { route in
                         switch route {
-                        case .breadHub:        BreadHubView()
-                        case .kefirHub:        KefirHubView()
-                        case .bakesList:       BakesView()
-                        case .formulaList:     FormulaListView()
-                        case .starterList:     StarterView()
-                        case let .bake(id):    BakeLookupView(id: id)
-                        case let .formula(id): FormulaLookupView(id: id)
-                        case let .starter(id): StarterLookupView(id: id)
-                        case .kefirBatch:      KefirBatchLookupView(id: route.kefirBatchID)
+                        case .breadHub:
+                            BreadHubView()
+                        case .kefirHub:
+                            KefirHubView()
+                        case .bakesList:
+                            BakesView()
+                        case .formulaList:
+                            FormulaListView()
+                        case .starterList:
+                            StarterView()
+                        case let .bake(id):
+                            BakeLookupView(id: id)
+                        case let .formula(id):
+                            FormulaLookupView(id: id)
+                        case let .starter(id):
+                            StarterLookupView(id: id)
+                        case .kefirBatch:
+                            KefirBatchLookupView(id: route.kefirBatchID)
                         }
                     }
             }
+            .toolbarColorScheme(.light, for: .navigationBar)
+            .toolbarBackground(Theme.Surface.app, for: .navigationBar)
+            .toolbarBackground(.visible, for: .navigationBar)
             .tabItem {
                 Label("Batch", systemImage: "square.grid.2x2.fill")
             }
             .tag(RootTab.fermentations)
 
             NavigationStack(path: $router.knowledgePath) {
-                KnowledgeView(
-                    library: environment.knowledgeLibrary,
-                    query: $knowledgeSearchQuery
-                )
+                KnowledgeView(library: environment.knowledgeLibrary)
                     .navigationDestination(for: KnowledgeRoute.self) { route in
                         switch route {
-                        case let .article(id): KnowledgeLookupView(id: id)
+                        case let .article(id):
+                            KnowledgeLookupView(id: id)
                         }
                     }
             }
+            .toolbarColorScheme(.light, for: .navigationBar)
+            .toolbarBackground(Theme.Surface.app, for: .navigationBar)
+            .toolbarBackground(.visible, for: .navigationBar)
             .tabItem {
                 Label("Guide", systemImage: "book.fill")
             }
             .tag(RootTab.knowledge)
         }
+        .tint(Theme.Control.tabActiveTint)
+        .toolbarColorScheme(.light, for: .tabBar)
+        .toolbarBackground(Theme.Control.tabBackground, for: .tabBar)
+        .toolbarBackground(.visible, for: .tabBar)
     }
-
-    private var contextualKnowledgePresentationBinding: Binding<ContextualKnowledgePresentation?> {
-        Binding(
-            get: { router.contextualKnowledgePresentation },
-            set: { router.contextualKnowledgePresentation = $0 }
-        )
-    }
-
-    // MARK: - Bootstrap
 
     @MainActor
     private func bootstrapIfNeeded() async {
@@ -125,15 +124,11 @@ struct RootTabView: View {
             }
         }
 
-        do {
-            try SeedDataLoader.ensureSystemFormulas(in: modelContext)
-        } catch {
-            assertionFailure("System formula seeding failed: \(error)")
-        }
-
         environment.knowledgeLibrary.preloadIfNeeded()
 
-        guard ProcessInfo.processInfo.environment["XCODE_RUNNING_FOR_PREVIEWS"] != "1" else { return }
+        guard ProcessInfo.processInfo.environment["XCODE_RUNNING_FOR_PREVIEWS"] != "1" else {
+            return
+        }
 
         let appSettings = loadOrCreateAppSettings()
         let notificationService = environment.prepareNotificationServiceIfNeeded()
@@ -145,7 +140,10 @@ struct RootTabView: View {
 
         guard AppLaunchOptions.shouldSuppressNotifications == false else { return }
 
-        scheduleNotificationBootstrap(notificationService: notificationService, appSettings: appSettings)
+        scheduleNotificationBootstrap(
+            notificationService: notificationService,
+            appSettings: appSettings
+        )
     }
 
     @MainActor
@@ -153,6 +151,7 @@ struct RootTabView: View {
         if let existing = try? modelContext.fetch(FetchDescriptor<AppSettings>()).first {
             return existing
         }
+
         let settings = AppSettings()
         modelContext.insert(settings)
         try? modelContext.save()
@@ -166,15 +165,18 @@ struct RootTabView: View {
     ) {
         let needsLaunchSync = appSettings.lastNotificationSync == nil
         let needsAuthorizationPrompt = appSettings.hasRequestedNotificationPermission == false
+
         guard needsLaunchSync || needsAuthorizationPrompt else { return }
 
         Task(priority: .utility) {
             let authorizationState = await notificationService.requestAuthorizationIfNeeded(settings: appSettings)
+
             if authorizationState == .authorized {
                 await notificationService.resyncAll(using: modelContext)
                 appSettings.lastNotificationSync = .now
                 try? modelContext.save()
             }
+
             if authorizationState == .denied {
                 if appSettings.lastNotificationSync == nil {
                     appSettings.lastNotificationSync = .now
@@ -186,106 +188,136 @@ struct RootTabView: View {
     }
 }
 
-// MARK: - Lookup helpers
+// MARK: - Lookup helpers (reusable across tab navigation destinations)
 
 private struct BakeLookupView: View {
+    @Environment(\.modelContext) private var modelContext
+
     let id: UUID
 
-    @Query private var results: [Bake]
-
-    init(id: UUID) {
-        self.id = id
-        _results = Query(filter: #Predicate<Bake> { $0.id == id })
-    }
-
-    private var bake: Bake? { results.first }
+    @State private var bake: Bake?
 
     var body: some View {
-        if let bake {
-            BakeDetailView(bake: bake)
-        } else {
-            ContentUnavailableView("Impasto non trovato", systemImage: "exclamationmark.triangle")
+        Group {
+            if let bake {
+                BakeDetailView(bake: bake)
+            } else {
+                ContentUnavailableView("Bake non trovato", systemImage: "exclamationmark.triangle")
+            }
         }
+        .task(id: id) {
+            bake = load()
+        }
+    }
+
+    private func load() -> Bake? {
+        let descriptor = FetchDescriptor<Bake>(predicate: #Predicate { $0.id == id })
+        return try? modelContext.fetch(descriptor).first
     }
 }
 
-@MainActor
 private struct FormulaLookupView: View {
+    @Environment(\.modelContext) private var modelContext
+
     let id: UUID
 
+    @State private var formula: RecipeFormula?
+
     var body: some View {
-        FormulaDetailView(formulaID: id)
+        Group {
+            if let formula {
+                FormulaDetailView(formula: formula)
+            } else {
+                ContentUnavailableView("Ricetta non trovata", systemImage: "exclamationmark.triangle")
+            }
+        }
+        .task(id: id) {
+            formula = load()
+        }
+    }
+
+    private func load() -> RecipeFormula? {
+        let descriptor = FetchDescriptor<RecipeFormula>(predicate: #Predicate { $0.id == id })
+        return try? modelContext.fetch(descriptor).first
     }
 }
 
 private struct StarterLookupView: View {
+    @Environment(\.modelContext) private var modelContext
+
     let id: UUID
 
-    @Query private var results: [Starter]
-
-    init(id: UUID) {
-        self.id = id
-        _results = Query(filter: #Predicate<Starter> { $0.id == id })
-    }
-
-    private var starter: Starter? { results.first }
+    @State private var starter: Starter?
 
     var body: some View {
-        if let starter {
-            StarterDetailView(starter: starter)
-        } else {
-            ContentUnavailableView("Starter non trovato", systemImage: "exclamationmark.triangle")
+        Group {
+            if let starter {
+                StarterDetailView(starter: starter)
+            } else {
+                ContentUnavailableView("Starter non trovato", systemImage: "exclamationmark.triangle")
+            }
         }
+        .task(id: id) {
+            starter = load()
+        }
+    }
+
+    private func load() -> Starter? {
+        let descriptor = FetchDescriptor<Starter>(predicate: #Predicate { $0.id == id })
+        return try? modelContext.fetch(descriptor).first
     }
 }
 
 private struct KnowledgeLookupView: View {
     @EnvironmentObject private var environment: AppEnvironment
+
     let id: String
+
     var body: some View {
         Group {
-            if let item = environment.knowledgeLibrary.item(id: id) { KnowledgeDetailView(item: item) }
-            else { ContentUnavailableView("Guida non trovata", systemImage: "book.closed") }
+            if let item = environment.knowledgeLibrary.item(id: id) {
+                KnowledgeDetailView(item: item)
+            } else {
+                ContentUnavailableView("Guida non trovata", systemImage: "book.closed")
+            }
         }
-        .task { environment.knowledgeLibrary.loadIfNeeded() }
-    }
-}
-
-private struct ContextualKnowledgeSheetView: View {
-    let articleID: String
-
-    var body: some View {
-        KnowledgeLookupView(id: articleID)
-            .id(articleID)
-            .tint(Theme.Control.primaryFill)
-            .environment(\.knowledgePresentationContext, .contextualSheet)
+        .task {
+            environment.knowledgeLibrary.loadIfNeeded()
+        }
     }
 }
 
 private struct KefirBatchLookupView: View {
+    @Environment(\.modelContext) private var modelContext
+
     let id: UUID
 
-    @Query private var results: [KefirBatch]
-
-    init(id: UUID) {
-        self.id = id
-        _results = Query(filter: #Predicate<KefirBatch> { $0.id == id })
-    }
-
-    private var batch: KefirBatch? { results.first }
+    @State private var batch: KefirBatch?
 
     var body: some View {
-        if let batch {
-            KefirBatchDetailView(batch: batch)
-        } else {
-            ContentUnavailableView("Batch non trovato", systemImage: "exclamationmark.triangle")
+        Group {
+            if let batch {
+                KefirBatchDetailView(batch: batch)
+            } else {
+                ContentUnavailableView("Batch non trovato", systemImage: "exclamationmark.triangle")
+            }
         }
+        .task(id: id) {
+            batch = load()
+        }
+    }
+
+    private func load() -> KefirBatch? {
+        let descriptor = FetchDescriptor<KefirBatch>(predicate: #Predicate { $0.id == id })
+        return try? modelContext.fetch(descriptor).first
     }
 }
 
 private extension FermentationsRoute {
     var kefirBatchID: UUID {
-        guard case .kefirBatch(let id) = self else { preconditionFailure("Expected kefir batch route") }
+        guard case .kefirBatch(let id) = self else {
+            preconditionFailure("Expected kefir batch route")
+        }
         return id
     }
 }

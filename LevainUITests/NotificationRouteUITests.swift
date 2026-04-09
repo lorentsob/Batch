@@ -8,7 +8,7 @@ final class NotificationRouteUITests: XCTestCase {
         continueAfterFailure = false
     }
 
-    func testKnowledgeSurfaceReachableFromOggi() throws {
+    func testKnowledgeSurfaceReachableFromHome() throws {
         let app = XCUIApplication()
         app.launchEmpty()
 
@@ -18,24 +18,24 @@ final class NotificationRouteUITests: XCTestCase {
         XCTAssertTrue(app.scrollViews["KnowledgeScrollView"].waitForExistence(timeout: 8))
     }
 
-    func testColdLaunchMissingBakeRouteFallsBackToBatch() throws {
+    func testColdLaunchMissingBakeRouteFallsBackToPreparazioni() throws {
         let app = XCUIApplication()
         let route = "levain://bake/\(UUID().uuidString)?step=\(UUID().uuidString)"
         app.launchSeededWithPendingNotificationRoute(route)
 
-        // Direct-object routing: missing bake → Batch with empty path → FermentationsView
+        // Direct-object routing: missing bake → preparazioni with empty path → FermentationsView
         XCTAssertTrue(app.descendants(matching: .any).matching(identifier: "FermentationsView").firstMatch.waitForExistence(timeout: 8))
         let bannerProbe = app.otherElements["ToastBannerProbe"]
         XCTAssertTrue(bannerProbe.waitForExistence(timeout: 8))
-        XCTAssertEqual(bannerProbe.label, "Questo impasto non è più disponibile")
+        XCTAssertEqual(bannerProbe.label, "Questo bake non è più disponibile")
     }
 
-    func testColdLaunchMissingStarterRouteFallsBackToBatch() throws {
+    func testColdLaunchMissingStarterRouteFallsBackToPreparazioni() throws {
         let app = XCUIApplication()
         let route = "levain://starter/\(UUID().uuidString)"
         app.launchSeededWithPendingNotificationRoute(route)
 
-        // Direct-object routing: missing starter → Batch with empty path → FermentationsView
+        // Direct-object routing: missing starter → preparazioni with empty path → FermentationsView
         XCTAssertTrue(app.descendants(matching: .any).matching(identifier: "FermentationsView").firstMatch.waitForExistence(timeout: 8))
         let bannerProbe = app.otherElements["ToastBannerProbe"]
         XCTAssertTrue(bannerProbe.waitForExistence(timeout: 8))
@@ -50,7 +50,7 @@ final class NotificationRouteUITests: XCTestCase {
         XCTAssertFalse(app.descendants(matching: .any).matching(identifier: "FermentationsView").firstMatch.exists)
     }
 
-    func testColdLaunchMissingKefirRouteFallsBackToBatch() throws {
+    func testColdLaunchMissingKefirRouteFallsBackToPreparazioni() throws {
         let app = XCUIApplication()
         let route = "levain://kefir/\(UUID().uuidString)"
         app.launchSeededWithPendingNotificationRoute(route)

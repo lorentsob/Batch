@@ -6,42 +6,27 @@ enum BakeScheduler {
         targetBakeDateTime: Date,
         formula: RecipeFormula,
         starter: Starter? = nil,
-        notes: String = "",
-        yeastConversion: YeastConversionResult? = nil
+        notes: String = ""
     ) -> Bake {
         formula.recalculateDerivedValues()
-
-        // Quando viene fornita una conversione lievito commerciale, usiamo i suoi valori
-        // per farina/acqua/peso totale al posto di quelli della formula originale.
-        let flourWeight    = yeastConversion?.newTotalFlourWeight ?? formula.totalFlourWeight
-        let waterWeight    = yeastConversion?.newTotalWaterWeight ?? formula.totalWaterWeight
-        let hydration      = yeastConversion?.hydrationPercent    ?? formula.hydrationPercent
-        let inoculationPct = yeastConversion.map { $0.yeastPercent } ?? formula.inoculationPercent
-        let totalDough     = yeastConversion?.totalDoughWeight     ?? formula.totalDoughWeight
-
         let bake = Bake(
             name: name.isEmpty ? formula.name : name,
             type: formula.type,
             targetBakeDateTime: targetBakeDateTime,
             formula: formula,
             starter: starter,
-            inoculationPercent: inoculationPct,
-            totalFlourWeight: flourWeight,
-            totalWaterWeight: waterWeight,
-            totalDoughWeight: totalDough,
-            hydrationPercent: hydration,
+            inoculationPercent: formula.inoculationPercent,
+            totalFlourWeight: formula.totalFlourWeight,
+            totalWaterWeight: formula.totalWaterWeight,
+            totalDoughWeight: formula.totalDoughWeight,
+            hydrationPercent: formula.hydrationPercent,
             servings: formula.servings,
             notes: notes,
             ingredients: formula.ingredients ?? "",
             procedure: formula.procedure ?? "",
             bakingInstructions: formula.bakingInstructions ?? ""
         )
-        let steps = generateSteps(
-            for: bake,
-            from: formula,
-            targetBakeDateTime: targetBakeDateTime,
-            yeastConversion: yeastConversion
-        )
+        let steps = generateSteps(for: bake, from: formula, targetBakeDateTime: targetBakeDateTime)
         bake.steps = steps
         steps.forEach { $0.bake = bake }
         return bake
@@ -50,8 +35,7 @@ enum BakeScheduler {
     static func generateSteps(
         for bake: Bake,
         from formula: RecipeFormula,
-        targetBakeDateTime: Date,
-        yeastConversion: YeastConversionResult? = nil
+        targetBakeDateTime: Date
     ) -> [BakeStep] {
         let templates = formula.defaultSteps
         var cursor = targetBakeDateTime
@@ -59,22 +43,7 @@ enum BakeScheduler {
 
         for index in templates.indices.reversed() {
             let template = templates[index]
-            // Se è una conversione lievito commerciale, sostituiamo le durate di bulk e proof
-            // con quelle calcolate dal profilo tempi scelto.
-            let effectiveDuration: Int
-            if let yeastConversion {
-                switch template.type {
-                case .bulk:
-                    effectiveDuration = yeastConversion.bulkDurationMinutes
-                case .proof:
-                    effectiveDuration = yeastConversion.proofDurationMinutes
-                default:
-                    effectiveDuration = template.durationMinutes
-                }
-            } else {
-                effectiveDuration = template.durationMinutes
-            }
-            let start = cursor.adding(minutes: -max(effectiveDuration, 1))
+            let start = cursor.adding(minutes: -max(template.durationMinutes, 1))
             let isWindowBased = [.proof, .coldRetard].contains(template.type)
             let flexibleWindowStart = isWindowBased ? cursor : start
             let flexibleWindowEnd = isWindowBased
@@ -86,7 +55,7 @@ enum BakeScheduler {
                 nameOverride: template.name,
                 descriptionText: template.details,
                 plannedStart: start,
-                plannedDurationMinutes: max(effectiveDuration, 1),
+                plannedDurationMinutes: max(template.durationMinutes, 1),
                 flexibleWindowStart: flexibleWindowStart,
                 flexibleWindowEnd: flexibleWindowEnd,
                 reminderOffsetMinutes: max(template.reminderOffsetMinutes, 0),
@@ -103,12 +72,7 @@ enum BakeScheduler {
         return result.sorted { $0.orderIndex < $1.orderIndex }
     }
 
-    static func shiftFutureSteps(
-        in bake: Bake,
-        after anchorStep: BakeStep,
-        by minutes: Int,
-        now: Date = .now
-    ) {
+    static func shiftFutureSteps(in bake: Bake, after anchorStep: BakeStep, by minutes: Int) {
         guard minutes != 0 else { return }
 
         // When the anchor is running, its plannedEnd = actualStart + duration (frozen — not
@@ -143,29 +107,14 @@ enum BakeScheduler {
             step.flexibleWindowEnd = step.flexibleWindowEnd?.adding(minutes: effectiveShift)
         }
 
-        // Extend the anchor step so the hero timer and "Fine" chips update.
-        //
-        // Window-based steps (proof, cold retard): `windowEnd` follows `flexibleWindowEnd`.
-        // Non-window steps: `plannedEnd` is `referenceStart + plannedDurationMinutes` only,
-        // so we must adjust `plannedDurationMinutes` — updating `flexibleWindowEnd` alone has no effect.
+        // When the anchor is running, extend its window so the overdue
+        // indicator reflects the shift.  Without this the hero card shows
+        // unchanged times (actualStart is frozen) and the user perceives
+        // "no effect."  The raw `minutes` value is used (not effectiveShift)
+        // because effectiveShift may differ due to gap re-anchoring logic.
         if anchorStep.status == .running {
-            if anchorStep.isWindowBased {
-                anchorStep.flexibleWindowEnd = (anchorStep.flexibleWindowEnd ?? anchorStep.plannedEnd)
-                    .adding(minutes: minutes)
-            } else {
-                let elapsed = anchorStep.elapsedMinutes(now: now)
-                let candidate = anchorStep.plannedDurationMinutes + minutes
-                // Keep at least the elapsed time so remaining time never goes negative; allow reversibility down to that floor.
-                anchorStep.plannedDurationMinutes = max(1, max(elapsed, candidate))
-            }
-        } else if anchorStep.status == .pending, anchorStep.isOverdue(now: now) {
-            if anchorStep.isWindowBased {
-                anchorStep.flexibleWindowEnd = (anchorStep.flexibleWindowEnd ?? anchorStep.plannedEnd)
-                    .adding(minutes: minutes)
-            } else {
-                let candidate = anchorStep.plannedDurationMinutes + minutes
-                anchorStep.plannedDurationMinutes = max(1, candidate)
-            }
+            anchorStep.flexibleWindowEnd = (anchorStep.flexibleWindowEnd ?? anchorStep.plannedEnd)
+                .adding(minutes: minutes)
         }
 
         bake.targetBakeDateTime = bake.sortedSteps.last?.plannedEnd ?? bake.targetBakeDateTime

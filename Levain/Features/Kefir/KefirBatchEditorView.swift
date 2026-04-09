@@ -88,6 +88,7 @@ struct KefirBatchEditorView: View {
         .tint(Theme.Control.primaryFill)
         .scrollContentBackground(.hidden)
         .background(Theme.Surface.app)
+        .presentationBackground(Theme.Surface.app)
         .accessibilityIdentifier("KefirBatchEditorView")
         .onChange(of: storageMode) { _, newValue in
             expectedRoutineHours = newValue.defaultRoutineHours
@@ -160,10 +161,10 @@ struct KefirBatchEditorView: View {
 
     private var contextSection: some View {
         Section("Contesto") {
-            TextField("Uso principale del batch", text: $useLabel)
+            TextField("Uso principale", text: $useLabel)
                 .accessibilityIdentifier("KefirBatchUseField")
 
-            TextField("Cosa lo distingue", text: $differentiationNote, axis: .vertical)
+            TextField("Differenze", text: $differentiationNote, axis: .vertical)
                 .lineLimit(2...4)
                 .accessibilityIdentifier("KefirBatchDifferenceField")
         }
@@ -171,7 +172,7 @@ struct KefirBatchEditorView: View {
 
     private var notesSection: some View {
         Section("Note") {
-            TextField("Note sul batch", text: $notes, axis: .vertical)
+            TextField("Osservazioni rapide", text: $notes, axis: .vertical)
                 .lineLimit(3...6)
                 .accessibilityIdentifier("KefirBatchNotesField")
         }

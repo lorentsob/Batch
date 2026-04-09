@@ -115,8 +115,6 @@ struct BakeStepDetailView: View {
                 }
             }
         }
-        .scrollBounceBehavior(.basedOnSize, axes: .vertical)
-        .scrollClipDisabled(false)
         .navigationTitle(step.displayName)
         .navigationBarTitleDisplayMode(.inline)
         .tint(Theme.Control.primaryFill)
@@ -168,7 +166,7 @@ struct BakeStepDetailView: View {
                 try? await Task.sleep(for: .milliseconds(300))
                 try? modelContext.save()
                 await environment.notificationService.syncNotifications(forBake: bakeID, in: modelContext)
-                environment.showBanner("Impasto completato!", duration: 4)
+                environment.showBanner("Bake completato!", duration: 4)
             }
         } else {
             persistAndSync()
@@ -193,15 +191,12 @@ private struct MetricRow: View {
     let value: String
 
     var body: some View {
-        HStack(alignment: .firstTextBaseline, spacing: 12) {
+        HStack {
             Text(label)
-                .foregroundStyle(Theme.ink)
             Spacer()
             Text(value)
                 .foregroundStyle(Theme.muted)
                 .multilineTextAlignment(.trailing)
-                .lineLimit(2)
-                .fixedSize(horizontal: false, vertical: true)
         }
     }
 }

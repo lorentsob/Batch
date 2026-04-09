@@ -158,4 +158,21 @@ final class KnowledgeFlowUITests: XCTestCase {
 
         XCTAssertTrue(app.staticTexts["KnowledgeDetailTitle-bulk-fermentation-basics"].waitForExistence(timeout: 8))
     }
+
+    func testKnowledgeArticleNavigationUsesSharedRootStack() throws {
+        let app = XCUIApplication()
+        app.launchEmpty()
+
+        let guidesButton = app.buttons["TodayBrowseGuidesButton"]
+        XCTAssertTrue(guidesButton.waitForExistence(timeout: 5))
+        guidesButton.tap()
+        XCTAssertTrue(app.scrollViews["KnowledgeScrollView"].waitForExistence(timeout: 8))
+
+        let articleRow = app.buttons["KnowledgeArticleRow-starter-basics"].firstMatch
+        XCTAssertTrue(articleRow.waitForExistence(timeout: 5))
+        articleRow.tap()
+
+        XCTAssertTrue(app.scrollViews["KnowledgeDetailView"].waitForExistence(timeout: 8))
+        XCTAssertTrue(app.staticTexts["Basi del lievito madre"].waitForExistence(timeout: 8))
+    }
 }

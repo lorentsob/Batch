@@ -23,18 +23,11 @@ enum KnowledgeRoute: Hashable {
     case article(String)
 }
 
-struct ContextualKnowledgePresentation: Identifiable, Equatable {
-    let articleID: String
-
-    var id: String { articleID }
-}
-
 @MainActor
 final class AppRouter: ObservableObject {
     @Published var selectedTab: RootTab = .oggi
     @Published var fermentationsPath: [FermentationsRoute] = []
     @Published var knowledgePath: [KnowledgeRoute] = []
-    @Published var contextualKnowledgePresentation: ContextualKnowledgePresentation?
     var bannerPresenter: ((String, TimeInterval) -> Void)?
 
     // MARK: - Navigation helpers (direct-object routing rule)
@@ -43,32 +36,32 @@ final class AppRouter: ObservableObject {
 
     func openBake(_ id: UUID) {
         selectedTab = .fermentations
-        fermentationsPath = [.bakesList, .bake(id)]
+        fermentationsPath = [.bake(id)]
     }
 
     func openFormula(_ id: UUID) {
         selectedTab = .fermentations
-        fermentationsPath = [.formulaList, .formula(id)]
+        fermentationsPath = [.formula(id)]
     }
 
     func openStarter(_ id: UUID) {
         selectedTab = .fermentations
-        fermentationsPath = [.starterList, .starter(id)]
+        fermentationsPath = [.starter(id)]
     }
 
     // Phase 19 hook — kefir batch detail route. Wires into KefirHubView when batch CRUD lands.
     func openKefirBatch(_ id: UUID) {
         selectedTab = .fermentations
-        fermentationsPath = [.kefirHub, .kefirBatch(id)]
+        fermentationsPath = [.kefirBatch(id)]
     }
 
     func openKnowledge(_ id: String?) {
-        guard let id else {
-            showKnowledgeTab(articleID: nil)
-            return
+        selectedTab = .knowledge
+        if let id = id {
+            knowledgePath = [.article(id)]
+        } else {
+            knowledgePath = []
         }
-
-        presentContextualKnowledge(id)
     }
 
     func open(url: URL) {
@@ -94,9 +87,9 @@ final class AppRouter: ObservableObject {
             }
         case "knowledge":
             if let value = segments.first {
-                showKnowledgeTab(articleID: value)
+                openKnowledge(value)
             } else {
-                showKnowledgeTab(articleID: nil)
+                openKnowledge(nil)
             }
         default:
             break
@@ -128,19 +121,19 @@ final class AppRouter: ObservableObject {
         guard let bake = fetchBake(id: bakeId, modelContext: modelContext) else {
             selectedTab = .fermentations
             fermentationsPath = []
-            presentBanner("Questo impasto non è più disponibile", duration: 8)
+            presentBanner("Questo bake non è più disponibile", duration: 8)
             return
         }
 
         if bake.derivedStatus == .cancelled {
             openBake(bake.id)
-            presentBanner("Questo impasto è stato annullato", duration: 5)
+            presentBanner("Questo bake è stato annullato", duration: 5)
             return
         }
 
         if bake.derivedStatus == .completed {
             openBake(bake.id)
-            presentBanner("Questo impasto è già completato", duration: 5)
+            presentBanner("Questo bake è già completato", duration: 5)
             return
         }
 
@@ -197,28 +190,6 @@ final class AppRouter: ObservableObject {
 
     private func presentBanner(_ message: String, duration: TimeInterval = 3) {
         bannerPresenter?(message, duration)
-    }
-
-    func dismissContextualKnowledge() {
-        contextualKnowledgePresentation = nil
-    }
-
-    private func showKnowledgeTab(articleID: String?) {
-        dismissContextualKnowledge()
-        selectedTab = .knowledge
-        if let articleID {
-            knowledgePath = [.article(articleID)]
-        } else {
-            knowledgePath = []
-        }
-    }
-
-    private func presentContextualKnowledge(_ articleID: String) {
-        if contextualKnowledgePresentation?.articleID == articleID {
-            return
-        }
-
-        contextualKnowledgePresentation = ContextualKnowledgePresentation(articleID: articleID)
     }
 }
 

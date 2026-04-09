@@ -6,55 +6,15 @@ final class FermentationsFlowUITests: XCTestCase {
         continueAfterFailure = false
     }
 
-    private func revealIfNeeded(_ element: XCUIElement, in app: XCUIApplication, attempts: Int = 3) {
-        guard element.waitForExistence(timeout: 1.5) == false else { return }
-
-        for _ in 0..<attempts {
-            app.swipeUp()
-            if element.waitForExistence(timeout: 1.5) {
-                return
-            }
-        }
-    }
-
-    @discardableResult
-    private func waitForCard(
-        _ identifier: String,
-        in app: XCUIApplication,
-        timeout: TimeInterval = 8
-    ) -> XCUIElement {
-        let card = app.descendants(matching: .any).matching(identifier: identifier).firstMatch
-        revealIfNeeded(card, in: app)
-        XCTAssertTrue(card.waitForExistence(timeout: timeout))
-        return card
-    }
-
-    private func navigateToFormulaList(app: XCUIApplication, timeout: TimeInterval = 8) {
-        let batchTab = app.tabBars.buttons["Batch"]
-        XCTAssertTrue(batchTab.waitForExistence(timeout: 5))
-        batchTab.tap()
-
-        let ricetteCard = waitForCard("RicetteCard", in: app, timeout: timeout)
-        ricetteCard.tap()
-
-        XCTAssertTrue(app.descendants(matching: .any).matching(identifier: "FormulaListView").firstMatch.waitForExistence(timeout: timeout))
-    }
-
-    private func dismissKnowledgeModal(in app: XCUIApplication) {
-        let start = app.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.12))
-        let end = app.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.82))
-        start.press(forDuration: 0.05, thenDragTo: end)
-    }
-
     // MARK: - Shell structure
 
     func testFermentationsTabIsReachableFromTabBar() throws {
         let app = XCUIApplication()
         app.launchEmpty()
 
-        let batchTab = app.tabBars.buttons["Batch"]
-        XCTAssertTrue(batchTab.waitForExistence(timeout: 5))
-        batchTab.tap()
+        let fermentiTab = app.tabBars.buttons["Fermenti"]
+        XCTAssertTrue(fermentiTab.waitForExistence(timeout: 5))
+        fermentiTab.tap()
 
         XCTAssertTrue(app.descendants(matching: .any).matching(identifier: "FermentationsView").firstMatch.waitForExistence(timeout: 5))
     }
@@ -63,12 +23,12 @@ final class FermentationsFlowUITests: XCTestCase {
         let app = XCUIApplication()
         app.launchEmpty()
 
-        app.tabBars.buttons["Batch"].tap()
+        app.tabBars.buttons["Fermenti"].tap()
 
-        _ = waitForCard("ImpastiCard", in: app)
-        _ = waitForCard("StarterCard", in: app)
-        _ = waitForCard("KefirHubCard", in: app)
-        _ = waitForCard("RicetteCard", in: app)
+        XCTAssertTrue(app.descendants(matching: .any).matching(identifier: "ImpastiCard").firstMatch.waitForExistence(timeout: 5))
+        XCTAssertTrue(app.descendants(matching: .any).matching(identifier: "StarterCard").firstMatch.waitForExistence(timeout: 5))
+        XCTAssertTrue(app.descendants(matching: .any).matching(identifier: "KefirHubCard").firstMatch.waitForExistence(timeout: 5))
+        XCTAssertTrue(app.descendants(matching: .any).matching(identifier: "RicetteCard").firstMatch.waitForExistence(timeout: 5))
     }
 
     // MARK: - Navigation
@@ -77,9 +37,10 @@ final class FermentationsFlowUITests: XCTestCase {
         let app = XCUIApplication()
         app.launchEmpty()
 
-        app.tabBars.buttons["Batch"].tap()
+        app.tabBars.buttons["Fermenti"].tap()
 
-        let impastiCard = waitForCard("ImpastiCard", in: app)
+        let impastiCard = app.descendants(matching: .any).matching(identifier: "ImpastiCard").firstMatch
+        XCTAssertTrue(impastiCard.waitForExistence(timeout: 5))
         impastiCard.tap()
 
         XCTAssertTrue(app.descendants(matching: .any).matching(identifier: "BakesScrollView").firstMatch.waitForExistence(timeout: 5))
@@ -89,9 +50,10 @@ final class FermentationsFlowUITests: XCTestCase {
         let app = XCUIApplication()
         app.launchEmpty()
 
-        app.tabBars.buttons["Batch"].tap()
+        app.tabBars.buttons["Fermenti"].tap()
 
-        let starterCard = waitForCard("StarterCard", in: app)
+        let starterCard = app.descendants(matching: .any).matching(identifier: "StarterCard").firstMatch
+        XCTAssertTrue(starterCard.waitForExistence(timeout: 5))
         starterCard.tap()
 
         XCTAssertTrue(app.descendants(matching: .any).matching(identifier: "StarterScrollView").firstMatch.waitForExistence(timeout: 5))
@@ -101,9 +63,10 @@ final class FermentationsFlowUITests: XCTestCase {
         let app = XCUIApplication()
         app.launchEmpty()
 
-        app.tabBars.buttons["Batch"].tap()
+        app.tabBars.buttons["Fermenti"].tap()
 
-        let ricetteCard = waitForCard("RicetteCard", in: app)
+        let ricetteCard = app.descendants(matching: .any).matching(identifier: "RicetteCard").firstMatch
+        XCTAssertTrue(ricetteCard.waitForExistence(timeout: 5))
         ricetteCard.tap()
 
         XCTAssertTrue(app.descendants(matching: .any).matching(identifier: "FormulaListView").firstMatch.waitForExistence(timeout: 5))
@@ -115,9 +78,10 @@ final class FermentationsFlowUITests: XCTestCase {
         let app = XCUIApplication()
         app.launchEmpty()
 
-        app.tabBars.buttons["Batch"].tap()
+        app.tabBars.buttons["Fermenti"].tap()
 
-        let kefirCard = waitForCard("KefirHubCard", in: app)
+        let kefirCard = app.descendants(matching: .any).matching(identifier: "KefirHubCard").firstMatch
+        XCTAssertTrue(kefirCard.waitForExistence(timeout: 5))
         kefirCard.tap()
 
         XCTAssertTrue(app.descendants(matching: .any).matching(identifier: "KefirHubView").firstMatch.waitForExistence(timeout: 5))
@@ -127,7 +91,7 @@ final class FermentationsFlowUITests: XCTestCase {
         let app = XCUIApplication()
         app.launchEmpty()
 
-        app.tabBars.buttons["Batch"].tap()
+        app.tabBars.buttons["Fermenti"].tap()
         app.descendants(matching: .any).matching(identifier: "KefirHubCard").firstMatch.tap()
 
         XCTAssertTrue(app.staticTexts["Nessun batch attivo"].waitForExistence(timeout: 5))
@@ -135,57 +99,14 @@ final class FermentationsFlowUITests: XCTestCase {
 
     // MARK: - Deep link preservation
 
-    func testBatchTabIsSelectedAfterBakeDeepLink() throws {
+    func testFermentiTabIsSelectedAfterBakeDeepLink() throws {
         let app = XCUIApplication()
         app.launchSeeded()
 
         XCTAssertTrue(app.tabBars.buttons["Oggi"].waitForExistence(timeout: 5))
 
-        // Navigate via Oggi to a bake (preserves Batch tab selection)
-        app.tabBars.buttons["Batch"].tap()
+        // Navigate via Oggi to a bake (preserves Fermenti tab selection)
+        app.tabBars.buttons["Fermenti"].tap()
         XCTAssertTrue(app.descendants(matching: .any).matching(identifier: "FermentationsView").firstMatch.waitForExistence(timeout: 5))
-    }
-
-    func testFormulaGlossaryLinkOpensKnowledgeArticleOnSharedRootStack() throws {
-        let app = XCUIApplication()
-        app.launchSeeded()
-
-        navigateToFormulaList(app: app)
-
-        let formulaRow = app.staticTexts["Bagel"].firstMatch
-        XCTAssertTrue(formulaRow.waitForExistence(timeout: 8))
-        formulaRow.tap()
-
-        XCTAssertTrue(app.navigationBars["Ricetta"].waitForExistence(timeout: 8))
-
-        let bulkLink = app.links["Bulk fermentation"].firstMatch
-        XCTAssertTrue(bulkLink.waitForExistence(timeout: 8))
-        bulkLink.tap()
-
-        XCTAssertTrue(app.scrollViews["KnowledgeDetailView"].waitForExistence(timeout: 8))
-        XCTAssertTrue(app.staticTexts["KnowledgeDetailTitle-bulk-fermentation-basics"].waitForExistence(timeout: 8))
-    }
-
-    func testFormulaGlossaryBackReturnsToFormulaDetail() throws {
-        let app = XCUIApplication()
-        app.launchSeeded()
-
-        navigateToFormulaList(app: app)
-
-        let formulaRow = app.staticTexts["Bagel"].firstMatch
-        XCTAssertTrue(formulaRow.waitForExistence(timeout: 8))
-        formulaRow.tap()
-
-        XCTAssertTrue(app.navigationBars["Ricetta"].waitForExistence(timeout: 8))
-
-        let bulkLink = app.links["Bulk fermentation"].firstMatch
-        XCTAssertTrue(bulkLink.waitForExistence(timeout: 8))
-        bulkLink.tap()
-
-        XCTAssertTrue(app.scrollViews["KnowledgeDetailView"].waitForExistence(timeout: 8))
-        dismissKnowledgeModal(in: app)
-
-        XCTAssertTrue(app.navigationBars["Ricetta"].waitForExistence(timeout: 8))
-        XCTAssertTrue(app.staticTexts["Bagel"].waitForExistence(timeout: 8))
     }
 }

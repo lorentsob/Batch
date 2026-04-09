@@ -18,8 +18,11 @@ struct KefirHubView: View {
             if batches.isEmpty {
                 EmptyStateView(
                     title: "Nessun batch attivo",
-                    message: "Quando avvii il primo batch lo trovi qui."
-                )
+                    message: "Quando avvii il primo batch lo trovi qui.",
+                    actionTitle: "Nuovo batch"
+                ) {
+                    editorMode = .create
+                }
                 .listRowInsets(.init(top: 16, leading: 20, bottom: 16, trailing: 20))
                 .listRowBackground(Color.clear)
                 .listRowSeparator(.hidden)
@@ -30,13 +33,18 @@ struct KefirHubView: View {
                     archiveBatch(batch)
                 }
             }
-
-            journalSection
         }
         .listStyle(.plain)
-        .levainListSurface()
-        .navigationTitle("")
+        .background(Theme.Surface.app)
+        .navigationTitle("Kefir")
         .navigationBarTitleDisplayMode(.inline)
+        .toolbar {
+            ToolbarItem(placement: .primaryAction) {
+                Button("Nuovo batch") {
+                    editorMode = .create
+                }
+            }
+        }
         .accessibilityIdentifier("KefirHubView")
         .sheet(item: $editorMode) { mode in
             NavigationStack {
@@ -64,10 +72,11 @@ struct KefirHubView: View {
 
     private var headerCard: some View {
         SectionCard(emphasis: .tinted) {
-            ScreenTitleBlock(
-                title: "Kefir",
-                subtitle: "I tuoi batch di Kefir."
-            )
+            Text("Kefir")
+                .font(.system(size: 26, weight: .bold))
+                .foregroundStyle(Theme.ink)
+            Text("I tuoi batch, dove sono e cosa fare.")
+                .foregroundStyle(Theme.muted)
 
             if batches.isEmpty == false {
                 HStack(spacing: 10) {
@@ -84,45 +93,22 @@ struct KefirHubView: View {
                         StateBadge(text: "\(batches.archivedKefirCount) archiviat\(batches.archivedKefirCount == 1 ? "o" : "i")", tone: .count)
                     }
                 }
-            }
 
-            Button {
-                editorMode = .create
-            } label: {
-                Label("Nuovo batch", systemImage: "plus")
+                HStack {
+                    Spacer()
+                    Button {
+                        showingJournal = true
+                    } label: {
+                        Label("Journal", systemImage: "clock.arrow.circlepath")
+                    }
+                    .buttonStyle(SecondaryActionButtonStyle(fill: Theme.Surface.card))
+                    .accessibilityIdentifier("KefirHubOpenJournalButton")
+                }
             }
-            .buttonStyle(PrimaryActionButtonStyle())
-            .padding(.top, Theme.Spacing.xxs)
         }
-        .listRowInsets(.levainListRow(top: Theme.Spacing.sm, bottom: Theme.Spacing.xs))
+        .listRowInsets(.init(top: 0, leading: 20, bottom: 8, trailing: 20))
         .listRowBackground(Color.clear)
         .listRowSeparator(.hidden)
         .accessibilityIdentifier("KefirHubSummaryCard")
-    }
-
-    private var journalSection: some View {
-        SectionCard {
-            VStack(alignment: .leading, spacing: Theme.Spacing.md) {
-                Text("Cronologia batch")
-                    .font(Theme.Typography.headline)
-                    .foregroundStyle(Theme.Text.primary)
-                Text("Tieni traccia dei rinfreschi dei tuoi batch")
-                    .font(Theme.Typography.subheadline)
-                    .foregroundStyle(Theme.Text.secondary)
-                    .fixedSize(horizontal: false, vertical: true)
-            }
-
-            Button {
-                showingJournal = true
-            } label: {
-                Label("Apri cronologia", systemImage: "clock.arrow.circlepath")
-            }
-            .buttonStyle(SecondaryActionButtonStyle())
-            .padding(.top, Theme.Spacing.xxs)
-            .accessibilityIdentifier("KefirHubOpenJournalButton")
-        }
-        .listRowInsets(.levainListRow(top: Theme.Spacing.xs, bottom: Theme.Spacing.md))
-        .listRowBackground(Color.clear)
-        .listRowSeparator(.hidden)
     }
 }

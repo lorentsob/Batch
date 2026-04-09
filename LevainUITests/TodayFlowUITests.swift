@@ -13,8 +13,8 @@ final class TodayFlowUITests: XCTestCase {
         app.launchEmpty()
 
         XCTAssertTrue(app.scrollViews["TodayScrollView"].waitForExistence(timeout: 8))
-        XCTAssertTrue(app.staticTexts["Inizia con il primo impasto"].waitForExistence(timeout: 5))
-        XCTAssertTrue(app.buttons["Nuovo impasto"].exists)
+        XCTAssertTrue(app.staticTexts["Inizia il tuo primo bake"].waitForExistence(timeout: 5))
+        XCTAssertTrue(app.buttons["Nuovo bake"].exists)
         XCTAssertTrue(app.buttons["Aggiungi starter"].exists)
     }
 
@@ -24,7 +24,7 @@ final class TodayFlowUITests: XCTestCase {
 
         XCTAssertTrue(app.scrollViews["TodayScrollView"].waitForExistence(timeout: 8))
         XCTAssertTrue(app.staticTexts["Tutto in pari"].waitForExistence(timeout: 5))
-        XCTAssertTrue(app.buttons["Pianifica un nuovo impasto"].exists)
+        XCTAssertTrue(app.buttons["Pianifica un nuovo bake"].exists)
     }
 
     func testTodayFutureOnlyStateShowsPreviewCard() throws {
@@ -33,7 +33,7 @@ final class TodayFlowUITests: XCTestCase {
 
         XCTAssertTrue(app.scrollViews["TodayScrollView"].waitForExistence(timeout: 8))
         XCTAssertTrue(app.staticTexts["Prossima attività"].waitForExistence(timeout: 5))
-        XCTAssertTrue(app.buttons["Apri starter"].waitForExistence(timeout: 5))
+        XCTAssertTrue(app.buttons["Vai a Preparazioni"].waitForExistence(timeout: 5))
     }
 
     func testTodaySeededLaunchShowsOperationalContent() throws {

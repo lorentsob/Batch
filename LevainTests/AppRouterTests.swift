@@ -23,14 +23,6 @@ struct AppRouterTests {
         return ModelContext(container)
     }
 
-    private func expectFermentationsPath(
-        _ router: AppRouter,
-        equals expectedRoutes: [FermentationsRoute]
-    ) {
-        #expect(router.selectedTab == .fermentations)
-        #expect(router.fermentationsPath == expectedRoutes)
-    }
-
     @Test("AppRouter parses bake deep link correctly")
     func testBakeDeepLink() {
         let router = AppRouter()
@@ -39,8 +31,9 @@ struct AppRouterTests {
 
         router.open(url: url)
 
-        expectFermentationsPath(router, equals: [.bakesList, .bake(id)])
-        if case .bake(let parsedID) = router.fermentationsPath.last {
+        #expect(router.selectedTab == .preparazioni)
+        #expect(router.preparationsPath.count == 1)
+        if case .bake(let parsedID) = router.preparationsPath.first {
             #expect(parsedID == id)
         } else {
             Issue.record("Expected bake route, got something else")
@@ -55,8 +48,9 @@ struct AppRouterTests {
 
         router.open(url: url)
 
-        expectFermentationsPath(router, equals: [.starterList, .starter(id)])
-        if case .starter(let parsedID) = router.fermentationsPath.last {
+        #expect(router.selectedTab == .preparazioni)
+        #expect(router.preparationsPath.count == 1)
+        if case .starter(let parsedID) = router.preparationsPath.first {
             #expect(parsedID == id)
         } else {
             Issue.record("Expected starter route, got something else")
@@ -77,44 +71,6 @@ struct AppRouterTests {
         } else {
             Issue.record("Expected knowledge article route, got something else")
         }
-        #expect(router.contextualKnowledgePresentation == nil)
-    }
-
-    @Test("AppRouter opens contextual knowledge article without leaving current tab")
-    func testContextualKnowledgeArticlePreservesCurrentTab() {
-        let router = AppRouter()
-
-        router.selectedTab = .fermentations
-        router.openKnowledge("appretto-guide")
-
-        #expect(router.selectedTab == .fermentations)
-        #expect(router.contextualKnowledgePresentation?.articleID == "appretto-guide")
-        #expect(router.knowledgePath.isEmpty)
-    }
-
-    @Test("AppRouter replaces contextual knowledge article when a second linked guide opens")
-    func testContextualKnowledgeFlowReplacesPresentedArticle() {
-        let router = AppRouter()
-
-        router.selectedTab = .fermentations
-        router.openKnowledge("appretto-guide")
-        router.openKnowledge("pieghe-guide")
-
-        #expect(router.selectedTab == .fermentations)
-        #expect(router.contextualKnowledgePresentation?.articleID == "pieghe-guide")
-    }
-
-    @Test("AppRouter opens linked guide as modal even when already browsing inside knowledge tab")
-    func testKnowledgeTabLinkUsesContextualPresentation() {
-        let router = AppRouter()
-
-        router.selectedTab = .knowledge
-        router.knowledgePath = [.article("bulk-fermentation-basics")]
-        router.openKnowledge("pieghe-guide")
-
-        #expect(router.selectedTab == .knowledge)
-        #expect(router.knowledgePath == [.article("bulk-fermentation-basics")])
-        #expect(router.contextualKnowledgePresentation?.articleID == "pieghe-guide")
     }
 
     @Test("AppRouter ignores invalid schemes")
@@ -126,7 +82,7 @@ struct AppRouterTests {
         router.open(url: url)
 
         #expect(router.selectedTab == .oggi) // default tab
-        #expect(router.fermentationsPath.isEmpty)
+        #expect(router.preparationsPath.isEmpty)
     }
 
     @Test("AppRouter silently ignores unknown host — safe fallback for missing routes")
@@ -138,7 +94,7 @@ struct AppRouterTests {
 
         // State must remain at default — no crash, no navigation
         #expect(router.selectedTab == .oggi)
-        #expect(router.fermentationsPath.isEmpty)
+        #expect(router.preparationsPath.isEmpty)
         #expect(router.knowledgePath.isEmpty)
     }
 
@@ -150,8 +106,10 @@ struct AppRouterTests {
 
         router.open(url: url)
 
-        expectFermentationsPath(router, equals: [.formulaList, .formula(id)])
-        if case .formula(let parsedID) = router.fermentationsPath.last {
+        // Formula host resolves to preparazioni tab via openFormula
+        #expect(router.selectedTab == .preparazioni)
+        #expect(router.preparationsPath.count == 1)
+        if case .formula(let parsedID) = router.preparationsPath.first {
             #expect(parsedID == id)
         } else {
             Issue.record("Expected formula route")
@@ -167,10 +125,10 @@ struct AppRouterTests {
 
         // Malformed UUID must not change navigation state
         #expect(router.selectedTab == .oggi)
-        #expect(router.fermentationsPath.isEmpty)
+        #expect(router.preparationsPath.isEmpty)
     }
 
-    @Test("Notification navigation falls back to fermentations tab when bake no longer exists")
+    @Test("Notification navigation falls back to preparazioni tab when bake no longer exists")
     func testNotificationFallbackForMissingBake() throws {
         let context = try makeInMemoryContext()
         let router = AppRouter()
@@ -183,9 +141,9 @@ struct AppRouterTests {
 
         router.navigateFromNotificationPayload(bakeId: UUID(), stepId: UUID(), modelContext: context)
 
-        #expect(router.selectedTab == .fermentations)
-        #expect(router.fermentationsPath.isEmpty)
-        #expect(banner == "Questo impasto non è più disponibile")
+        #expect(router.selectedTab == .preparazioni)
+        #expect(router.preparationsPath.isEmpty)
+        #expect(banner == "Questo bake non è più disponibile")
         #expect(duration == 8)
     }
 
@@ -206,8 +164,9 @@ struct AppRouterTests {
 
         router.navigateFromNotificationPayload(bakeId: bake.id, stepId: UUID(), modelContext: context)
 
-        expectFermentationsPath(router, equals: [.bakesList, .bake(bake.id)])
-        if case .bake(let parsedID) = router.fermentationsPath.last {
+        #expect(router.selectedTab == .preparazioni)
+        #expect(router.preparationsPath.count == 1)
+        if case .bake(let parsedID) = router.preparationsPath.first {
             #expect(parsedID == bake.id)
         } else {
             Issue.record("Expected bake route after stale step fallback")
@@ -216,7 +175,7 @@ struct AppRouterTests {
         #expect(duration == 5)
     }
 
-    @Test("Notification navigation falls back to fermentations tab when starter is missing")
+    @Test("Notification navigation falls back to preparazioni tab when starter is missing")
     func testNotificationFallbackForMissingStarter() throws {
         let context = try makeInMemoryContext()
         let router = AppRouter()
@@ -229,13 +188,13 @@ struct AppRouterTests {
 
         router.navigateFromNotificationPayload(starterId: UUID(), modelContext: context)
 
-        #expect(router.selectedTab == .fermentations)
-        #expect(router.fermentationsPath.isEmpty)
+        #expect(router.selectedTab == .preparazioni)
+        #expect(router.preparationsPath.isEmpty)
         #expect(banner == "Starter non trovato")
         #expect(duration == 8)
     }
 
-    @Test("Notification navigation falls back to fermentations tab when kefir batch is missing")
+    @Test("Notification navigation falls back to preparazioni tab when kefir batch is missing")
     func testNotificationFallbackForMissingKefirBatch() throws {
         let context = try makeInMemoryContext()
         let router = AppRouter()
@@ -248,8 +207,8 @@ struct AppRouterTests {
 
         router.navigateFromNotificationPayload(kefirBatchId: UUID(), modelContext: context)
 
-        #expect(router.selectedTab == .fermentations)
-        #expect(router.fermentationsPath.isEmpty)
+        #expect(router.selectedTab == .preparazioni)
+        #expect(router.preparationsPath.isEmpty)
         #expect(banner == "Batch non trovato")
         #expect(duration == 8)
     }
@@ -264,8 +223,9 @@ struct AppRouterTests {
 
         router.navigateFromNotificationPayload(kefirBatchId: batch.id, modelContext: context)
 
-        expectFermentationsPath(router, equals: [.kefirHub, .kefirBatch(batch.id)])
-        if case .kefirBatch(let parsedID) = router.fermentationsPath.last {
+        #expect(router.selectedTab == .preparazioni)
+        #expect(router.preparationsPath.count == 1)
+        if case .kefirBatch(let parsedID) = router.preparationsPath.first {
             #expect(parsedID == batch.id)
         } else {
             Issue.record("Expected kefir batch route after notification navigation")
@@ -294,13 +254,14 @@ struct AppRouterTests {
             modelContext: context
         )
 
-        expectFermentationsPath(router, equals: [.bakesList, .bake(bake.id)])
-        if case .bake(let parsedID) = router.fermentationsPath.last {
+        #expect(router.selectedTab == .preparazioni)
+        #expect(router.preparationsPath.count == 1)
+        if case .bake(let parsedID) = router.preparationsPath.first {
             #expect(parsedID == bake.id)
         } else {
             Issue.record("Expected bake route for cancelled bake fallback")
         }
-        #expect(banner == "Questo impasto è stato annullato")
+        #expect(banner == "Questo bake è stato annullato")
         #expect(duration == 5)
     }
 
@@ -326,8 +287,9 @@ struct AppRouterTests {
             modelContext: context
         )
 
-        expectFermentationsPath(router, equals: [.bakesList, .bake(bake.id)])
-        #expect(banner == "Questo impasto è già completato")
+        #expect(router.selectedTab == .preparazioni)
+        #expect(router.preparationsPath.count == 1)
+        #expect(banner == "Questo bake è già completato")
         #expect(duration == 5)
     }
 
@@ -339,8 +301,9 @@ struct AppRouterTests {
 
         router.open(url: url)
 
-        expectFermentationsPath(router, equals: [.kefirHub, .kefirBatch(id)])
-        if case .kefirBatch(let parsedID) = router.fermentationsPath.last {
+        #expect(router.selectedTab == .preparazioni)
+        #expect(router.preparationsPath.count == 1)
+        if case .kefirBatch(let parsedID) = router.preparationsPath.first {
             #expect(parsedID == id)
         } else {
             Issue.record("Expected kefirBatch route, got something else")
@@ -354,13 +317,16 @@ struct AppRouterTests {
 
         router.openBake(bakeID)
 
-        expectFermentationsPath(router, equals: [.bakesList, .bake(bakeID)])
-        if case .bake(let parsedID) = router.fermentationsPath.last {
+        // Direct-object rule: preparationsPath goes straight to .bake without .breadHub
+        #expect(router.selectedTab == .preparazioni)
+        #expect(router.preparationsPath.count == 1)
+        if case .bake(let parsedID) = router.preparationsPath.first {
             #expect(parsedID == bakeID)
         } else {
             Issue.record("Expected direct bake route without hub prefix")
         }
-        let hasHubStep = router.fermentationsPath.contains(.breadHub) || router.fermentationsPath.contains(.kefirHub)
+        // Verify no hub step was inserted
+        let hasHubStep = router.preparationsPath.contains { $0 == .breadHub || $0 == .kefirHub }
         #expect(hasHubStep == false)
     }
 
