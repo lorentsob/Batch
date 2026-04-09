@@ -10,7 +10,7 @@ final class KefirFlowUITests: XCTestCase {
         let app = XCUIApplication()
         app.launchSeeded()
 
-        app.tabBars.buttons["Preparazioni"].tap()
+        app.tabBars.buttons["Batch"].tap()
 
         let card = app.descendants(matching: .any).matching(identifier: "KefirHubCard").firstMatch
         XCTAssertTrue(card.waitForExistence(timeout: 8))
@@ -37,10 +37,7 @@ final class KefirFlowUITests: XCTestCase {
         let app = XCUIApplication()
         app.launchSeeded()
 
-        openKefirHub(in: app)
-        app.buttons["Apri rinnovo"].firstMatch.tap()
-
-        XCTAssertTrue(app.descendants(matching: .any).matching(identifier: "KefirBatchDetailView").firstMatch.waitForExistence(timeout: 8))
+        openFirstSeededBatchDetail(in: app)
         XCTAssertTrue(app.staticTexts["Batch kefir cucina"].waitForExistence(timeout: 8))
         XCTAssertTrue(app.descendants(matching: .any).matching(identifier: "KefirDetailPrimaryActionButton").firstMatch.waitForExistence(timeout: 8))
     }
@@ -49,14 +46,8 @@ final class KefirFlowUITests: XCTestCase {
         let app = XCUIApplication()
         app.launchSeeded()
 
-        openKefirHub(in: app)
-
-        let journalButton = app.buttons["KefirHubOpenJournalButton"].firstMatch
-        XCTAssertTrue(journalButton.waitForExistence(timeout: 8))
-        journalButton.tap()
-
-        XCTAssertTrue(app.descendants(matching: .any).matching(identifier: "KefirJournalView").firstMatch.waitForExistence(timeout: 8))
-        XCTAssertTrue(app.staticTexts["Archivio pronto da riusare"].waitForExistence(timeout: 8))
+        openJournal(in: app)
+        XCTAssertTrue(app.staticTexts["Cronologia e archivio"].waitForExistence(timeout: 8))
         XCTAssertTrue(app.staticTexts["Batch test derivato"].waitForExistence(timeout: 8))
         XCTAssertTrue(scrollUntilVisible(app.staticTexts["Batch avviato"], in: app))
     }
@@ -104,7 +95,7 @@ final class KefirFlowUITests: XCTestCase {
         app.launchSeeded()
 
         openFirstSeededBatchDetail(in: app)
-        let deriveButton = app.staticTexts["Nuovo batch"].firstMatch
+        let deriveButton = app.buttons["KefirDetailQuickDeriveButton"].firstMatch
         XCTAssertTrue(scrollUntilVisible(deriveButton, in: app))
         deriveButton.tap()
 
@@ -124,7 +115,7 @@ final class KefirFlowUITests: XCTestCase {
 
         XCTAssertTrue(scrollUntilVisible(app.staticTexts["Storia recente"], in: app))
 
-        let journalButton = app.staticTexts["Apri journal batch"].firstMatch
+        let journalButton = app.buttons["KefirDetailOpenJournalButton"].firstMatch
         XCTAssertTrue(journalButton.waitForExistence(timeout: 8))
         journalButton.tap()
 
@@ -137,10 +128,10 @@ final class KefirFlowUITests: XCTestCase {
         let app = XCUIApplication()
         app.launchSeeded()
 
-        openKefirHub(in: app)
+        openJournal(in: app)
 
-        let archiveButton = app.buttons["KefirHubOpenArchiveButton"].firstMatch
-        XCTAssertTrue(archiveButton.waitForExistence(timeout: 8))
+        let archiveButton = app.buttons["KefirJournalOpenArchiveButton"].firstMatch
+        XCTAssertTrue(scrollUntilVisible(archiveButton, in: app, maxSwipes: 12))
         archiveButton.tap()
 
         XCTAssertTrue(app.descendants(matching: .any).matching(identifier: "KefirArchiveView").firstMatch.waitForExistence(timeout: 8))
@@ -198,14 +189,9 @@ final class KefirFlowUITests: XCTestCase {
         let app = XCUIApplication()
         app.launchSeeded()
 
-        openKefirHub(in: app)
-        let journalButton = app.buttons["KefirHubOpenJournalButton"].firstMatch
-        XCTAssertTrue(journalButton.waitForExistence(timeout: 8))
-        journalButton.tap()
+        openJournal(in: app)
 
-        XCTAssertTrue(app.descendants(matching: .any).matching(identifier: "KefirJournalView").firstMatch.waitForExistence(timeout: 8))
-
-        let archiveLink = app.buttons["Vai all'archivio completo"].firstMatch
+        let archiveLink = app.buttons["KefirJournalOpenArchiveButton"].firstMatch
         XCTAssertTrue(scrollUntilVisible(archiveLink, in: app, maxSwipes: 12))
         archiveLink.tap()
 
@@ -217,7 +203,7 @@ final class KefirFlowUITests: XCTestCase {
         app.launchSeeded()
 
         openFirstSeededBatchDetail(in: app)
-        let archiveButton = app.staticTexts["Archivia"].firstMatch
+        let archiveButton = app.buttons["KefirDetailQuickArchiveButton"].firstMatch
         XCTAssertTrue(scrollUntilVisible(archiveButton, in: app))
         archiveButton.tap()
         app.alerts.buttons["Archivia"].tap()
@@ -231,10 +217,9 @@ final class KefirFlowUITests: XCTestCase {
         app.launchSeeded()
 
         openFirstSeededBatchDetail(in: app)
-
-        let stateButton = app.staticTexts["Stato"].firstMatch
-        XCTAssertTrue(scrollUntilVisible(stateButton, in: app))
-        stateButton.tap()
+        let manageButton = app.buttons["KefirDetailPrimaryActionButton"].firstMatch
+        XCTAssertTrue(scrollUntilVisible(manageButton, in: app))
+        manageButton.tap()
 
         XCTAssertTrue(app.descendants(matching: .any).matching(identifier: "KefirBatchManageSheet").firstMatch.waitForExistence(timeout: 8))
         XCTAssertTrue(app.descendants(matching: .any).matching(identifier: "KefirBatchManageStoragePicker").firstMatch.waitForExistence(timeout: 8))
@@ -279,10 +264,10 @@ final class KefirFlowUITests: XCTestCase {
     }
 
     private func openFermentations(in app: XCUIApplication) {
-        let preparationsTab = app.tabBars.buttons["Preparazioni"]
-        XCTAssertTrue(preparationsTab.waitForExistence(timeout: 8))
-        preparationsTab.tap()
-        XCTAssertTrue(app.descendants(matching: .any).matching(identifier: "PreparationsView").firstMatch.waitForExistence(timeout: 8))
+        let batchTab = app.tabBars.buttons["Batch"]
+        XCTAssertTrue(batchTab.waitForExistence(timeout: 8))
+        batchTab.tap()
+        XCTAssertTrue(app.descendants(matching: .any).matching(identifier: "FermentationsView").firstMatch.waitForExistence(timeout: 8))
     }
 
     private func openKefirHub(in app: XCUIApplication) {
@@ -294,17 +279,25 @@ final class KefirFlowUITests: XCTestCase {
     }
 
     private func openArchiveView(in app: XCUIApplication) {
-        openKefirHub(in: app)
-        let archiveButton = app.buttons["KefirHubOpenArchiveButton"].firstMatch
-        XCTAssertTrue(archiveButton.waitForExistence(timeout: 8))
+        openJournal(in: app)
+        let archiveButton = app.buttons["KefirJournalOpenArchiveButton"].firstMatch
+        XCTAssertTrue(scrollUntilVisible(archiveButton, in: app, maxSwipes: 12))
         archiveButton.tap()
         XCTAssertTrue(app.descendants(matching: .any).matching(identifier: "KefirArchiveView").firstMatch.waitForExistence(timeout: 8))
     }
 
+    private func openJournal(in app: XCUIApplication) {
+        openKefirHub(in: app)
+        let journalButton = app.buttons["KefirHubOpenJournalButton"].firstMatch
+        XCTAssertTrue(scrollUntilVisible(journalButton, in: app, maxSwipes: 12))
+        journalButton.tap()
+        XCTAssertTrue(app.descendants(matching: .any).matching(identifier: "KefirJournalView").firstMatch.waitForExistence(timeout: 8))
+    }
+
     private func openFirstSeededBatchDetail(in app: XCUIApplication) {
         openKefirHub(in: app)
-        let openButton = app.buttons["Apri rinnovo"].firstMatch
-        XCTAssertTrue(openButton.waitForExistence(timeout: 8))
+        let openButton = app.buttons["KefirBatchPrimaryCTA-batch-kefir-cucina"].firstMatch
+        XCTAssertTrue(scrollUntilVisible(openButton, in: app, maxSwipes: 8))
         openButton.tap()
         XCTAssertTrue(app.descendants(matching: .any).matching(identifier: "KefirBatchDetailView").firstMatch.waitForExistence(timeout: 8))
     }

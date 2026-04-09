@@ -34,6 +34,54 @@ enum SeedDataLoader {
         try insertSampleContent(in: context, settings: settings, scenario: scenario)
     }
 
+    // MARK: - System formulas
+
+    /// Loads system_formulas.json and persists each formula as a `RecipeFormula` with
+    /// `isSystemFormula = true`. Idempotent: skipped if the flag is already set.
+    static func ensureSystemFormulas(in context: ModelContext) throws {
+        let settingsDescriptor = FetchDescriptor<AppSettings>()
+        let settings = try context.fetch(settingsDescriptor).first ?? {
+            let value = AppSettings()
+            context.insert(value)
+            return value
+        }()
+
+        guard settings.didSeedSystemFormulas == false else { return }
+
+        let systemFormulas = SystemFormulaLoader.loadSystemFormulas()
+        let existingIDs: Set<UUID> = try {
+            let descriptor = FetchDescriptor<RecipeFormula>()
+            return Set(try context.fetch(descriptor).map(\.id))
+        }()
+
+        for sf in systemFormulas where !existingIDs.contains(sf.id) {
+            let formula = RecipeFormula(
+                id: sf.id,
+                name: sf.name,
+                type: sf.type,
+                totalFlourWeight: sf.totalFlourWeight,
+                totalWaterWeight: sf.totalWaterWeight,
+                saltWeight: sf.saltWeight,
+                inoculationPercent: sf.inoculationPercent,
+                servings: sf.servings,
+                notes: sf.notes,
+                flourMix: sf.flourMix,
+                yeastType: sf.yeastType,
+                flours: sf.flours,
+                defaultSteps: sf.defaultSteps,
+                ingredients: sf.ingredients,
+                procedure: sf.procedure,
+                bakingInstructions: sf.bakingInstructions,
+                isSystemFormula: true,
+                isModifiedFromDefault: false
+            )
+            context.insert(formula)
+        }
+
+        settings.didSeedSystemFormulas = true
+        try context.save()
+    }
+
     static func resetAndSeed(in context: ModelContext, scenario: Scenario = .operational) throws {
         let settingsDescriptor = FetchDescriptor<AppSettings>()
         let settings = try context.fetch(settingsDescriptor).first ?? {
@@ -89,7 +137,7 @@ enum SeedDataLoader {
             waterWeight: 80,
             starterWeightUsed: 20,
             ratioText: "1:4:4",
-            notes: "Rinfresco pre-bake.",
+            notes: "Rinfresco pre-impasto.",
             starter: starter
         )
         context.insert(refresh1)

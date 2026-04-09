@@ -21,7 +21,7 @@ enum StarterReminderPlanner {
             identifier: "starter-due-\(starter.id.uuidString)",
             fireDate: due,
             title: starter.name,
-            body: "Rinfresco previsto oggi.",
+            body: "Oggi è previsto un rinfresco. Apri lo starter per registrarlo.",
             route: route
         )
 
@@ -29,7 +29,7 @@ enum StarterReminderPlanner {
             identifier: "starter-followup-\(starter.id.uuidString)",
             fireDate: followUp,
             title: starter.name,
-            body: "Ancora nessun rinfresco registrato.",
+            body: "Non hai ancora registrato il rinfresco di oggi. Apri lo starter per farlo adesso.",
             route: route
         )
 

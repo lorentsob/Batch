@@ -9,6 +9,19 @@ final class Bake {
         let activeStep: BakeStep?
     }
 
+    private struct OperationalSnapshotCacheKey: Equatable {
+        struct StepToken: Equatable {
+            let id: UUID
+            let orderIndex: Int
+            let plannedStart: Date
+            let actualStart: Date?
+            let statusRaw: String
+        }
+
+        let isCancelled: Bool
+        let steps: [StepToken]
+    }
+
     @Attribute(.unique) var id: UUID
     var name: String
     var typeRaw: String
@@ -30,6 +43,9 @@ final class Bake {
 
     @Relationship(deleteRule: .cascade, inverse: \BakeStep.bake)
     var steps: [BakeStep]
+
+    @Transient private var cachedOperationalSnapshot: OperationalSnapshot?
+    @Transient private var cachedOperationalSnapshotKey: OperationalSnapshotCacheKey?
 
     init(
         id: UUID = UUID(),
@@ -109,6 +125,24 @@ final class Bake {
     }
 
     func makeOperationalSnapshot() -> OperationalSnapshot {
+        let cacheKey = OperationalSnapshotCacheKey(
+            isCancelled: isCancelled,
+            steps: steps.map { step in
+                OperationalSnapshotCacheKey.StepToken(
+                    id: step.id,
+                    orderIndex: step.orderIndex,
+                    plannedStart: step.plannedStart,
+                    actualStart: step.actualStart,
+                    statusRaw: step.statusRaw
+                )
+            }
+        )
+
+        if cacheKey == cachedOperationalSnapshotKey,
+           let cachedOperationalSnapshot {
+            return cachedOperationalSnapshot
+        }
+
         let orderedSteps = steps.sorted { lhs, rhs in
             if lhs.orderIndex != rhs.orderIndex {
                 return lhs.orderIndex < rhs.orderIndex
@@ -133,10 +167,14 @@ final class Bake {
             orderedSteps.first(where: { $0.status == .running }) ??
             orderedSteps.first(where: { $0.status == .pending })
 
-        return OperationalSnapshot(
+        let snapshot = OperationalSnapshot(
             orderedSteps: orderedSteps,
             derivedStatus: derivedStatus,
             activeStep: activeStep
         )
+
+        cachedOperationalSnapshotKey = cacheKey
+        cachedOperationalSnapshot = snapshot
+        return snapshot
     }
 }

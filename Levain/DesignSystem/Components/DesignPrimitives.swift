@@ -33,7 +33,9 @@ struct MetricChip: View {
         switch tone {
         case .danger, .overdue:
             Theme.Surface.danger
-        case .done, .skipped:
+        case .done:
+            Theme.Surface.card
+        case .skipped:
             Theme.Surface.subtle
         default:
             Theme.Surface.card
@@ -44,7 +46,9 @@ struct MetricChip: View {
         switch tone {
         case .danger, .overdue:
             Theme.Border.danger
-        case .done, .skipped:
+        case .done:
+            Theme.Border.defaultColor
+        case .skipped:
             Theme.Border.done
         default:
             Theme.Border.emphasis
@@ -53,7 +57,9 @@ struct MetricChip: View {
 
     private var labelColor: Color {
         switch tone {
-        case .done, .skipped:
+        case .done:
+            Theme.Text.tertiary
+        case .skipped:
             Theme.Text.secondary
         default:
             Theme.Text.tertiary

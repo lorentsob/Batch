@@ -1,7 +1,7 @@
 # Core Operational Flows v2
 
 **Updated:** 2026-03-12  
-**Repository source of truth:** this markdown mirrors `/Users/lorentso/Downloads/levain-user-flows-v2.html` so the app, planning artifacts, and verification all reference the same operational model.
+**Repository source of truth:** this markdown mirrors the archived v2 flow export kept outside the repo, so the app, planning artifacts, and verification all reference the same operational model.
 
 ## Index
 

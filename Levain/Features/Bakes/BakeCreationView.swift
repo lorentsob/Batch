@@ -8,7 +8,7 @@ struct BakeCreationView: View {
     @EnvironmentObject private var router: AppRouter
 
     @Query(sort: \RecipeFormula.name) private var formulas: [RecipeFormula]
-    @Query(sort: \Starter.name) private var starters: [Starter]
+    @Query(filter: #Predicate<Starter> { $0.archivedAt == nil }, sort: \Starter.name) private var starters: [Starter]
 
     let preselectedFormula: RecipeFormula?
     let shouldPreselectFirstAvailable: Bool
@@ -21,6 +21,11 @@ struct BakeCreationView: View {
     @State private var notes: String
     @State private var showingBakeDatePicker = false
     @State private var showingBakeTimePicker = false
+
+    // Fonte lievito: sourdough (starter) o commerciale
+    @State private var useCommercialYeast = false
+    @State private var commercialYeastType: YeastType = .instantYeast
+    @State private var yeastProfile: YeastProfile = .medium
 
     init(preselectedFormula: RecipeFormula?, shouldPreselectFirstAvailable: Bool = false) {
         self.preselectedFormula = preselectedFormula
@@ -72,7 +77,7 @@ struct BakeCreationView: View {
             }
 
             Section("Pianificazione") {
-                TextField("Nome del bake (opzionale)", text: $name)
+                TextField("Nome impasto (opzionale)", text: $name)
                     .accessibilityIdentifier("BakeNameField")
 
                 VStack(alignment: .leading, spacing: 12) {
@@ -98,23 +103,16 @@ struct BakeCreationView: View {
                 .padding(.vertical, 4)
             }
 
-            if let formula = selectedFormulaChoice, formula.yeastType == .sourdough {
-                Section("Starter") {
-                    Picker("Starter usato", selection: $selectedStarterID) {
-                        Text("Nessuno").tag(Optional<UUID>.none)
-                        ForEach(starters) { starter in
-                            Text(starter.name).tag(Optional(starter.id))
-                        }
-                    }
-                }
+            if selectedFormulaChoice != nil {
+                yeastSourceSection
             }
 
-            Section("Avanzate") {
+            Section("Note") {
                 TextField("Note aggiuntive", text: $notes, axis: .vertical)
                     .lineLimit(3...5)
             }
         }
-        .navigationTitle("Nuovo bake")
+        .navigationTitle("Nuovo impasto")
         .tint(Theme.Control.primaryFill)
         .toolbar {
             ToolbarItem(placement: .cancellationAction) {
@@ -127,7 +125,6 @@ struct BakeCreationView: View {
         }
         .scrollContentBackground(.hidden)
         .background(Theme.Surface.app)
-        .presentationBackground(Theme.Surface.app)
         .sheet(isPresented: $showingBakeDatePicker) {
             BakeDatePickerSheet(selection: targetBakeDateBinding)
         }
@@ -147,6 +144,92 @@ struct BakeCreationView: View {
         }
     }
 
+    // MARK: - Yeast source section
+
+    @ViewBuilder
+    private var yeastSourceSection: some View {
+        let formula = selectedFormulaChoice
+        // Mostriamo sempre la sezione fonte lievito.
+        // Se la ricetta è già commerciale, blocchiamo sul commerciale.
+        let formulaIsCommercial = formula?.yeastType.isCommercial ?? false
+
+        Section {
+            // Selettore sourdough vs commerciale (solo se la ricetta è sourdough)
+            if !(formulaIsCommercial) {
+                Picker("Lievito", selection: $useCommercialYeast) {
+                    Text("Lievito madre").tag(false)
+                    Text("Commerciali").tag(true)
+                }
+                .pickerStyle(.segmented)
+                .onChange(of: useCommercialYeast) { _, _ in
+                    if !useCommercialYeast { selectedStarterID = nil }
+                }
+            }
+
+            if !useCommercialYeast && !formulaIsCommercial {
+                // --- Sourdough: picker starter personali ---
+                Picker("Starter usato", selection: $selectedStarterID) {
+                    Text("Nessuno").tag(Optional<UUID>.none)
+                    ForEach(starters) { starter in
+                        Text(starter.name).tag(Optional(starter.id))
+                    }
+                }
+            } else {
+                // --- Commerciale: tipo lievito + profilo tempi ---
+                Picker("Tipo lievito", selection: $commercialYeastType) {
+                    ForEach(YeastType.commercialCases) { type in
+                        Text(type.title).tag(type)
+                    }
+                }
+
+            }
+        } header: {
+            Text("Agente lievitante")
+        }
+
+        // Preview ricalcolo (solo quando si usa lievito commerciale)
+        if useCommercialYeast || formulaIsCommercial, let conversion = computedYeastConversion {
+            Section("Ricalcolo automatico") {
+                YeastConversionPreviewView(
+                    conversion: conversion,
+                    yeastType: formulaIsCommercial ? (formula?.yeastType ?? commercialYeastType) : commercialYeastType,
+                    profile: yeastProfile
+                )
+            }
+        }
+    }
+
+    /// Calcola la conversione in tempo reale basandosi sulla formula selezionata e sulle scelte UI.
+    private var computedYeastConversion: YeastConversionResult? {
+        guard let formula = selectedFormulaChoice else { return nil }
+        let isCommercial = useCommercialYeast || formula.yeastType.isCommercial
+        guard isCommercial else { return nil }
+
+        let targetType = formula.yeastType.isCommercial ? formula.yeastType : commercialYeastType
+
+        // Se la ricetta è già sourdough (e l'utente vuole commerciale), scomponiamo lo starter
+        if formula.yeastType == .sourdough {
+            let starterWeight = formula.inoculationPercent / 100 * formula.totalFlourWeight
+            // Assumiamo starter al 100% se non abbiamo uno starter selezionato
+            let hydration = selectedStarter?.hydration ?? 100.0
+            return YeastConversionService.convert(
+                formulaFlour: formula.totalFlourWeight,
+                formulaWater: formula.totalWaterWeight,
+                starterWeight: starterWeight,
+                starterHydration: hydration,
+                targetYeastType: targetType,
+                profile: yeastProfile
+            )
+        } else {
+            // Ricetta già commerciale: calcoliamo solo la quantità lievito per il profilo
+            return YeastConversionService.calculateYeast(
+                flourWeight: formula.totalFlourWeight,
+                targetYeastType: targetType,
+                profile: yeastProfile
+            )
+        }
+    }
+
     private var formulaPickerOptions: some View {
         Group {
             Text("Seleziona").tag(Optional<UUID>.none)
@@ -160,7 +243,7 @@ struct BakeCreationView: View {
             }
 
             if systemFormulas.isEmpty == false {
-                Section("Template di sistema") {
+                Section("Tutte le ricette") {
                     ForEach(systemFormulas) { formula in
                         Text(formula.name).tag(Optional(formula.id))
                     }
@@ -237,11 +320,18 @@ struct BakeCreationView: View {
 
         let formula = selectedFormulaChoice.makeTransientFormula()
 
+        // Apply yeast conversion weights to the transient formula when converting sourdough → commercial
+        if let conversion = computedYeastConversion, selectedFormulaChoice.yeastType == .sourdough {
+            formula.totalFlourWeight = conversion.newTotalFlourWeight
+            formula.totalWaterWeight = conversion.newTotalWaterWeight
+            formula.recalculateDerivedValues()
+        }
+
         let bake = BakeScheduler.generateBake(
             name: resolvedName,
             targetBakeDateTime: targetBakeDateTime,
             formula: formula,
-            starter: selectedStarter,
+            starter: useCommercialYeast ? nil : selectedStarter,
             notes: notes
         )
 
@@ -302,6 +392,24 @@ private extension BakeCreationView {
                 formula.hydrationPercent
             case let .system(formula):
                 formula.hydrationPercent
+            }
+        }
+
+        var totalFlourWeight: Double {
+            switch self {
+            case let .user(formula):
+                formula.totalFlourWeight
+            case let .system(formula):
+                formula.totalFlourWeight
+            }
+        }
+
+        var totalWaterWeight: Double {
+            switch self {
+            case let .user(formula):
+                formula.totalWaterWeight
+            case let .system(formula):
+                formula.totalWaterWeight
             }
         }
 
@@ -388,6 +496,8 @@ private struct BakeDatePickerSheet: View {
                     .labelsHidden()
                     .padding()
             }
+            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
+            .background(Theme.Surface.app.ignoresSafeArea())
             .navigationTitle("Data sfornata")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
@@ -400,7 +510,6 @@ private struct BakeDatePickerSheet: View {
             }
         }
         .presentationDetents([.medium, .large])
-        .presentationBackground(Theme.Surface.app)
     }
 }
 
@@ -416,6 +525,8 @@ private struct BakeTimePickerSheet: View {
                     .labelsHidden()
                     .frame(maxWidth: .infinity)
             }
+            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
+            .background(Theme.Surface.app.ignoresSafeArea())
             .navigationTitle("Ora sfornata")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
@@ -428,6 +539,97 @@ private struct BakeTimePickerSheet: View {
             }
         }
         .presentationDetents([.fraction(0.38)])
-        .presentationBackground(Theme.Surface.app)
+    }
+}
+
+// MARK: - Preview ricalcolo lievito commerciale
+
+private struct YeastConversionPreviewView: View {
+    let conversion: YeastConversionResult
+    let yeastType: YeastType
+    let profile: YeastProfile
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 0) {
+            // Ingredienti — righe secondarie, label/valore
+            dataRow(
+                label: "Farina totale",
+                value: String(format: "%.0f g", conversion.newTotalFlourWeight)
+            )
+            dataRow(
+                label: "Acqua totale",
+                value: String(format: "%.0f g", conversion.newTotalWaterWeight)
+            )
+
+            thinDivider.padding(.vertical, 12)
+
+            // Lievito — dato primario: label piccola, valore grande in verde
+            HStack(alignment: .center) {
+                VStack(alignment: .leading, spacing: 2) {
+                    Text(yeastType.shortTitle)
+                        .font(Theme.Typography.caption1Semibold)
+                        .foregroundStyle(Theme.Palette.green500)
+                        .textCase(.uppercase)
+                    Text("da aggiungere")
+                        .font(Theme.Typography.caption1)
+                        .foregroundStyle(Theme.Text.secondary)
+                }
+                Spacer()
+                Text(String(format: "%.1f g", conversion.yeastGrams))
+                    .font(.system(size: 22, weight: .semibold, design: .default))
+                    .foregroundStyle(Theme.Palette.green600)
+            }
+            .padding(.bottom, 12)
+
+            thinDivider.padding(.bottom, 12)
+
+            // Tempi — righe secondarie con icona
+            dataRow(label: "Puntata", value: durationLabel(conversion.bulkDurationMinutes), icon: "timer")
+            dataRow(label: "Appretto", value: durationLabel(conversion.proofDurationMinutes), icon: "moon.zzz.fill")
+
+        }
+        .padding(.vertical, 6)
+    }
+
+    // MARK: - Sub-views
+
+    private var thinDivider: some View {
+        Rectangle()
+            .fill(Theme.Border.defaultColor)
+            .frame(height: 0.5)
+    }
+
+    private func dataRow(label: String, value: String, icon: String? = nil) -> some View {
+        HStack {
+            if let icon {
+                Label(label, systemImage: icon)
+                    .font(Theme.Typography.subheadline)
+                    .foregroundStyle(Theme.Text.secondary)
+            } else {
+                Text(label)
+                    .font(Theme.Typography.subheadline)
+                    .foregroundStyle(Theme.Text.secondary)
+            }
+            Spacer()
+            Text(value)
+                .font(Theme.Typography.subheadlineSemibold)
+                .foregroundStyle(Theme.Text.primary)
+        }
+        .padding(.vertical, 5)
+    }
+
+    // MARK: - Helpers
+
+    private var isRichDough: Bool {
+        conversion.newTotalFlourWeight > 600
+    }
+
+    private func durationLabel(_ minutes: Int) -> String {
+        if minutes >= 60 {
+            let h = minutes / 60
+            let m = minutes % 60
+            return m == 0 ? "\(h)h" : "\(h)h \(m)min"
+        }
+        return "\(minutes) min"
     }
 }

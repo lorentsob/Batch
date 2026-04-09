@@ -19,6 +19,8 @@ struct BakeIngredientsView: View {
     let bake: Bake
 
     @Environment(\.dismiss) private var dismiss
+    @EnvironmentObject private var environment: AppEnvironment
+    @EnvironmentObject private var router: AppRouter
 
     private let metricColumns = [
         GridItem(.adaptive(minimum: 110), spacing: 8)
@@ -50,9 +52,14 @@ struct BakeIngredientsView: View {
         return steps
     }
 
+    private var glossaryIndex: KnowledgeGlossaryIndex {
+        environment.knowledgeLibrary.glossaryIndex
+    }
+
     var body: some View {
-        ScrollView {
-            VStack(alignment: .leading, spacing: 20) {
+        GeometryReader { geometry in
+            ScrollView(.vertical) {
+                VStack(alignment: .leading, spacing: 20) {
 
                 // ── Baker's math ────────────────────────────────────────────
                 SectionCard {
@@ -115,12 +122,22 @@ struct BakeIngredientsView: View {
 
                             ForEach(procedureSections, id: \.title) { section in
                                 VStack(alignment: .leading, spacing: 8) {
-                                    Text(section.title.uppercased())
-                                        .font(.caption.weight(.semibold))
-                                        .tracking(0.6)
-                                        .foregroundStyle(Theme.Control.primaryFill)
-                                    
-                                    Text(section.content)
+                                    GlossaryLinkedText(
+                                        text: section.title.uppercased(),
+                                        glossaryIndex: glossaryIndex,
+                                        maxLinks: 1,
+                                        onOpenKnowledge: router.openKnowledge
+                                    )
+                                    .font(.caption.weight(.semibold))
+                                    .tracking(0.6)
+                                    .foregroundStyle(Theme.Control.primaryFill)
+
+                                    GlossaryLinkedText(
+                                        text: section.content,
+                                        glossaryIndex: glossaryIndex,
+                                        maxLinks: 2,
+                                        onOpenKnowledge: router.openKnowledge
+                                    )
                                         .font(.subheadline)
                                         .foregroundStyle(Theme.ink)
                                         .fixedSize(horizontal: false, vertical: true)
@@ -158,14 +175,21 @@ struct BakeIngredientsView: View {
                     }
                 }
             }
-            .padding(.horizontal, 20)
-            .padding(.vertical, 24)
+                .frame(width: geometry.size.width, alignment: .leading)
+                .padding(.horizontal, 20)
+                .padding(.vertical, 24)
+        }
+            .scrollBounceBehavior(.basedOnSize, axes: .vertical)
+            .scrollClipDisabled(false)
         }
         .contentMargins(.bottom, 20, for: .scrollContent)
         .background(Theme.background.ignoresSafeArea())
         .navigationTitle("Dettagli ricetta")
         .navigationBarTitleDisplayMode(.inline)
         .tint(Theme.Control.primaryFill)
+        .task {
+            environment.knowledgeLibrary.loadIfNeeded()
+        }
         .toolbar {
             ToolbarItem(placement: .confirmationAction) {
                 Button("Fatto") { dismiss() }

@@ -24,7 +24,7 @@ struct StarterCardView: View {
                 }
 
                 LazyVGrid(columns: metricColumns, alignment: .leading, spacing: 8) {
-                    MetricChip(label: "Ritmo", value: "Ogni \(starter.refreshIntervalDays) gg", tone: .info)
+                    MetricChip(label: "Rinfreschi", value: "Ogni \(starter.refreshIntervalDays) gg", tone: .info)
                     MetricChip(label: "Prossimo", value: DateFormattingService.dayTime(starter.nextDueDate), tone: reminderTone)
                 }
 
@@ -62,9 +62,9 @@ struct StarterCardView: View {
     private var reminderTone: StateBadge.Tone {
         switch starter.dueState() {
         case .ok:
-            .done
+            .info
         case .dueToday:
-            .pending                // verde tenue — scade oggi, nel piano attivo
+            .pending
         case .overdue:
             .danger
         }

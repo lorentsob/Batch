@@ -3,10 +3,15 @@ name: iOS CI
 on:
   push:
     branches:
+      - main
       - develop
   pull_request:
     branches:
+      - main
       - develop
+
+permissions:
+  contents: read
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -14,7 +19,8 @@ concurrency:
 
 jobs:
   build-and-test:
-    name: Build & Test
+    name: Build
+    if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository
     runs-on: self-hosted
 
     env:

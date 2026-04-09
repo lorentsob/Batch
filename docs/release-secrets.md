@@ -1,4 +1,4 @@
-# Levain Release Secrets
+# Batch Release Secrets
 
 **Prepared:** 2026-03-10 — Phase 09-03
 **Impact:** `ios-release.yml` failures until these are provisioned (RISK-01).

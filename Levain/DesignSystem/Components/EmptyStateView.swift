@@ -3,19 +3,38 @@ import SwiftUI
 struct EmptyStateView: View {
     let title: String
     let message: String
-    let actionTitle: String
-    let action: () -> Void
+    var actionTitle: String? = nil
+    var action: (() -> Void)? = nil
+
+    init(title: String, message: String) {
+        self.title = title
+        self.message = message
+        self.actionTitle = nil
+        self.action = nil
+    }
+
+    init(title: String, message: String, actionTitle: String, action: @escaping () -> Void) {
+        self.title = title
+        self.message = message
+        self.actionTitle = actionTitle
+        self.action = action
+    }
 
     var body: some View {
         SectionCard(emphasis: .tinted) {
-            VStack(alignment: .leading, spacing: 12) {
+            VStack(alignment: .leading, spacing: Theme.Spacing.md) {
                 Text(title)
-                    .font(.system(size: 26, weight: .semibold))
-                    .foregroundStyle(Theme.ink)
+                    .font(Theme.Typography.title3)
+                    .foregroundStyle(Theme.Text.primary)
                 Text(message)
-                    .foregroundStyle(Theme.muted)
-                Button(actionTitle, action: action)
-                    .buttonStyle(PrimaryActionButtonStyle())
+                    .font(Theme.Typography.body)
+                    .foregroundStyle(Theme.Text.secondary)
+                    .fixedSize(horizontal: false, vertical: true)
+                if let actionTitle, let action {
+                    Button(actionTitle, action: action)
+                        .buttonStyle(PrimaryActionButtonStyle())
+                        .frame(maxWidth: 240, alignment: .leading)
+                }
             }
         }
     }
@@ -37,13 +56,15 @@ struct MultiActionEmptyStateView: View {
 
     var body: some View {
         SectionCard(emphasis: .tinted) {
-            VStack(alignment: .leading, spacing: 16) {
+            VStack(alignment: .leading, spacing: Theme.Spacing.md) {
                 Text(title)
-                    .font(.system(size: 26, weight: .semibold))
-                    .foregroundStyle(Theme.ink)
+                    .font(Theme.Typography.title3)
+                    .foregroundStyle(Theme.Text.primary)
                 Text(message)
-                    .foregroundStyle(Theme.muted)
-                VStack(alignment: .leading, spacing: 10) {
+                    .font(Theme.Typography.body)
+                    .foregroundStyle(Theme.Text.secondary)
+                    .fixedSize(horizontal: false, vertical: true)
+                VStack(alignment: .leading, spacing: Theme.Spacing.xs) {
                     ForEach(actions) { action in
                         Button {
                             action.handler()

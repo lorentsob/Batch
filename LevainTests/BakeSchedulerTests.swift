@@ -73,8 +73,7 @@ final class BakeSchedulerTests: XCTestCase {
         let steps = bake.sortedSteps
         let first = steps[0]
         let second = steps[1]
-        let third = steps[2]
-        
+
         // Prima del shift, completiamo il SECONDO step (che è dopo l'ancora "first")
         second.complete(at: second.plannedEnd)
         
@@ -92,6 +91,44 @@ final class BakeSchedulerTests: XCTestCase {
         XCTAssertEqual(steps[2].plannedStart, originalStarts[2].adding(minutes: 60), "Lo step incompleto futuro deve spostarsi")
         
         XCTAssertEqual(bake.targetBakeDateTime, originalTarget.adding(minutes: 60), "Il tempo target del bake deve aggiornarsi")
+    }
+
+    /// Fasi non a finestra in corso: lo shift deve allungare/accorciare `plannedDurationMinutes` così timer e "Fine" si aggiornano.
+    func testShiftExtendsRunningNonWindowStepDuration() {
+        let formula = DomainFixtures.makeFormula(steps: [
+            FormulaStepTemplate(type: .bulk, name: "Bulk", durationMinutes: 120),
+            FormulaStepTemplate(type: .bake, name: "Bake", durationMinutes: 30)
+        ])
+        let target = Date.fixedNow.adding(minutes: 400)
+        let bake = BakeScheduler.generateBake(name: "T", targetBakeDateTime: target, formula: formula)
+        let bulk = bake.sortedSteps[0]
+        bulk.start(at: Date.fixedNow)
+
+        let originalEnd = bulk.plannedEnd
+        let originalDuration = bulk.plannedDurationMinutes
+
+        BakeScheduler.shiftFutureSteps(in: bake, after: bulk, by: 15, now: .fixedNow)
+
+        XCTAssertEqual(bulk.plannedDurationMinutes, originalDuration + 15)
+        XCTAssertEqual(bulk.plannedEnd, originalEnd.adding(minutes: 15))
+    }
+
+    func testShiftCannotReduceRunningStepBelowElapsedTime() {
+        let formula = DomainFixtures.makeFormula(steps: [
+            FormulaStepTemplate(type: .bulk, name: "Bulk", durationMinutes: 60),
+            FormulaStepTemplate(type: .bake, name: "Bake", durationMinutes: 30)
+        ])
+        let bake = BakeScheduler.generateBake(
+            name: "T",
+            targetBakeDateTime: Date.fixedNow.adding(minutes: 400),
+            formula: formula
+        )
+        let bulk = bake.sortedSteps[0]
+        bulk.start(at: Date.fixedNow.adding(minutes: -40))
+
+        BakeScheduler.shiftFutureSteps(in: bake, after: bulk, by: -30, now: .fixedNow)
+
+        XCTAssertEqual(bulk.plannedDurationMinutes, 40, "La durata non scende sotto il tempo già trascorso")
     }
     
     // MARK: - Derived Progression Helpers

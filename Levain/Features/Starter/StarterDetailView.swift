@@ -17,62 +17,63 @@ struct StarterDetailView: View {
     }
 
     var body: some View {
+        let orderedRefreshes = sortedRefreshes
+        let linkedBakes = starter.bakes.sorted { $0.targetBakeDateTime > $1.targetBakeDateTime }
+
         ScrollView {
             VStack(alignment: .leading, spacing: 20) {
-                StarterDetailHeaderView(starter: starter)
+                StarterDetailHeaderView(starter: starter) {
+                    showingRefreshSheet = true
+                }
 
                 SectionCard {
-                    HStack {
-                        Text("Ultimi rinfreschi")
+                    VStack(alignment: .leading, spacing: 4) {
+                        Text("Log rinfreschi")
                             .font(.headline)
                             .foregroundStyle(Theme.ink)
-                        Spacer()
-                        StateBadge(text: "\(sortedRefreshes.count)", tone: .count)
+                        Text("Registro dei rinfreschi passati con dosi, tempi e note.")
+                            .font(.subheadline)
+                            .foregroundStyle(Theme.muted)
                     }
+                    .padding(.bottom, 8)
 
-                    if sortedRefreshes.isEmpty {
-                        Text("Ancora nessun log.")
+                    if orderedRefreshes.isEmpty {
+                        Text("Ancora nessun rinfresco registrato.")
                             .foregroundStyle(Theme.muted)
                     } else {
-                        ForEach(sortedRefreshes.prefix(3)) { refresh in
-                            Button {
-                                selectedRefresh = refresh
-                            } label: {
-                                RefreshHistoryRow(refresh: refresh)
+                        VStack(spacing: 0) {
+                            ForEach(orderedRefreshes.prefix(3)) { refresh in
+                                Button {
+                                    selectedRefresh = refresh
+                                } label: {
+                                    RefreshHistoryRow(refresh: refresh)
+                                }
+                                .buttonStyle(.plain)
+                                Divider().padding(.vertical, 8)
                             }
-                            .buttonStyle(.plain)
                         }
 
-                        if sortedRefreshes.count > 3 {
-                            Button {
-                                showingAllRefreshes = true
-                            } label: {
-                                HStack {
-                                    Text("Vedi tutti i rinfreschi")
-                                        .font(.subheadline.weight(.semibold))
-                                    Spacer()
-                                    StateBadge(text: "\(sortedRefreshes.count)", tone: .count)
-                                    Image(systemName: "chevron.right")
-                                        .font(.footnote.weight(.semibold))
-                                        .foregroundStyle(Theme.muted)
-                                }
-                            }
-                            .buttonStyle(.plain)
+                        Button {
+                            showingAllRefreshes = true
+                        } label: {
+                            Label("Tutti i rinfreschi", systemImage: "clock.arrow.circlepath")
                         }
+                        .buttonStyle(SecondaryActionButtonStyle())
+                        .accessibilityIdentifier("StarterOpenAllLogsButton")
                     }
                 }
 
-                if starter.bakes.isEmpty == false {
+                if linkedBakes.isEmpty == false {
                     SectionCard {
                         HStack {
-                            Text("Bake collegati")
+                            Text("Impasti collegati")
                                 .font(.headline)
                                 .foregroundStyle(Theme.ink)
                             Spacer()
-                            StateBadge(text: "\(starter.bakes.count)", tone: .count)
+                            StateBadge(text: "\(linkedBakes.count)", tone: .count)
                         }
 
-                        ForEach(starter.bakes.sorted { $0.targetBakeDateTime > $1.targetBakeDateTime }.prefix(4)) { bake in
+                        ForEach(linkedBakes.prefix(4)) { bake in
                             Button {
                                 router.openBake(bake.id)
                             } label: {
@@ -109,12 +110,11 @@ struct StarterDetailView: View {
         .navigationTitle(starter.name)
         .tint(Theme.Control.primaryFill)
         .toolbar {
-            ToolbarItemGroup(placement: .topBarTrailing) {
-                Button("Modifica") {
+            ToolbarItem(placement: .topBarTrailing) {
+                Button {
                     showingEditor = true
-                }
-                Button("Rinfresca") {
-                    showingRefreshSheet = true
+                } label: {
+                    Image(systemName: "pencil")
                 }
             }
         }
@@ -156,9 +156,11 @@ struct AllRefreshesView: View {
     }
 
     var body: some View {
+        let orderedRefreshes = sortedRefreshes
+
         ScrollView {
             VStack(spacing: 8) {
-                ForEach(sortedRefreshes) { refresh in
+                ForEach(orderedRefreshes) { refresh in
                     Button {
                         onSelect(refresh)
                     } label: {

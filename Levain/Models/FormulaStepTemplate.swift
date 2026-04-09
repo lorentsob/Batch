@@ -63,17 +63,17 @@ struct FormulaStepTemplate: Codable, Hashable, Identifiable {
     }
 
     static let defaultBreadSteps: [FormulaStepTemplate] = [
-        FormulaStepTemplate(type: .starterRefresh, name: "Starter pronto", details: "Starter al picco o quasi", durationMinutes: 120, reminderOffsetMinutes: 15),
+        FormulaStepTemplate(type: .starterRefresh, name: "Rinfresca starter", details: "Usa lo starter quando è al picco o quasi", durationMinutes: 120, reminderOffsetMinutes: 15),
         FormulaStepTemplate(type: .autolysis, name: "Autolisi", details: "Farina e acqua a riposo", durationMinutes: 30),
         FormulaStepTemplate(type: .mix, name: "Impasto", details: "Inserisci starter e sale", durationMinutes: 20),
-        FormulaStepTemplate(type: .bulk, name: "Bulk fermentation", details: "Con pieghe nella prima fase", durationMinutes: 240, reminderOffsetMinutes: 30, temperatureRange: "24-26 C", volumeTarget: "+40%"),
+        FormulaStepTemplate(type: .bulk, name: "Puntata", details: "Con pieghe nella prima parte", durationMinutes: 240, reminderOffsetMinutes: 30, temperatureRange: "24-26 C", volumeTarget: "+40%"),
         FormulaStepTemplate(type: .shape, name: "Formatura", details: "Tensione finale", durationMinutes: 25),
         FormulaStepTemplate(type: .proof, name: "Appretto", details: "Seconda lievitazione", durationMinutes: 120, reminderOffsetMinutes: 20),
         FormulaStepTemplate(type: .bake, name: "Cottura", details: "Forno ben caldo", durationMinutes: 45, reminderOffsetMinutes: 10)
     ]
 
     static let defaultPizzaSteps: [FormulaStepTemplate] = [
-        FormulaStepTemplate(type: .starterRefresh, name: "Starter pronto", details: "Al raddoppio", durationMinutes: 240, reminderOffsetMinutes: 15),
+        FormulaStepTemplate(type: .starterRefresh, name: "Rinfresca starter", details: "Usa lo starter quando è al picco o quasi", durationMinutes: 240, reminderOffsetMinutes: 15),
         FormulaStepTemplate(type: .mix, name: "Impasto", details: "Puntamento in massa", durationMinutes: 20),
         FormulaStepTemplate(type: .bulk, name: "Puntata", details: "Lievitazione in massa", durationMinutes: 120, temperatureRange: "24 C"),
         FormulaStepTemplate(type: .shape, name: "Staglio", details: "Formatura dei panetti", durationMinutes: 15),
@@ -81,4 +81,3 @@ struct FormulaStepTemplate: Codable, Hashable, Identifiable {
         FormulaStepTemplate(type: .bake, name: "Cottura", details: "Alte temperature", durationMinutes: 5, reminderOffsetMinutes: 2)
     ]
 }
-

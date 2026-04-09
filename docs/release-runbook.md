@@ -1,4 +1,4 @@
-# Levain Release Runbook
+# Batch Release Runbook
 
 **Prepared:** 2026-03-10 — Phase 09-03
 **Standard Operating Procedure:** Creating and verifying a v1 Release Candidate for TestFlight.
@@ -56,8 +56,8 @@ If the release workflow fails:
 For every build, fill out this minimal checklist to ensure quality before it reaches TestFlight.
 
 - [ ] CI build passed on clean runner (ios-ci.yml check).
-- [ ] Unit tests (24/24) passed on clean runner.
-- [ ] UI tests (9/9) passed on clean runner or local smoke pass completed.
+- [ ] Maintainer verification passed locally before release.
+- [ ] UI smoke pass completed on device or simulator before release.
 - [ ] Signing succeeded using repository-managed secrets.
 - [ ] Exported IPA is readable (if local export was used for validation).
 

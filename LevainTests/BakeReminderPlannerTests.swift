@@ -58,7 +58,7 @@ struct BakeReminderPlannerTests {
 
         if let reminder = reminders.first {
             #expect(reminder.title == "Shape · My Bread")
-            #expect(reminder.body == "È il momento di controllare questo passaggio.")
+            #expect(reminder.body == "È il momento di intervenire su questo passaggio. Apri l'impasto per continuare.")
             #expect(reminder.route == "levain://bake/\(bake.id.uuidString)?step=\(pendingStep.id.uuidString)")
             #expect(reminder.fireDate == now.addingTimeInterval(2700))
             #expect(reminder.identifier == "bake-start-\(bake.id.uuidString)-\(pendingStep.id.uuidString)")
@@ -86,7 +86,7 @@ struct BakeReminderPlannerTests {
 
         let reminders = BakeReminderPlanner.planReminders(for: bake, now: now)
         #expect(reminders.count == 2)
-        #expect(reminders[0].body == "Il tuo impasto è pronto per la prossima azione.")
-        #expect(reminders[1].body == "La finestra si sta chiudendo.")
+        #expect(reminders[0].body == "Il tuo impasto è pronto per il prossimo passaggio. Aprilo per continuare.")
+        #expect(reminders[1].body == "La finestra utile sta per chiudersi. Apri l'impasto se devi intervenire ora.")
     }
 }

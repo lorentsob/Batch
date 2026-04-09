@@ -22,6 +22,25 @@ fix_*.py
 patch_*.rb
 
 .agent/
+.claude/
+.cursor/
 .gsd
+.planning/
 adapters/
 stuff/
+PROJECT_RULES.md
+GSD-STYLE.md
+model_capabilities.yaml
+docs/model-selection-playbook.md
+docs/token-optimization-guide.md
+docs/runbook.md
+
+# Local environment and secrets
+.env
+.env.*
+*.secret
+*.p8
+*.pem
+*.p12
+*.mobileprovision
+*.cer
