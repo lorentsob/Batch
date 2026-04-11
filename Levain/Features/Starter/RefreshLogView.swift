@@ -43,7 +43,7 @@ struct RefreshLogView: View {
             Section("Dettagli") {
                 DatePicker("Quando", selection: $dateTime)
                 TextField("Rapporto", text: $ratioText)
-                NumericField(title: "Fuori frigo (°C)", value: $ambientTemp)
+                NumericField(title: "Temp. ambiente (°C)", value: $ambientTemp)
             }
 
             Section("Mix Farine") {
@@ -87,7 +87,7 @@ struct RefreshLogView: View {
                 }
             }
 
-            Section("Passaggio in frigo") {
+            Section("In frigo") {
                 Toggle("Messo subito in frigo", isOn: $recordFridgeTime)
                 if recordFridgeTime {
                     DatePicker("Messo in frigo alle", selection: $putInFridgeAt)
@@ -99,7 +99,7 @@ struct RefreshLogView: View {
                     .lineLimit(2...5)
             }
         }
-        .navigationTitle("Log rinfresco")
+        .navigationTitle("Rinfresco")
         .tint(Theme.Control.primaryFill)
         .toolbar {
             ToolbarItem(placement: .cancellationAction) {

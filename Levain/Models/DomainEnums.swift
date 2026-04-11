@@ -86,7 +86,7 @@ enum KefirBatchState: String, CaseIterable, Codable, Identifiable {
     var title: String {
         switch self {
         case .active: "Attivo"
-        case .dueSoon: "Attenzione"
+        case .dueSoon: "Da rinfrescare a breve"
         case .dueNow: "Da rinfrescare"
         case .overdue: "In ritardo"
         case .pausedFridge: "In frigo"

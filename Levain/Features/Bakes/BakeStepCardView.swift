@@ -318,7 +318,7 @@ struct StepTimelineRow: View {
 
     private var statusLine: String {
         if isArchived {
-            return "Impasto annullato — fase non piu attiva"
+            return "Impasto annullato — fase non più attiva"
         }
 
         switch step.status {
