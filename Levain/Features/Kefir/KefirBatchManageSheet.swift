@@ -135,7 +135,7 @@ struct KefirBatchManageSheet: View {
             batch.renew(at: now)
             KefirEventRecorder.recordRenewal(of: batch, in: modelContext, at: now)
             try? saveContext()
-            syncNotificationsAndShowBanner("Gestione aggiornata a ora")
+            syncNotificationsAndShowBanner("Rinnovo registrato")
         }
         dismiss()
     }

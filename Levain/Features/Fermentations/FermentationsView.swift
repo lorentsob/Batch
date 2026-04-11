@@ -104,7 +104,7 @@ struct FermentationsView: View {
         SectionCard(emphasis: .tinted) {
             ScreenTitleBlock(
                 title: "Batch",
-                subtitle: "I tuoi batch attivi."
+                subtitle: "I tuoi batch attivi"
             )
             .padding(.bottom, Theme.Spacing.xs)
 

@@ -67,7 +67,7 @@ struct SettingsView: View {
             }
 
             Section("Backup") {
-                Text("Esporta o ripristina solo i dati utente. Knowledge e template di sistema restano nel bundle dell'app.")
+                Text("Esporta o ripristina solo i dati utente. Guide e modelli di sistema restano nell'app.")
                     .font(.footnote)
                     .foregroundStyle(Theme.muted)
 
@@ -88,7 +88,7 @@ struct SettingsView: View {
 
             Section("Contenuto incluso") {
                 Text("Starter, rinfreschi, ricette salvate, impasti e fasi.")
-                Text("Non include knowledge, template di sistema o flag tecnici interni.")
+                Text("Non include guide, modelli di sistema o preferenze dell'app.")
                     .foregroundStyle(Theme.muted)
             }
         }

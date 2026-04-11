@@ -28,7 +28,7 @@ struct StarterDetailView: View {
 
                 SectionCard {
                     VStack(alignment: .leading, spacing: 4) {
-                        Text("Log rinfreschi")
+                        Text("Rinfreschi")
                             .font(.headline)
                             .foregroundStyle(Theme.ink)
                         Text("Registro dei rinfreschi passati con dosi, tempi e note.")
