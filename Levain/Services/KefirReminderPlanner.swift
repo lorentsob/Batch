@@ -59,11 +59,11 @@ enum KefirReminderPlanner {
     private static func warningBody(for batch: KefirBatch) -> String {
         switch batch.storageMode {
         case .roomTemperature:
-            return "Tra poco sarà il momento di rinnovare il batch"
+            return "Tra poco sarà il momento di rinnovare il batch."
         case .fridge:
-            return "Domani conviene controllare il batch in frigo"
+            return "Domani dovrai controllare il batch in frigo."
         case .freezer:
-            return "Tra poco sarà il momento di riattivare il batch"
+            return "Tra poco sarà il momento di riattivare il batch."
         }
     }
 
