@@ -20,7 +20,7 @@ struct StarterView: View {
             SectionCard(emphasis: .tinted) {
                 ScreenTitleBlock(
                     title: "Starter",
-                    subtitle: "Controlla i tuoi starter"
+                    subtitle: "I tuoi starter"
                 )
                 
                 if !activeStarters.isEmpty {

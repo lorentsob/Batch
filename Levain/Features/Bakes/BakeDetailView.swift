@@ -64,7 +64,7 @@ struct BakeDetailView: View {
 
                     VStack(alignment: .leading, spacing: 12) {
                         HStack {
-                            Text(isCancelled ? "Timeline archiviata" : (activeStep == nil ? "Timeline" : "Ricetta step by step"))
+                            Text(isCancelled ? "Timeline archiviata" : (activeStep == nil ? "Timeline" : "Fasi della ricetta"))
                                 .font(.headline)
                                 .foregroundStyle(Theme.ink)
                             Spacer()

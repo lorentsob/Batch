@@ -87,7 +87,7 @@ struct TodayView: View {
                     if allFeaturesDisabled {
                         EmptyStateView(
                             title: "Nessuna sezione attiva",
-                            message: "Attiva almeno una sezione (Impasti, Starter o Kefir) dalle impostazioni per iniziare a usare Levain.",
+                            message: "Attiva almeno una sezione dalle impostazioni per iniziare.",
                             actionTitle: "Apri impostazioni"
                         ) {
                             showingSettings = true

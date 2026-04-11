@@ -66,7 +66,7 @@ struct KefirHubView: View {
         SectionCard(emphasis: .tinted) {
             ScreenTitleBlock(
                 title: "Kefir",
-                subtitle: "I tuoi batch di Kefir."
+                subtitle: "I tuoi batch di kefir"
             )
 
             if batches.isEmpty == false {
@@ -106,7 +106,7 @@ struct KefirHubView: View {
                 Text("Cronologia batch")
                     .font(Theme.Typography.headline)
                     .foregroundStyle(Theme.Text.primary)
-                Text("Tieni traccia dei rinfreschi dei tuoi batch")
+                Text("Tieni traccia dei rinnovi dei tuoi batch")
                     .font(Theme.Typography.subheadline)
                     .foregroundStyle(Theme.Text.secondary)
                     .fixedSize(horizontal: false, vertical: true)
