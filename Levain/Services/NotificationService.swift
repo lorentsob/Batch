@@ -2,7 +2,7 @@ import Foundation
 import SwiftData
 import UserNotifications
 
-private struct NotificationRequestPayload: Sendable {
+struct NotificationRequestPayload: Sendable, Equatable {
     let identifier: String
     let title: String
     let body: String
@@ -10,9 +10,160 @@ private struct NotificationRequestPayload: Sendable {
     let fireDate: Date
 }
 
-private struct NotificationSyncPlan: Sendable {
+struct NotificationSyncPlan: Sendable, Equatable {
     let identifiersToRemove: [String]
     let requests: [NotificationRequestPayload]
+}
+
+enum NotificationPlanningDefaults {
+    static let overdueReminderHour = 19
+    static let overdueReminderMinute = 0
+    static let overdueWindowDays = 7
+    static let maxPendingRequests = 60
+}
+
+enum RollingOverdueReminderPlanner {
+    static func reminderDates(
+        overdueSince: Date,
+        now: Date = .now,
+        windowDays: Int = NotificationPlanningDefaults.overdueWindowDays
+    ) -> [Date] {
+        guard windowDays > 0 else { return [] }
+
+        let windowDates = identifierDates(now: now, windowDays: windowDays)
+        guard let windowEnd = windowDates.last else { return [] }
+
+        let firstEligibleDate = max(firstReminderDate(after: overdueSince), firstReminderDate(after: now))
+        guard firstEligibleDate <= windowEnd else { return [] }
+
+        return windowDates.filter { $0 >= firstEligibleDate }
+    }
+
+    static func identifierDates(
+        now: Date = .now,
+        windowDays: Int = NotificationPlanningDefaults.overdueWindowDays
+    ) -> [Date] {
+        guard windowDays > 0 else { return [] }
+
+        let firstFutureReminder = firstReminderDate(after: now)
+        return (0..<windowDays).compactMap { offset in
+            Calendar.current.date(byAdding: .day, value: offset, to: firstFutureReminder)
+        }
+    }
+
+    static func identifierSuffix(for date: Date) -> String {
+        let components = Calendar.current.dateComponents([.year, .month, .day], from: date)
+        let year = components.year ?? 0
+        let month = components.month ?? 0
+        let day = components.day ?? 0
+        return String(format: "%04d%02d%02d", year, month, day)
+    }
+
+    private static func firstReminderDate(after reference: Date) -> Date {
+        let sameDayReminder = reference.settingTime(
+            hour: NotificationPlanningDefaults.overdueReminderHour,
+            minute: NotificationPlanningDefaults.overdueReminderMinute
+        )
+
+        if sameDayReminder > reference {
+            return sameDayReminder
+        }
+
+        let nextDay = Calendar.current.date(byAdding: .day, value: 1, to: reference.startOfDay) ?? reference
+        return nextDay.settingTime(
+            hour: NotificationPlanningDefaults.overdueReminderHour,
+            minute: NotificationPlanningDefaults.overdueReminderMinute
+        )
+    }
+}
+
+enum NotificationPlanBuilder {
+    static func buildGlobalPlan(
+        bakes: [Bake],
+        starters: [Starter],
+        kefirBatches: [KefirBatch],
+        now: Date = .now
+    ) -> NotificationSyncPlan {
+        let plans =
+            bakes.map { makePlan(for: $0, now: now) } +
+            starters.map { makePlan(for: $0, now: now) } +
+            kefirBatches.map { makePlan(for: $0, now: now) }
+
+        return merge(plans: plans, now: now)
+    }
+
+    static func merge(plans: [NotificationSyncPlan], now: Date = .now) -> NotificationSyncPlan {
+        let identifiersToRemove = Array(Set(plans.flatMap(\.identifiersToRemove))).sorted()
+
+        let sortedRequests = plans
+            .flatMap(\.requests)
+            .filter { $0.fireDate > now }
+            .sorted {
+                if $0.fireDate == $1.fireDate {
+                    return $0.identifier < $1.identifier
+                }
+                return $0.fireDate < $1.fireDate
+            }
+
+        var seenIdentifiers = Set<String>()
+        var requests: [NotificationRequestPayload] = []
+        requests.reserveCapacity(min(sortedRequests.count, NotificationPlanningDefaults.maxPendingRequests))
+
+        for request in sortedRequests where requests.count < NotificationPlanningDefaults.maxPendingRequests {
+            guard seenIdentifiers.insert(request.identifier).inserted else { continue }
+            requests.append(request)
+        }
+
+        return NotificationSyncPlan(
+            identifiersToRemove: identifiersToRemove,
+            requests: requests
+        )
+    }
+
+    private static func makePlan(for bake: Bake, now: Date) -> NotificationSyncPlan {
+        NotificationSyncPlan(
+            identifiersToRemove: BakeReminderPlanner.identifiers(for: bake, now: now),
+            requests: BakeReminderPlanner.planReminders(for: bake, now: now).map { reminder in
+                NotificationRequestPayload(
+                    identifier: reminder.identifier,
+                    title: reminder.title,
+                    body: reminder.body,
+                    route: reminder.route,
+                    fireDate: reminder.fireDate
+                )
+            }
+        )
+    }
+
+    private static func makePlan(for starter: Starter, now: Date) -> NotificationSyncPlan {
+        NotificationSyncPlan(
+            identifiersToRemove: StarterReminderPlanner.identifiers(for: starter, now: now),
+            requests: StarterReminderPlanner.planReminders(for: starter, now: now).map { reminder in
+                NotificationRequestPayload(
+                    identifier: reminder.identifier,
+                    title: reminder.title,
+                    body: reminder.body,
+                    route: reminder.route,
+                    fireDate: reminder.fireDate
+                )
+            }
+        )
+    }
+
+    private static func makePlan(for batch: KefirBatch, now: Date) -> NotificationSyncPlan {
+        NotificationSyncPlan(
+            identifiersToRemove: KefirReminderPlanner.identifiers(for: batch, now: now),
+            requests: KefirReminderPlanner.planReminders(for: batch, now: now).map { reminder in
+                NotificationRequestPayload(
+                    identifier: reminder.identifier,
+                    title: reminder.title,
+                    body: reminder.body,
+                    route: reminder.route,
+                    fireDate: reminder.fireDate
+                )
+            }
+        )
+    }
 }
 
 private enum NotificationScheduler {
@@ -116,29 +267,24 @@ final class NotificationService: NSObject, ObservableObject, UNUserNotificationC
         let starters = (try? modelContext.fetch(FetchDescriptor<Starter>())) ?? []
         let kefirBatches = (try? modelContext.fetch(FetchDescriptor<KefirBatch>())) ?? []
 
-        let plans =
-            bakes.map { makeSyncPlan(for: $0) } +
-            starters.map { makeSyncPlan(for: $0) } +
-            kefirBatches.map { makeSyncPlan(for: $0) }
-        await NotificationScheduler.apply(plans)
+        let plan = NotificationPlanBuilder.buildGlobalPlan(
+            bakes: bakes,
+            starters: starters,
+            kefirBatches: kefirBatches
+        )
+        await NotificationScheduler.apply([plan])
     }
 
-    func syncNotifications(forBake bakeID: UUID, in context: ModelContext) async {
-        let descriptor = FetchDescriptor<Bake>(predicate: #Predicate { $0.id == bakeID })
-        guard let bake = (try? context.fetch(descriptor))?.first else { return }
-        await NotificationScheduler.apply([makeSyncPlan(for: bake)])
+    func syncNotifications(forBake _: UUID, in context: ModelContext) async {
+        await resyncAll(using: context)
     }
 
-    func syncNotifications(forStarter starterID: UUID, in context: ModelContext) async {
-        let descriptor = FetchDescriptor<Starter>(predicate: #Predicate { $0.id == starterID })
-        guard let starter = (try? context.fetch(descriptor))?.first else { return }
-        await NotificationScheduler.apply([makeSyncPlan(for: starter)])
+    func syncNotifications(forStarter _: UUID, in context: ModelContext) async {
+        await resyncAll(using: context)
     }
 
-    func syncNotifications(forKefirBatch batchID: UUID, in context: ModelContext) async {
-        let descriptor = FetchDescriptor<KefirBatch>(predicate: #Predicate { $0.id == batchID })
-        guard let batch = (try? context.fetch(descriptor))?.first else { return }
-        await NotificationScheduler.apply([makeSyncPlan(for: batch)])
+    func syncNotifications(forKefirBatch _: UUID, in context: ModelContext) async {
+        await resyncAll(using: context)
     }
 
     nonisolated func userNotificationCenter(
@@ -187,56 +333,9 @@ final class NotificationService: NSObject, ObservableObject, UNUserNotificationC
     }
 
     private func fridgeReminderIdentifier(_ id: UUID) -> String { "refresh-fridge-\(id.uuidString)" }
-    private func dueIdentifier(_ id: UUID) -> String { "starter-due-\(id.uuidString)" }
-    private func followUpIdentifier(_ id: UUID) -> String { "starter-followup-\(id.uuidString)" }
 
     func fridgeReminderRoute(for refresh: StarterRefresh) -> String? {
         guard let starterID = refresh.starter?.id else { return nil }
         return AppRouter.DeepLink.starter(id: starterID)
-    }
-
-    private func makeSyncPlan(for bake: Bake) -> NotificationSyncPlan {
-        NotificationSyncPlan(
-            identifiersToRemove: BakeReminderPlanner.identifiers(for: bake),
-            requests: BakeReminderPlanner.planReminders(for: bake).map { reminder in
-                NotificationRequestPayload(
-                    identifier: reminder.identifier,
-                    title: reminder.title,
-                    body: reminder.body,
-                    route: reminder.route,
-                    fireDate: reminder.fireDate
-                )
-            }
-        )
-    }
-
-    private func makeSyncPlan(for starter: Starter) -> NotificationSyncPlan {
-        NotificationSyncPlan(
-            identifiersToRemove: [dueIdentifier(starter.id), followUpIdentifier(starter.id)],
-            requests: StarterReminderPlanner.planReminders(for: starter).map { reminder in
-                NotificationRequestPayload(
-                    identifier: reminder.identifier,
-                    title: reminder.title,
-                    body: reminder.body,
-                    route: reminder.route,
-                    fireDate: reminder.fireDate
-                )
-            }
-        )
-    }
-
-    private func makeSyncPlan(for batch: KefirBatch) -> NotificationSyncPlan {
-        NotificationSyncPlan(
-            identifiersToRemove: KefirReminderPlanner.identifiers(for: batch),
-            requests: KefirReminderPlanner.planReminders(for: batch).map { reminder in
-                NotificationRequestPayload(
-                    identifier: reminder.identifier,
-                    title: reminder.title,
-                    body: reminder.body,
-                    route: reminder.route,
-                    fireDate: reminder.fireDate
-                )
-            }
-        )
     }
 }
