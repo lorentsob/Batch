@@ -2,6 +2,7 @@ import SwiftData
 import SwiftUI
 
 struct RootTabView: View {
+    @Environment(\.scenePhase) private var scenePhase
     @Environment(\.modelContext) private var modelContext
     @EnvironmentObject private var environment: AppEnvironment
     @EnvironmentObject private var router: AppRouter
@@ -49,6 +50,19 @@ struct RootTabView: View {
         }
         .onOpenURL { url in
             router.open(url: url, modelContext: modelContext)
+        }
+        .onChange(of: scenePhase) { _, newPhase in
+            guard newPhase == .active, didBootstrap else { return }
+            guard ProcessInfo.processInfo.environment["XCODE_RUNNING_FOR_PREVIEWS"] != "1" else { return }
+            guard AppLaunchOptions.shouldSuppressNotifications == false else { return }
+
+            let appSettings = loadOrCreateAppSettings()
+            let notificationService = environment.prepareNotificationServiceIfNeeded()
+            syncNotificationsForLifecycle(
+                notificationService: notificationService,
+                appSettings: appSettings,
+                showDisabledBanner: false
+            )
         }
     }
 
@@ -145,7 +159,11 @@ struct RootTabView: View {
 
         guard AppLaunchOptions.shouldSuppressNotifications == false else { return }
 
-        scheduleNotificationBootstrap(notificationService: notificationService, appSettings: appSettings)
+        syncNotificationsForLifecycle(
+            notificationService: notificationService,
+            appSettings: appSettings,
+            showDisabledBanner: true
+        )
     }
 
     @MainActor
@@ -160,14 +178,11 @@ struct RootTabView: View {
     }
 
     @MainActor
-    private func scheduleNotificationBootstrap(
+    private func syncNotificationsForLifecycle(
         notificationService: NotificationService,
-        appSettings: AppSettings
+        appSettings: AppSettings,
+        showDisabledBanner: Bool
     ) {
-        let needsLaunchSync = appSettings.lastNotificationSync == nil
-        let needsAuthorizationPrompt = appSettings.hasRequestedNotificationPermission == false
-        guard needsLaunchSync || needsAuthorizationPrompt else { return }
-
         Task(priority: .utility) {
             let authorizationState = await notificationService.requestAuthorizationIfNeeded(settings: appSettings)
             if authorizationState == .authorized {
@@ -176,11 +191,11 @@ struct RootTabView: View {
                 try? modelContext.save()
             }
             if authorizationState == .denied {
-                if appSettings.lastNotificationSync == nil {
-                    appSettings.lastNotificationSync = .now
-                    try? modelContext.save()
+                appSettings.lastNotificationSync = .now
+                try? modelContext.save()
+                if showDisabledBanner {
+                    router.showNotificationsDisabledBanner()
                 }
-                router.showNotificationsDisabledBanner()
             }
         }
     }
