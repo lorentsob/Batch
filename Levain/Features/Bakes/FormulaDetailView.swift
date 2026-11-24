@@ -283,15 +283,25 @@ struct FormulaDetailView: View {
                             glossarySectionTitle(section.title)
                         }
 
-                        GlossaryLinkedText(
-                            text: section.content,
-                            glossaryIndex: glossaryIndex,
-                            maxLinks: 2,
-                            onOpenKnowledge: router.openKnowledge
-                        )
-                            .font(.subheadline)
-                            .foregroundStyle(Theme.ink)
-                            .fixedSize(horizontal: false, vertical: true)
+                        VStack(alignment: .leading, spacing: 6) {
+                            ForEach(DescriptionBulletList.parse(section.content), id: \.self) { line in
+                                HStack(alignment: .top, spacing: 10) {
+                                    RoundedRectangle(cornerRadius: 1)
+                                        .fill(Theme.Control.primaryFill.opacity(0.55))
+                                        .frame(width: 3, height: 16)
+                                        .padding(.top, 3)
+                                    GlossaryLinkedText(
+                                        text: line,
+                                        glossaryIndex: glossaryIndex,
+                                        maxLinks: 1,
+                                        onOpenKnowledge: router.openKnowledge
+                                    )
+                                    .font(.subheadline)
+                                    .foregroundStyle(Theme.ink)
+                                    .fixedSize(horizontal: false, vertical: true)
+                                }
+                            }
+                        }
                     }
                     .padding(.vertical, 6)
                 }

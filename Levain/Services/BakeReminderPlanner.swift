@@ -15,6 +15,9 @@ enum BakeReminderPlanner {
         }
 
         var reminders: [BakeReminder] = []
+        if let activeStep = bake.activeStep, activeStep.isOverdue(now: now) {
+            reminders.append(contentsOf: overdueReminders(for: bake, step: activeStep, now: now))
+        }
 
         for step in bake.sortedSteps where step.isTerminal == false {
             if step.isWindowBased, step.status == .running {
@@ -39,9 +42,10 @@ enum BakeReminderPlanner {
         return reminders
     }
 
-    static func identifiers(for bake: Bake) -> [String] {
+    static func identifiers(for bake: Bake, now: Date = .now) -> [String] {
         bake.steps.flatMap { step in
-            ReminderPhase.allCases.map { identifier(for: bake, step: step, phase: $0) }
+            ReminderPhase.allCases.map { identifier(for: bake, step: step, phase: $0) } +
+            RollingOverdueReminderPlanner.identifierDates(now: now).map { overdueIdentifier(for: bake, step: step, on: $0) }
         }
     }
 
@@ -75,6 +79,18 @@ enum BakeReminderPlanner {
         return reminders
     }
 
+    private static func overdueReminders(for bake: Bake, step: BakeStep, now: Date) -> [BakeReminder] {
+        RollingOverdueReminderPlanner.reminderDates(overdueSince: step.windowEnd, now: now).map { fireDate in
+            BakeReminder(
+                identifier: overdueIdentifier(for: bake, step: step, on: fireDate),
+                title: "\(step.displayName) · \(bake.name)",
+                body: "Non hai ancora completato \(step.displayName) di \(bake.name).",
+                route: AppRouter.DeepLink.bake(id: bake.id, stepID: step.id),
+                fireDate: fireDate
+            )
+        }
+    }
+
     private enum ReminderPhase: String, CaseIterable {
         case start
         case windowClose
@@ -82,5 +98,9 @@ enum BakeReminderPlanner {
 
     private static func identifier(for bake: Bake, step: BakeStep, phase: ReminderPhase) -> String {
         "bake-\(phase.rawValue)-\(bake.id.uuidString)-\(step.id.uuidString)"
+    }
+
+    private static func overdueIdentifier(for bake: Bake, step: BakeStep, on fireDate: Date) -> String {
+        "bake-overdue-\(bake.id.uuidString)-\(step.id.uuidString)-\(RollingOverdueReminderPlanner.identifierSuffix(for: fireDate))"
     }
 }

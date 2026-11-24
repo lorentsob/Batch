@@ -1,0 +1,64 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="950" viewBox="0 0 1600 950">
+<rect width="1600" height="950" fill="#F7F8F4"/>
+<text x="80" y="92" text-anchor="start" font-family="Inter, -apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif" font-size="46" font-weight="800" fill="#172019">
+<tspan x="80" dy="0">Nuova preparazione</tspan>
+</text>
+<text x="82" y="138" text-anchor="start" font-family="Inter, -apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif" font-size="22" font-weight="500" fill="#667064">
+<tspan x="82" dy="0">Il selettore apre domini operativi, non semplici template.</tspan>
+</text>
+
+<rect x="95" y="300" width="310" height="260" rx="30" fill="#FFFFFF" stroke="#DDE5D9" stroke-width="2"/>
+<text x="150" y="375" text-anchor="start" font-family="Inter, -apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif" font-size="34" font-weight="800" fill="#172019">
+<tspan x="150" dy="0">Oggi</tspan>
+</text>
+<rect x="150" y="455" width="278" height="46" rx="23" fill="#DDEDDD"/>
+<text x="289" y="485" text-anchor="middle" font-family="Inter, -apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif" font-size="18" font-weight="700" fill="#2F6F45">
+<tspan x="289" dy="0">Nuova preparazione</tspan>
+</text>
+<path d="M 405 430 C 470 430, 470 430, 535 430" fill="none" stroke="#2F6F45" stroke-width="4" stroke-linecap="round"/>
+<path d="M 523 420 L 535 430 L 523 440" fill="none" stroke="#2F6F45" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+
+<rect x="535" y="235" width="360" height="390" rx="30" fill="#FFFFFF" stroke="#DDE5D9" stroke-width="2"/>
+<text x="585" y="310" text-anchor="start" font-family="Inter, -apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif" font-size="34" font-weight="800" fill="#172019">
+<tspan x="585" dy="0">Scegli dominio</tspan>
+</text>
+<rect x="585" y="385" width="135" height="46" rx="23" fill="#DDEDDD"/>
+<text x="652.5" y="415" text-anchor="middle" font-family="Inter, -apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif" font-size="18" font-weight="700" fill="#2F6F45">
+<tspan x="652.5" dy="0">Impasto</tspan>
+</text>
+<rect x="585" y="455" width="135" height="46" rx="23" fill="#ECEFEB"/>
+<text x="652.5" y="485" text-anchor="middle" font-family="Inter, -apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif" font-size="18" font-weight="700" fill="#7A8178">
+<tspan x="652.5" dy="0">Starter</tspan>
+</text>
+<rect x="585" y="525" width="128" height="46" rx="23" fill="#F4DFDD"/>
+<text x="649" y="555" text-anchor="middle" font-family="Inter, -apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif" font-size="18" font-weight="700" fill="#B6463B">
+<tspan x="649" dy="0">Kefir</tspan>
+</text>
+<path d="M 895 430 C 960 430, 960 430, 1025 430" fill="none" stroke="#2F6F45" stroke-width="4" stroke-linecap="round"/>
+<path d="M 1013 420 L 1025 430 L 1013 440" fill="none" stroke="#2F6F45" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+
+<rect x="1025" y="160" width="380" height="170" rx="30" fill="#FFFFFF" stroke="#DDE5D9" stroke-width="2"/>
+<text x="1075" y="230" text-anchor="start" font-family="Inter, -apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif" font-size="29" font-weight="800" fill="#172019">
+<tspan x="1075" dy="0">Timeline impasto</tspan>
+</text>
+<text x="1075" y="270" text-anchor="start" font-family="Inter, -apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif" font-size="22" font-weight="500" fill="#667064">
+<tspan x="1075" dy="0">Formula -&gt; step -&gt; shift</tspan>
+</text>
+
+<rect x="1025" y="390" width="380" height="170" rx="30" fill="#FFFFFF" stroke="#DDE5D9" stroke-width="2"/>
+<text x="1075" y="460" text-anchor="start" font-family="Inter, -apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif" font-size="29" font-weight="800" fill="#172019">
+<tspan x="1075" dy="0">Refresh starter</tspan>
+</text>
+<text x="1075" y="500" text-anchor="start" font-family="Inter, -apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif" font-size="22" font-weight="500" fill="#667064">
+<tspan x="1075" dy="0">Due date -&gt; rinnovo</tspan>
+</text>
+
+<rect x="1025" y="620" width="380" height="170" rx="30" fill="#FFFFFF" stroke="#DDE5D9" stroke-width="2"/>
+<text x="1075" y="690" text-anchor="start" font-family="Inter, -apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif" font-size="29" font-weight="800" fill="#172019">
+<tspan x="1075" dy="0">Kefir batch</tspan>
+</text>
+<text x="1075" y="730" text-anchor="start" font-family="Inter, -apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif" font-size="22" font-weight="500" fill="#667064">
+<tspan x="1075" dy="0">Rinfresca -&gt; cronologia</tspan>
+</text>
+
+</svg>

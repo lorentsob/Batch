@@ -1,0 +1,23 @@
+{
+  "name": "batch-logo-loading",
+  "private": true,
+  "version": "0.1.0",
+  "scripts": {
+    "preview": "remotion studio src/index.ts",
+    "still": "remotion still src/index.ts BatchLogoLoading out/batch-logo-loading-frame30.png --frame=30",
+    "export:lottie": "node scripts/export-lottie.mjs",
+    "render:app": "remotion render src/index.ts BatchLogoLoading ../../../Levain/Assets.xcassets/BatchLogoLoading.dataset/batch-logo-loading.mov --image-format=png --pixel-format=yuva444p10le --codec=prores --prores-profile=4444 --muted"
+  },
+  "dependencies": {
+    "@remotion/cli": "4.0.456",
+    "react": "19.1.0",
+    "react-dom": "19.1.0",
+    "remotion": "4.0.456"
+  },
+  "devDependencies": {
+    "@types/node": "22.15.3",
+    "@types/react": "19.1.8",
+    "@types/react-dom": "19.1.6",
+    "typescript": "5.8.3"
+  }
+}

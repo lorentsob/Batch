@@ -23,9 +23,7 @@ struct StarterView: View {
                     subtitle: "I tuoi starter"
                 )
                 
-                if !activeStarters.isEmpty {
-                    StateBadge(text: "\(activeStarters.count) starter", tone: .count)
-                }
+                StateBadge(text: "\(activeStarters.count) starter", tone: .count)
 
                 Button {
                     editingStarter = nil
@@ -37,6 +35,8 @@ struct StarterView: View {
                 .padding(.top, Theme.Spacing.xxs)
             }
             .listRowInsets(.levainListRow(top: Theme.Spacing.sm, bottom: Theme.Spacing.md))
+            .listRowSeparator(.hidden)
+            .listRowBackground(Color.clear)
 
 
 
@@ -130,7 +130,6 @@ struct StarterView: View {
         .listStyle(.plain)
         .levainListSurface()
         .tint(Theme.Control.primaryFill)
-        .accessibilityIdentifier("StarterScrollView")
         .accessibilityIdentifier("StarterScrollView")
         .sheet(isPresented: $showingEditor) {
             NavigationStack {

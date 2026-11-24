@@ -17,7 +17,14 @@ enum BakeScheduler {
         let waterWeight    = yeastConversion?.newTotalWaterWeight ?? formula.totalWaterWeight
         let hydration      = yeastConversion?.hydrationPercent    ?? formula.hydrationPercent
         let inoculationPct = yeastConversion.map { $0.yeastPercent } ?? formula.inoculationPercent
-        let totalDough     = yeastConversion?.totalDoughWeight     ?? formula.totalDoughWeight
+        let totalDough = if let yeastConversion {
+            yeastConversion.newTotalFlourWeight
+                + yeastConversion.newTotalWaterWeight
+                + formula.saltWeight
+                + yeastConversion.yeastGrams
+        } else {
+            formula.totalDoughWeight
+        }
 
         let bake = Bake(
             name: name.isEmpty ? formula.name : name,

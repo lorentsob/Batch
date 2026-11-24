@@ -45,11 +45,24 @@ enum KefirReminderPlanner {
             )
         }
 
+        reminders.append(contentsOf:
+            RollingOverdueReminderPlanner.reminderDates(overdueSince: dueAt, now: now).map { fireDate in
+                KefirReminderRequest(
+                    identifier: overdueIdentifier(for: batch, on: fireDate),
+                    fireDate: fireDate,
+                    title: batch.name,
+                    body: overdueBody(for: batch),
+                    route: route
+                )
+            }
+        )
+
         return reminders
     }
 
-    static func identifiers(for batch: KefirBatch) -> [String] {
-        Phase.allCases.map { identifier(for: batch, phase: $0) }
+    static func identifiers(for batch: KefirBatch, now: Date = .now) -> [String] {
+        Phase.allCases.map { identifier(for: batch, phase: $0) } +
+        RollingOverdueReminderPlanner.identifierDates(now: now).map { overdueIdentifier(for: batch, on: $0) }
     }
 
     private static func identifier(for batch: KefirBatch, phase: Phase) -> String {
@@ -76,5 +89,20 @@ enum KefirReminderPlanner {
         case .freezer:
             return "È il momento di riattivare il batch."
         }
+    }
+
+    private static func overdueBody(for batch: KefirBatch) -> String {
+        switch batch.storageMode {
+        case .roomTemperature:
+            return "Non hai ancora rinnovato \(batch.name)."
+        case .fridge:
+            return "Non hai ancora controllato \(batch.name)."
+        case .freezer:
+            return "Non hai ancora riattivato \(batch.name)."
+        }
+    }
+
+    private static func overdueIdentifier(for batch: KefirBatch, on fireDate: Date) -> String {
+        "kefir-overdue-\(batch.id.uuidString)-\(RollingOverdueReminderPlanner.identifierSuffix(for: fireDate))"
     }
 }

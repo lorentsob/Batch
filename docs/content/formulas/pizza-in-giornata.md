@@ -32,7 +32,7 @@ bake_type: pizza-tonda
 
 - 230 g salsa di pomodoro
 - 200 g mozzarella
-- 50 g salame piccante
+- Condimento a piacere
 
 ## Starter prep
 
@@ -84,7 +84,7 @@ bake_type: pizza-tonda
 - Stendi i panetti con le dita.
 - Condisci con salsa di pomodoro, mozzarella e olio.
 - Inforna alla massima potenza nella parte bassa del forno per circa 10 minuti.
-- Aggiungi il salame piccante.
+- Aggiungi il condimento.
 - Sposta la pizza nella parte alta del forno per altri 2 minuti.
 - Servi subito.
 

@@ -162,7 +162,7 @@ struct BakeCreationView: View {
                 }
                 .pickerStyle(.segmented)
                 .onChange(of: useCommercialYeast) { _, _ in
-                    if !useCommercialYeast { selectedStarterID = nil }
+                    if useCommercialYeast { selectedStarterID = nil }
                 }
             }
 
@@ -182,6 +182,11 @@ struct BakeCreationView: View {
                     }
                 }
 
+                Picker("Profilo tempi", selection: $yeastProfile) {
+                    ForEach(YeastProfile.allCases) { profile in
+                        Text(profile.title).tag(profile)
+                    }
+                }
             }
         } header: {
             Text("Agente lievitante")
@@ -224,6 +229,7 @@ struct BakeCreationView: View {
             // Ricetta già commerciale: calcoliamo solo la quantità lievito per il profilo
             return YeastConversionService.calculateYeast(
                 flourWeight: formula.totalFlourWeight,
+                waterWeight: formula.totalWaterWeight,
                 targetYeastType: targetType,
                 profile: yeastProfile
             )
@@ -318,24 +324,33 @@ struct BakeCreationView: View {
         guard let selectedFormulaChoice else { return }
         let resolvedName = name.trimmingCharacters(in: .whitespacesAndNewlines)
 
-        let formula = selectedFormulaChoice.makeTransientFormula()
-
-        // Apply yeast conversion weights to the transient formula when converting sourdough → commercial
-        if let conversion = computedYeastConversion, selectedFormulaChoice.yeastType == .sourdough {
-            formula.totalFlourWeight = conversion.newTotalFlourWeight
-            formula.totalWaterWeight = conversion.newTotalWaterWeight
-            formula.recalculateDerivedValues()
+        let baseFormula = selectedFormulaChoice.makeTransientFormula()
+        let conversionForBake = computedYeastConversion
+        let convertedSourdoughFormula = conversionForBake != nil
+            && selectedFormulaChoice.yeastType == .sourdough
+            && useCommercialYeast
+        let formula: RecipeFormula
+        if let conversion = conversionForBake, convertedSourdoughFormula {
+            formula = RecipeYeastAdaptationService.adaptedFormula(
+                from: baseFormula,
+                conversion: conversion,
+                targetYeastType: commercialYeastType,
+                profile: yeastProfile
+            )
+        } else {
+            formula = baseFormula
         }
 
         let bake = BakeScheduler.generateBake(
             name: resolvedName,
             targetBakeDateTime: targetBakeDateTime,
             formula: formula,
-            starter: useCommercialYeast ? nil : selectedStarter,
-            notes: notes
+            starter: conversionForBake == nil ? selectedStarter : nil,
+            notes: notes,
+            yeastConversion: conversionForBake
         )
 
-        if selectedFormulaChoice.isSystem {
+        if selectedFormulaChoice.isSystem || convertedSourdoughFormula {
             bake.formula = nil
         }
 

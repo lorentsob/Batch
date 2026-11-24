@@ -1,0 +1,45 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="950" viewBox="0 0 1600 950">
+<rect width="1600" height="950" fill="#F7F8F4"/>
+<text x="80" y="92" text-anchor="start" font-family="Inter, -apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif" font-size="46" font-weight="800" fill="#172019">
+<tspan x="80" dy="0">BakeStep state model</tspan>
+</text>
+<text x="82" y="138" text-anchor="start" font-family="Inter, -apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif" font-size="22" font-weight="500" fill="#667064">
+<tspan x="82" dy="0">Il tempo può rendere uno step in ritardo, ma non può completarlo.</tspan>
+</text>
+
+<rect x="150" y="370" width="280" height="150" rx="30" fill="#FFFFFF" stroke="#DDE5D9" stroke-width="2"/>
+<text x="290" y="455" text-anchor="middle" font-family="Inter, -apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif" font-size="34" font-weight="800" fill="#172019">
+<tspan x="290" dy="0">pending</tspan>
+</text>
+<rect x="650" y="260" width="280" height="150" rx="30" fill="#DDEDDD" stroke="#DDE5D9" stroke-width="2"/>
+<text x="790" y="345" text-anchor="middle" font-family="Inter, -apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif" font-size="34" font-weight="800" fill="#2F6F45">
+<tspan x="790" dy="0">running</tspan>
+</text>
+<rect x="1170" y="260" width="280" height="150" rx="30" fill="#DDEDDD" stroke="#DDE5D9" stroke-width="2"/>
+<text x="1310" y="345" text-anchor="middle" font-family="Inter, -apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif" font-size="34" font-weight="800" fill="#2F6F45">
+<tspan x="1310" dy="0">done</tspan>
+</text>
+<rect x="1170" y="560" width="280" height="150" rx="30" fill="#ECEFEB" stroke="#DDE5D9" stroke-width="2"/>
+<text x="1310" y="645" text-anchor="middle" font-family="Inter, -apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif" font-size="34" font-weight="800" fill="#7A8178">
+<tspan x="1310" dy="0">skipped</tspan>
+</text>
+<path d="M 430 445 C 540 445, 540 335, 650 335" fill="none" stroke="#2F6F45" stroke-width="4" stroke-linecap="round"/>
+<path d="M 638 325 L 650 335 L 638 345" fill="none" stroke="#2F6F45" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M 930 335 C 1050 335, 1050 335, 1170 335" fill="none" stroke="#2F6F45" stroke-width="4" stroke-linecap="round"/>
+<path d="M 1158 325 L 1170 335 L 1158 345" fill="none" stroke="#2F6F45" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M 430 445 C 800 445, 800 635, 1170 635" fill="none" stroke="#7A8178" stroke-width="4" stroke-linecap="round"/>
+<path d="M 1158 625 L 1170 635 L 1158 645" fill="none" stroke="#7A8178" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M 930 335 C 1050 335, 1050 635, 1170 635" fill="none" stroke="#7A8178" stroke-width="4" stroke-linecap="round"/>
+<path d="M 1158 625 L 1170 635 L 1158 645" fill="none" stroke="#7A8178" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+<rect x="150" y="650" width="610" height="130" rx="30" fill="#F4DFDD" stroke="#B6463B" stroke-width="2"/>
+<text x="195" y="722" text-anchor="start" font-family="Inter, -apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif" font-size="26" font-weight="700" fill="#B6463B">
+<tspan x="195" dy="0">Overdue è una lettura UI derivata, non uno</tspan>
+<tspan x="195" dy="33">status salvato.</tspan>
+</text>
+<rect x="845" y="650" width="610" height="130" rx="30" fill="#EFF3EA" stroke="#DDE5D9" stroke-width="2"/>
+<text x="890" y="722" text-anchor="start" font-family="Inter, -apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif" font-size="26" font-weight="700" fill="#2F6F45">
+<tspan x="890" dy="0">actualStart e actualEnd restano separati</tspan>
+<tspan x="890" dy="33">dal piano.</tspan>
+</text>
+
+</svg>

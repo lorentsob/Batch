@@ -1,0 +1,75 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1800" height="1050" viewBox="0 0 1800 1050">
+<rect width="1800" height="1050" fill="#F7F8F4"/>
+<text x="80" y="92" text-anchor="start" font-family="Inter, -apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif" font-size="46" font-weight="800" fill="#172019">
+<tspan x="80" dy="0">Kefir lifecycle</tspan>
+</text>
+<text x="82" y="138" text-anchor="start" font-family="Inter, -apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif" font-size="22" font-weight="500" fill="#667064">
+<tspan x="82" dy="0">Il kefir diventa un dominio operativo: stato, eventi, archivio e confronto.</tspan>
+</text>
+
+<rect x="95" y="275" width="330" height="170" rx="30" fill="#F4DFDD" stroke="#DDE5D9" stroke-width="2"/>
+<text x="131" y="347" text-anchor="start" font-family="Inter, -apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif" font-size="30" font-weight="800" fill="#B6463B">
+<tspan x="131" dy="0">Kefico overdue</tspan>
+</text>
+<text x="131" y="387" text-anchor="start" font-family="Inter, -apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif" font-size="21" font-weight="500" fill="#667064">
+<tspan x="131" dy="0">stato derivato</tspan>
+</text>
+<rect x="515" y="275" width="330" height="170" rx="30" fill="#DDEDDD" stroke="#DDE5D9" stroke-width="2"/>
+<text x="551" y="347" text-anchor="start" font-family="Inter, -apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif" font-size="30" font-weight="800" fill="#2F6F45">
+<tspan x="551" dy="0">Rinfresca</tspan>
+</text>
+<text x="551" y="387" text-anchor="start" font-family="Inter, -apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif" font-size="21" font-weight="500" fill="#667064">
+<tspan x="551" dy="0">azione primaria</tspan>
+</text>
+<rect x="935" y="275" width="330" height="170" rx="30" fill="#EFF3EA" stroke="#DDE5D9" stroke-width="2"/>
+<text x="971" y="347" text-anchor="start" font-family="Inter, -apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif" font-size="30" font-weight="800" fill="#7A8178">
+<tspan x="971" dy="0">KefirEvent</tspan>
+</text>
+<text x="971" y="387" text-anchor="start" font-family="Inter, -apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif" font-size="21" font-weight="500" fill="#667064">
+<tspan x="971" dy="0">evento automatico</tspan>
+</text>
+<rect x="1355" y="275" width="330" height="170" rx="30" fill="#FFFFFF" stroke="#DDE5D9" stroke-width="2"/>
+<text x="1391" y="347" text-anchor="start" font-family="Inter, -apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif" font-size="30" font-weight="800" fill="#667064">
+<tspan x="1391" dy="0">Cronologia</tspan>
+</text>
+<text x="1391" y="387" text-anchor="start" font-family="Inter, -apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif" font-size="21" font-weight="500" fill="#667064">
+<tspan x="1391" dy="0">memoria leggibile</tspan>
+</text>
+<rect x="95" y="630" width="330" height="170" rx="30" fill="#ECEFEB" stroke="#DDE5D9" stroke-width="2"/>
+<text x="131" y="702" text-anchor="start" font-family="Inter, -apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif" font-size="30" font-weight="800" fill="#7A8178">
+<tspan x="131" dy="0">Archivia</tspan>
+</text>
+<text x="131" y="742" text-anchor="start" font-family="Inter, -apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif" font-size="21" font-weight="500" fill="#667064">
+<tspan x="131" dy="0">resta consultabile</tspan>
+</text>
+<rect x="515" y="630" width="330" height="170" rx="30" fill="#DDEDDD" stroke="#DDE5D9" stroke-width="2"/>
+<text x="551" y="702" text-anchor="start" font-family="Inter, -apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif" font-size="30" font-weight="800" fill="#2F6F45">
+<tspan x="551" dy="0">Nuovo batch</tspan>
+</text>
+<text x="551" y="742" text-anchor="start" font-family="Inter, -apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif" font-size="21" font-weight="500" fill="#667064">
+<tspan x="551" dy="0">derivazione</tspan>
+</text>
+<rect x="935" y="630" width="330" height="170" rx="30" fill="#FFFFFF" stroke="#DDE5D9" stroke-width="2"/>
+<text x="971" y="702" text-anchor="start" font-family="Inter, -apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif" font-size="30" font-weight="800" fill="#667064">
+<tspan x="971" dy="0">Confronta</tspan>
+</text>
+<text x="971" y="742" text-anchor="start" font-family="Inter, -apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif" font-size="21" font-weight="500" fill="#667064">
+<tspan x="971" dy="0">lineage context</tspan>
+</text>
+<path d="M 425 360 C 470 360, 470 360, 515 360" fill="none" stroke="#2F6F45" stroke-width="4" stroke-linecap="round"/>
+<path d="M 503 350 L 515 360 L 503 370" fill="none" stroke="#2F6F45" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M 845 360 C 890 360, 890 360, 935 360" fill="none" stroke="#2F6F45" stroke-width="4" stroke-linecap="round"/>
+<path d="M 923 350 L 935 360 L 923 370" fill="none" stroke="#2F6F45" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M 1265 360 C 1310 360, 1310 360, 1355 360" fill="none" stroke="#2F6F45" stroke-width="4" stroke-linecap="round"/>
+<path d="M 1343 350 L 1355 360 L 1343 370" fill="none" stroke="#2F6F45" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M 1520 445 C 1520 445, 1520 630, 1520 630" fill="none" stroke="#7A8178" stroke-width="4" stroke-linecap="round"/>
+<path d="M 1508 620 L 1520 630 L 1508 640" fill="none" stroke="#7A8178" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M 1355 715 C 1310 715, 1310 715, 1265 715" fill="none" stroke="#7A8178" stroke-width="4" stroke-linecap="round"/>
+<path d="M 1253 705 L 1265 715 L 1253 725" fill="none" stroke="#7A8178" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M 1095 715 C 1015 715, 1015 715, 935 715" fill="none" stroke="#2F6F45" stroke-width="4" stroke-linecap="round"/>
+<path d="M 923 705 L 935 715 L 923 725" fill="none" stroke="#2F6F45" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+<text x="95" y="930" text-anchor="start" font-family="Inter, -apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif" font-size="28" font-weight="700" fill="#2F6F45">
+<tspan x="95" dy="0">Automatic-first: l'utente non deve compilare un diario per avere memoria operativa.</tspan>
+</text>
+
+</svg>

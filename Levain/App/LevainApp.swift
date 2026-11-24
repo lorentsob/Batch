@@ -1,5 +1,7 @@
 import SwiftUI
 import SwiftData
+import AVFoundation
+import UIKit
 
 @main
 struct LevainApp: App {
@@ -60,27 +62,16 @@ private struct SplashView: View {
 
     var body: some View {
         GeometryReader { geo in
+            let logoSize = min(geo.size.width * 0.58, 260)
+
             ZStack {
-                // Radial gradient — warm glow at the logo centre, deepens toward edges
-                RadialGradient(
-                    colors: [
-                        Color(hex: "#0F4A35"),
-                        Theme.Palette.green800
-                    ],
-                    center: UnitPoint(x: 0.5, y: 0.38),
-                    startRadius: 0,
-                    endRadius: geo.size.height * 0.68
-                )
+                Color(hex: "#155D4D")
                 .ignoresSafeArea()
 
                 VStack(spacing: 24) {
-                    Image("AppLogo")
-                        .resizable()
-                        .scaledToFit()
-                        .frame(width: geo.size.width * 0.65)
-                        // Layered shadow: green glow + depth
-                        .shadow(color: Theme.Palette.green500.opacity(0.30), radius: 44, x: 0, y: 0)
-                        .shadow(color: Color.black.opacity(0.22), radius: 24, x: 0, y: 14)
+                    SplashLogoAnimationView(reduceMotion: reduceMotion)
+                        .frame(width: logoSize, height: logoSize)
+                        .shadow(color: Theme.Palette.green800.opacity(0.28), radius: 30, x: 0, y: 18)
                         .opacity(logoVisible ? 1 : 0)
                         .scaleEffect(logoVisible ? (logoPulsing ? 0.984 : 1.0) : 0.76)
                         .offset(y: logoVisible ? 0 : 22)
@@ -88,14 +79,14 @@ private struct SplashView: View {
                     VStack(spacing: 8) {
                         Text("Batch")
                             .font(.system(size: 36, weight: .bold))
-                            .foregroundStyle(Color.white)
+                            .foregroundStyle(Theme.Palette.neutral0)
                             .kerning(-0.5)
                             .opacity(titleVisible ? 1 : 0)
                             .offset(y: titleVisible ? 0 : 14)
 
                         Text("Fermenti Vivi")
                             .font(Theme.Typography.subheadline)
-                            .foregroundStyle(Color.white.opacity(0.50))
+                            .foregroundStyle(Theme.Palette.neutral0.opacity(0.72))
                             .kerning(0.4)
                             .opacity(subtitleVisible ? 1 : 0)
                             .offset(y: subtitleVisible ? 0 : 8)
@@ -131,5 +122,111 @@ private struct SplashView: View {
                 }
             }
         }
+    }
+}
+
+private struct SplashLogoAnimationView: View {
+    let reduceMotion: Bool
+
+    @State private var player = SplashLogoAnimationAsset.makePlayer()
+
+    var body: some View {
+        ZStack {
+            if reduceMotion || player == nil {
+                Image("AppLogo")
+                    .resizable()
+                    .scaledToFit()
+            }
+
+            if let player, reduceMotion == false {
+                SplashLogoPlayerView(player: player)
+                    .aspectRatio(1, contentMode: .fit)
+            }
+        }
+        .accessibilityHidden(true)
+        .onAppear {
+            guard reduceMotion == false else { return }
+            player?.seek(to: .zero)
+            player?.play()
+        }
+        .onDisappear {
+            player?.pause()
+        }
+        .onChange(of: reduceMotion) { _, shouldReduceMotion in
+            if shouldReduceMotion {
+                player?.pause()
+                player?.seek(to: .zero)
+            } else {
+                player?.seek(to: .zero)
+                player?.play()
+            }
+        }
+    }
+}
+
+private struct SplashLogoPlayerView: UIViewRepresentable {
+    let player: AVPlayer
+
+    func makeUIView(context: Context) -> PlayerContainerView {
+        let view = PlayerContainerView()
+        view.configure(with: player)
+        return view
+    }
+
+    func updateUIView(_ uiView: PlayerContainerView, context: Context) {
+        uiView.configure(with: player)
+    }
+
+    static func dismantleUIView(_ uiView: PlayerContainerView, coordinator: ()) {
+        uiView.playerLayer.player = nil
+    }
+}
+
+private final class PlayerContainerView: UIView {
+    override static var layerClass: AnyClass { AVPlayerLayer.self }
+
+    var playerLayer: AVPlayerLayer {
+        layer as! AVPlayerLayer
+    }
+
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        backgroundColor = .clear
+        isOpaque = false
+        isUserInteractionEnabled = false
+    }
+
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+
+    func configure(with player: AVPlayer) {
+        playerLayer.player = player
+        playerLayer.videoGravity = .resizeAspect
+        playerLayer.backgroundColor = UIColor.clear.cgColor
+        playerLayer.isOpaque = false
+    }
+}
+
+private enum SplashLogoAnimationAsset {
+    static func makePlayer() -> AVPlayer? {
+        guard let dataAsset = NSDataAsset(name: "BatchLogoLoading") else {
+            return nil
+        }
+
+        let url = FileManager.default.temporaryDirectory
+            .appendingPathComponent("batch-logo-loading")
+            .appendingPathExtension("mov")
+
+        do {
+            try dataAsset.data.write(to: url, options: [.atomic])
+        } catch {
+            return nil
+        }
+
+        let player = AVPlayer(url: url)
+        player.isMuted = true
+        player.actionAtItemEnd = .pause
+        return player
     }
 }

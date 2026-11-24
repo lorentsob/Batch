@@ -68,7 +68,7 @@ jobs:
             -destination "generic/platform=iOS Simulator" \
             CODE_SIGNING_ALLOWED=NO \
             SWIFT_TREAT_WARNINGS_AS_ERRORS=YES \
-            build 2>&1 | tee /tmp/build.log | xcpretty --color
+            build 2>&1 | tee /tmp/build.log | { if command -v xcpretty >/dev/null; then xcpretty --color; else cat; fi; }
 
       # ── 6. List simulators (diagnostic) ─────────────────────────────────────
       - name: List available simulators
