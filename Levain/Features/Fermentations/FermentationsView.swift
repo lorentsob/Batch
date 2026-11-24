@@ -139,10 +139,7 @@ struct FermentationsView: View {
             title: "Impasti",
             badge: bakesBadge,
             rows: bakesRows,
-            isEmpty: activeBakes.isEmpty,
-            emptyMessage: "Crea un impasto",
-            onTap: { router.fermentationsPath.append(.bakesList) },
-            onEmptyCTA: { showingBakeEditor = true }
+            onTap: { router.fermentationsPath.append(.bakesList) }
         )
         .accessibilityIdentifier("ImpastiCard")
     }
@@ -153,10 +150,7 @@ struct FermentationsView: View {
             title: "Starter",
             badge: startersBadge,
             rows: starterRows,
-            isEmpty: starters.isEmpty,
-            emptyMessage: "Aggiungi starter",
-            onTap: { router.fermentationsPath.append(.starterList) },
-            onEmptyCTA: { showingStarterEditor = true }
+            onTap: { router.fermentationsPath.append(.starterList) }
         )
         .accessibilityIdentifier("StarterCard")
     }
@@ -167,10 +161,7 @@ struct FermentationsView: View {
             title: "Kefir",
             badge: kefirBadge,
             rows: kefirRows,
-            isEmpty: kefirBatches.isEmpty,
-            emptyMessage: "Crea batch",
-            onTap: { router.fermentationsPath.append(.kefirHub) },
-            onEmptyCTA: { kefirEditorMode = .create }
+            onTap: { router.fermentationsPath.append(.kefirHub) }
         )
         .accessibilityIdentifier("KefirHubCard")
     }
@@ -179,12 +170,9 @@ struct FermentationsView: View {
         FermentHubTile(
             icon: .system("book.closed.fill"),
             title: "Ricette",
-            badge: formulas.isEmpty ? nil : "\(formulas.count)",
+            badge: "\(formulas.count)",
             rows: formulasRows,
-            isEmpty: formulas.isEmpty,
-            emptyMessage: "Aggiungi ricetta",
-            onTap: { router.fermentationsPath.append(.formulaList) },
-            onEmptyCTA: { /* Could trigger formula creation */ }
+            onTap: { router.fermentationsPath.append(.formulaList) }
         )
         .accessibilityIdentifier("RicetteCard")
     }
@@ -192,8 +180,7 @@ struct FermentationsView: View {
     // MARK: - Section Rows
 
     private var bakesRows: [FermentHubTile.Row] {
-        guard !activeBakes.isEmpty else { return [] }
-        return [
+        [
             .init(
                 icon: "fork.knife",
                 label: "\(activeBakes.count) in corso"
@@ -202,21 +189,19 @@ struct FermentationsView: View {
     }
 
     private var starterRows: [FermentHubTile.Row] {
-        guard !starters.isEmpty else { return [] }
-        return [
+        [
             .init(
                 icon: "flame.fill",
-                label: "\(starters.count) gestiti"
+                label: "\(starters.count) gestit\(starters.count == 1 ? "o" : "i")"
             )
         ]
     }
 
     private var formulasRows: [FermentHubTile.Row] {
-        guard !formulas.isEmpty else { return [] }
-        return [
+        [
             .init(
                 icon: "list.clipboard.fill",
-                label: "\(formulas.count) salvate"
+                label: "\(formulas.count) salvat\(formulas.count == 1 ? "a" : "e")"
             )
         ]
     }
@@ -224,7 +209,6 @@ struct FermentationsView: View {
     // MARK: - Kefir rows
 
     private var kefirRows: [FermentHubTile.Row] {
-        guard kefirBatches.isEmpty == false else { return [] }
         var rows: [FermentHubTile.Row] = []
         if kefirBatches.warningKefirCount > 0 {
             rows.append(.init(icon: "exclamationmark.circle.fill", label: "\(kefirBatches.warningKefirCount) da rinnovare", tone: .warning))
@@ -235,22 +219,34 @@ struct FermentationsView: View {
         if kefirBatches.pausedKefirCount > 0 {
             rows.append(.init(icon: "pause.circle.fill", label: "\(kefirBatches.pausedKefirCount) pausa"))
         }
+        if rows.isEmpty {
+            if kefirBatches.archivedKefirCount > 0 {
+                rows.append(
+                    .init(
+                        icon: "archivebox.fill",
+                        label: "\(kefirBatches.archivedKefirCount) archiviat\(kefirBatches.archivedKefirCount == 1 ? "o" : "i")"
+                    )
+                )
+            } else {
+                rows.append(.init(icon: "drop.fill", label: "0 batch attivi"))
+            }
+        }
         return rows
     }
 
     // MARK: - Badges
 
     private var bakesBadge: String? {
-        activeBakes.isEmpty ? nil : "\(activeBakes.count)"
+        "\(activeBakes.count)"
     }
 
     private var startersBadge: String? {
-        starters.isEmpty ? nil : "\(starters.count)"
+        "\(starters.count)"
     }
 
     private var kefirBadge: String? {
         if kefirBatches.liveKefirCount > 0 { return "\(kefirBatches.liveKefirCount)" }
-        return kefirBatches.archivedKefirCount > 0 ? "\(kefirBatches.archivedKefirCount)" : nil
+        return kefirBatches.archivedKefirCount > 0 ? "\(kefirBatches.archivedKefirCount)" : "0"
     }
 
     // MARK: - Empty States
@@ -291,10 +287,11 @@ private struct FermentHubTile: View {
     let title: String
     let badge: String?
     let rows: [Row]
-    let isEmpty: Bool
-    let emptyMessage: String
     let onTap: () -> Void
-    let onEmptyCTA: () -> Void
+
+    private static let maxVisibleRows = 2
+    private static let minTileContentHeight: CGFloat = 104
+    private static let metricRowsMinHeight: CGFloat = 30
 
     var body: some View {
         SectionCard(emphasis: .tinted) {
@@ -313,32 +310,35 @@ private struct FermentHubTile: View {
                         .foregroundStyle(Theme.Text.primary)
                         .lineLimit(1)
 
-                    if isEmpty {
-                        Text(emptyMessage)
-                            .font(Theme.Typography.caption1)
-                            .foregroundStyle(Theme.Text.secondary)
-                    } else {
-                        VStack(alignment: .leading, spacing: Theme.Spacing.xxs) {
-                            ForEach(rows.prefix(2), id: \.label) { row in
-                                HStack(spacing: Theme.Spacing.xxs) {
-                                    Image(systemName: row.icon)
-                                        .font(Theme.Typography.caption2.weight(.semibold))
-                                        .foregroundStyle(rowColor(row.tone))
-                                    Text(row.label)
-                                        .font(Theme.Typography.caption2)
-                                        .foregroundStyle(Theme.Text.secondary)
-                                        .lineLimit(1)
-                                }
+                    VStack(alignment: .leading, spacing: Theme.Spacing.xxs) {
+                        ForEach(visibleRows, id: \.label) { row in
+                            HStack(spacing: Theme.Spacing.xxs) {
+                                Image(systemName: row.icon)
+                                    .font(Theme.Typography.caption2.weight(.semibold))
+                                    .foregroundStyle(rowColor(row.tone))
+                                    .frame(width: 12, alignment: .center)
+                                Text(row.label)
+                                    .font(Theme.Typography.caption2)
+                                    .foregroundStyle(Theme.Text.secondary)
+                                    .lineLimit(1)
+                                    .minimumScaleFactor(0.86)
                             }
                         }
                     }
+                    .frame(minHeight: Self.metricRowsMinHeight, alignment: .topLeading)
                 }
             }
             .padding(.vertical, Theme.Spacing.xxs)
-            .frame(maxWidth: .infinity, alignment: .leading)
+            .frame(maxWidth: .infinity, minHeight: Self.minTileContentHeight, alignment: .topLeading)
         }
         .contentShape(Rectangle())
         .onTapGesture { onTap() }
+        .accessibilityElement(children: .combine)
+        .accessibilityValue(visibleRows.map(\.label).joined(separator: " · "))
+    }
+
+    private var visibleRows: [Row] {
+        Array(rows.prefix(Self.maxVisibleRows))
     }
 
     private func rowColor(_ tone: Row.Tone) -> Color {

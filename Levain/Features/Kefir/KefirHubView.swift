@@ -69,20 +69,16 @@ struct KefirHubView: View {
                 subtitle: "I tuoi batch di kefir"
             )
 
-            if batches.isEmpty == false {
-                HStack(spacing: 10) {
-                    if batches.warningKefirCount > 0 {
-                        StateBadge(text: "\(batches.warningKefirCount) da seguire", tone: .count)
-                    }
-                    if batches.activeKefirCount > 0 {
-                        StateBadge(text: "\(batches.activeKefirCount) in corso", tone: .count)
-                    }
-                    if batches.pausedKefirCount > 0 {
-                        StateBadge(text: "\(batches.pausedKefirCount) in pausa", tone: .count)
-                    }
-                    if batches.liveKefirCount == 0, batches.archivedKefirCount > 0 {
-                        StateBadge(text: "\(batches.archivedKefirCount) archiviat\(batches.archivedKefirCount == 1 ? "o" : "i")", tone: .count)
-                    }
+            HStack(spacing: 10) {
+                if batches.warningKefirCount > 0 {
+                    StateBadge(text: "\(batches.warningKefirCount) da seguire", tone: .count)
+                }
+                StateBadge(text: "\(batches.activeKefirCount) in corso", tone: .count)
+                if batches.pausedKefirCount > 0 {
+                    StateBadge(text: "\(batches.pausedKefirCount) in pausa", tone: .count)
+                }
+                if batches.liveKefirCount == 0, batches.archivedKefirCount > 0 {
+                    StateBadge(text: "\(batches.archivedKefirCount) archiviat\(batches.archivedKefirCount == 1 ? "o" : "i")", tone: .count)
                 }
             }
 

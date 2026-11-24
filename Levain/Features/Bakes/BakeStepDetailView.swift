@@ -47,9 +47,7 @@ struct BakeStepDetailView: View {
                             .font(.caption.weight(.semibold))
                             .foregroundStyle(Theme.Control.primaryFill)
 
-                        Text(step.descriptionText)
-                            .foregroundStyle(Theme.ink)
-                            .fixedSize(horizontal: false, vertical: true)
+                        DescriptionBulletList(text: step.descriptionText)
                     }
                     .padding(.vertical, 4)
                 }

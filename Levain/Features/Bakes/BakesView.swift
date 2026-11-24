@@ -65,12 +65,8 @@ struct BakesView: View {
                         subtitle: "I tuoi impasti attivi o in programma"
                     )
                     HStack(spacing: Theme.Spacing.sm + 4) {
-                        if activeBakes.isEmpty == false {
-                            StateBadge(text: "\(activeBakes.count) attivi", tone: .count)
-                        }
-                        if formulas.isEmpty == false {
-                            StateBadge(text: "\(formulas.count) ricette", tone: .count)
-                        }
+                        StateBadge(text: "\(activeBakes.count) attiv\(activeBakes.count == 1 ? "o" : "i")", tone: .count)
+                        StateBadge(text: "\(formulas.count) ricett\(formulas.count == 1 ? "a" : "e")", tone: .count)
                     }
 
                     Button {
@@ -84,6 +80,8 @@ struct BakesView: View {
                     .padding(.top, Theme.Spacing.xxs)
                 }
                 .listRowInsets(.levainListRow(top: Theme.Spacing.sm, bottom: Theme.Spacing.md))
+                .listRowSeparator(.hidden)
+                .listRowBackground(Color.clear)
 
 
 
@@ -139,7 +137,7 @@ struct BakesView: View {
                                     }
 
                                     if let step = row.snapshot.activeStep {
-                                        Text(step.descriptionText.isEmpty ? "La fase attiva è pronta da seguire." : step.descriptionText)
+                                        Text(step.descriptionText.isEmpty ? "La fase attiva è pronta da seguire." : step.descriptionText.descriptionFirstLine)
                                             .font(.footnote)
                                             .foregroundStyle(Theme.muted)
                                             .lineLimit(2)

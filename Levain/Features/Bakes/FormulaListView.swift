@@ -50,6 +50,8 @@ struct FormulaListView: View {
                     .padding(.top, Theme.Spacing.xxs)
                 }
                 .listRowInsets(.levainListRow(top: Theme.Spacing.sm, bottom: Theme.Spacing.md))
+                .listRowSeparator(.hidden)
+                .listRowBackground(Color.clear)
 
 
                 if activeFormulas.isEmpty {

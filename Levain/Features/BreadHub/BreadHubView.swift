@@ -193,7 +193,7 @@ struct BreadHubView: View {
                             }
 
                             if let step = row.snapshot.activeStep {
-                                Text(step.descriptionText.isEmpty ? "La fase attiva è pronta da seguire." : step.descriptionText)
+                                Text(step.descriptionText.isEmpty ? "La fase attiva è pronta da seguire." : step.descriptionText.descriptionFirstLine)
                                     .font(.footnote)
                                     .foregroundStyle(Theme.muted)
                                     .lineLimit(2)

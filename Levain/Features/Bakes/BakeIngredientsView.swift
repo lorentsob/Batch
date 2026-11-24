@@ -29,7 +29,8 @@ struct BakeIngredientsView: View {
     // MARK: Parsed data
 
     private var ingredientSections: [IngredientSection] {
-        guard let raw = bake.ingredients, !raw.isEmpty,
+        let raw = bake.formula?.ingredients ?? bake.ingredients
+        guard let raw, !raw.isEmpty,
               let data = raw.data(using: .utf8),
               let sections = try? JSONDecoder().decode([IngredientSection].self, from: data)
         else { return [] }
@@ -37,7 +38,8 @@ struct BakeIngredientsView: View {
     }
 
     private var procedureSections: [ProcedureSection] {
-        guard let raw = bake.procedure, !raw.isEmpty,
+        let raw = bake.formula?.procedure ?? bake.procedure
+        guard let raw, !raw.isEmpty,
               let data = raw.data(using: .utf8),
               let sections = try? JSONDecoder().decode([ProcedureSection].self, from: data)
         else { return [] }
@@ -45,11 +47,22 @@ struct BakeIngredientsView: View {
     }
 
     private var bakingSteps: [String] {
-        guard let raw = bake.bakingInstructions, !raw.isEmpty,
+        guard let raw = bake.formula?.bakingInstructions ?? bake.bakingInstructions, !raw.isEmpty,
               let data = raw.data(using: .utf8),
               let steps = try? JSONDecoder().decode([String].self, from: data)
         else { return [] }
         return steps
+    }
+
+    private var yeastMetric: (label: String, value: String)? {
+        if let item = ingredientSections.flatMap(\.items).first(where: { $0.localizedCaseInsensitiveContains("lievito") }) {
+            let label = item.localizedCaseInsensitiveContains("lievito madre") ? "Lievito madre" : "Lievito"
+            return (label, extractedGramValue(from: item) ?? item)
+        }
+
+        let inocW = Int(bake.totalFlourWeight * bake.inoculationPercent / 100)
+        guard inocW > 0 else { return nil }
+        return ("Lievito", "~\(inocW) g")
     }
 
     private var glossaryIndex: KnowledgeGlossaryIndex {
@@ -77,13 +90,9 @@ struct BakeIngredientsView: View {
                             if saltW > 0 {
                                 MetricChip(label: "Sale", value: "\(saltW) g", tone: .schedule)
                             }
-                            let inocW = Int(bake.totalFlourWeight * formula.inoculationPercent / 100)
-                            MetricChip(label: "Lievito madre", value: "~\(inocW) g", tone: .info)
-                        } else {
-                            let inocW = Int(bake.totalFlourWeight * bake.inoculationPercent / 100)
-                            if inocW > 0 {
-                                MetricChip(label: "Lievito madre", value: "~\(inocW) g", tone: .info)
-                            }
+                        }
+                        if let yeastMetric {
+                            MetricChip(label: yeastMetric.label, value: yeastMetric.value, tone: .info)
                         }
                     }
 
@@ -132,15 +141,25 @@ struct BakeIngredientsView: View {
                                     .tracking(0.6)
                                     .foregroundStyle(Theme.Control.primaryFill)
 
-                                    GlossaryLinkedText(
-                                        text: section.content,
-                                        glossaryIndex: glossaryIndex,
-                                        maxLinks: 2,
-                                        onOpenKnowledge: router.openKnowledge
-                                    )
-                                        .font(.subheadline)
-                                        .foregroundStyle(Theme.ink)
-                                        .fixedSize(horizontal: false, vertical: true)
+                                    VStack(alignment: .leading, spacing: 6) {
+                                        ForEach(DescriptionBulletList.parse(section.content), id: \.self) { line in
+                                            HStack(alignment: .top, spacing: 10) {
+                                                RoundedRectangle(cornerRadius: 1)
+                                                    .fill(Theme.Control.primaryFill.opacity(0.55))
+                                                    .frame(width: 3, height: 16)
+                                                    .padding(.top, 3)
+                                                GlossaryLinkedText(
+                                                    text: line,
+                                                    glossaryIndex: glossaryIndex,
+                                                    maxLinks: 1,
+                                                    onOpenKnowledge: router.openKnowledge
+                                                )
+                                                .font(.subheadline)
+                                                .foregroundStyle(Theme.ink)
+                                                .fixedSize(horizontal: false, vertical: true)
+                                            }
+                                        }
+                                    }
                                 }
                             }
                         }
@@ -196,6 +215,16 @@ struct BakeIngredientsView: View {
                     .fontWeight(.semibold)
             }
         }
+    }
+
+    private func extractedGramValue(from text: String) -> String? {
+        guard let range = text.range(
+            of: #"([0-9]+(?:[,.][0-9]+)?)\s*g"#,
+            options: [.regularExpression, .caseInsensitive]
+        ) else {
+            return nil
+        }
+        return String(text[range])
     }
 }
 

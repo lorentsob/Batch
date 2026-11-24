@@ -398,9 +398,9 @@
     "flourMix": "100% farina 00 per pizza",
     "flours": [],
     "notes": "",
-    "ingredients": "[{\"title\": \"Impasto\", \"items\": [\"600 g farina 00 per pizza\", \"360 ml acqua\", \"2 cucchiai olio extravergine d'oliva\", \"12 g sale\", \"100 g lievito madre già rinfrescato la sera prima\"]}, {\"title\": \"Cottura\", \"items\": [\"230 g salsa di pomodoro\", \"200 g mozzarella\", \"50 g salame piccante\"]}]",
-    "procedure": "[{\"title\": \"Starter prep\", \"level\": 2, \"content\": \"\"}, {\"title\": \"Oggi, ore 21:00\", \"level\": 3, \"content\": \"- Tira fuori il lievito madre dal frigo.\\n- Rinfrescalo.\\n- Lascialo a temperatura ambiente finché raddoppia.\\n- Quando ha raddoppiato, rimettilo in frigo fino a domattina.\"}, {\"title\": \"Domani, ore 8:30\", \"level\": 3, \"content\": \"- Tira fuori il lievito madre dal frigo per riportarlo a temperatura ambiente.\"}, {\"title\": \"Dough mix\", \"level\": 2, \"content\": \"\"}, {\"title\": \"Impasto\", \"level\": 3, \"content\": \"- Alle 9:00 sciogli il lievito madre nell'acqua.\\n- Aggiungi la farina.\\n- Aggiungi il sale.\\n- Aggiungi infine l'olio.\\n- Lavora fino a ottenere un impasto liscio e omogeneo.\"}, {\"title\": \"Timeline\", \"level\": 2, \"content\": \"\"}, {\"title\": \"Bulk fermentation\", \"level\": 3, \"content\": \"- 09:30 → primo giro di pieghe\\n- 11:00 → secondo giro di pieghe\\n- 11:30 → terzo giro di pieghe\\n- 11:30 - 17:30 → lievitazione coperta fino al raddoppio\"}, {\"title\": \"Formatura\", \"level\": 3, \"content\": \"- 17:30 → dividi in 3 panetti e forma le palline\\n- 17:30 - 19:30 → riposo finale dei panetti\\n- 19:30 → stesura prima del condimento\"}, {\"title\": \"Bake\", \"level\": 2, \"content\": \"- Stendi i panetti con le dita.\\n- Condisci con salsa di pomodoro, mozzarella e olio.\\n- Inforna alla massima potenza nella parte bassa del forno per circa 10 minuti.\\n- Aggiungi il salame piccante.\\n- Sposta la pizza nella parte alta del forno per altri 2 minuti.\\n- Servi subito.\"}]",
-    "bakingInstructions": "[\"Stendi i panetti con le dita.\", \"Condisci con salsa di pomodoro, mozzarella e olio.\", \"Inforna alla massima potenza nella parte bassa del forno per circa 10 minuti.\", \"Aggiungi il salame piccante.\", \"Sposta la pizza nella parte alta del forno per altri 2 minuti.\", \"Servi subito.\"]",
+    "ingredients": "[{\"title\": \"Impasto\", \"items\": [\"600 g farina 00 per pizza\", \"360 ml acqua\", \"2 cucchiai olio extravergine d'oliva\", \"12 g sale\", \"100 g lievito madre già rinfrescato la sera prima\"]}, {\"title\": \"Cottura\", \"items\": [\"230 g salsa di pomodoro\", \"200 g mozzarella\", \"Condimento a piacere\"]}]",
+    "procedure": "[{\"title\": \"Starter prep\", \"level\": 2, \"content\": \"\"}, {\"title\": \"Oggi, ore 21:00\", \"level\": 3, \"content\": \"- Tira fuori il lievito madre dal frigo.\\n- Rinfrescalo.\\n- Lascialo a temperatura ambiente finché raddoppia.\\n- Quando ha raddoppiato, rimettilo in frigo fino a domattina.\"}, {\"title\": \"Domani, ore 8:30\", \"level\": 3, \"content\": \"- Tira fuori il lievito madre dal frigo per riportarlo a temperatura ambiente.\"}, {\"title\": \"Dough mix\", \"level\": 2, \"content\": \"\"}, {\"title\": \"Impasto\", \"level\": 3, \"content\": \"- Alle 9:00 sciogli il lievito madre nell'acqua.\\n- Aggiungi la farina.\\n- Aggiungi il sale.\\n- Aggiungi infine l'olio.\\n- Lavora fino a ottenere un impasto liscio e omogeneo.\"}, {\"title\": \"Timeline\", \"level\": 2, \"content\": \"\"}, {\"title\": \"Bulk fermentation\", \"level\": 3, \"content\": \"- 09:30 → primo giro di pieghe\\n- 11:00 → secondo giro di pieghe\\n- 11:30 → terzo giro di pieghe\\n- 11:30 - 17:30 → lievitazione coperta fino al raddoppio\"}, {\"title\": \"Formatura\", \"level\": 3, \"content\": \"- 17:30 → dividi in 3 panetti e forma le palline\\n- 17:30 - 19:30 → riposo finale dei panetti\\n- 19:30 → stesura prima del condimento\"}, {\"title\": \"Bake\", \"level\": 2, \"content\": \"- Stendi i panetti con le dita.\\n- Condisci con salsa di pomodoro, mozzarella e olio.\\n- Inforna alla massima potenza nella parte bassa del forno per circa 10 minuti.\\n- Aggiungi il condimento.\\n- Sposta la pizza nella parte alta del forno per altri 2 minuti.\\n- Servi subito.\"}]",
+    "bakingInstructions": "[\"Stendi i panetti con le dita.\", \"Condisci con salsa di pomodoro, mozzarella e olio.\", \"Inforna alla massima potenza nella parte bassa del forno per circa 10 minuti.\", \"Aggiungi il condimento.\", \"Sposta la pizza nella parte alta del forno per altri 2 minuti.\", \"Servi subito.\"]",
     "defaultSteps": [
       {
         "id": "3F125343-08BE-56B5-BCB4-FFD3C2FEE0BD",
@@ -449,7 +449,7 @@
         "name": "Cottura",
         "typeRaw": "bake",
         "durationMinutes": 12,
-        "details": "- Stendi i panetti con le dita.\n- Condisci con salsa di pomodoro, mozzarella e olio.\n- Inforna alla massima potenza nella parte bassa del forno per circa 10 minuti.\n- Aggiungi il salame piccante.\n- Sposta la pizza nella parte alta del forno per altri 2 minuti.\n- Servi subito.",
+        "details": "- Stendi i panetti con le dita.\n- Condisci con salsa di pomodoro, mozzarella e olio.\n- Inforna alla massima potenza nella parte bassa del forno per circa 10 minuti.\n- Aggiungi il condimento.\n- Sposta la pizza nella parte alta del forno per altri 2 minuti.\n- Servi subito.",
         "notes": "",
         "reminderOffsetMinutes": 0,
         "temperatureRange": "",
@@ -457,7 +457,7 @@
         "ingredients": [
           "230 g salsa di pomodoro",
           "200 g mozzarella",
-          "50 g salame piccante"
+          "Condimento a piacere"
         ]
       }
     ]

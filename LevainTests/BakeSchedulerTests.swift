@@ -63,6 +63,58 @@ final class BakeSchedulerTests: XCTestCase {
         XCTAssertEqual(proof.windowStart, proof.plannedEnd)
         XCTAssertEqual(proof.windowEnd, proof.plannedEnd.adding(minutes: 60))
     }
+
+    func testCommercialYeastAdaptationUpdatesPizzaDosesAndProcedureText() throws {
+        let systemFormula = try XCTUnwrap(
+            SystemFormulaLoader.loadSystemFormulas().first { $0.name == "Pizza in giornata" }
+        )
+        let sourceFormula = systemFormula.makeTransientFormula()
+        let conversion = YeastConversionService.convert(
+            formulaFlour: sourceFormula.totalFlourWeight,
+            formulaWater: sourceFormula.totalWaterWeight,
+            starterWeight: sourceFormula.inoculationPercent / 100 * sourceFormula.totalFlourWeight,
+            starterHydration: 100,
+            targetYeastType: .instantYeast,
+            profile: .medium
+        )
+
+        let adaptedFormula = RecipeYeastAdaptationService.adaptedFormula(
+            from: sourceFormula,
+            conversion: conversion,
+            targetYeastType: .instantYeast,
+            profile: .medium
+        )
+        let bake = BakeScheduler.generateBake(
+            name: "",
+            targetBakeDateTime: Date.fixedNow.adding(minutes: 1_000),
+            formula: adaptedFormula,
+            yeastConversion: conversion
+        )
+
+        let allRecipeText = [
+            bake.ingredients ?? "",
+            bake.procedure ?? "",
+            bake.sortedSteps.map(\.descriptionText).joined(separator: "\n"),
+            bake.sortedSteps.flatMap(\.stepIngredients).joined(separator: "\n")
+        ].joined(separator: "\n").lowercased()
+
+        XCTAssertEqual(adaptedFormula.yeastType, .instantYeast)
+        XCTAssertEqual(bake.totalFlourWeight, conversion.newTotalFlourWeight, accuracy: 0.01)
+        XCTAssertEqual(bake.totalWaterWeight, conversion.newTotalWaterWeight, accuracy: 0.01)
+        XCTAssertEqual(bake.inoculationPercent, conversion.yeastPercent, accuracy: 0.01)
+        XCTAssertFalse(allRecipeText.contains("lievito madre"))
+        XCTAssertFalse(allRecipeText.contains("rinfresca"))
+        XCTAssertTrue(allRecipeText.contains("lievito secco istantaneo"))
+        XCTAssertTrue(bake.sortedSteps.contains { $0.type == .proof && $0.displayName == "Appretto" })
+        XCTAssertEqual(
+            bake.sortedSteps.first { $0.type == .bulk }?.plannedDurationMinutes,
+            conversion.bulkDurationMinutes
+        )
+        XCTAssertEqual(
+            bake.sortedSteps.first { $0.type == .proof }?.plannedDurationMinutes,
+            conversion.proofDurationMinutes
+        )
+    }
     
     // MARK: - Timeline Shifting
     
