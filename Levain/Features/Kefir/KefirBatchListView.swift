@@ -82,7 +82,7 @@ struct KefirBatchListView: View {
                     .foregroundStyle(Theme.Text.secondary)
             }
         }
-        .buttonStyle(.plain)
+        .buttonStyle(FullRowPlainButtonStyle())
         .accessibilityIdentifier("KefirArchiveSectionHeader")
     }
 }

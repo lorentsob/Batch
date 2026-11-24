@@ -45,6 +45,7 @@ struct KefirJournalView: View {
             }
             .padding(.horizontal, 20)
             .padding(.vertical, 24)
+            .accessibilityElement(children: .contain)
             .accessibilityIdentifier("KefirJournalView")
         }
         .accessibilityIdentifier("KefirJournalScrollView")
@@ -64,11 +65,13 @@ struct KefirJournalView: View {
                 RoundedRectangle(cornerRadius: Theme.Radius.card, style: .continuous)
                     .stroke(Theme.Border.danger, lineWidth: focusBatch.derivedState == .overdue ? 1.5 : 0)
             )
+            .accessibilityElement(children: .contain)
             .accessibilityIdentifier("KefirJournalHeaderCard")
         } else {
             SectionCard(emphasis: .tinted) {
                 headerBody(renderState: renderState)
             }
+            .accessibilityElement(children: .contain)
             .accessibilityIdentifier("KefirJournalHeaderCard")
         }
     }
@@ -106,6 +109,7 @@ struct KefirJournalView: View {
                 .accessibilityIdentifier("KefirJournalOpenArchiveButton")
             }
         }
+        .accessibilityElement(children: .contain)
         .accessibilityIdentifier("KefirJournalArchiveSection")
     }
 

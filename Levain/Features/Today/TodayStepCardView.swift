@@ -19,6 +19,7 @@ struct TodayStepCardView: View {
             onCustomShift: allowsShift ? onOpenShift : nil,
             onQuickShift: allowsShift ? onQuickShift : nil
         )
+        .accessibilityElement(children: .contain)
         .accessibilityIdentifier("TodayOperationalCard")
     }
 

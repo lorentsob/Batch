@@ -93,7 +93,7 @@ struct StarterDetailView: View {
                                         .foregroundStyle(Theme.muted)
                                 }
                             }
-                            .buttonStyle(.plain)
+                            .buttonStyle(FullRowPlainButtonStyle())
                         }
                     }
                 }

@@ -93,6 +93,7 @@ struct KefirHubView: View {
         .listRowInsets(.levainListRow(top: Theme.Spacing.sm, bottom: Theme.Spacing.xs))
         .listRowBackground(Color.clear)
         .listRowSeparator(.hidden)
+        .accessibilityElement(children: .contain)
         .accessibilityIdentifier("KefirHubSummaryCard")
     }
 

@@ -26,6 +26,7 @@ struct ToastBannerView: View {
             RoundedRectangle(cornerRadius: Theme.Radius.control, style: .continuous)
                 .stroke(Theme.Border.emphasis, lineWidth: 1)
         )
+        .accessibilityElement(children: .contain)
         .accessibilityIdentifier("ToastBannerView")
     }
 }

@@ -11,6 +11,7 @@ struct KefirBatchCardView: View {
 
     var body: some View {
         sectionCard
+            .accessibilityElement(children: .contain)
             .accessibilityIdentifier("KefirBatchCard-\(batch.accessibilityStem)")
     }
 

@@ -8,7 +8,7 @@ struct LevainApp: App {
     @StateObject private var router = AppRouter()
     @StateObject private var environment = AppEnvironment()
 
-    @State private var showSplash = true
+    @State private var showSplash = !AppLaunchOptions.shouldSkipSplash
 
     let container: ModelContainer
 
@@ -36,6 +36,10 @@ struct LevainApp: App {
                 }
             }
             .task {
+                guard showSplash else {
+                    environment.markLaunchTransitionComplete()
+                    return
+                }
                 try? await Task.sleep(for: .seconds(1.9))
                 withAnimation(.easeIn(duration: 0.55)) {
                     showSplash = false

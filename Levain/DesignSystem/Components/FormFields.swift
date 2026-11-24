@@ -99,3 +99,13 @@ extension View {
             .contentShape(Rectangle())
     }
 }
+
+/// Plain button style whose whole label frame is tappable, including the empty
+/// space created by `Spacer`. Use it for full-width rows instead of `.plain`.
+struct FullRowPlainButtonStyle: ButtonStyle {
+    func makeBody(configuration: Configuration) -> some View {
+        configuration.label
+            .contentShape(Rectangle())
+            .opacity(configuration.isPressed ? 0.55 : 1)
+    }
+}
