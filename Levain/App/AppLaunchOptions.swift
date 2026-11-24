@@ -33,6 +33,10 @@ enum AppLaunchOptions {
     /// When present, simulates a cold launch opened from a notification route.
     static let keyPendingNotificationRoute = "LEVAIN_PENDING_NOTIFICATION_ROUTE"
 
+    /// `"1"` → start without the animated splash so automation can interact
+    /// with the UI immediately.
+    static let keySkipSplash = "LEVAIN_SKIP_SPLASH"
+
     // MARK: - Resolved Values
 
     /// Whether the current process was launched with an isolated in-memory store.
@@ -60,5 +64,9 @@ enum AppLaunchOptions {
 
     static var pendingNotificationRoute: String? {
         ProcessInfo.processInfo.environment[keyPendingNotificationRoute]
+    }
+
+    static var shouldSkipSplash: Bool {
+        ProcessInfo.processInfo.environment[keySkipSplash] == "1"
     }
 }

@@ -3,7 +3,7 @@ id: "starter-recovery"
 title: "Recuperare uno starter pigro"
 category: "starter"
 tags: ["recupero", "attività", "troubleshooting"]
-aliases: []
+aliases: ["starter pigro", "starter debole", "hooch"]
 relatedStepTypes: ["starterRefresh"]
 relatedStarterStates: ["overdue"]
 source: "Levain/Resources/knowledge.json"
@@ -15,6 +15,8 @@ source: "Levain/Resources/knowledge.json"
 **Categoria:** `starter`
 
 **Tag:** `recupero`, `attività`, `troubleshooting`
+
+**Alias:** `starter pigro`, `starter debole`, `hooch`
 
 ## Sintesi
 

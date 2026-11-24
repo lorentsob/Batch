@@ -155,6 +155,7 @@ struct BreadHubView: View {
                     ) {
                         showingBakeEditor = true
                     }
+                    .accessibilityElement(children: .contain)
                     .accessibilityIdentifier("BreadHubBakesEmptyState")
                 }
             }
@@ -201,7 +202,7 @@ struct BreadHubView: View {
                         }
                     }
                 }
-                .buttonStyle(.plain)
+                .buttonStyle(FullRowPlainButtonStyle())
                 .accessibilityIdentifier("BreadHubBakeCard_\(row.bake.id)")
                 .listRowInsets(.levainListRow(bottom: Theme.Spacing.xs))
                 .listRowBackground(Color.clear)
@@ -230,6 +231,7 @@ struct BreadHubView: View {
                         editingStarter = nil
                         showingStarterEditor = true
                     }
+                    .accessibilityElement(children: .contain)
                     .accessibilityIdentifier("BreadHubStartersEmptyState")
                 }
             }
@@ -290,7 +292,7 @@ struct BreadHubView: View {
                     }
                 }
             }
-            .buttonStyle(.plain)
+            .buttonStyle(FullRowPlainButtonStyle())
             .accessibilityIdentifier("BreadHubFormuleRow")
         }
         .listRowInsets(.levainListRow(bottom: Theme.Spacing.md))

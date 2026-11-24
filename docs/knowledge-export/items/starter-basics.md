@@ -3,7 +3,7 @@ id: "starter-basics"
 title: "Basi del lievito madre"
 category: "starter"
 tags: ["starter", "rinfresco", "manutenzione"]
-aliases: []
+aliases: ["starter", "lievito madre", "sourdough starter"]
 relatedStepTypes: ["starterRefresh"]
 relatedStarterStates: ["ok", "dueToday"]
 source: "Levain/Resources/knowledge.json"
@@ -15,6 +15,8 @@ source: "Levain/Resources/knowledge.json"
 **Categoria:** `starter`
 
 **Tag:** `starter`, `rinfresco`, `manutenzione`
+
+**Alias:** `starter`, `lievito madre`, `sourdough starter`
 
 ## Sintesi
 

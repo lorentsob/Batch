@@ -3,7 +3,7 @@ id: "bakers-math"
 title: "Baker's math e idratazione"
 category: "bakerMath"
 tags: ["percentuale", "idratazione", "calcolo"]
-aliases: []
+aliases: ["baker's math", "bakers math", "idratazione", "hydration"]
 relatedStepTypes: ["mix"]
 relatedStarterStates: []
 source: "Levain/Resources/knowledge.json"
@@ -15,6 +15,8 @@ source: "Levain/Resources/knowledge.json"
 **Categoria:** `bakerMath`
 
 **Tag:** `percentuale`, `idratazione`, `calcolo`
+
+**Alias:** `baker's math`, `bakers math`, `idratazione`, `hydration`
 
 ## Sintesi
 

@@ -112,6 +112,7 @@ struct BakeCreationView: View {
                     .lineLimit(3...5)
             }
         }
+        .formKeyboardToolbar()
         .navigationTitle("Nuovo impasto")
         .tint(Theme.Control.primaryFill)
         .toolbar {

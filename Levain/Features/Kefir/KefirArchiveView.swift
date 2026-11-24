@@ -29,6 +29,7 @@ struct KefirArchiveView: View {
             }
             .padding(.horizontal, 20)
             .padding(.vertical, 24)
+            .accessibilityElement(children: .contain)
             .accessibilityIdentifier("KefirArchiveView")
         }
         .accessibilityIdentifier("KefirArchiveScrollView")
@@ -58,6 +59,7 @@ struct KefirArchiveView: View {
                 StateBadge(text: "\(archivedCount) archiviati", tone: .count)
             }
         }
+        .accessibilityElement(children: .contain)
         .accessibilityIdentifier("KefirArchiveHeaderCard")
     }
 
@@ -72,6 +74,7 @@ struct KefirArchiveView: View {
                     .foregroundStyle(Theme.muted)
             }
         }
+        .accessibilityElement(children: .contain)
         .accessibilityIdentifier("KefirArchiveEmptyCard")
     }
 
@@ -129,6 +132,7 @@ struct KefirArchiveView: View {
                 .accessibilityIdentifier("KefirArchiveDeriveButton-\(batch.accessibilityStem)")
             }
         }
+        .accessibilityElement(children: .contain)
         .accessibilityIdentifier("KefirArchiveBatchCard-\(batch.accessibilityStem)")
     }
 }

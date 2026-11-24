@@ -131,7 +131,7 @@ struct FormulaListView: View {
                                 .foregroundStyle(Theme.muted)
                         }
                     }
-                    .buttonStyle(.plain)
+                    .buttonStyle(FullRowPlainButtonStyle())
                     .listRowSeparator(.hidden)
                     .listRowBackground(Color.clear)
                     .listRowInsets(.levainListRow(top: Theme.Spacing.xs, bottom: Theme.Spacing.xs))

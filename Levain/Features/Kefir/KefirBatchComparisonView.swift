@@ -30,6 +30,7 @@ struct KefirBatchComparisonView: View {
             }
             .padding(.horizontal, 20)
             .padding(.vertical, 24)
+            .accessibilityElement(children: .contain)
             .accessibilityIdentifier("KefirBatchComparisonView")
         }
         .background(Theme.background.ignoresSafeArea())
@@ -55,6 +56,7 @@ struct KefirBatchComparisonView: View {
                 }
             }
         }
+        .accessibilityElement(children: .contain)
         .accessibilityIdentifier("KefirComparisonHeaderCard")
     }
 
@@ -84,6 +86,7 @@ struct KefirBatchComparisonView: View {
                 accessibilityIdentifier: "KefirComparisonSourceCard"
             )
         }
+        .accessibilityElement(children: .contain)
         .accessibilityIdentifier("KefirComparisonSourceSection")
     }
 
@@ -105,6 +108,7 @@ struct KefirBatchComparisonView: View {
                 )
             }
         }
+        .accessibilityElement(children: .contain)
         .accessibilityIdentifier("KefirComparisonDerivedSection")
     }
 

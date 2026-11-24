@@ -38,10 +38,11 @@ struct FormulaStepEditorView: View {
                         Text(option.title).tag(option)
                     }
                 }
-                LabeledContent("Nome della fase") {
-                    TextField("es. Autolisi", text: $name)
-                        .multilineTextAlignment(.trailing)
-                }
+                FormTextRow(
+                    title: "Nome della fase",
+                    placeholder: "es. Autolisi",
+                    text: $name
+                )
                 VStack(alignment: .leading, spacing: 6) {
                     Text("Dettagli")
                         .font(.subheadline)
@@ -65,6 +66,7 @@ struct FormulaStepEditorView: View {
                         Text(DateFormattingService.duration(minutes: durationMinutes))
                             .foregroundStyle(Theme.muted)
                     }
+                    .formRowHitArea()
                 }
                 .buttonStyle(.plain)
 
@@ -77,19 +79,24 @@ struct FormulaStepEditorView: View {
                         Text(reminderOffsetMinutes == 0 ? "Nessun promemoria" : "\(reminderOffsetMinutes) min prima")
                             .foregroundStyle(Theme.muted)
                     }
+                    .formRowHitArea()
                 }
                 .buttonStyle(.plain)
             }
 
             Section("Target qualitativi") {
-                LabeledContent("Temperatura") {
-                    TextField("es. 24-26°C", text: $temperatureRange)
-                        .multilineTextAlignment(.trailing)
-                }
-                LabeledContent("Target volume") {
-                    TextField("es. Raddoppio", text: $volumeTarget)
-                        .multilineTextAlignment(.trailing)
-                }
+                FormTextRow(
+                    title: "Temperatura",
+                    placeholder: "es. 24-26°C",
+                    text: $temperatureRange,
+                    capitalization: .never,
+                    keyboard: .numbersAndPunctuation
+                )
+                FormTextRow(
+                    title: "Target volume",
+                    placeholder: "es. Raddoppio",
+                    text: $volumeTarget
+                )
                 VStack(alignment: .leading, spacing: 6) {
                     Text("Note")
                         .font(.subheadline)
@@ -103,6 +110,7 @@ struct FormulaStepEditorView: View {
                 .listRowInsets(EdgeInsets(top: 10, leading: 16, bottom: 10, trailing: 16))
             }
         }
+        .formKeyboardToolbar()
         .navigationTitle(name.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty ? "Fase" : name)
         .scrollContentBackground(.hidden)
         .background(Theme.Surface.app)

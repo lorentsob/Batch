@@ -3,7 +3,7 @@ id: "bulk-fermentation-basics"
 title: "Bulk fermentation"
 category: "fermentation"
 tags: ["bulk", "fermentazione", "temperatura"]
-aliases: []
+aliases: ["bulk", "prima lievitazione", "first rise"]
 relatedStepTypes: ["bulk", "fold"]
 relatedStarterStates: []
 source: "Levain/Resources/knowledge.json"
@@ -15,6 +15,8 @@ source: "Levain/Resources/knowledge.json"
 **Categoria:** `fermentation`
 
 **Tag:** `bulk`, `fermentazione`, `temperatura`
+
+**Alias:** `bulk`, `prima lievitazione`, `first rise`
 
 ## Sintesi
 

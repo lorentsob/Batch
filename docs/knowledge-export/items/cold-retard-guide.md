@@ -3,7 +3,7 @@ id: "cold-retard-guide"
 title: "Cold retard"
 category: "fermentation"
 tags: ["frigo", "retarder", "sapore"]
-aliases: []
+aliases: ["cold retard", "lievitazione finale in frigo", "proof in frigo"]
 relatedStepTypes: ["coldRetard", "proof"]
 relatedStarterStates: []
 source: "Levain/Resources/knowledge.json"
@@ -15,6 +15,8 @@ source: "Levain/Resources/knowledge.json"
 **Categoria:** `fermentation`
 
 **Tag:** `frigo`, `retarder`, `sapore`
+
+**Alias:** `cold retard`, `lievitazione finale in frigo`, `proof in frigo`
 
 ## Sintesi
 

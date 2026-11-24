@@ -84,6 +84,7 @@ struct KefirBatchEditorView: View {
             contextSection
             notesSection
         }
+        .formKeyboardToolbar()
         .navigationTitle(mode.title)
         .tint(Theme.Control.primaryFill)
         .scrollContentBackground(.hidden)
@@ -109,14 +110,16 @@ struct KefirBatchEditorView: View {
 
     private var identitySection: some View {
         Section("Identità") {
-            LabeledContent("Nome batch") {
-                TextField("es. Batch cucina", text: $name)
-                    .multilineTextAlignment(.trailing)
-                    .autocorrectionDisabled()
-                    .textInputAutocapitalization(.words)
-                    .textContentType(.none)
-                    .accessibilityIdentifier("KefirBatchNameField")
-            }
+            FormTextRow(
+                title: "Nome batch",
+                placeholder: "es. Batch cucina",
+                text: $name,
+                autofocus: isCreating,
+                capitalization: .words,
+                fieldAccessibilityIdentifier: "KefirBatchNameField"
+            )
+            .autocorrectionDisabled()
+            .textContentType(.none)
 
             Picker("Conservazione", selection: $storageMode) {
                 ForEach(KefirStorageMode.allCases) { option in
@@ -175,6 +178,11 @@ struct KefirBatchEditorView: View {
                 .lineLimit(3...6)
                 .accessibilityIdentifier("KefirBatchNotesField")
         }
+    }
+
+    private var isCreating: Bool {
+        if case .create = mode { return true }
+        return false
     }
 
     private var trimmedName: String {

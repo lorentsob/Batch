@@ -50,7 +50,7 @@ final class BakesFlowUITests: XCTestCase {
 
         XCTAssertTrue(app.descendants(matching: .any).matching(identifier: "BakesScrollView").firstMatch.waitForExistence(timeout: 8))
         XCTAssertTrue(app.staticTexts["Nessun impasto ancora"].waitForExistence(timeout: 8))
-        XCTAssertTrue(app.buttons["Crea il tuo primo impasto"].waitForExistence(timeout: 8))
+        XCTAssertTrue(app.buttons["Nuovo impasto"].waitForExistence(timeout: 8))
     }
 
     func testNewBakeShowsSystemTemplatesInRecipePicker() throws {

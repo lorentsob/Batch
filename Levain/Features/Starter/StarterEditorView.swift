@@ -35,10 +35,13 @@ struct StarterEditorView: View {
     var body: some View {
         Form {
             Section("Identità") {
-                LabeledContent("Nome dello starter") {
-                    TextField("es. Ciccio", text: $name)
-                        .multilineTextAlignment(.trailing)
-                }
+                FormTextRow(
+                    title: "Nome dello starter",
+                    placeholder: "es. Ciccio",
+                    text: $name,
+                    autofocus: starter == nil,
+                    capitalization: .words
+                )
             }
 
             Section("Setup") {
@@ -76,6 +79,7 @@ struct StarterEditorView: View {
                                 .font(.footnote.weight(.semibold))
                                 .foregroundStyle(Theme.muted)
                         }
+                        .formRowHitArea()
                     }
                     .buttonStyle(.plain)
                 }
@@ -107,6 +111,7 @@ struct StarterEditorView: View {
                     .lineLimit(3...6)
             }
         }
+        .formKeyboardToolbar()
         .navigationTitle(starter == nil ? "Nuovo starter" : "Modifica starter")
         .tint(Theme.Control.primaryFill)
         .scrollContentBackground(.hidden)

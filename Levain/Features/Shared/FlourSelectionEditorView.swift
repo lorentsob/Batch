@@ -25,12 +25,18 @@ struct FlourSelectionEditorView: View {
                                     .foregroundStyle(Theme.Control.primaryFill)
                             }
                         }
+                        .formRowHitArea()
                     }
                     .buttonStyle(.plain)
                 }
 
                 if flour.category == .custom {
-                    TextField("Nome personalizzato", text: $flour.customName)
+                    FormTextRow(
+                        title: "Nome",
+                        placeholder: "Nome personalizzato",
+                        text: $flour.customName,
+                        autofocus: flour.customName.isEmpty
+                    )
                 }
             }
 
@@ -39,7 +45,7 @@ struct FlourSelectionEditorView: View {
                     showingPercentagePicker = true
                 } label: {
                     SelectionFormRow(
-                        title: "Percentuale sul totale flour",
+                        title: "Percentuale sul totale farine",
                         value: "\(Int(flour.percentage.rounded()))%"
                     )
                 }
@@ -48,6 +54,7 @@ struct FlourSelectionEditorView: View {
         }
         .scrollContentBackground(.hidden)
         .background(Theme.Surface.app)
+        .formKeyboardToolbar()
         .navigationTitle("Farina")
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
@@ -92,6 +99,7 @@ struct SelectionFormRow: View {
                 .font(.footnote.weight(.semibold))
                 .foregroundStyle(Theme.muted)
         }
+        .formRowHitArea()
     }
 }
 

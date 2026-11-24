@@ -8,7 +8,7 @@ struct LevainApp: App {
     @StateObject private var router = AppRouter()
     @StateObject private var environment = AppEnvironment()
 
-    @State private var showSplash = true
+    @State private var showSplash = !AppLaunchOptions.shouldSkipSplash
 
     let container: ModelContainer
 
@@ -36,6 +36,10 @@ struct LevainApp: App {
                 }
             }
             .task {
+                guard showSplash else {
+                    environment.markLaunchTransitionComplete()
+                    return
+                }
                 try? await Task.sleep(for: .seconds(1.9))
                 withAnimation(.easeIn(duration: 0.55)) {
                     showSplash = false
@@ -128,7 +132,9 @@ private struct SplashView: View {
 private struct SplashLogoAnimationView: View {
     let reduceMotion: Bool
 
-    @State private var player = SplashLogoAnimationAsset.makePlayer()
+    // Created once in onAppear: a default-value expression here would run on every
+    // re-init of this view (the splash re-renders while it animates).
+    @State private var player: AVPlayer?
 
     var body: some View {
         ZStack {
@@ -145,6 +151,9 @@ private struct SplashLogoAnimationView: View {
         }
         .accessibilityHidden(true)
         .onAppear {
+            if player == nil {
+                player = SplashLogoAnimationAsset.makePlayer()
+            }
             guard reduceMotion == false else { return }
             player?.seek(to: .zero)
             player?.play()
@@ -209,7 +218,10 @@ private final class PlayerContainerView: UIView {
 }
 
 private enum SplashLogoAnimationAsset {
-    static func makePlayer() -> AVPlayer? {
+    /// Copies the bundled video to a temporary file once per install and reuses it,
+    /// so the file is never rewritten while a player is reading it.
+    @MainActor
+    private static let fileURL: URL? = {
         guard let dataAsset = NSDataAsset(name: "BatchLogoLoading") else {
             return nil
         }
@@ -218,13 +230,23 @@ private enum SplashLogoAnimationAsset {
             .appendingPathComponent("batch-logo-loading")
             .appendingPathExtension("mov")
 
+        let existingSize = (try? FileManager.default.attributesOfItem(atPath: url.path))?[.size] as? Int
+        if existingSize == dataAsset.data.count {
+            return url
+        }
+
         do {
             try dataAsset.data.write(to: url, options: [.atomic])
+            return url
         } catch {
             return nil
         }
+    }()
 
-        let player = AVPlayer(url: url)
+    @MainActor
+    static func makePlayer() -> AVPlayer? {
+        guard let fileURL else { return nil }
+        let player = AVPlayer(url: fileURL)
         player.isMuted = true
         player.actionAtItemEnd = .pause
         return player

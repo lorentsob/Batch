@@ -297,6 +297,19 @@ enum SeedDataLoader {
             notes: "Solo ricetta salvata, nessun lavoro in agenda."
         )
         context.insert(formula)
+
+        // Recipes alone do not count as user data on Today: an archived kefir
+        // batch makes the store non-empty without creating any work or preview.
+        let archivedBatch = KefirBatch(
+            name: "Batch archiviato",
+            createdAt: .now.adding(minutes: -20 * 24 * 60),
+            lastManagedAt: .now.adding(minutes: -12 * 24 * 60),
+            expectedRoutineHours: 24,
+            storageMode: .roomTemperature,
+            notes: "Chiuso, nessuna azione richiesta.",
+            archivedAt: .now.adding(minutes: -10 * 24 * 60)
+        )
+        context.insert(archivedBatch)
     }
 
     private static func insertOperationalKefirHistory(

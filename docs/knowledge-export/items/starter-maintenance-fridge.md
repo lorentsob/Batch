@@ -3,7 +3,7 @@ id: "starter-maintenance-fridge"
 title: "Manutenzione starter in frigo"
 category: "starter"
 tags: ["frigo", "conservazione", "rinfresco"]
-aliases: []
+aliases: ["starter in frigo", "manutenzione starter", "rinfresco in frigo"]
 relatedStepTypes: ["starterRefresh"]
 relatedStarterStates: ["dueToday", "overdue"]
 source: "Levain/Resources/knowledge.json"
@@ -15,6 +15,8 @@ source: "Levain/Resources/knowledge.json"
 **Categoria:** `starter`
 
 **Tag:** `frigo`, `conservazione`, `rinfresco`
+
+**Alias:** `starter in frigo`, `manutenzione starter`, `rinfresco in frigo`
 
 ## Sintesi
 

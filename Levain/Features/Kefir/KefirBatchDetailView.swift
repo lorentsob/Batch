@@ -36,6 +36,7 @@ struct KefirBatchDetailView: View {
             }
             .padding(.horizontal, 20)
             .padding(.vertical, 24)
+            .accessibilityElement(children: .contain)
             .accessibilityIdentifier("KefirBatchDetailView")
         }
         .contentMargins(.bottom, 88, for: .scrollContent)
@@ -155,6 +156,7 @@ struct KefirBatchDetailView: View {
                 .accessibilityIdentifier("KefirDetailOpenJournalButton")
             }
         }
+        .accessibilityElement(children: .contain)
         .accessibilityIdentifier("KefirBatchRecentHistoryCard")
     }
 
@@ -173,6 +175,7 @@ struct KefirBatchDetailView: View {
                 secondaryQuickActions
             }
         }
+        .accessibilityElement(children: .contain)
         .accessibilityIdentifier("KefirBatchActionsCard")
     }
 

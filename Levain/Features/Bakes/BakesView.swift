@@ -190,7 +190,7 @@ struct BakesView: View {
                                     .foregroundStyle(Theme.muted)
                             }
                         }
-                        .buttonStyle(.plain)
+                        .buttonStyle(FullRowPlainButtonStyle())
                     }
                     .listRowSeparator(.hidden)
                     .listRowBackground(Color.clear)
@@ -466,19 +466,6 @@ struct FormulaStatRow: View {
             Spacer()
             Text(value)
                 .foregroundStyle(Theme.Text.primary)
-                .multilineTextAlignment(.trailing)
-        }
-    }
-}
-
-struct NumericField: View {
-    let title: String
-    @Binding var value: Double
-
-    var body: some View {
-        LabeledContent(title) {
-            TextField("", value: $value, format: .number)
-                .keyboardType(.decimalPad)
                 .multilineTextAlignment(.trailing)
         }
     }
