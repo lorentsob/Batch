@@ -3,7 +3,7 @@ id: "common-problems"
 title: "Problemi comuni e soluzioni"
 category: "troubleshooting"
 tags: ["troubleshooting", "crosta", "mollica", "pane piatto"]
-aliases: []
+aliases: ["troubleshooting", "underproofing", "overproofing"]
 relatedStepTypes: ["bake"]
 relatedStarterStates: ["overdue"]
 source: "Levain/Resources/knowledge.json"
@@ -15,6 +15,8 @@ source: "Levain/Resources/knowledge.json"
 **Categoria:** `troubleshooting`
 
 **Tag:** `troubleshooting`, `crosta`, `mollica`, `pane piatto`
+
+**Alias:** `troubleshooting`, `underproofing`, `overproofing`
 
 ## Sintesi
 

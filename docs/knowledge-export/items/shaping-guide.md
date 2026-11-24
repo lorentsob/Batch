@@ -3,7 +3,7 @@ id: "shaping-guide"
 title: "Formatura e preforma"
 category: "fermentation"
 tags: ["formatura", "tensione", "bench rest"]
-aliases: []
+aliases: ["formatura", "preforma", "bench rest", "shape", "shaping"]
 relatedStepTypes: ["preshape", "benchRest", "shape"]
 relatedStarterStates: []
 source: "Levain/Resources/knowledge.json"
@@ -15,6 +15,8 @@ source: "Levain/Resources/knowledge.json"
 **Categoria:** `fermentation`
 
 **Tag:** `formatura`, `tensione`, `bench rest`
+
+**Alias:** `formatura`, `preforma`, `bench rest`, `shape`, `shaping`
 
 ## Sintesi
 
