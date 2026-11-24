@@ -1,0 +1,76 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1000" viewBox="0 0 1600 1000">
+<rect width="1600" height="1000" fill="#F7F8F4"/>
+<text x="80" y="92" text-anchor="start" font-family="Inter, -apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif" font-size="46" font-weight="800" fill="#172019">
+<tspan x="80" dy="0">IA finale</tspan>
+</text>
+<text x="82" y="138" text-anchor="start" font-family="Inter, -apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif" font-size="22" font-weight="500" fill="#667064">
+<tspan x="82" dy="0">La navigazione passa da sezioni separate a tre superfici con ruoli chiari.</tspan>
+</text>
+
+<rect x="95" y="220" width="400" height="590" rx="30" fill="#FFFFFF" stroke="#DDE5D9" stroke-width="2"/>
+<text x="145" y="292" text-anchor="start" font-family="Inter, -apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif" font-size="38" font-weight="800" fill="#172019">
+<tspan x="145" dy="0">Oggi</tspan>
+</text>
+<text x="145" y="350" text-anchor="start" font-family="Inter, -apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif" font-size="24" font-weight="700" fill="#2F6F45">
+<tspan x="145" dy="0">Agenda operativa</tspan>
+</text>
+<text x="145" y="405" text-anchor="start" font-family="Inter, -apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif" font-size="25" font-weight="500" fill="#667064">
+<tspan x="145" dy="0">Azioni in ritardo,</tspan>
+<tspan x="145" dy="31">elementi attivi,</tspan>
+<tspan x="145" dy="31">prossime cose da fare e</tspan>
+<tspan x="145" dy="31">supporto guide.</tspan>
+</text>
+<rect x="145" y="675" width="226" height="46" rx="23" fill="#DDEDDD"/>
+<text x="258" y="705" text-anchor="middle" font-family="Inter, -apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif" font-size="18" font-weight="700" fill="#2F6F45">
+<tspan x="258" dy="0">Cosa fare oggi</tspan>
+</text>
+
+<rect x="600" y="220" width="400" height="590" rx="30" fill="#FFFFFF" stroke="#DDE5D9" stroke-width="2"/>
+<text x="650" y="292" text-anchor="start" font-family="Inter, -apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif" font-size="38" font-weight="800" fill="#172019">
+<tspan x="650" dy="0">Batch</tspan>
+</text>
+<text x="650" y="350" text-anchor="start" font-family="Inter, -apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif" font-size="24" font-weight="700" fill="#2F6F45">
+<tspan x="650" dy="0">Hub dei domini</tspan>
+</text>
+<text x="650" y="405" text-anchor="start" font-family="Inter, -apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif" font-size="25" font-weight="500" fill="#667064">
+<tspan x="650" dy="0">Impasti, Starter, Kefir e</tspan>
+<tspan x="650" dy="31">Ricette restano specifici</tspan>
+<tspan x="650" dy="31">ma accessibili da un</tspan>
+<tspan x="650" dy="31">unico centro.</tspan>
+</text>
+<rect x="650" y="635" width="135" height="46" rx="23" fill="#DDEDDD"/>
+<text x="717.5" y="665" text-anchor="middle" font-family="Inter, -apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif" font-size="18" font-weight="700" fill="#2F6F45">
+<tspan x="717.5" dy="0">Impasti</tspan>
+</text>
+<rect x="650" y="695" width="135" height="46" rx="23" fill="#ECEFEB"/>
+<text x="717.5" y="725" text-anchor="middle" font-family="Inter, -apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif" font-size="18" font-weight="700" fill="#7A8178">
+<tspan x="717.5" dy="0">Starter</tspan>
+</text>
+<rect x="805" y="695" width="128" height="46" rx="23" fill="#F4DFDD"/>
+<text x="869" y="725" text-anchor="middle" font-family="Inter, -apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif" font-size="18" font-weight="700" fill="#B6463B">
+<tspan x="869" dy="0">Kefir</tspan>
+</text>
+
+<rect x="1105" y="220" width="400" height="590" rx="30" fill="#FFFFFF" stroke="#DDE5D9" stroke-width="2"/>
+<text x="1155" y="292" text-anchor="start" font-family="Inter, -apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif" font-size="38" font-weight="800" fill="#172019">
+<tspan x="1155" dy="0">Guide</tspan>
+</text>
+<text x="1155" y="350" text-anchor="start" font-family="Inter, -apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif" font-size="24" font-weight="700" fill="#2F6F45">
+<tspan x="1155" dy="0">Supporto</tspan>
+</text>
+<text x="1155" y="405" text-anchor="start" font-family="Inter, -apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif" font-size="25" font-weight="500" fill="#667064">
+<tspan x="1155" dy="0">Contenuti bundled,</tspan>
+<tspan x="1155" dy="31">categorie, ricerca e</tspan>
+<tspan x="1155" dy="31">articoli richiamabili</tspan>
+<tspan x="1155" dy="31">quando aiutano l'azione.</tspan>
+</text>
+<rect x="1155" y="675" width="187" height="46" rx="23" fill="#ECEFEB"/>
+<text x="1248.5" y="705" text-anchor="middle" font-family="Inter, -apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif" font-size="18" font-weight="700" fill="#7A8178">
+<tspan x="1248.5" dy="0">Cerca guide</tspan>
+</text>
+<path d="M 495 515 C 547.5 515, 547.5 515, 600 515" fill="none" stroke="#DDE5D9" stroke-width="4" stroke-linecap="round"/>
+<path d="M 588 505 L 600 515 L 588 525" fill="none" stroke="#DDE5D9" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M 1000 515 C 1052.5 515, 1052.5 515, 1105 515" fill="none" stroke="#DDE5D9" stroke-width="4" stroke-linecap="round"/>
+<path d="M 1093 505 L 1105 515 L 1093 525" fill="none" stroke="#DDE5D9" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+
+</svg>
