@@ -89,8 +89,8 @@ final class TodayFlowUITests: XCTestCase {
         XCTAssertTrue(refreshButton.waitForExistence(timeout: 5))
         refreshButton.tap()
 
-        XCTAssertTrue(app.navigationBars["Log rinfresco"].waitForExistence(timeout: 5))
-        app.navigationBars["Log rinfresco"].buttons["Salva"].tap()
+        XCTAssertTrue(app.navigationBars["Rinfresco"].waitForExistence(timeout: 5))
+        app.navigationBars["Rinfresco"].buttons["Salva"].tap()
 
         XCTAssertTrue(app.scrollViews["TodayScrollView"].waitForExistence(timeout: 5))
         XCTAssertFalse(app.buttons["Rinfresca"].firstMatch.exists)

@@ -25,7 +25,7 @@ final class NotificationRouteUITests: XCTestCase {
 
         // Direct-object routing: missing bake → Batch with empty path → FermentationsView
         XCTAssertTrue(app.descendants(matching: .any).matching(identifier: "FermentationsView").firstMatch.waitForExistence(timeout: 8))
-        let bannerProbe = app.otherElements["ToastBannerProbe"]
+        let bannerProbe = app.staticTexts["ToastBannerMessage"]
         XCTAssertTrue(bannerProbe.waitForExistence(timeout: 8))
         XCTAssertEqual(bannerProbe.label, "Questo impasto non è più disponibile")
     }
@@ -37,7 +37,7 @@ final class NotificationRouteUITests: XCTestCase {
 
         // Direct-object routing: missing starter → Batch with empty path → FermentationsView
         XCTAssertTrue(app.descendants(matching: .any).matching(identifier: "FermentationsView").firstMatch.waitForExistence(timeout: 8))
-        let bannerProbe = app.otherElements["ToastBannerProbe"]
+        let bannerProbe = app.staticTexts["ToastBannerMessage"]
         XCTAssertTrue(bannerProbe.waitForExistence(timeout: 8))
         XCTAssertEqual(bannerProbe.label, "Starter non trovato")
     }
@@ -56,7 +56,7 @@ final class NotificationRouteUITests: XCTestCase {
         app.launchSeededWithPendingNotificationRoute(route)
 
         XCTAssertTrue(app.descendants(matching: .any).matching(identifier: "FermentationsView").firstMatch.waitForExistence(timeout: 8))
-        let bannerProbe = app.otherElements["ToastBannerProbe"]
+        let bannerProbe = app.staticTexts["ToastBannerMessage"]
         XCTAssertTrue(bannerProbe.waitForExistence(timeout: 8))
         XCTAssertEqual(bannerProbe.label, "Batch non trovato")
     }
@@ -75,7 +75,7 @@ final class NotificationRouteUITests: XCTestCase {
         app.launchEmptyWithDeniedNotifications()
 
         XCTAssertTrue(app.scrollViews["TodayScrollView"].waitForExistence(timeout: 8))
-        let bannerProbe = app.otherElements["ToastBannerProbe"]
+        let bannerProbe = app.staticTexts["ToastBannerMessage"]
         XCTAssertTrue(bannerProbe.waitForExistence(timeout: 8))
         XCTAssertEqual(bannerProbe.label, "Attiva le notifiche per ricevere i promemoria")
     }

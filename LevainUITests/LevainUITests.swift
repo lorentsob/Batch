@@ -14,6 +14,7 @@ extension XCUIApplication {
         launchEnvironment["LEVAIN_SUPPRESS_NOTIFICATIONS"] = suppressNotifications ? "1" : "0"
         launchEnvironment["LEVAIN_SEED_SCENARIO"] = seedScenario
         launchEnvironment["LEVAIN_FORCE_NOTIFICATIONS_DENIED"] = forceNotificationsDenied ? "1" : "0"
+        launchEnvironment["LEVAIN_SKIP_SPLASH"] = "1"
         if let pendingNotificationRoute {
             launchEnvironment["LEVAIN_PENDING_NOTIFICATION_ROUTE"] = pendingNotificationRoute
         }

@@ -14,7 +14,8 @@ final class KefirFlowUITests: XCTestCase {
 
         let card = app.descendants(matching: .any).matching(identifier: "KefirHubCard").firstMatch
         XCTAssertTrue(card.waitForExistence(timeout: 8))
-        XCTAssertEqual(card.value as? String, "1 da seguire · 1 in corso · 2 in pausa")
+        // The tile shows at most two rows (most urgent first).
+        XCTAssertEqual(card.value as? String, "1 da rinnovare · 1 in corso")
     }
 
     func testSeededKefirHubShowsGroupedBatchSections() throws {
@@ -28,8 +29,12 @@ final class KefirFlowUITests: XCTestCase {
         XCTAssertTrue(app.staticTexts["Batch kefir cucina"].exists)
         XCTAssertTrue(app.staticTexts["Batch kefir colazione"].exists)
         XCTAssertTrue(scrollUntilVisible(app.descendants(matching: .any).matching(identifier: "KefirSection-paused").firstMatch, in: app))
-        XCTAssertTrue(scrollUntilVisible(app.descendants(matching: .any).matching(identifier: "KefirSection-archived").firstMatch, in: app))
         XCTAssertTrue(scrollUntilVisible(app.staticTexts["Backup frigo"], in: app))
+        // Archived batches live in a collapsible section, closed by default.
+        let archiveHeader = app.buttons["KefirArchiveSectionHeader"].firstMatch
+        XCTAssertTrue(scrollUntilVisible(archiveHeader, in: app))
+        XCTAssertFalse(app.staticTexts["Batch test derivato"].exists)
+        archiveHeader.tap()
         XCTAssertTrue(scrollUntilVisible(app.staticTexts["Batch test derivato"], in: app))
     }
 
@@ -75,9 +80,12 @@ final class KefirFlowUITests: XCTestCase {
         app.launchEmpty()
 
         openFermentations(in: app)
-        let quickNewKefirButton = app.descendants(matching: .any).matching(identifier: "QuickNewKefirButton").firstMatch
-        XCTAssertTrue(quickNewKefirButton.waitForExistence(timeout: 8))
-        quickNewKefirButton.tap()
+        let newPreparationMenu = app.buttons["Nuova preparazione"].firstMatch
+        XCTAssertTrue(newPreparationMenu.waitForExistence(timeout: 8))
+        newPreparationMenu.tap()
+        let newKefirButton = app.buttons["Nuovo batch kefir"].firstMatch
+        XCTAssertTrue(newKefirButton.waitForExistence(timeout: 5))
+        newKefirButton.tap()
 
         XCTAssertTrue(app.descendants(matching: .any).matching(identifier: "KefirBatchEditorView").firstMatch.waitForExistence(timeout: 8))
         let nameField = app.textFields["KefirBatchNameField"]

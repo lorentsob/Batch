@@ -50,7 +50,8 @@ final class LifecycleUITests: XCTestCase {
         let route = "levain://starter/\(UUID().uuidString)"
         app.launchSeededWithPendingNotificationRoute(route)
 
+        // A route to a starter that no longer exists falls back to the Batch root.
         XCTAssertTrue(app.tabBars.buttons["Batch"].waitForExistence(timeout: 8))
-        XCTAssertTrue(app.scrollViews["StarterScrollView"].waitForExistence(timeout: 8))
+        XCTAssertTrue(app.descendants(matching: .any).matching(identifier: "FermentationsView").firstMatch.waitForExistence(timeout: 8))
     }
 }
