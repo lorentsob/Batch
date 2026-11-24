@@ -18,12 +18,12 @@
 		0D244B36BB2D2FBD61B00E07 /* Date+Levain.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4FAA5A66043B616FE6D1EEB /* Date+Levain.swift */; };
 		117C421943BF09675D867489 /* SystemFormulaLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88067D9DEA0402EE4E48496A /* SystemFormulaLoader.swift */; };
 		19909D6C120DD64EDE45A9BA /* SectionCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EF66CC37AE507FB215CFF22 /* SectionCard.swift */; };
-		2A3B4C5D6E7F8A9B0C1D2E3F /* DescriptionBulletList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A2B3C4D5E6F7A8B9C0D1E2F /* DescriptionBulletList.swift */; };
 		1B203CD85910F7A753EA7B7E /* knowledge.json in Resources */ = {isa = PBXBuildFile; fileRef = 40446C7081740B9B23D8ADD4 /* knowledge.json */; };
 		1BE392C607BBCEC2EAF5137D /* KefirReminderPlannerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 083F30497BFDB52B2F385962 /* KefirReminderPlannerTests.swift */; };
 		1F99F650F9715E660F28D7D1 /* DomainFixtures.swift in Sources */ = {isa = PBXBuildFile; fileRef = B103892E03A334196B1D10CE /* DomainFixtures.swift */; };
 		20066B89AB8228C6E5C18C67 /* BakeReminderPlannerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F702B38C52B89746F9D8DE1 /* BakeReminderPlannerTests.swift */; };
 		21CA3CFE43B3EDC7290C5241 /* TodayOperationalCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B78544D1490C8484385BAFBD /* TodayOperationalCardView.swift */; };
+		22E21188FFE699FD262EA83F /* FormInputUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D632E5F50188534077133D11 /* FormInputUITests.swift */; };
 		23592D376BA4BB9645E3755F /* KefirBatchPresentation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66277E1D52967557EA871DEB /* KefirBatchPresentation.swift */; };
 		26045D68DC5B6B88BC79FA0D /* BakeStepDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E8199167A33F653C5C7BD8E /* BakeStepDetailView.swift */; };
 		263CE789C470376E617AAB9D /* KefirBatchManageSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0F4E7C83EE3E491B01BC1D07 /* KefirBatchManageSheet.swift */; };
@@ -43,6 +43,7 @@
 		47704AD0CE398C15C49B22E5 /* BakeSchedulerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B39BE3A6D9E872507ECAB51 /* BakeSchedulerTests.swift */; };
 		4AA374A3237C2CCB24C3625A /* KnowledgeCategoryPillView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67516C2C986793F18606EC30 /* KnowledgeCategoryPillView.swift */; };
 		4B0D6B3EC6DE9A8516EE27BF /* RecipeFormulaTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03068B3858AD919A409B16D5 /* RecipeFormulaTests.swift */; };
+		4B276E1D6CD1E8CFC6713BF9 /* DescriptionBulletList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94A95C9220E9C36B836BE153 /* DescriptionBulletList.swift */; };
 		4E537EEE2ECC83C497858DA4 /* FormulaStepEditorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF8C7A1E97DF7299C6E9B7A6 /* FormulaStepEditorView.swift */; };
 		4FCFC5305EEE296E84DCF165 /* FlourSelectionEditorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05BB2A8E3BCF16B390C67996 /* FlourSelectionEditorView.swift */; };
 		5AAE0BB77D877CE7A8802DC2 /* BakesFlowUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74E8B96E2C8D2CE83E5D72CD /* BakesFlowUITests.swift */; };
@@ -80,6 +81,7 @@
 		A72AB65E92A8FBAD29E07734 /* TodayFlowUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DAE057C970FA6A827C1AC37 /* TodayFlowUITests.swift */; };
 		A9950169D4FF9217C2B29CD8 /* SystemFormula.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82808E94CC2A7217CDAAFE45 /* SystemFormula.swift */; };
 		AC4C1CBFA44C0269CD84573D /* EmptyStateView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB0CD69CAD160F8964E04E38 /* EmptyStateView.swift */; };
+		AE808A5B216892607BA30954 /* FormFields.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E48F7B735A532DF2AD1DF60 /* FormFields.swift */; };
 		AFE15E3C2C2B00406C25D6D8 /* ModelContainerFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = BCF69DF1AB4A6F4ADD87ECC4 /* ModelContainerFactory.swift */; };
 		B03377B35FA0B15E8A905AEF /* KefirEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9BA9E5B4AA49505BDDFD328 /* KefirEvent.swift */; };
 		B5E9CD6022D24A67C2CD7C74 /* StarterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DDDA7E52937AA625C6BE4336 /* StarterTests.swift */; };
@@ -110,6 +112,7 @@
 		DB9B2922D41F33DC0C0834C5 /* KefirJournalView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CD2B15E96D25693E9554923 /* KefirJournalView.swift */; };
 		DCCEBF31D5C991DFA2894BA6 /* AppSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEAB2C1827C62E47C070528C /* AppSettings.swift */; };
 		DDB4A3789C278F00C5E04131 /* KefirBatchComparisonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D112680B5E99DF09CDE5947 /* KefirBatchComparisonView.swift */; };
+		DF4006B33356546C819C1190 /* logo-squircle.svg in Resources */ = {isa = PBXBuildFile; fileRef = BF852AB20022BDE733C1532C /* logo-squircle.svg */; };
 		E1B4B8B57517B854F49572E0 /* BackupService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E01C62CC5536C52C2331B21 /* BackupService.swift */; };
 		E51AA3D045B8F6386DBEE0FE /* StarterReminderPlannerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 529741780FA026FA8C458250 /* StarterReminderPlannerTests.swift */; };
 		E60D19B33CA5F87D9D711D49 /* FormulaStepTemplate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 240767BF4294389BF07F152B /* FormulaStepTemplate.swift */; };
@@ -153,13 +156,12 @@
 		019C5DED2589ED39E611C1A1 /* KnowledgeLoaderTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KnowledgeLoaderTests.swift; sourceTree = "<group>"; };
 		03068B3858AD919A409B16D5 /* RecipeFormulaTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecipeFormulaTests.swift; sourceTree = "<group>"; };
 		031DE41E33A5A47BB92E1B84 /* LevainApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LevainApp.swift; sourceTree = "<group>"; };
-		03C325E845719C6FC294C6FE /* logo-01.svg */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = "logo-01.svg"; sourceTree = "<group>"; };
+		03C325E845719C6FC294C6FE /* logo-01.svg */ = {isa = PBXFileReference; path = "logo-01.svg"; sourceTree = "<group>"; };
 		0488D5D97917ED1EDCE7A49E /* KnowledgeRowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KnowledgeRowView.swift; sourceTree = "<group>"; };
 		05BB2A8E3BCF16B390C67996 /* FlourSelectionEditorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlourSelectionEditorView.swift; sourceTree = "<group>"; };
-		0829A06D388058C26EB78A33 /* starter.svg */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = starter.svg; sourceTree = "<group>"; };
+		0829A06D388058C26EB78A33 /* starter.svg */ = {isa = PBXFileReference; path = starter.svg; sourceTree = "<group>"; };
 		083F30497BFDB52B2F385962 /* KefirReminderPlannerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KefirReminderPlannerTests.swift; sourceTree = "<group>"; };
 		0EF66CC37AE507FB215CFF22 /* SectionCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SectionCard.swift; sourceTree = "<group>"; };
-		1A2B3C4D5E6F7A8B9C0D1E2F /* DescriptionBulletList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DescriptionBulletList.swift; sourceTree = "<group>"; };
 		0F4E7C83EE3E491B01BC1D07 /* KefirBatchManageSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KefirBatchManageSheet.swift; sourceTree = "<group>"; };
 		0F73F2107220BBBBD20F36DA /* TodayStarterReminderRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodayStarterReminderRow.swift; sourceTree = "<group>"; };
 		0FF36CA3FB5AF886EBFB28C7 /* KefirFlowUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KefirFlowUITests.swift; sourceTree = "<group>"; };
@@ -174,7 +176,8 @@
 		25425933BA83B4B7162BE06A /* KefirBatchCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KefirBatchCardView.swift; sourceTree = "<group>"; };
 		2974CC1E6E482DB4EAF2E6FE /* SystemFormulaLoaderTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SystemFormulaLoaderTests.swift; sourceTree = "<group>"; };
 		2AC91F1BE2D66E6CA2B2D162 /* RefreshHistoryRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RefreshHistoryRow.swift; sourceTree = "<group>"; };
-		2EFA2DE8D87323F11D4B16F3 /* LevainTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = LevainTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		2E48F7B735A532DF2AD1DF60 /* FormFields.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FormFields.swift; sourceTree = "<group>"; };
+		2EFA2DE8D87323F11D4B16F3 /* LevainTests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = LevainTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		2F702B38C52B89746F9D8DE1 /* BakeReminderPlannerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BakeReminderPlannerTests.swift; sourceTree = "<group>"; };
 		2F8DFC3E0B70BF05BE48DA6B /* BakeReminderPlanner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BakeReminderPlanner.swift; sourceTree = "<group>"; };
 		2F987C31F0C39CE7F5933AE5 /* KefirEventTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KefirEventTests.swift; sourceTree = "<group>"; };
@@ -206,7 +209,7 @@
 		623F69F7E6BA861E103B1791 /* YeastConversionService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YeastConversionService.swift; sourceTree = "<group>"; };
 		624AD82924BEAD344125588C /* KnowledgeDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KnowledgeDetailView.swift; sourceTree = "<group>"; };
 		638576BACCFFCBDAB792082C /* KefirBatch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KefirBatch.swift; sourceTree = "<group>"; };
-		65564B7A1CCBBD895F8BE550 /* LevainUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = LevainUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		65564B7A1CCBBD895F8BE550 /* LevainUITests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = LevainUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		66277E1D52967557EA871DEB /* KefirBatchPresentation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KefirBatchPresentation.swift; sourceTree = "<group>"; };
 		67516C2C986793F18606EC30 /* KnowledgeCategoryPillView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KnowledgeCategoryPillView.swift; sourceTree = "<group>"; };
 		6983B1F948DFA6BE209403E8 /* SeedDataLoaderTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SeedDataLoaderTests.swift; sourceTree = "<group>"; };
@@ -217,19 +220,20 @@
 		762C7FC5CFEB6829E4E7BEC1 /* FermentationsFlowUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FermentationsFlowUITests.swift; sourceTree = "<group>"; };
 		7762E15F65697D717FBB038F /* StateBadgeToneTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StateBadgeToneTests.swift; sourceTree = "<group>"; };
 		79D4C487A002E34766EBC3F2 /* AppEnvironment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppEnvironment.swift; sourceTree = "<group>"; };
-		7A93F72E454DE1667B080E9C /* bake.svg */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = bake.svg; sourceTree = "<group>"; };
+		7A93F72E454DE1667B080E9C /* bake.svg */ = {isa = PBXFileReference; path = bake.svg; sourceTree = "<group>"; };
 		7BD7C03D5139BD3131B782AE /* AppRouterTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppRouterTests.swift; sourceTree = "<group>"; };
 		7D19BA59B3A928A04BD8843E /* FermentationsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FermentationsView.swift; sourceTree = "<group>"; };
 		82808E94CC2A7217CDAAFE45 /* SystemFormula.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SystemFormula.swift; sourceTree = "<group>"; };
 		88067D9DEA0402EE4E48496A /* SystemFormulaLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SystemFormulaLoader.swift; sourceTree = "<group>"; };
-		89BAF4761DDB1090512623FB /* logo.svg */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = logo.svg; sourceTree = "<group>"; };
+		89BAF4761DDB1090512623FB /* logo.svg */ = {isa = PBXFileReference; path = logo.svg; sourceTree = "<group>"; };
 		8B39BE3A6D9E872507ECAB51 /* BakeSchedulerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BakeSchedulerTests.swift; sourceTree = "<group>"; };
 		8CBB82511329EC43AD7BC640 /* StarterDetailHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StarterDetailHeaderView.swift; sourceTree = "<group>"; };
 		8E9AA4021F43AE9655D8F68C /* StateBadge.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StateBadge.swift; sourceTree = "<group>"; };
 		9069286C22B79776F290E460 /* KnowledgeLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KnowledgeLoader.swift; sourceTree = "<group>"; };
+		94A95C9220E9C36B836BE153 /* DescriptionBulletList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DescriptionBulletList.swift; sourceTree = "<group>"; };
 		9527884010C3C4CC2BA7DF2D /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		9A9E648F721B49CD581E8B10 /* logo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = logo.png; sourceTree = "<group>"; };
-		9B4004713422E6E47C0B76CD /* Levain.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Levain.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		9B4004713422E6E47C0B76CD /* Levain.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = Levain.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		9FC08F220B40EB7C51A3AB1B /* KefirBatchListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KefirBatchListView.swift; sourceTree = "<group>"; };
 		A061F753EFB622786D154A83 /* KnowledgeItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KnowledgeItem.swift; sourceTree = "<group>"; };
 		A327533FEB9FDE64DDA58C58 /* AppLaunchOptions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppLaunchOptions.swift; sourceTree = "<group>"; };
@@ -249,12 +253,14 @@
 		B78544D1490C8484385BAFBD /* TodayOperationalCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodayOperationalCardView.swift; sourceTree = "<group>"; };
 		BC0451D6E4DCF1F8EF2C78E7 /* BakeIngredientsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BakeIngredientsView.swift; sourceTree = "<group>"; };
 		BCF69DF1AB4A6F4ADD87ECC4 /* ModelContainerFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelContainerFactory.swift; sourceTree = "<group>"; };
+		BF852AB20022BDE733C1532C /* logo-squircle.svg */ = {isa = PBXFileReference; path = "logo-squircle.svg"; sourceTree = "<group>"; };
 		C25872A58F8373FE1A2CF530 /* ToastBannerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToastBannerView.swift; sourceTree = "<group>"; };
 		C3719CAB830F30160F021B55 /* BakeScheduler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BakeScheduler.swift; sourceTree = "<group>"; };
 		CDA0457086F14FDAC1DC627A /* ShiftTimelineView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShiftTimelineView.swift; sourceTree = "<group>"; };
 		CEAB2C1827C62E47C070528C /* AppSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppSettings.swift; sourceTree = "<group>"; };
 		CF8C7A1E97DF7299C6E9B7A6 /* FormulaStepEditorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FormulaStepEditorView.swift; sourceTree = "<group>"; };
 		CFF203DD5A6EA2502E937535 /* NotificationRouteUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationRouteUITests.swift; sourceTree = "<group>"; };
+		D632E5F50188534077133D11 /* FormInputUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FormInputUITests.swift; sourceTree = "<group>"; };
 		D7C76E6286DA83E2BCAB2DA6 /* KefirEventRecorder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KefirEventRecorder.swift; sourceTree = "<group>"; };
 		D88945036E9817121C4963FC /* system_formulas.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = system_formulas.json; sourceTree = "<group>"; };
 		D9ECE5A0429356DA9B30ED63 /* SeedDataLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SeedDataLoader.swift; sourceTree = "<group>"; };
@@ -281,6 +287,7 @@
 			children = (
 				7A93F72E454DE1667B080E9C /* bake.svg */,
 				03C325E845719C6FC294C6FE /* logo-01.svg */,
+				BF852AB20022BDE733C1532C /* logo-squircle.svg */,
 				9A9E648F721B49CD581E8B10 /* logo.png */,
 				89BAF4761DDB1090512623FB /* logo.svg */,
 				0829A06D388058C26EB78A33 /* starter.svg */,
@@ -428,9 +435,10 @@
 		632408C7CA7F874D37AE66CB /* Components */ = {
 			isa = PBXGroup;
 			children = (
+				94A95C9220E9C36B836BE153 /* DescriptionBulletList.swift */,
 				4D09C0219515B0C58E80A791 /* DesignPrimitives.swift */,
-				1A2B3C4D5E6F7A8B9C0D1E2F /* DescriptionBulletList.swift */,
 				DB0CD69CAD160F8964E04E38 /* EmptyStateView.swift */,
+				2E48F7B735A532DF2AD1DF60 /* FormFields.swift */,
 				0EF66CC37AE507FB215CFF22 /* SectionCard.swift */,
 				8E9AA4021F43AE9655D8F68C /* StateBadge.swift */,
 			);
@@ -573,6 +581,7 @@
 			children = (
 				74E8B96E2C8D2CE83E5D72CD /* BakesFlowUITests.swift */,
 				762C7FC5CFEB6829E4E7BEC1 /* FermentationsFlowUITests.swift */,
+				D632E5F50188534077133D11 /* FormInputUITests.swift */,
 				0FF36CA3FB5AF886EBFB28C7 /* KefirFlowUITests.swift */,
 				F2C6374ED12D33A5878CF5F3 /* KnowledgeFlowUITests.swift */,
 				61243C17854EB5B5F0148C16 /* LevainUITests.swift */,
@@ -658,13 +667,14 @@
 				LastUpgradeCheck = 2640;
 				TargetAttributes = {
 					00849C44FA575554ED75F76A = {
-						DevelopmentTeam = "";
+						DevelopmentTeam = C974BPN56D;
 					};
 					3B49ED6DA58469A7F9B8E54F = {
-						DevelopmentTeam = "";
+						DevelopmentTeam = C974BPN56D;
 						TestTargetID = 8E84F0B210E0A11CDE4A5962;
 					};
 					8E84F0B210E0A11CDE4A5962 = {
+						DevelopmentTeam = C974BPN56D;
 						ProvisioningStyle = Automatic;
 					};
 				};
@@ -699,6 +709,7 @@
 				0AD978B4F088E30BC5FA053D /* bake.svg in Resources */,
 				1B203CD85910F7A753EA7B7E /* knowledge.json in Resources */,
 				E830FEAADF68120783747C70 /* logo-01.svg in Resources */,
+				DF4006B33356546C819C1190 /* logo-squircle.svg in Resources */,
 				B77F7DCD7B30591E5A2CDC66 /* logo.png in Resources */,
 				7F84475AA184AE8C7AE6A84D /* logo.svg in Resources */,
 				F61E1B0737AD9DD1C7957726 /* starter.svg in Resources */,
@@ -715,6 +726,7 @@
 			files = (
 				5AAE0BB77D877CE7A8802DC2 /* BakesFlowUITests.swift in Sources */,
 				F3F3B920908C803B4A114684 /* FermentationsFlowUITests.swift in Sources */,
+				22E21188FFE699FD262EA83F /* FormInputUITests.swift in Sources */,
 				CE0386037363277B0ADAEC91 /* KefirFlowUITests.swift in Sources */,
 				F4F46A97B9F0EE28E5B4E275 /* KnowledgeFlowUITests.swift in Sources */,
 				8F7B429D77A05781C4E826F9 /* LevainUITests.swift in Sources */,
@@ -773,12 +785,13 @@
 				2C9CAFB2E374A422B8C0300F /* BreadHubView.swift in Sources */,
 				0D244B36BB2D2FBD61B00E07 /* Date+Levain.swift in Sources */,
 				6F7C689E9224FA177FE49E9D /* DateFormattingService.swift in Sources */,
-				2A3B4C5D6E7F8A9B0C1D2E3F /* DescriptionBulletList.swift in Sources */,
+				4B276E1D6CD1E8CFC6713BF9 /* DescriptionBulletList.swift in Sources */,
 				7D3DA6A05B6CB6132F859BC1 /* DesignPrimitives.swift in Sources */,
 				6FB2EAAC65EC1C0350BDCFCB /* DomainEnums.swift in Sources */,
 				AC4C1CBFA44C0269CD84573D /* EmptyStateView.swift in Sources */,
 				FCCC7A6B486A9359BDAE7F6D /* FermentationsView.swift in Sources */,
 				4FCFC5305EEE296E84DCF165 /* FlourSelectionEditorView.swift in Sources */,
+				AE808A5B216892607BA30954 /* FormFields.swift in Sources */,
 				D7BBC6CAA904668226675EA3 /* FormulaDetailView.swift in Sources */,
 				A44ED48046434A743314F4CB /* FormulaEditorView.swift in Sources */,
 				FFA273A8F2496E91BA328B92 /* FormulaListView.swift in Sources */,
@@ -942,7 +955,7 @@
 				COPY_PHASE_STRIP = NO;
 				CURRENT_PROJECT_VERSION = 1;
 				DEBUG_INFORMATION_FORMAT = dwarf;
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = C974BPN56D;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = YES;
@@ -1046,7 +1059,7 @@
 				COPY_PHASE_STRIP = NO;
 				CURRENT_PROJECT_VERSION = 1;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = C974BPN56D;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = YES;
@@ -1095,7 +1108,6 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = C974BPN56D;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Levain/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = Batch;
