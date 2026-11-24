@@ -471,19 +471,6 @@ struct FormulaStatRow: View {
     }
 }
 
-struct NumericField: View {
-    let title: String
-    @Binding var value: Double
-
-    var body: some View {
-        LabeledContent(title) {
-            TextField("", value: $value, format: .number)
-                .keyboardType(.decimalPad)
-                .multilineTextAlignment(.trailing)
-        }
-    }
-}
-
 #Preview("Bakes") {
     NavigationStack {
         BakesView()

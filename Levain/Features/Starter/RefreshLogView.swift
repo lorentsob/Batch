@@ -42,7 +42,13 @@ struct RefreshLogView: View {
 
             Section("Dettagli") {
                 DatePicker("Quando", selection: $dateTime)
-                TextField("Rapporto", text: $ratioText)
+                FormTextRow(
+                    title: "Rapporto",
+                    placeholder: "1:4:4",
+                    text: $ratioText,
+                    capitalization: .never,
+                    keyboard: .numbersAndPunctuation
+                )
                 NumericField(title: "Temp. ambiente (°C)", value: $ambientTemp)
             }
 
@@ -61,6 +67,7 @@ struct RefreshLogView: View {
                                 .font(.footnote.weight(.semibold))
                                 .foregroundStyle(Theme.muted)
                         }
+                        .formRowHitArea()
                     }
                     .buttonStyle(.plain)
                 }
@@ -99,6 +106,7 @@ struct RefreshLogView: View {
                     .lineLimit(2...5)
             }
         }
+        .formKeyboardToolbar()
         .navigationTitle("Rinfresco")
         .tint(Theme.Control.primaryFill)
         .toolbar {

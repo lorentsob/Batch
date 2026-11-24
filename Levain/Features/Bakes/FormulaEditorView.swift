@@ -50,10 +50,13 @@ struct FormulaEditorView: View {
     var body: some View {
         Form {
             Section("Identità") {
-                LabeledContent("Nome della ricetta") {
-                    TextField("es. Pane di Segale", text: $name)
-                        .multilineTextAlignment(.trailing)
-                }
+                FormTextRow(
+                    title: "Nome della ricetta",
+                    placeholder: "es. Pane di Segale",
+                    text: $name,
+                    autofocus: formula == nil,
+                    capitalization: .words
+                )
                 Picker("Tipo", selection: $type) {
                     ForEach(RecipeCategory.allCases) { option in
                         Text(option.title).tag(option)
@@ -150,6 +153,7 @@ struct FormulaEditorView: View {
                             Image(systemName: "chevron.right")
                                 .foregroundStyle(Theme.muted)
                         }
+                        .formRowHitArea()
                     }
                     .buttonStyle(.plain)
                 }
@@ -177,6 +181,7 @@ struct FormulaEditorView: View {
                 Text("Note")
             }
         }
+        .formKeyboardToolbar()
         .navigationTitle(formula == nil ? "Nuova ricetta" : "Modifica ricetta")
         .tint(Theme.Control.primaryFill)
         .toolbar {
